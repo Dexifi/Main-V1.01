@@ -1,0 +1,169 @@
+.lamp,
+.solUsdc {
+  position: absolute;
+}
+.lamp {
+  top: 0;
+  left: calc(50% - 455.5px);
+  background: radial-gradient(
+      50% 50%at 50% 50%,
+      rgba(119, 186, 234, 0.1),
+      transparent
+    ),
+    radial-gradient(
+      50% 50%at 50% 50%,
+      rgba(251, 0, 196, 0) 3.49%,
+      rgba(119, 186, 234, 0) 7.6%,
+      rgba(253, 0, 197, 0) 10.46%,
+      rgba(119, 186, 234, 0) 14.46%,
+      rgba(255, 0, 199, 0) 18.56%,
+      rgba(3, 0, 3, 0) 19.53%,
+      transparent 79.82%,
+      rgba(246, 0, 192, 0) 81.08%,
+      rgba(119, 186, 234, 0) 84.04%,
+      rgba(247, 0, 193, 0) 86.61%,
+      rgba(119, 186, 234, 0) 91.01%,
+      rgba(249, 0, 194, 0) 95.16%,
+      rgba(119, 186, 234, 0) 98.6%
+    );
+  width: 56.94rem;
+  height: 44.25rem;
+  overflow: hidden;
+}
+.solUsdc {
+  top: 1.63rem;
+  left: 2.13rem;
+  font-weight: 500;
+}
+.headChild {
+  position: absolute;
+  top: 3.41rem;
+  left: 2.09rem;
+  border-top: 1px solid var(--color-lightcyan-300);
+  box-sizing: border-box;
+  width: 21.5rem;
+  height: 0.06rem;
+}
+.solana2Icon,
+.usdCoinUsdcLogo1Icon {
+  position: absolute;
+  top: 1.63rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: cover;
+}
+.solana2Icon {
+  right: 44.06rem;
+}
+.usdCoinUsdcLogo1Icon {
+  left: 13.5rem;
+}
+.r {
+  position: relative;
+  font-size: var(--font-size-mini);
+  font-weight: 500;
+  font-family: var(--tittle-16-m);
+  color: var(--color-lightcyan-100);
+  text-align: left;
+}
+.createPositionButton,
+.createPositionButton1 {
+  cursor: pointer;
+  border: 1px solid var(--color-lightcyan-700);
+  padding: 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  top: 2.19rem;
+  border-radius: var(--br-6xl);
+  box-sizing: border-box;
+  height: 1.88rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.createPositionButton {
+  position: absolute;
+  left: 45.19rem;
+  width: 9.81rem;
+  overflow: hidden;
+}
+.createPositionButton:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton1 {
+  left: 36.75rem;
+  width: 8rem;
+}
+.createPositionButton1:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton1:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton1,
+.createPositionButton2,
+.head {
+  position: absolute;
+  overflow: hidden;
+}
+.createPositionButton2 {
+  cursor: pointer;
+  border: 1px solid var(--color-lightcyan-700);
+  padding: 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  top: 2.19rem;
+  left: 28.31rem;
+  border-radius: var(--br-6xl);
+  box-sizing: border-box;
+  width: 8rem;
+  height: 1.88rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.createPositionButton2:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton2:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.head {
+  top: 0;
+  left: 0.13rem;
+  width: 56.63rem;
+  height: 6.19rem;
+}
+.managePositionPopup {
+  position: relative;
+  border-radius: var(--br-21xl);
+  background-color: var(--color-gray-600);
+  box-shadow: 0 0 20px 1px rgba(217, 248, 255, 0.25);
+  width: 56.94rem;
+  height: 44.25rem;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 100%;
+  text-align: left;
+  font-size: var(--font-size-xl);
+  color: var(--color-lightcyan-100);
+  font-family: var(--tittle-16-m);
+}

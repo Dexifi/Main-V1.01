@@ -1,0 +1,22 @@
+.readDocs {
+  position: absolute;
+  top: 0.69rem;
+  left: 2.13rem;
+  line-height: 1.5rem;
+  display: inline-block;
+  width: 5.13rem;
+  height: 1.81rem;
+}
+.readDocsParent {
+  position: relative;
+  border-radius: var(--br-3xs);
+  background-color: var(--color-black);
+  box-shadow: 0 0 5px #0085ff;
+  width: 100%;
+  height: 3.13rem;
+  overflow: hidden;
+  text-align: left;
+  font-size: var(--tittle-16-m-size);
+  color: var(--color1);
+  font-family: var(--font-helvetica);
+}

@@ -1,0 +1,584 @@
+.lamp {
+  position: absolute;
+  top: -38.19rem;
+  left: calc(50% - 259px);
+  background: radial-gradient(
+    50% 50%at 50% 50%,
+    rgba(119, 186, 234, 0.2),
+    rgba(37, 58, 73, 0.06) 47.92%,
+    transparent
+  );
+  width: 32.38rem;
+  height: 76.31rem;
+  overflow: hidden;
+}
+.dexifiLogoIcon {
+  position: relative;
+  width: 3.13rem;
+  height: 2.39rem;
+  object-fit: cover;
+}
+.dxe {
+  position: relative;
+  font-size: var(--font-size-lg);
+  font-family: var(--tittle-16-m);
+  color: var(--color-lightcyan-100);
+  text-align: left;
+}
+.createPositionButton {
+  cursor: pointer;
+  border: 0;
+  padding: 0 1.06rem 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  position: absolute;
+  top: 6.44rem;
+  left: 1.38rem;
+  border-radius: var(--br-6xl);
+  box-shadow: 0 0 5px #d9f8ff;
+  width: 6.94rem;
+  height: 2.19rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+.createPositionButton:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.usdCoinUsdcLogo1Icon {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: cover;
+}
+.createPositionButton1 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  position: absolute;
+  top: 6.44rem;
+  left: 9rem;
+  border-radius: var(--br-6xl);
+  box-shadow: 0 0 5px #d9f8ff;
+  width: 7.13rem;
+  height: 2.19rem;
+  overflow: hidden;
+  flex-direction: row;
+  box-sizing: border-box;
+  gap: var(--gap-3xs);
+}
+.createPositionButton1:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton1:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton1,
+.sol,
+.solana2Parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sol {
+  position: relative;
+  font-size: var(--font-size-xl);
+  font-weight: 500;
+  font-family: var(--tittle-16-m);
+  color: var(--color-lightcyan-100);
+  text-align: center;
+  width: 4.25rem;
+  height: 1.81rem;
+  flex-shrink: 0;
+}
+.solana2Parent {
+  border-radius: var(--br-6xl);
+  background-color: var(--color-gray-700);
+  box-shadow: 0 0 5px rgba(217, 248, 255, 0.25);
+  width: 9.31rem;
+  height: 2.5rem;
+  flex-direction: row;
+}
+.p,
+.sol1 {
+  margin: 0;
+  color: var(--color-lightcyan-100);
+}
+.p {
+  color: var(--color-slategray-100);
+}
+.sol100645Container {
+  position: relative;
+  font-size: var(--font-size-sm);
+  font-family: var(--tittle-16-m);
+  text-align: left;
+}
+.createPositionButton2,
+.createPositionButton3,
+.createPositionButton4,
+.createPositionButton5,
+.createPositionButton6,
+.createPositionButton7,
+.createPositionButton8,
+.createPositionButton9 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 var(--padding-19xl) 0 0;
+  position: absolute;
+  left: 0;
+  width: 31.38rem;
+  height: 3.88rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-138xl);
+}
+.createPositionButton2 {
+  background-color: var(--color-darkslategray-600);
+  top: 0;
+}
+.createPositionButton2:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton2:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton3,
+.createPositionButton4,
+.createPositionButton5,
+.createPositionButton6,
+.createPositionButton7,
+.createPositionButton8,
+.createPositionButton9 {
+  background-color: var(--color-darkslategray-500);
+  top: 3.88rem;
+}
+.createPositionButton3:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton3:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton4,
+.createPositionButton5,
+.createPositionButton6,
+.createPositionButton7,
+.createPositionButton8,
+.createPositionButton9 {
+  background-color: var(--color-darkslategray-600);
+  top: 7.75rem;
+}
+.createPositionButton4:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton4:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton5,
+.createPositionButton6,
+.createPositionButton7,
+.createPositionButton8,
+.createPositionButton9 {
+  background-color: var(--color-darkslategray-500);
+  top: 11.63rem;
+}
+.createPositionButton5:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton5:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton6,
+.createPositionButton7,
+.createPositionButton8,
+.createPositionButton9 {
+  background-color: var(--color-darkslategray-600);
+  top: 15.5rem;
+}
+.createPositionButton6:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton6:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton7,
+.createPositionButton8,
+.createPositionButton9 {
+  background-color: var(--color-darkslategray-500);
+  top: 19.38rem;
+}
+.createPositionButton7:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton7:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton8,
+.createPositionButton9 {
+  background-color: var(--color-darkslategray-600);
+  top: 23.25rem;
+}
+.createPositionButton8:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton8:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton9 {
+  background-color: var(--color-darkslategray-500);
+  top: 27.13rem;
+}
+.createPositionButton9:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton9:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.circleInfoSolid1Icon {
+  position: relative;
+  width: 1.25rem;
+  height: 1.25rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.createPositionButton10 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 var(--padding-19xl) 0 0;
+  background-color: var(--color-darkslategray-600);
+  position: absolute;
+  top: 31rem;
+  left: 0;
+  width: 31.38rem;
+  height: 3.88rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-138xl);
+}
+.createPositionButton10:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton10:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButtonParent {
+  position: absolute;
+  top: 12.56rem;
+  left: 0;
+  width: 31.38rem;
+  height: 34.88rem;
+  overflow-y: auto;
+}
+.listPanelChild {
+  border: 1px solid var(--color-lightcyan-400);
+  font-family: var(--tittle-16-m);
+  font-size: 22;
+  background-color: transparent;
+  position: absolute;
+  top: 3.19rem;
+  left: 1.38rem;
+  border-radius: var(--br-mini);
+  box-sizing: border-box;
+  width: 28.56rem;
+  height: 2.5rem;
+  overflow: hidden;
+  color: D9F8FF;
+}
+.listPanelChild:hover {
+  border: 1px solid var(--color-lightcyan-100);
+  box-sizing: border-box;
+}
+.listPanelChild:focus {
+  border-radius: var(--br-xl);
+  border: 1px solid var(--color-lightcyan-100);
+  box-sizing: border-box;
+  box-shadow: 0 0 4px #d9f8ff;
+}
+.createPositionButton11 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  position: absolute;
+  top: 9.25rem;
+  left: 8.31rem;
+  border-radius: var(--br-6xl);
+  box-shadow: 0 0 5px #d9f8ff;
+  width: 7.06rem;
+  height: 2.19rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-3xs);
+}
+.createPositionButton11:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton11:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.lidoForSolanaLogo2Icon {
+  position: relative;
+  width: 2.44rem;
+  height: 2.44rem;
+  object-fit: cover;
+}
+.createPositionButton12 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  position: absolute;
+  top: 6.44rem;
+  left: 16.81rem;
+  border-radius: var(--br-6xl);
+  box-shadow: 0 0 5px #d9f8ff;
+  width: 6.56rem;
+  height: 2.19rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+.createPositionButton12:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton12:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.marinadeLogoCopy1 {
+  position: relative;
+  width: 2.06rem;
+  height: 2.06rem;
+  object-fit: cover;
+}
+.createPositionButton13,
+.createPositionButton14 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  position: absolute;
+  top: 9.31rem;
+  left: 16.13rem;
+  border-radius: var(--br-6xl);
+  box-shadow: 0 0 5px #d9f8ff;
+  width: 6.5rem;
+  height: 2.19rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+.createPositionButton13:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton13:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.createPositionButton14 {
+  left: 1.38rem;
+  width: 6.19rem;
+  gap: var(--gap-5xs);
+}
+.createPositionButton14:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton14:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.ethereumEthLogo1Icon {
+  position: relative;
+  width: 1.88rem;
+  height: 1.88rem;
+  object-fit: cover;
+}
+.createPositionButton15 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  position: absolute;
+  top: 9.31rem;
+  left: 23.38rem;
+  border-radius: var(--br-6xl);
+  box-shadow: 0 0 5px #d9f8ff;
+  width: 6.94rem;
+  height: 2.19rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-3xs);
+}
+.createPositionButton15:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton15:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.vectorIcon {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
+}
+.circleXmarkRegular1 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  top: 1.31rem;
+  left: 28.69rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  overflow: hidden;
+}
+.circleXmarkRegular1:hover {
+  border-radius: var(--br-3xs);
+  box-shadow: 0 0 4px #fff;
+}
+.tokenList {
+  position: absolute;
+  top: 1rem;
+  left: 1.44rem;
+  line-height: 1.71rem;
+  display: inline-block;
+  width: 8.94rem;
+  height: 1.88rem;
+}
+.listPanel,
+.swapTokenListWindow {
+  position: relative;
+  border-radius: var(--br-3xs);
+  width: 31.38rem;
+  height: 47.44rem;
+}
+.listPanel {
+  background-color: var(--color-gray-600);
+  box-shadow: 0 0 4px #88d6ff;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.swapTokenListWindow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  text-align: left;
+  font-size: var(--font-size-mini);
+  color: var(--color-lightcyan-100);
+  font-family: var(--tittle-16-m);
+}

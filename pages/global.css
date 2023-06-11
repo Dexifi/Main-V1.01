@@ -1,0 +1,154 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Helvetica:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geomatrix:wght@100&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Han+Sans+SC:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bitcheese:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+body {
+  margin: 0;
+  line-height: normal;
+}
+:root {
+  /* fonts */
+  --font-helvetica: Helvetica;
+  --font-syne: Syne;
+  --font-geomatrix: Geomatrix;
+  --font-roboto: Roboto;
+  --tittle-16-m: "DM Sans";
+  --regular-12: "Source Han Sans SC";
+  --font-bitcheese: Bitcheese;
+  --font-inter: Inter;
+
+  /* font sizes */
+  --font-size-5xl: 1.5rem;
+  --font-size-xl: 1.25rem;
+  --tittle-16-m-size: 1rem;
+  --font-size-41xl: 3.75rem;
+  --font-size-9xl: 1.75rem;
+  --font-size-lg: 1.13rem;
+  --regular-12-size: 0.75rem;
+  --font-size-mini: 0.94rem;
+  --font-size-3xl: 1.38rem;
+  --font-size-sm: 0.88rem;
+  --font-size-lgi: 1.19rem;
+  --font-size-21xl: 2.5rem;
+  --font-size-7xs: 0.38rem;
+  --font-size-smi: 0.81rem;
+  --font-size-2xs: 0.69rem;
+  --font-size-17xl: 2.25rem;
+
+  /* Colors */
+  --color-black: #000;
+  --color-gray-100: #19232d;
+  --color-gray-200: #13232d;
+  --color-gray-300: #142030;
+  --color-gray-400: #121d2c;
+  --color-gray-700: #121c2b;
+  --color-gray-800: #111b2a;
+  --color-gray-900: #0e121c;
+  --color-gray-1000: #0e121b;
+  --color-gray-600: #0d111b;
+  --color-gray-1100: #071013;
+  --color3: rgba(255, 255, 255, 0.2);
+  --color2: rgba(255, 255, 255, 0.4);
+  --color-gray-1300: rgba(255, 255, 255, 0.5);
+  --color: rgba(255, 255, 255, 0.6);
+  --color-gray-500: rgba(25, 35, 45, 0.8);
+  --color-gray-1200: rgba(0, 0, 0, 0.3);
+  --color1: #fff;
+  --color-dodgerblue-100: #268aff;
+  --color-dodgerblue-200: #0084ff;
+  --color-dodgerblue-300: rgba(0, 132, 255, 0.5);
+  --color-deepskyblue-100: #1ed6ff;
+  --color-silver: #c4c4c4;
+  --color-fuchsia: #fa01d2;
+  --color-blue: #7000ff;
+  --color-gold-100: #fbe947;
+  --color-gold: #efd301;
+  --color-chocolate: #c95901;
+  --color-aquamarine: #88e8ad;
+  --color-lightcyan-100: #d9f8ff;
+  --color-lightcyan-200: rgba(217, 248, 255, 0.1);
+  --color-lightcyan-300: rgba(217, 248, 255, 0.7);
+  --color-lightcyan-800: rgba(217, 248, 255, 0.25);
+  --color-lightcyan-500: rgba(217, 248, 255, 0.2);
+  --color-lightcyan-600: rgba(217, 248, 255, 0.8);
+  --color-lightcyan-700: rgba(217, 248, 255, 0.6);
+  --color-lightcyan-900: rgba(217, 248, 255, 0.45);
+  --color-lightcyan-1000: rgba(217, 248, 255, 0.3);
+  --color-lightcyan-400: rgba(217, 248, 255, 0.5);
+  --color-lightslategray-100: #848895;
+  --color-lightslategray: #7b8693;
+  --other-hover-bg: #4b4f52;
+  --color-darkslategray-300: #2a3731;
+  --color-darkslategray-400: #25313f;
+  --color-darkslategray-100: #202d3a;
+  --color-darkslategray-200: rgba(48, 66, 86, 0.3);
+  --color-darkslategray-500: rgba(48, 66, 86, 0.4);
+  --color-darkslategray-600: rgba(32, 45, 58, 0.1);
+  --gray-dark-4: #7c7c8d;
+  --color-slategray-100: #757788;
+  --color-slategray-200: #727383;
+  --color-slategray-500: #727382;
+  --color-slategray-300: rgba(124, 124, 141, 0.7);
+  --color-slategray-400: rgba(114, 115, 131, 0.7);
+  --color-firebrick-200: #ba0000;
+  --color-aqua-100: #3efff3;
+  --color-aqua: #00ffec;
+  --color-limegreen: #00b127;
+  --color-gainsboro: #d9d9d9;
+  --color-mediumaquamarine: #50af95;
+
+  /* Gaps */
+  --gap-10xs: 0.19rem;
+  --gap-mini: 0.94rem;
+  --gap-33xl: 3.25rem;
+  --gap-65xl: 5.25rem;
+  --gap-smi: 0.81rem;
+  --gap-9xs: 0.25rem;
+  --gap-xs: 0.75rem;
+  --gap-5xs: 0.5rem;
+  --gap-3xs: 0.63rem;
+  --gap-138xl: 9.81rem;
+  --gap-6xl: 1.56rem;
+  --gap-13xl: 2rem;
+  --gap-99xl: 7.38rem;
+  --gap-11xs: 0.13rem;
+  --gap-8xl: 1.69rem;
+  --gap-30xl: 3.06rem;
+  --gap-27xl: 2.88rem;
+
+  /* Paddings */
+  --padding-3xs: 0.63rem;
+  --padding-xs: 0.75rem;
+  --padding-4xs: 0.56rem;
+  --padding-8xs: 0.31rem;
+  --padding-5xl: 1.5rem;
+  --padding-19xl: 2.38rem;
+  --padding-9xs: 0.25rem;
+  --padding-10xs: 0.19rem;
+  --padding-7xs: 0.38rem;
+  --padding-xl: 1.25rem;
+  --padding-lg: 1.13rem;
+  --padding-lgi: 1.19rem;
+
+  /* border radiuses */
+  --br-xl: 20px;
+  --br-31xl: 50px;
+  --br-3xs: 10px;
+  --br-6xl: 25px;
+  --br-6xs: 7px;
+  --br-21xl: 40px;
+  --br-mini: 15px;
+  --br-23xl: 42px;
+  --br-11xl: 30px;
+  --br-12xs: 1px;
+  --br-32xl: 51px;
+  --br-33xl: 52px;
+  --br-231xl: 250px;
+  --br-8xs: 5px;
+}

@@ -1,0 +1,287 @@
+.lamp {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 251px);
+  background: radial-gradient(
+      50% 50%at 50% 50%,
+      rgba(119, 186, 234, 0.1),
+      transparent
+    ),
+    radial-gradient(
+      50% 50%at 50% 50%,
+      rgba(251, 0, 196, 0) 3.49%,
+      rgba(119, 186, 234, 0) 7.6%,
+      rgba(253, 0, 197, 0) 10.46%,
+      rgba(119, 186, 234, 0) 14.46%,
+      rgba(255, 0, 199, 0) 18.56%,
+      rgba(3, 0, 3, 0) 19.53%,
+      transparent 79.82%,
+      rgba(246, 0, 192, 0) 81.08%,
+      rgba(119, 186, 234, 0) 84.04%,
+      rgba(247, 0, 193, 0) 86.61%,
+      rgba(119, 186, 234, 0) 91.01%,
+      rgba(249, 0, 194, 0) 95.16%,
+      rgba(119, 186, 234, 0) 98.6%
+    );
+  width: 31.38rem;
+  height: 48.69rem;
+  overflow: hidden;
+}
+.ray,
+.stake,
+.vault {
+  position: relative;
+  font-weight: 500;
+}
+.stake {
+  font-family: var(--tittle-16-m);
+}
+.ray,
+.vault {
+  line-height: 1.71rem;
+  display: flex;
+  align-items: center;
+  width: 4.06rem;
+  height: 2.19rem;
+  flex-shrink: 0;
+}
+.ray {
+  font-size: var(--font-size-3xl);
+}
+.raydiumRayCoin1Icon {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: cover;
+}
+.stakeParent {
+  position: absolute;
+  top: 1.31rem;
+  left: 2.38rem;
+  border-radius: var(--br-6xl);
+  background-color: var(--color-gray-600);
+  box-shadow: 0 0 5px rgba(217, 248, 255, 0.25);
+  width: 26.25rem;
+  height: 3.13rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-30xl);
+  font-size: var(--font-size-xl);
+  color: var(--color-lightcyan-100);
+}
+.balance11366987,
+.stake1 {
+  font-weight: 500;
+  font-family: var(--tittle-16-m);
+}
+.balance11366987 {
+  position: absolute;
+  top: 18.94rem;
+  left: calc(50% - 185px);
+}
+.stake1 {
+  position: relative;
+  font-size: var(--font-size-3xl);
+  color: var(--color-lightcyan-100);
+  text-align: left;
+}
+.createPositionButton {
+  cursor: pointer;
+  border: 1px solid var(--color-lightcyan-700);
+  padding: 0 var(--padding-xs);
+  background-color: var(--color-darkslategray-100);
+  position: absolute;
+  top: 28.75rem;
+  left: 2.13rem;
+  border-radius: var(--br-6xl);
+  box-sizing: border-box;
+  width: 26.25rem;
+  height: 3.44rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.createPositionButton:hover {
+  border: 1px solid var(--color-lightcyan-600);
+  box-sizing: border-box;
+  box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
+    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+}
+.createPositionButton:active {
+  background-color: var(--color-lightcyan-500);
+  border: 1px solid var(--color-slategray-400);
+  box-sizing: border-box;
+}
+.div {
+  position: absolute;
+  top: 3.13rem;
+  left: calc(50% + 114px);
+  font-weight: 500;
+}
+.ray1,
+.raydiumRayCoin1Parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ray1 {
+  position: relative;
+  font-weight: 500;
+  width: 4.25rem;
+  height: 1.81rem;
+  flex-shrink: 0;
+}
+.raydiumRayCoin1Parent {
+  position: absolute;
+  top: 0.69rem;
+  left: 1.69rem;
+  border-radius: var(--br-6xl);
+  background-color: var(--color-gray-700);
+  box-shadow: 0 0 5px rgba(217, 248, 255, 0.25);
+  width: 7.75rem;
+  flex-direction: row;
+  padding: 0 0 0 var(--padding-3xs);
+  box-sizing: border-box;
+  text-align: center;
+  font-size: var(--font-size-xl);
+  color: var(--color-lightcyan-100);
+}
+.depositstakepopupChild,
+.per1 {
+  position: absolute;
+  border-radius: var(--br-6xl);
+  overflow: hidden;
+}
+.per1 {
+  top: 20.44rem;
+  left: 2.13rem;
+  background-color: var(--color-gray-600);
+  box-shadow: 0 0 5px rgba(217, 248, 255, 0.5);
+  width: 26.25rem;
+  height: 4.44rem;
+  font-family: var(--tittle-16-m);
+}
+.depositstakepopupChild {
+  border: 1px solid var(--color-lightcyan-400);
+  background-color: transparent;
+  top: 20.94rem;
+  left: 14.69rem;
+  box-sizing: border-box;
+  width: 12.5rem;
+  height: 2.5rem;
+  color: D9F8FF;
+  font-size: 22;
+}
+.depositstakepopupChild:hover {
+  border: 1px solid var(--color-lightcyan-100);
+  box-sizing: border-box;
+}
+.depositstakepopupChild:focus {
+  border-radius: var(--br-xl);
+  border: 1px solid var(--color-lightcyan-100);
+  box-sizing: border-box;
+  box-shadow: 0 0 4px #d9f8ff;
+}
+.p {
+  margin: 0;
+}
+.raydiumRay5373978Container1 {
+  line-break: anywhere;
+  width: 100%;
+}
+.raydiumRay5373978Container {
+  position: absolute;
+  top: 0;
+  left: 4.88rem;
+  line-height: 1.71rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  width: 8.38rem;
+  height: 14.38rem;
+}
+.raydiumRay537397824051Wrapper {
+  position: absolute;
+  top: 4.06rem;
+  left: 14.06rem;
+  width: 9.75rem;
+  height: 14.38rem;
+  text-align: right;
+  font-size: var(--tittle-16-m-size);
+}
+.aprProviderRewardContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 1.71rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  width: 8.38rem;
+  height: 14.38rem;
+}
+.aprProviderRewardTotalStakWrapper {
+  position: absolute;
+  top: 4.06rem;
+  left: 3.56rem;
+  width: 9.75rem;
+  height: 14.38rem;
+  font-size: var(--tittle-16-m-size);
+  color: var(--color-lightcyan-100);
+}
+.max,
+.maxbutton {
+  position: absolute;
+}
+.max {
+  top: 0.25rem;
+  left: calc(50% - 28px);
+  font-size: var(--tittle-16-m-size);
+  font-weight: 500;
+  font-family: var(--tittle-16-m);
+  color: var(--color1);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.75rem;
+  height: 1.44rem;
+}
+.maxbutton {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: var(--color-darkslategray-100);
+  top: 25.88rem;
+  left: calc(50% + 112px);
+  border-radius: var(--br-mini);
+  box-shadow: 0 0 5px #d9f8ff;
+  width: 5.25rem;
+  height: 2.19rem;
+  overflow: hidden;
+}
+.maxbutton:hover {
+  box-shadow: 0 0 4px 1px #d9f8ff;
+}
+.maxbutton:active {
+  background-color: var(--color-lightcyan-800);
+}
+.depositstakepopup {
+  position: relative;
+  border-radius: var(--br-21xl);
+  background-color: var(--color-gray-600);
+  box-shadow: 0 0 20px 1px rgba(217, 248, 255, 0.25);
+  width: 31.38rem;
+  height: 34.38rem;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 100%;
+  text-align: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-slategray-100);
+  font-family: var(--font-helvetica);
+}
