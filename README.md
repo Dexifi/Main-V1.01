@@ -1,4 +1,29 @@
 
+Dexifi Protocol
+
+
+Abstract
+Decentralized finance (DeFi) has been taking the world by storm in recent years,
+promising to revolutionize the way traditional finance is handled, making it more
+accessible and inclusive for everyone. Solana, a high-performance blockchain
+platform, has recently become one of the most popular networks for DeFi
+protocols. Dexifi is a platform that consolidates all DeFi services into a single
+location, utilizing the top-performing live protocols.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   # DashboardFix
 
   Note: Please ensure you have installed <code><a href="https://nodejs.org/en/download/">nodejs</a></code>
