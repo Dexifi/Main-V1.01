@@ -1175,7 +1175,7 @@
 }
 .netWorth5,
 .stakingBalance {
-  position: absolute;
+  position: relative;
   overflow: hidden;
 }
 .netWorth5 {
@@ -1186,7 +1186,7 @@
   font-size: var(--font-size-xl);
 }
 .stakingBalance {
-  top: 45.63rem;
+  top: 34.63rem;
   left: calc(50% - 566px);
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -1228,7 +1228,6 @@
   position: relative;
   width: 47.5rem;
   height: 1.88rem;
-  overflow: hidden;
   flex-shrink: 0;
 }
 .div27,
@@ -1279,8 +1278,8 @@
   color: var(--color-lightslategray);
 }
 .frameGroup {
-  position: absolute;
-  top: 3.13rem;
+  position: relative;
+  top: 1.13rem;
   left: 2.13rem;
   display: flex;
   flex-direction: column;
@@ -1291,7 +1290,6 @@
   color: var(--color-fuchsia);
 }
 .walletBalanceContainer {
-  position: absolute;
   top: 0;
   left: 0;
   font-weight: 500;
@@ -1299,12 +1297,11 @@
   width: 25.13rem;
 }
 .netWorth6 {
-  position: absolute;
+  position: relative;
   top: 1.19rem;
   left: 1.31rem;
   width: 25.88rem;
   height: 2.06rem;
-  overflow: hidden;
   font-size: var(--font-size-xl);
 }
 .domains {
@@ -1338,7 +1335,7 @@
   height: 11.56rem;
 }
 .dexifisol {
-  position: absolute;
+  position: relative;
   top: 0.38rem;
   left: 0;
   font-weight: 500;
@@ -1390,9 +1387,10 @@
   color: var(--color-slategray-200);
 }
 .frameDiv {
-  position: absolute;
+  position: relative;
   top: 0.94rem;
-  left: 0.81rem;
+  margin-right: 2rem;
+  /* left: 0.81rem; */
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -1400,17 +1398,16 @@
 }
 .walletBalance,
 .walletBalanceInner {
-  position: absolute;
+  position: relative;
   border-radius: var(--br-xl);
   overflow: hidden;
 }
 .walletBalanceInner {
-  top: 1.75rem;
-  left: 51.63rem;
   background-color: var(--color-darkslategray-200);
   backdrop-filter: blur(4px);
   width: 17.44rem;
-  height: 10.69rem;
+  padding-bottom: 2rem;
+  margin-left: 3.5rem;
 }
 .walletBalance {
   top: 31.25rem;
@@ -1418,7 +1415,7 @@
   background-color: var(--color-gray-600);
   box-shadow: 0 0 4px #88d6ff;
   width: 70.94rem;
-  height: 13.75rem;
+  padding-bottom: 4rem;
 }
 .hoverTipsChild {
   position: relative;
@@ -1831,12 +1828,9 @@
   overflow: hidden;
 }
 .walletOverviewWrapper {
-  position: absolute;
+  position: relative;
   top: 0;
-  left: calc(50% - 866px);
-  width: 108.25rem;
-  height: 75rem;
-  overflow-y: auto;
+  width: 100vw;
 }
 .utc {
   margin: 0;
@@ -2101,11 +2095,12 @@
   font-size: var(--font-size-5xl);
   color: var(--color-slategray-100);
   font-family: var(--font-helvetica);
+  z-index: 99999;
 }
 .dashboard {
   position: relative;
   background-color: var(--color-gray-600);
-  width: 100%;
+  width: 99vw;
   height: 152.19rem;
   overflow: hidden;
   text-align: left;
@@ -2113,8 +2108,12 @@
   color: var(--color-lightcyan-100);
   font-family: var(--tittle-16-m);
 }
-.activeHeader{
+.activeHeader {
   box-shadow: 0 1px 0px 0 #88d6ff;
   border-bottom: 1px solid var(--color-lightcyan-300);
   color: var(--color-lightcyan-100);
+}
+.allWalletBalance{
+  display: flex;
+  position: relative;
 }

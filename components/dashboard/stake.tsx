@@ -2,15 +2,20 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import styles from "../../pages/dashboard.module.css";
 import { connection } from "../../utils/get-connection";
 import { PublicKey } from "@solana/web3.js";
+import {
+  MAINNET_PROGRAM_ID,
+  RAYDIUM_MAINNET,
+  Utils1216,
+} from "@raydium-io/raydium-sdk";
 
 const GetStake = () => {
   const { publicKey } = useWallet();
   const fetchData = async () => {
     const data = await connection.getParsedProgramAccounts(
-      new PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"),
+      new PublicKey("4qD717qKoj3Sm8YfHMSR7tSKjWn5An817nArA6nGdcUR"),
       {
         filters: [
-          { dataSize: 88 },
+          { dataSize: 232 },
           {
             memcmp: {
               offset: 40,
@@ -20,9 +25,28 @@ const GetStake = () => {
         ],
       }
     );
+
+    console.log(data);
+    // const infoList = await Utils1216.getAllInfo({
+    //   connection,
+    //   programId: MAINNET_PROGRAM_ID.UTIL1216,
+    //   poolIds: Utils1216.DEFAULT_POOL_ID,
+    //   wallet: publicKey,
+    //   chainTime: new Date().getTime() / 1000,
+    // });
+    // console.log(infoList);
   };
+  fetchData();
   return (
     <div className={styles.stakingBalance}>
+      <div className={styles.netWorth5}>
+        <div className={styles.stakingContainer}>
+          <span>Staking</span>
+          <span className={styles.span}>{` `}</span>
+          <span className={styles.inRange}>{`*  `}</span>
+          <span>$ 12,500.00</span>
+        </div>
+      </div>
       <div className={styles.headContainer}>
         <div className={styles.head2}>
           <div className={styles.amount}>Amount</div>
@@ -54,14 +78,6 @@ const GetStake = () => {
             alt=""
             src="/raydiumraycoin-111@2x.png"
           />
-        </div>
-      </div>
-      <div className={styles.netWorth5}>
-        <div className={styles.stakingContainer}>
-          <span>Staking</span>
-          <span className={styles.span}>{` `}</span>
-          <span className={styles.inRange}>{`*  `}</span>
-          <span>$ 12,500.00</span>
         </div>
       </div>
     </div>

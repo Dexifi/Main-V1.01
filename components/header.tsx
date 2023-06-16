@@ -96,7 +96,12 @@ const Header: FC = ({ page }) => {
           <a className={styles.trade} onClick={onTradeClick}>
             Trade
           </a>
-          <a className={styles.yield} onClick={onYieldClick}>
+          <a
+            className={`${styles.yield} ${
+              page === "liquidity" ? styles.activeHeader : ""
+            }`}
+            onClick={onYieldClick}
+          >
             Liquidity
           </a>
           <a className={styles.farm3} onClick={onFarm1Click}>

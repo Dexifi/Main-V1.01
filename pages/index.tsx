@@ -1,8 +1,10 @@
 import type { NextPage } from "next";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "./index.module.css";
+import { connection } from "../utils/get-connection";
+
 const Index: NextPage = () => {
   const router = useRouter();
 
@@ -45,7 +47,10 @@ const Index: NextPage = () => {
   const onFrameButton6Click = useCallback(() => {
     window.open("https://dexifi-finances.gitbook.io/dexifi-blog/");
   }, []);
-
+  const [transactionsCount, setTransactionsCount] = useState(0);
+  connection.getTransactionCount().then((res) => {
+    setTransactionsCount(res);
+  });
   return (
     <div className={styles.index1}>
       <img className={styles.circleMainIcon} alt="" src="/circle-main.svg" />
@@ -119,7 +124,7 @@ const Index: NextPage = () => {
             />
             <a
               className={styles.whitepaper}
-              href="https://dexifi.io/whitepaper.pdf"
+              href="/Dexifi Protocol Whitepaper.pdf"
             >
               Whitepaper
             </a>
@@ -285,7 +290,9 @@ const Index: NextPage = () => {
           </div>
           <div className={styles.solana}>
             <div className={styles.frame13}>
-              <div className={styles.div}>168 B</div>
+              <div className={styles.div}>
+                {Math.round(transactionsCount / 1000000000)} B
+              </div>
               <div
                 className={styles.totalProjectLunched}
               >{`total transaction `}</div>

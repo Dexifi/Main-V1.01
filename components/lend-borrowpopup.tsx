@@ -4,6 +4,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useState } from "react";
 import BN from "bn.js";
 import { SolendAction } from "@solendprotocol/solend-sdk";
+import { PublicKey } from "@solana/web3.js";
+import { connection } from "../utils/get-connection";
 
 type LendBorrowpopupType = {
   onClose?: () => void;
@@ -32,7 +34,6 @@ const LendBorrowpopup: NextPage<LendBorrowpopupType> = ({
   const handleBorrow = async () => {
     if (Number(amount) <= 0) return setWarning("Enter amount for supply!");
     const a = new BN(Number(amount) * 10 ** lend.stats.decimals);
-    console.log(a.toString());
     const solendAction = await SolendAction.buildBorrowTxns(
       connection,
       a,
@@ -49,26 +50,49 @@ const LendBorrowpopup: NextPage<LendBorrowpopupType> = ({
       <div className={styles.lamp} />
       <div className={styles.borrowParent}>
         <div className={styles.borrow}>Borrow</div>
-        <div className={styles.sol}>SOL</div>
-        <img className={styles.solana2Icon} alt="" src="/solana-2@2x.png" />
+        <div className={styles.sol}>{lend.stats.symbol}</div>
+        <img
+          className={styles.solana2Icon}
+          alt=""
+          src={lend.config.liquidityToken.logo}
+        />
       </div>
-      <div className={styles.balance11366987}>Balance : 113.66987 SOL</div>
+      <div className={styles.balance11366987}>
+        Balance : {userBoorrowLimit} {lend.stats.symbol}
+      </div>
       <div className={styles.per1}>
-        <div className={styles.div}>$ 224.6646</div>
+        <div className={styles.div}>
+          $ {Number((amount * lend.stats.assetPriceUSD).toFixed(5))}
+        </div>
         <div className={styles.solana2Parent}>
-          <img className={styles.solana2Icon} alt="" src="/solana-2@2x.png" />
-          <div className={styles.sol1}>SOL</div>
+          <img
+            className={styles.solana2Icon}
+            alt=""
+            src={lend.config.liquidityToken.logo}
+          />
+          <div className={styles.sol1}>{lend.stats.symbol}</div>
         </div>
       </div>
-      <input className={styles.lendBorrowpopupChild} type="number" />
-      <button className={styles.maxbutton}>
+      <input
+        className={styles.lendBorrowpopupChild}
+        type="number"
+        onChange={handleChangeAmount}
+        value={amount}
+      />
+      <button
+        className={styles.maxbutton}
+        onClick={() => setAmount(userBoorrowLimit)}
+      >
         <div className={styles.max}>Max</div>
       </button>
-      <button className={styles.maxbutton1}>
+      <button
+        className={styles.maxbutton1}
+        onClick={() => setAmount(userBoorrowLimit / 2)}
+      >
         <div className={styles.max}>Half</div>
       </button>
       <div className={styles.div1}>~~ $ 21.6804</div>
-      <button className={styles.createPositionButton}>
+      <button className={styles.createPositionButton} onClick={handleBorrow}>
         <div className={styles.borrow1}>Borrow</div>
       </button>
       <div className={styles.details}>
@@ -79,7 +103,9 @@ const LendBorrowpopup: NextPage<LendBorrowpopupType> = ({
           <p className={styles.price}>Borrow APR</p>
         </div>
         <div className={styles.to531782Container}>
-          <p className={styles.price}>$ 23.30</p>
+          <p className={styles.price}>
+            $ {lend.stats.assetPriceUSD.toFixed(5)}
+          </p>
           <p className={styles.price}>$ 3,804.47 to $ 5317.82</p>
           <p className={styles.price}> 54.47 % to 17.82 %</p>
           <p className={styles.price}>Supply APR</p>

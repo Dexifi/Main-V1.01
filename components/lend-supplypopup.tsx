@@ -71,10 +71,7 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
   };
   const handleSupply = async () => {
     if (Number(amount) <= 0) return setWarning("Enter amount for supply!");
-    let marketPubkey =
-      page === "turbo"
-        ? new PublicKey("7RCz8wb6WXxUhAigok9ttgrVgDFFFbibcirECzWSBauM")
-        : undefined;
+
     const a = new BN(amount * LAMPORTS_PER_SOL);
     const solendAction = await SolendAction.buildDepositTxns(
       connection,
@@ -82,7 +79,7 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
       reserve.stats.symbol,
       publicKey,
       "production",
-      marketPubkey
+      new PublicKey(pool.config.address)
     );
     if (solendAction) (await solendAction).sendTransactions(sendTransaction);
   };
@@ -90,7 +87,7 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
     <div className={styles.lendSupplypopup}>
       <div className={styles.lamp} />
       <div className={styles.supplyParent}>
-        <div className={styles.supply} >Supply</div>
+        <div className={styles.supply}>Supply</div>
         <div className={styles.sol}>{reserve.stats.symbol}</div>
         <img
           className={styles.solana2Icon}
@@ -128,7 +125,7 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
       </button>
       <button
         className={styles.maxbutton1}
-        onClick={() => setAmount(tokenBalance / 50)}
+        onClick={() => setAmount(tokenBalance / 2)}
       >
         <div className={styles.max}>Half</div>
       </button>
@@ -144,7 +141,9 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
           <p className={styles.price}>Supply APR</p>
         </div>
         <div className={styles.to531782Container}>
-          <p className={styles.price}>$ {reserve.stats.assetPriceUSD.toFixed(2)}</p>
+          <p className={styles.price}>
+            $ {reserve.stats.assetPriceUSD.toFixed(2)}
+          </p>
           <p className={styles.price}>$ 3,804.47 to $ 5317.82</p>
           <p className={styles.price}> 54.47 % to 17.82 %</p>
           <p className={styles.price}>Supply APR</p>

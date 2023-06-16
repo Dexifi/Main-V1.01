@@ -1,6 +1,7 @@
+import styles from "../../pages/dashboard.module.css";
+import GetOrca from "./get-orca";
 const GetFarm = () => {
-     
-     return (
+  return (
     <div className={styles.farm}>
       <div className={styles.netWorth1}>
         <div className={styles.farmContainer}>
@@ -22,6 +23,7 @@ const GetFarm = () => {
           <div className={styles.reward}>Reward</div>
           <div className={styles.headerChild} />
         </div>
+        <GetOrca />
         <div className={styles.solUsdcParent}>
           <div className={styles.usturCssTier}>SOL-USDC</div>
           <div className={styles.raydium}>Raydium</div>
@@ -57,3 +59,4 @@ const GetFarm = () => {
     </div>
   );
 };
+export default GetFarm;

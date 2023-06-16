@@ -14,12 +14,9 @@ import {
 } from "@metaplex-foundation/js";
 import { connection } from "../utils/get-connection";
 import axios from "axios";
-import { getPrice } from "../components/dashboard/walletBalance";
 
 const IndexNFTGallery: NextPage = () => {
   const [isManagenftpopupOpen, setManagenftpopupOpen] = useState(false);
-  const frameButtonRef = useRef<HTMLButtonElement>(null);
-  const frameButton1Ref = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const [selectedNFT, setSelectedNFT] = useState(null);
   const openManagenftpopup = useCallback(() => {
@@ -42,41 +39,37 @@ const IndexNFTGallery: NextPage = () => {
     router.push("/index-transaction");
   }, [router]);
 
-  const onDashbordClick = useCallback(() => {
-    router.push("/dashboard");
-  }, [router]);
   const { publicKey } = useWallet();
   const [NFTs, setNFTs] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const fetchData = async () => {
-    const wallet = Keypair.generate();
-    const metaplex = Metaplex.make(connection)
-      .use(keypairIdentity(wallet))
-      .use(bundlrStorage());
-    const userNft = await metaplex.nfts().findAllByOwner({ owner: publicKey });
-    let userNFTs = [];
-    userNft.forEach(async (nft) => {
-      const metaData = await axios.get(
-        `https://api-mainnet.magiceden.dev/v2/tokens/${nft.mintAddress.toString()}`
+    try {
+      const { data } = await axios.get(
+        `https://api-mainnet.magiceden.dev/v2/wallets/${publicKey}/tokens`
       );
-      // const price = await axios.get(
-      //   `https://api-mainnet.magiceden.dev/v2/collections/${metaData.data.collection}/stats`
-      // );
-      if (metaData.data.name) {
-        userNFTs.push({
-          ...metaData.data,
-          // price: price.data.floorPrice / LAMPORTS_PER_SOL,
-        });
-      }
-    });
-    setNFTs(userNFTs);
-    setLoading(false);
+      const promises = data.map(async (item) => {
+        if (!item.hasOwnProperty("price")) {
+          if (item.hasOwnProperty("collection")) {
+            const floorPrice = await axios.get(
+              `https://api-mainnet.magiceden.dev/v2/collections/${item.collection}/stats`
+            );
+            item.price = floorPrice.data.floorPrice / LAMPORTS_PER_SOL;
+          }
+        }
+        return item;
+      });
+      const updatedData = await Promise.all(promises);
+      setNFTs(updatedData);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
   useEffect(() => {
-    // setLoading(true);
+    setLoading(true);
     if (publicKey && isLoading) fetchData();
   }, [publicKey]);
-  console.log(NFTs);
   return (
     <>
       <div className={styles.dashboardnftgallery}>
@@ -100,7 +93,9 @@ const IndexNFTGallery: NextPage = () => {
                               {item.collection ? item.collection : "?"}
                             </p>
                             <p className={styles.collection}>1</p>
-                            <p className={styles.collection}>10.655 SOL</p>
+                            <p className={styles.collection}>
+                              {item.price || 0} SOL
+                            </p>
                           </div>
                         </div>
                         <img

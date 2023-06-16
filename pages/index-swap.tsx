@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import SwapTokenListWindow from "../components/swap-token-list-window";
 import PortalPopup from "../components/portal-popup";
 import styles from "./index-swap.module.css";
@@ -11,6 +11,12 @@ import {
   getTokenBalanceFromWallet,
 } from "../components/dashboard/walletBalance";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { connection } from "../utils/get-connection";
+import { PublicKey } from "@solana/web3.js";
+import JSBI from "jsbi";
+import Head from "next/head";
+import Script from "next/script";
+import { useJupiter } from "@jup-ag/react-hook";
 
 const IndexSwap: NextPage = () => {
   const [isSwapTokenListWindowPopupOpen, setSwapTokenListWindowPopupOpen] =
@@ -18,6 +24,9 @@ const IndexSwap: NextPage = () => {
   const [isSwapTokenListWindowPopup1Open, setSwapTokenListWindowPopup1Open] =
     useState(false);
   const [tokenList, setTokenList] = useState([]);
+  const [firstToken, setFirstToken] = useState(false);
+  const [secondToken, setSecondToken] = useState(false);
+  const [fetched, setFetched] = useState(false);
   const openSwapTokenListWindowPopup = useCallback(() => {
     setSwapTokenListWindowPopupOpen(true);
   }, []);
@@ -41,30 +50,48 @@ const IndexSwap: NextPage = () => {
   const onUSDC100EPjFDt1vClick = useCallback(() => {
     window.open("solscan.io");
   }, []);
+
   const { publicKey } = useWallet();
   const fetchTokenList = async () => {
     const tokens: Token[] = await (
       await fetch(TOKEN_LIST_URL["mainnet-beta"])
     ).json();
-    const walletTokens = await getTokenBalanceFromWallet(publicKey);
-    walletTokens.map((token) => {
-      let t = tokens.find((i) => {
-        if (token.account.data.parsed.info.mint == i.address)
-          i.uiAmount = token.account.data.parsed.info.tokenAmount.uiAmount;
-      });
-    });
-    const walletHave = tokens.filter((item) => item.hasOwnProperty("uiAmount"));
-    walletHave.map(async (item) => {
-      item.price = (await getPrice(item.symbol)).data.data[item.symbol].price;
-      item.value = item.uiAmount * item.price;
-    });
-    console.log(walletHave);
+    setTokenList(tokens);
+    setFetched(true);
+    setFirstToken(tokens.find((t) => t.symbol === "SOL"));
+    setSecondToken(tokens.find((t) => t.symbol === "USDC"));
+
+    // const walletTokens = await getTokenBalanceFromWallet(publicKey);
+    // walletTokens.map((token) => {
+    //   let t = tokens.find((i) => {
+    //     if (token.account.data.parsed.info.mint == i.address)
+    //       i.uiAmount = token.account.data.parsed.info.tokenAmount.uiAmount;
+    //   });
+    // });
+    // const walletHave = tokens.filter((item) => item.hasOwnProperty("uiAmount"));
+    // walletHave.map(async (item) => {
+    //   item.price = (await getPrice(item.symbol)).data.data[item.symbol].price;
+    //   item.value = item.uiAmount * item.price;
+    // });
   };
-  fetchTokenList();
+  if (!fetched)
+    fetchTokenList().then(() => {
+      const jupiter = useJupiter({
+        amount: JSBI.BigInt(1 * 10 ** 6), // raw input amount of tokens
+        inputMint: new PublicKey(firstToken.address),
+        outputMint: new PublicKey(secondToken.address),
+        slippage: 1, // 1% slippage
+        debounceTime: 250, // debounce ms time before refresh
+      });
+      console.log(jupiter);
+    });
+  // useEffect(() => {
+  //   if (publicKey && fetched) main();
+  // }, [publicKey, fetched]);
+
   return (
     <>
-      <script src="https://terminal.jup.ag/main-v1.js" data-preload />
-
+      <main></main>
       <div className={styles.indexswap}>
         <div className={styles.lamp} />
         <div className={styles.liquidityPanel}>
@@ -82,9 +109,9 @@ const IndexSwap: NextPage = () => {
                 <img
                   className={styles.solana2Icon}
                   alt=""
-                  src="/solana-21@2x.png"
+                  src={firstToken?.logoURI}
                 />
-                <div className={styles.sol}>SOL</div>
+                <div className={styles.sol}>{firstToken?.symbol}</div>
                 <img
                   className={styles.anglesDownSolid1Icon}
                   alt=""
@@ -117,9 +144,9 @@ const IndexSwap: NextPage = () => {
                 <img
                   className={styles.solana2Icon}
                   alt=""
-                  src="/usdcoinusdclogo-11@2x.png"
+                  src={secondToken?.logoURI}
                 />
-                <div className={styles.usdc}>USDC</div>
+                <div className={styles.usdc}>{secondToken?.symbol}</div>
                 <img
                   className={styles.anglesDownSolid1Icon}
                   alt=""
@@ -237,14 +264,19 @@ const IndexSwap: NextPage = () => {
           <p className={styles.priceImpact}>2022-04-20 22:00 UTC</p>
         </div>
       </div>
-
       {isSwapTokenListWindowPopupOpen && (
         <PortalPopup
           overlayColor="rgba(13, 17, 27, 0.7)"
           placement="Centered"
           onOutsideClick={closeSwapTokenListWindowPopup}
         >
-          <SwapTokenListWindow onClose={closeSwapTokenListWindowPopup} />
+          <SwapTokenListWindow
+            onClose={closeSwapTokenListWindowPopup}
+            tokens={tokenList}
+            setToken={setFirstToken}
+            firstToken={firstToken}
+            secondToken={secondToken}
+          />
         </PortalPopup>
       )}
       {isSwapTokenListWindowPopup1Open && (
@@ -253,7 +285,13 @@ const IndexSwap: NextPage = () => {
           placement="Centered"
           onOutsideClick={closeSwapTokenListWindowPopup1}
         >
-          <SwapTokenListWindow onClose={closeSwapTokenListWindowPopup1} />
+          <SwapTokenListWindow
+            onClose={closeSwapTokenListWindowPopup1}
+            tokens={tokenList}
+            setToken={setSecondToken}
+            firstToken={firstToken}
+            secondToken={secondToken}
+          />
         </PortalPopup>
       )}
     </>

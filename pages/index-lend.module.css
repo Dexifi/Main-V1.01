@@ -197,7 +197,7 @@
 .div3 {
   position: absolute;
   bottom: 3.69rem;
-  left: calc(50% - 31.5px);
+  left: calc(55% - 31.5px);
   font-size: var(--font-size-lg);
   font-family: var(--tittle-16-m);
   color: #61c7cb;
@@ -1376,3 +1376,25 @@
   background-color: rgb(251, 233, 71, 0.4);
   content: "";
 }
+/* .svg {
+  height: 100px;
+  margin: auto;
+  display: block;
+}
+
+.svg path {
+  stroke-linecap: round;
+  stroke-width: 6;
+}
+
+.grey {
+  stroke: #e7e7e8;
+}
+
+.blue {
+  stroke: url(#gradient);
+  stroke-dasharray: 198;
+  stroke-dashoffset: 198;
+  animation: dash 3s ease-out forwards;
+  stroke-dashoffset: 198 * 0.5
+} */

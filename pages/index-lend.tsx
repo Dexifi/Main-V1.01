@@ -208,22 +208,61 @@ const IndexLend: NextPage = () => {
                     >{`(Total borrow/Total supply) `}</p>
                   </div>
                   <div className={styles.basicGauge}>
-                    <img
-                      className={styles.graphicIcon}
-                      alt=""
-                      src="/graphic.svg"
-                    />
-                    <img
-                      className={styles.tickMarkIcon}
-                      alt=""
-                      src="/tick-mark.svg"
-                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="8 10 110 100"
+                      style={{ width: "170px", height: "auto" }}
+                    >
+                      <linearGradient
+                        id="gradient"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="100%"
+                      >
+                        <stop offset="0%" stopColor="#76FFFF" />
+                        <stop offset="100%" stopColor="#76FFFF" />
+                      </linearGradient>
+                      <path
+                        className="grey"
+                        d="M30,90 A40,40 0 1,1 80,90"
+                        fill="none"
+                        style={{
+                          stroke: "#292f39",
+                          strokeLinecap: "round",
+                          strokeWidth: "6",
+                        }}
+                      />
+                      <path
+                        id="blue"
+                        fill="none"
+                        className="blue"
+                        d="M30,90 A40,40 0 1,1 80,90"
+                        style={{
+                          stroke: "url(#gradient)",
+                          strokeLinecap: "round",
+                          strokeWidth: "6",
+                          strokeDasharray: "198",
+                          strokeDashoffset: marketTVl.totalBorrowMarket
+                            ? (
+                                198 -
+                                198 *
+                                  (marketTVl.totalBorrowMarket /
+                                    marketTVl.totalSupplyMarket)
+                              ).toFixed(2)
+                            : 198,
+                          animation: "dash 3s ease-out forwards",
+                        }}
+                      />
+                    </svg>
                     <div className={styles.div3}>
-                      {(
-                        (marketTVl.totalBorrowMarket /
-                          marketTVl.totalSupplyMarket) *
-                        100
-                      ).toFixed(2)}
+                      {marketTVl.totalBorrowMarket
+                        ? (
+                            (marketTVl.totalBorrowMarket /
+                              marketTVl.totalSupplyMarket) *
+                            100
+                          ).toFixed(2)
+                        : 0}
                       %
                     </div>
                   </div>
@@ -313,7 +352,7 @@ const IndexLend: NextPage = () => {
                             ? styles.repayWrapper
                             : styles.activeRepay
                         }`}
-                        onClick={openLendRepaypopup}
+                        onClick={() => openLendRepaypopup(item)}
                       >
                         <div className={styles.repay}>Repay</div>
                       </button>
@@ -323,7 +362,7 @@ const IndexLend: NextPage = () => {
                             ? styles.withdrawWrapper
                             : styles.activeWithdraw
                         }`}
-                        onClick={openLendWithdrawpopup}
+                        onClick={() => openLendWithdrawpopup(item)}
                       >
                         <div className={styles.withdraw}>Withdraw</div>
                       </button>
@@ -525,6 +564,7 @@ const IndexLend: NextPage = () => {
             </div>
           </div>
         </div>
+
         <div className={styles.v101202204202200UtcContainer}>
           <p className={styles.poolFillingRate}>V1.0.1</p>
           <p className={styles.poolFillingRate}>2022-04-20 22:00 UTC</p>
@@ -541,7 +581,6 @@ const IndexLend: NextPage = () => {
             reserve={selectedLend}
             pool={pool}
             user={user}
-            page={page}
           />
         </PortalPopup>
       )}
@@ -553,10 +592,9 @@ const IndexLend: NextPage = () => {
         >
           <LendBorrowpopup
             onClose={closeLendBorrowpopup}
-            reserve={selectedLend}
+            lend={selectedLend}
             pool={pool}
             user={user}
-            page={page}
           />
         </PortalPopup>
       )}
@@ -566,7 +604,12 @@ const IndexLend: NextPage = () => {
           placement="Centered"
           onOutsideClick={closeLendRepaypopup}
         >
-          <LendRepaypopup onClose={closeLendRepaypopup} />
+          <LendRepaypopup
+            onClose={closeLendRepaypopup}
+            pool={pool}
+            lend={selectedLend}
+            user={user}
+          />
         </PortalPopup>
       )}
       {isLendWithdrawpopupOpen && (
@@ -575,7 +618,13 @@ const IndexLend: NextPage = () => {
           placement="Centered"
           onOutsideClick={closeLendWithdrawpopup}
         >
-          <LendWithdrawpopup onClose={closeLendWithdrawpopup} />
+          <LendWithdrawpopup
+            onClose={closeLendWithdrawpopup}
+            lend={selectedLend}
+            pool={pool}
+            page={page}
+            user={user}
+          />
         </PortalPopup>
       )}
     </>
