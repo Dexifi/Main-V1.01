@@ -250,14 +250,14 @@ const Dashboard: NextPage = () => {
               </div>
               <img className={styles.donutIcon} alt="" src="/donut.svg" />
             </div>
-            <WalletBalance
+            {/* <WalletBalance
               walletBalance={walletBalance}
               setWalletBalance={setWalletBalance}
-            />
+            /> */}
             {/* <GetStake /> */}
             {/* <GetLend /> */}
-            <GetTrade />
-            {/* <GetLiquidity /> */}
+            {/* <GetTrade /> */}
+            <GetLiquidity />
             {/* <GetFarm /> */}
             {/* <GetNFT /> */}
           </div>

@@ -157,7 +157,6 @@ const IndexLend: NextPage = () => {
   useEffect(() => {
     if (loading && publicKey && pool && !user) fetchData();
   }, [publicKey, page, markets]);
-  console.log(pool);
   return (
     <>
       <div className={styles.indexlend}>

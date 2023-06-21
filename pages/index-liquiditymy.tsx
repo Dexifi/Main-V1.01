@@ -7,6 +7,8 @@ import WalletSetting from "../components/wallet-setting";
 import DisconnectSetting from "../components/disconnect-setting";
 import { useRouter } from "next/router";
 import styles from "./index-liquiditymy.module.css";
+import Header from "../components/header";
+
 const IndexLiquiditymy: NextPage = () => {
   const [isManagePositionPopupOpen, setManagePositionPopupOpen] =
     useState(false);
@@ -73,64 +75,8 @@ const IndexLiquiditymy: NextPage = () => {
     setCLMMPositionpopup1Open(false);
   }, []);
 
-  const openWalletSettingPopup = useCallback(() => {
-    setWalletSettingPopupOpen(true);
-  }, []);
-
-  const closeWalletSettingPopup = useCallback(() => {
-    setWalletSettingPopupOpen(false);
-  }, []);
-
-  const openDisconnectSettingPopup = useCallback(() => {
-    setDisconnectSettingPopupOpen(true);
-  }, []);
-
-  const closeDisconnectSettingPopup = useCallback(() => {
-    setDisconnectSettingPopupOpen(false);
-  }, []);
-
   const onPoolsClick = useCallback(() => {
     router.push("/index-liquidity");
-  }, [router]);
-
-  const onSwapClick = useCallback(() => {
-    router.push("/index-swap");
-  }, [router]);
-
-  const onLendClick = useCallback(() => {
-    router.push("/index-lend");
-  }, [router]);
-
-  const onTradeClick = useCallback(() => {
-    router.push("/index-trade");
-  }, [router]);
-
-  const onYieldClick = useCallback(() => {
-    router.push("/index-liquidity");
-  }, [router]);
-
-  const onFarmClick = useCallback(() => {
-    router.push("/index-farm");
-  }, [router]);
-
-  const onStakeClick = useCallback(() => {
-    router.push("/index-stake");
-  }, [router]);
-
-  const onDashbordClick = useCallback(() => {
-    router.push("/dashboard");
-  }, [router]);
-
-  const onStake1Click = useCallback(() => {
-    window.open("nft.dexifi.io");
-  }, []);
-
-  const onDAOClick = useCallback(() => {
-    router.push("/index-i-d-o");
-  }, [router]);
-
-  const onDEXIFILOGOImageClick = useCallback(() => {
-    router.push("/");
   }, [router]);
 
   return (
@@ -330,67 +276,7 @@ const IndexLiquiditymy: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className={styles.header}>
-          <div className={styles.swapParent}>
-            <a className={styles.swap} onClick={onSwapClick}>
-              Swap
-            </a>
-            <a className={styles.lend} onClick={onLendClick}>
-              Lend
-            </a>
-            <a className={styles.trade} onClick={onTradeClick}>
-              Trade
-            </a>
-            <a className={styles.yield} onClick={onYieldClick}>
-              Liquidity
-            </a>
-            <a className={styles.farm} onClick={onFarmClick}>
-              Farm
-            </a>
-            <a className={styles.stake} onClick={onStakeClick}>
-              Stake
-            </a>
-            <div className={styles.frameInner} />
-            <a className={styles.dashbord} onClick={onDashbordClick}>
-              Dashboard
-            </a>
-            <a className={styles.stake1} onClick={onStake1Click}>
-              NFT
-            </a>
-            <a className={styles.dao} onClick={onDAOClick}>
-              IDO
-            </a>
-          </div>
-          <img
-            className={styles.dexifiLogoIcon}
-            alt=""
-            src="/dexifi-logo@2x.png"
-            onClick={onDEXIFILOGOImageClick}
-          />
-          <div className={styles.instanceParent}>
-            <button
-              className={styles.connectWalletWrapper}
-              ref={frameButtonRef}
-              onClick={openWalletSettingPopup}
-            >
-              <button className={styles.connectWallet}>Connect Wallet</button>
-            </button>
-            <button
-              className={styles.iconSettingsWrapper}
-              ref={frameButton1Ref}
-              onClick={openDisconnectSettingPopup}
-            >
-              <button className={styles.iconSettings}>
-                <img className={styles.vectorIcon} alt="" src="/vector15.svg" />
-                <img
-                  className={styles.vectorIcon1}
-                  alt=""
-                  src="/vector16.svg"
-                />
-              </button>
-            </button>
-          </div>
-        </div>
+        <Header page={"liquidity"} />
         <div className={styles.v101202204202200UtcContainer}>
           <p className={styles.utc}>V1.0.1</p>
           <p className={styles.utc}>2022-04-20 22:00 UTC</p>

@@ -114,6 +114,8 @@
   width: 9.31rem;
   height: 2.5rem;
   flex-direction: row;
+  margin-right: auto;
+  margin-left: 1rem;
 }
 .p,
 .sol1 {

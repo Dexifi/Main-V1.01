@@ -9,31 +9,16 @@ import axios from "axios";
 import BN from "bn.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import liquidityData from "./Raydiumdb/liquidityData.json";
-import NodeCache from "node-cache";
 import { connection } from "../../utils/get-connection";
 import { findToken, getTokenBalanceFromWallet } from "./walletBalance";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { OpenOrders } from "@project-serum/serum";
 import { useState } from "react";
 
-const cache = new NodeCache({ stdTTL: 3000, checkperiod: 120 });
-
 const GetLiquidity = () => {
   const { publicKey } = useWallet();
   const [userLiquidity, setUserLiquidity] = useState([]);
-  async function fetchDataFromCache(url) {
-    let data = cache.get(url);
-    if (data === undefined) {
-      console.log("Fetching data from axios:", url);
-      const response = await axios.get(url);
-      data = response.data;
-      cache.set(url, data);
-      console.log("chached");
-    } else {
-      console.log("Fetching data from cache:", url);
-    }
-    return data;
-  }
+  const [fetched, setFetched] = useState(false);
   async function getTokenAccounts(connection: Connection, owner: PublicKey) {
     const tokenResp = await connection.getTokenAccountsByOwner(owner, {
       programId: TOKEN_PROGRAM_ID,
@@ -116,26 +101,26 @@ const GetLiquidity = () => {
       const liquiditySymbol = `${baseToken?.symbol}-${quoteToken?.symbol}`;
       allLiquiditys.push({
         name: `${liquiditySymbol}`,
-        "pool total base ": base,
-        "pool total quote ": quote,
-
-        "base vault balance ": baseTokenAmount.value.uiAmount,
-        "quote vault balance ": quoteTokenAmount.value.uiAmount,
-
-        "base tokens in openorders ": openOrdersBaseTokenTotal,
-        "quote tokens in openorders  ": openOrdersQuoteTokenTotal,
-
-        "base token decimals ": poolState.baseDecimal.toNumber(),
-        "quote token decimals ": poolState.quoteDecimal.toNumber(),
-        "total lp ": poolState.lpReserve.div(denominator).toString(),
-
-        "addedLpAmount ":
+        poolTotalBase: base,
+        poolTotalQuote: quote,
+        baseVaultBalance: baseTokenAmount.value.uiAmount,
+        quoteVaultBalance: quoteTokenAmount.value.uiAmount,
+        baseTokensInOpenorders: openOrdersBaseTokenTotal,
+        quoteTokensInOpenorders: openOrdersQuoteTokenTotal,
+        baseTokenDecimals: poolState.baseDecimal.toNumber(),
+        quoteTokenDecimals: poolState.quoteDecimal.toNumber(),
+        totalLp: poolState.lpReserve.div(denominator).toString(),
+        addedLpAmount:
           (addedLpAccount?.accountInfo.amount.toNumber() || 0) / baseDecimal,
+        baseToken,
+        quoteToken,
       });
     });
     setUserLiquidity(allLiquiditys);
+    setFetched(true);
   }
-  if (publicKey) demoFarm();
+  if (!fetched && publicKey) demoFarm();
+  console.log(userLiquidity);
   return (
     <div className={styles.liquidity}>
       <div className={styles.headGroup}>
@@ -188,6 +173,46 @@ const GetLiquidity = () => {
           <div className={styles.sol4556}>SOL 45.56 %</div>
           <div className={styles.usdc5444}>USDC 54.44 %</div>
         </div>
+        {userLiquidity.map((item, index) => {
+          return (
+            <div className={styles.div10} key={index+1}>
+              <div className={styles.item} />
+              <div className={styles.usturCssTier}>{item.name}</div>
+              <div className={styles.raydium}>Raydium</div>
+              <div className={styles.normal}>Normal</div>
+              <img
+                className={styles.solanaCopy21}
+                alt=""
+                src="/solana-copy-2@2x.png"
+              />
+              <div className={styles.div11}>6.15%</div>
+              <div className={styles.div12}>$ 4,812.99</div>
+              <img
+                className={styles.usdCoinUsdcLogo2Icon1}
+                alt=""
+                src="/usdcoinusdclogo-2@2x.png"
+              />
+              <img
+                className={styles.raydiumRayCoin1Icon1}
+                alt=""
+                src="/raydiumraycoin-11@2x.png"
+              />
+              <div className={styles.tvl}>TVL : $ 12.0 m</div>
+              <div className={styles.div13}>$ 222.21</div>
+              <div className={styles.x1818}>x18.18</div>
+              <div className={styles.range189231}>
+                Range : 18.9231 - 23.6432 USDC per SOL
+              </div>
+              <div className={styles.indexTp22654}>Index TP: 22.654 $</div>
+              <div className={styles.statusInContainer}>
+                <span>{`Status : `}</span>
+                <span className={styles.inRange}>In Range</span>
+              </div>
+              <div className={styles.sol4556}>SOL 45.56 %</div>
+              <div className={styles.usdc5444}>USDC 54.44 %</div>
+            </div>
+          );
+        })}
       </div>
       <div className={styles.netWorth2}>
         <div className={styles.liquidityContainer}>

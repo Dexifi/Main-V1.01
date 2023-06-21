@@ -20,12 +20,10 @@ const LendWithdrawpopup: NextPage<LendWithdrawpopupType> = ({
   const [amount, setAmount] = useState(0);
   const { sendTransaction, wallet, publicKey } = useWallet();
   const [tokenBalance, setTokenBalance] = useState(null);
-  console.log(user );
   useEffect(() => {
     const token = user.deposits.find(
       (item) => item.mintAddress === lend.config.liquidityToken.mint
     );
-    console.log(token);
     if (token) setTokenBalance(token.info.user);
     else setTokenBalance(0);
   }, [publicKey]);

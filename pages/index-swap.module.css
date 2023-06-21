@@ -75,7 +75,7 @@
   border-radius: var(--br-mini);
   width: 10.63rem;
   height: 2.5rem;
-  color: D9F8FF;
+  color: #D9F8FF;
   font-size: 22;
 }
 .frameChild:hover {
@@ -330,8 +330,7 @@
   width: 8.94rem;
   height: 1.88rem;
 }
-.balance1000000001,
-.usdc00438622717Container {
+.balance1000000001 {
   width: 13.69rem;
 }
 .balance1000000001 {

@@ -20,11 +20,12 @@ const LendBorrowpopup: NextPage<LendBorrowpopupType> = ({
   const { publicKey, sendTransaction } = useWallet();
   const [amount, setAmount] = useState(0);
   const [warning, setWarning] = useState(null);
+  console.log(user)
   const [userBoorrowLimit, setUserBoorrowLimit] = useState(undefined);
   if (!userBoorrowLimit)
     setUserBoorrowLimit(
       (
-        (user.obligationStats.borrowLimit - 0.01) /
+        (user.obligationStats.borrowLimit - user.obligationStats.userTotalBorrow - 0.01) /
         lend.stats.assetPriceUSD.toFixed(2)
       ).toFixed(7)
     ) || 0;

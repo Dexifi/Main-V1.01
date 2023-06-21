@@ -4,19 +4,23 @@ import SwapTokenListWindow from "../components/swap-token-list-window";
 import PortalPopup from "../components/portal-popup";
 import styles from "./index-swap.module.css";
 import Header from "../components/header";
-import { Jupiter, RouteInfo, TOKEN_LIST_URL } from "@jup-ag/core";
-import axios from "axios";
+import { Jupiter, TOKEN_LIST_URL } from "@jup-ag/core";
 import {
   getPrice,
   getTokenBalanceFromWallet,
 } from "../components/dashboard/walletBalance";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { connection } from "../utils/get-connection";
-import { PublicKey } from "@solana/web3.js";
+import {
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  TransactionMessage,
+  VersionedTransaction,
+  SystemProgram,
+  AddressLookupTableAccount,
+  sendAndConfirmRawTransaction,
+} from "@solana/web3.js";
 import JSBI from "jsbi";
-import Head from "next/head";
-import Script from "next/script";
-import { useJupiter } from "@jup-ag/react-hook";
 
 const IndexSwap: NextPage = () => {
   const [isSwapTokenListWindowPopupOpen, setSwapTokenListWindowPopupOpen] =
@@ -27,6 +31,7 @@ const IndexSwap: NextPage = () => {
   const [firstToken, setFirstToken] = useState(false);
   const [secondToken, setSecondToken] = useState(false);
   const [fetched, setFetched] = useState(false);
+  const [amount, setAmount] = useState(1);
   const openSwapTokenListWindowPopup = useCallback(() => {
     setSwapTokenListWindowPopupOpen(true);
   }, []);
@@ -43,52 +48,114 @@ const IndexSwap: NextPage = () => {
     setSwapTokenListWindowPopup1Open(false);
   }, []);
 
-  const onSOL227954So111112Click = useCallback(() => {
-    window.open("solscan.io");
-  }, []);
-
   const onUSDC100EPjFDt1vClick = useCallback(() => {
     window.open("solscan.io");
   }, []);
 
-  const { publicKey } = useWallet();
+  const {
+    publicKey,
+    wallet,
+    signAllTransactions,
+    signTransaction,
+    sendTransaction,
+  } = useWallet();
   const fetchTokenList = async () => {
     const tokens: Token[] = await (
       await fetch(TOKEN_LIST_URL["mainnet-beta"])
     ).json();
     setTokenList(tokens);
-    setFetched(true);
+
     setFirstToken(tokens.find((t) => t.symbol === "SOL"));
     setSecondToken(tokens.find((t) => t.symbol === "USDC"));
-
-    // const walletTokens = await getTokenBalanceFromWallet(publicKey);
-    // walletTokens.map((token) => {
-    //   let t = tokens.find((i) => {
-    //     if (token.account.data.parsed.info.mint == i.address)
-    //       i.uiAmount = token.account.data.parsed.info.tokenAmount.uiAmount;
-    //   });
-    // });
-    // const walletHave = tokens.filter((item) => item.hasOwnProperty("uiAmount"));
-    // walletHave.map(async (item) => {
-    //   item.price = (await getPrice(item.symbol)).data.data[item.symbol].price;
-    //   item.value = item.uiAmount * item.price;
-    // });
+    setFetched(true);
   };
-  if (!fetched)
-    fetchTokenList().then(() => {
-      const jupiter = useJupiter({
-        amount: JSBI.BigInt(1 * 10 ** 6), // raw input amount of tokens
+  useEffect(() => {
+    fetchTokenList();
+  }, []);
+  const fetchTokensWithWallet = async () => {
+    const tokens = tokenList;
+    const walletTokens = await getTokenBalanceFromWallet(publicKey);
+    walletTokens.map((item) => {
+      tokens.forEach(async (token) => {
+        if (item.account.data.parsed.info.mint === token.address) {
+          token.balance = item.account.data.parsed.info.tokenAmount.uiAmount;
+          token.price = await getPrice(token.symbol);
+        }
+      });
+    });
+    const solanaToken = tokens.find((token) => token.symbol === "SOL");
+    solanaToken.balance =
+      (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
+    solanaToken.price = await getPrice("SOL");
+    setFirstToken(tokens.find((t) => t.symbol === "SOL"));
+    setSecondToken(
+      tokens.find(async (t) => {
+        if (t.symbol === "USDC") {
+          t.price = await getPrice("USDC");
+          return t;
+        }
+      })
+    );
+    setTokenList(tokens);
+  };
+  const makeSwap = async () => {
+    const jupiter = await Jupiter.load({
+      connection,
+      cluster: "mainnet-beta",
+      user: publicKey, // or public key
+      // platformFeeAndAccounts:  NO_PLATFORM_FEE,
+      // routeCacheDuration: CACHE_DURATION_MS
+      // wrapUnwrapSOL: true (default) | false
+    });
+    const routeMap: Map<string, string[]> = jupiter.getRouteMap();
+    if (!Number.isNaN(amount)) {
+      const routes = await jupiter.computeRoutes({
         inputMint: new PublicKey(firstToken.address),
         outputMint: new PublicKey(secondToken.address),
-        slippage: 1, // 1% slippage
-        debounceTime: 250, // debounce ms time before refresh
+        amount: JSBI.BigInt(Number(amount) * 10 ** firstToken.decimals), // 1000000 => 1 USDC if inputToken.address is USDC mint.
+        slippageBps: 1, // 1 bps = 0.01%.
+        // forceFetch (optional) => to force fetching routes and not use the cache.
+        // intermediateTokens => if provided will only find routes that use the intermediate tokens.
+        // feeBps => the extra fee in BPS you want to charge on top of this swap.
+        // onlyDirectRoutes =>  Only show single hop routes.
+        // swapMode => "ExactIn" | "ExactOut" Defaults to "ExactIn"  "ExactOut" is to support use cases like payments when you want an exact output amount.
+        // enforceSingleTx =>  Only show routes where only one single transaction is used to perform the Jupiter swap.
       });
-      console.log(jupiter);
-    });
-  // useEffect(() => {
-  //   if (publicKey && fetched) main();
-  // }, [publicKey, fetched]);
+      const { swapTransaction, addressLookupTableAccounts } =
+        await jupiter.exchange({
+          routeInfo: routes.routesInfos[0],
+        });
 
+      // decompile transaction message and add transfer instruction
+      let message = TransactionMessage.decompile(swapTransaction.message, {
+        addressLookupTableAccounts: addressLookupTableAccounts,
+      });
+      // compile the message and update the swapTransaction
+      swapTransaction.message = message.compileToV0Message(
+        addressLookupTableAccounts
+      );
+      swapTransaction.sign([wallet?.adapter]);
+      // await sendTransaction(swapTransaction.serialize(), connection);
+      // Execute the transaction
+      const rawTransaction = swapTransaction.serialize();
+      const txid = await sendAndConfirmRawTransaction(
+        connection,
+        rawTransaction,
+        {
+          skipPreflight: true,
+          commitment: "confirmed",
+          maxRetries: 2,
+        }
+      );
+      console.log(`https://solscan.io/tx/${txid}`);
+    }
+  };
+  useEffect(() => {
+    if (publicKey && fetched) fetchTokensWithWallet();
+  }, [publicKey, fetched]);
+  const handleChangeAmount = (e) => {
+    setAmount(e.target.value);
+  };
   return (
     <>
       <main></main>
@@ -97,11 +164,20 @@ const IndexSwap: NextPage = () => {
         <div className={styles.liquidityPanel}>
           <div className={styles.listPanel}>
             <div className={styles.lamp1} />
-            <button className={styles.createPositionButton}>
+            <button
+              className={styles.createPositionButton}
+              onClick={makeSwap}
+              disabled={!publicKey}
+            >
               <b className={styles.swap}>Swap</b>
             </button>
             <div className={styles.frameParent}>
-              <input className={styles.frameChild} type="number" />
+              <input
+                className={styles.frameChild}
+                type="number"
+                value={amount}
+                onChange={handleChangeAmount}
+              />
               <button
                 className={styles.solana2Parent}
                 onClick={openSwapTokenListWindowPopup}
@@ -119,21 +195,33 @@ const IndexSwap: NextPage = () => {
                 />
               </button>
             </div>
-            <button className={styles.transferDomainButton}>
+            <button
+              className={styles.transferDomainButton}
+              onClick={() => setAmount(firstToken.balance * 0.25)}
+            >
               <div className={styles.transfer}>%25</div>
             </button>
-            <button className={styles.transferDomainButton1}>
+            <button
+              className={styles.transferDomainButton1}
+              onClick={() => setAmount(firstToken.balance * 0.5)}
+            >
               <div className={styles.transfer}>%50</div>
             </button>
-            <button className={styles.transferDomainButton2}>
+            <button
+              className={styles.transferDomainButton2}
+              onClick={() => setAmount(firstToken.balance * 0.75)}
+            >
               <div className={styles.transfer}>%75</div>
             </button>
-            <button className={styles.transferDomainButton3}>
+            <button
+              className={styles.transferDomainButton3}
+              onClick={() => setAmount(firstToken.balance)}
+            >
               <div className={styles.transfer}>%100</div>
             </button>
             <div className={styles.yourePaying}>{`You’re Paying `}</div>
             <div className={styles.balance100000000}>
-              Balance : 10,000.0000 SOL
+              Balance : {firstToken.balance || 0} {firstToken.symbol}
             </div>
             <div className={styles.frameGroup}>
               <input className={styles.frameChild} type="number" />
@@ -156,11 +244,18 @@ const IndexSwap: NextPage = () => {
             </div>
             <div className={styles.toReceive}>To Receive</div>
             <div className={styles.balance1000000001}>
-              Balance : 10,000.0000 USDC
+              Balance : {secondToken.balance?.toFixed(4) || 0 + " "}
+              {secondToken?.symbol}
             </div>
             <div className={styles.usdc00438622717Container}>
-              <p className={styles.priceImpact}>1 USDC ≈ 0.0438622717 SOL</p>
-              <p className={styles.priceImpact}>1 SOL ≈ 22.811322 USDC</p>
+              <p className={styles.priceImpact}>
+                1 {secondToken.symbol} ≈ {secondToken.price / firstToken.price}{" "}
+                SOL
+              </p>
+              <p className={styles.priceImpact}>
+                1 {firstToken.symbol} ≈ {firstToken.price / secondToken.price}{" "}
+                USDC
+              </p>
             </div>
             <img className={styles.icon} alt="" src="/1.svg" />
             <img className={styles.icon1} alt="" src="/1.svg" />
@@ -191,29 +286,50 @@ const IndexSwap: NextPage = () => {
               <img
                 className={styles.solana2Icon}
                 alt=""
-                src="/solana-2@2x.png"
+                src={firstToken.logoURI}
               />
               <div
                 className={styles.sol227954So111112Container}
-                onClick={onSOL227954So111112Click}
+                onClick={() => {
+                  window.open(`https://solscan.io/token/${firstToken.address}`);
+                }}
               >
-                <p className={styles.priceImpact}>SOL $22.7954</p>
-                <p className={styles.epjfdt1v}>So11...1112</p>
+                <p className={styles.priceImpact}>
+                  {firstToken.symbol} ${firstToken.price?.toFixed(2)}
+                </p>
+                <p className={styles.epjfdt1v}>
+                  {firstToken.address?.slice(0, 4)}...
+                  {firstToken.address?.slice(-4)}
+                </p>
               </div>
               <img
                 className={styles.solana2Icon}
                 alt=""
-                src="/usdcoinusdclogo-2@2x.png"
+                src={secondToken.logoURI}
               />
               <div
                 className={styles.usdc100Epjfdt1vContainer}
-                onClick={onUSDC100EPjFDt1vClick}
+                onClick={() => {
+                  window.open(`https://solscan.io/token/${firstToken.address}`);
+                }}
               >
-                <p className={styles.priceImpact}>USDC $1.00</p>
-                <p className={styles.epjfdt1v}>EPjF...Dt1v</p>
+                <p className={styles.priceImpact}>
+                  {secondToken.symbol} ${secondToken.price}
+                </p>
+                <p className={styles.epjfdt1v}>
+                  {secondToken.address?.slice(0, 4)}...
+                  {secondToken.address?.slice(-4)}
+                </p>
               </div>
             </div>
-            <button className={styles.ellipseParent}>
+            <button
+              className={styles.ellipseParent}
+              onClick={() => {
+                const util = secondToken;
+                setSecondToken(firstToken);
+                setFirstToken(secondToken);
+              }}
+            >
               <div className={styles.ellipseDiv} />
               <img
                 className={styles.rotateRightSolid1Icon}
@@ -258,7 +374,7 @@ const IndexSwap: NextPage = () => {
             <div className={styles.solUsdc}>SOL-USDC</div>
           </button>
         </div>
-        <Header />
+        <Header page={"swap"} />
         <div className={styles.v101202204202200UtcContainer}>
           <p className={styles.priceImpact}>V1.0.1</p>
           <p className={styles.priceImpact}>2022-04-20 22:00 UTC</p>

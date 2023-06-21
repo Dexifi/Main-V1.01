@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { useState, useCallback } from "react";
 import PortalPopup from "./portal-popup";
 import styles from "./trade-token-list-window.module.css";
+import { findToken } from "./dashboard/walletBalance";
 
 type TradeTokenListWindowType = {
   onClose?: () => void;
@@ -9,6 +10,8 @@ type TradeTokenListWindowType = {
 
 const TradeTokenListWindow: NextPage<TradeTokenListWindowType> = ({
   onClose,
+  markets,
+  setSelectedMarket,
 }) => {
   const [isTradeTokenListWindowPopup1Open, setTradeTokenListWindowPopup1Open] =
     useState(false);
@@ -20,7 +23,6 @@ const TradeTokenListWindow: NextPage<TradeTokenListWindowType> = ({
   const closeTradeTokenListWindowPopup1 = useCallback(() => {
     setTradeTokenListWindowPopup1Open(false);
   }, []);
-
   return (
     <>
       <div
@@ -30,204 +32,87 @@ const TradeTokenListWindow: NextPage<TradeTokenListWindowType> = ({
         <div className={styles.listPanel}>
           <div className={styles.lamp} />
           <div className={styles.row1Parent}>
-            <button className={styles.row1}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
-            <button className={styles.row2}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
-            <button className={styles.row3}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
-            <button className={styles.row4}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
-            <button className={styles.row5}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
-            <button className={styles.row6}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
-            <button className={styles.row7}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
-            <button className={styles.row8}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
-            <button className={styles.row9}>
-              <div className={styles.solana2Parent}>
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/solana-2@2x.png"
-                />
-                <img
-                  className={styles.solana2Icon}
-                  alt=""
-                  src="/usdcoinusdclogo-2@2x.png"
-                />
-                <div className={styles.sol}>SOL</div>
-                <div className={styles.sol}>USDC</div>
-                <img
-                  className={styles.circleInfoSolid1Icon}
-                  alt=""
-                  src="/circleinfosolid-1.svg"
-                />
-              </div>
-              <div className={styles.marketId}>Market ID : awd...dwa66</div>
-            </button>
+            {markets?.map((item, index) => {
+              if (index % 2 === 0) {
+                return (
+                  <button
+                    className={styles.row1}
+                    key={index + 1}
+                    onClick={() => {
+                      setSelectedMarket(item);
+                      onClose();
+                    }}
+                  >
+                    <div className={styles.solana2Parent}>
+                      <img
+                        className={styles.solana2Icon}
+                        alt=""
+                        src={item.tokenA?.logoURI}
+                      />
+                      <img
+                        className={styles.solana2Icon}
+                        alt=""
+                        src={item.tokenB?.logoURI}
+                      />
+                      <div className={styles.sol}>
+                        {item.name.split("/")[0]}
+                      </div>
+                      <div className={styles.sol}>
+                        {item.name.split("/")[1]}
+                      </div>
+                      <img
+                        className={styles.circleInfoSolid1Icon}
+                        alt=""
+                        src="/circleinfosolid-1.svg"
+                      />
+                    </div>
+                    <div className={styles.marketId}>
+                      Market ID : {item.address?.toString().slice(0, 3)}...
+                      {item.address?.toString().slice(-5)}
+                    </div>
+                  </button>
+                );
+              } else {
+                return (
+                  <button
+                    className={styles.row2}
+                    key={index + 1}
+                    onClick={() => {
+                      setSelectedMarket(item);
+                      onClose();
+                    }}
+                  >
+                    <div className={styles.solana2Parent}>
+                      <img
+                        className={styles.solana2Icon}
+                        alt=""
+                        src={item.tokenA?.logoURI}
+                      />
+                      <img
+                        className={styles.solana2Icon}
+                        alt=""
+                        src={item.tokenB?.logoURI}
+                      />
+                      <div className={styles.sol}>
+                        {item.name.split("/")[0]}
+                      </div>
+                      <div className={styles.sol}>
+                        {item.name.split("/")[1]}
+                      </div>
+                      <img
+                        className={styles.circleInfoSolid1Icon}
+                        alt=""
+                        src="/circleinfosolid-1.svg"
+                      />
+                    </div>
+                    <div className={styles.marketId}>
+                      Market ID : {item.address?.toString().slice(0, 3)}...
+                      {item.address?.toString().slice(-5)}
+                    </div>
+                  </button>
+                );
+              }
+            })}
           </div>
           <input
             className={styles.listPanelChild}

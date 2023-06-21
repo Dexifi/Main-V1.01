@@ -23,13 +23,15 @@ interface WalletBalanceProps {
 
 const getPrice = async (symbol: string) => {
   let price = await axios.get(`https://price.jup.ag/v4/price?ids=${symbol}`);
-  return price;
+  return price.data.data[symbol].price;
 };
 
-const findToken = async (mint: string) => {
+const findToken = async (mintOrSymbol: string) => {
   const tokens = await new TokenListProvider().resolve();
   const tokenList = tokens.filterByChainId(101).getList();
-  const tokenInfo = tokenList.find((t) => t.address === mint);
+  let tokenInfo =
+    tokenList.find((t) => t.address === mintOrSymbol) ||
+    tokenList.find((t) => t.symbol === mintOrSymbol);
   return tokenInfo;
 };
 
@@ -124,8 +126,7 @@ const WalletBalance: FC<WalletBalanceProps> = ({
       });
       try {
         for (let t of updatedTokensList) {
-          let price = await getPrice(t.symbol);
-          t.price = price.data.data[t.symbol].price;
+          t.price = await getPrice(t.symbol);
           t.value = t.uiAmount * t.price;
         }
       } catch (err) {

@@ -12,10 +12,10 @@ const GetStake = () => {
   const { publicKey } = useWallet();
   const fetchData = async () => {
     const data = await connection.getParsedProgramAccounts(
-      new PublicKey("4qD717qKoj3Sm8YfHMSR7tSKjWn5An817nArA6nGdcUR"),
+      new PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"),
       {
         filters: [
-          { dataSize: 232 },
+          { dataSize: 88 },
           {
             memcmp: {
               offset: 40,
@@ -25,7 +25,6 @@ const GetStake = () => {
         ],
       }
     );
-
     console.log(data);
     // const infoList = await Utils1216.getAllInfo({
     //   connection,

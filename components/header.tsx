@@ -93,7 +93,7 @@ const Header: FC = ({ page }) => {
           >
             Lend
           </a>
-          <a className={styles.trade} onClick={onTradeClick}>
+          <a className={`${styles.trade} ${page==="trade"?styles.activeHeader:""}`} onClick={onTradeClick}>
             Trade
           </a>
           <a

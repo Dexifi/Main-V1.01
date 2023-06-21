@@ -119,7 +119,7 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
       />
       <button
         className={styles.maxbutton}
-        onClick={() => setAmount(tokenBalance)}
+        onClick={() => setAmount(tokenBalance - 0.02)}
       >
         <div className={styles.max}>Max</div>
       </button>

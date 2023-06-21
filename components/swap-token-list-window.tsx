@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import styles from "./swap-token-list-window.module.css";
 import { useState } from "react";
+import { getPrice } from "./dashboard/walletBalance";
 
 type SwapTokenListWindowType = {
   onClose?: () => void;
@@ -14,11 +15,38 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
   secondToken,
 }) => {
   const [search, setSearch] = useState("");
-  
+
   const handleOnChangeSearch = (target) => {
     setSearch(target.target.value.toUpperCase());
   };
-
+  tokens.sort((a, b) => {
+    // اگر balance وجود دارد، براساس آن مرتب کن
+    if (a.balance != null && b.balance != null) {
+      return b.balance - a.balance;
+    }
+    // اگر balance در a وجود دارد ولی در b وجود ندارد، a را جلوی b بگذار
+    else if (a.balance != null && b.balance == null) {
+      return -1;
+    }
+    // اگر balance در b وجود دارد ولی در a وجود ندارد، b را جلوی a بگذار
+    else if (a.balance == null && b.balance != null) {
+      return 1;
+    }
+    // اگر هر دوی a و b balance ندارند، ترتیب اصلی را حفظ کن
+    else {
+      return 0;
+    }
+  });
+  const setDefaultTokens = async (tokenSymbol: string) => {
+    const thisToken = tokens.find((item) => item.symbol === tokenSymbol);
+    console.log(thisToken);
+    if (
+      firstToken.symbol !== thisToken.symbol &&
+      secondToken.symbol !== thisToken.symbol
+    )
+      setToken(thisToken);
+    onClose();
+  };
   return (
     <div className={styles.swapTokenListWindow}>
       <div className={styles.listPanel}>
@@ -33,15 +61,7 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
         </button>
         <button
           className={styles.createPositionButton1}
-          onClick={() => {
-            const thisToken = tokens.find((item) => item.symbol === "USDC");
-            if (
-              firstToken.symbol !== thisToken.symbol &&
-              secondToken.symbol !== thisToken.symbol
-            )
-              setToken(thisToken);
-            onClose();
-          }}
+          onClick={()=>setDefaultTokens("USDC")}
         >
           <img
             className={styles.usdCoinUsdcLogo1Icon}
@@ -63,8 +83,11 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
                       item.symbol !== firstToken.symbol &&
                       item.symbol !== secondToken.symbol
                     )
-                      setToken(item);
-                    onClose();
+                      (async () => {
+                        item.price = await getPrice(item.symbol);
+                        setToken(item);
+                        await onClose();
+                      })();
                   }}
                 >
                   <div className={styles.solana2Parent}>
@@ -75,10 +98,16 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
                     />
                     <div className={styles.sol}>{item.symbol}</div>
                   </div>
-                  <div className={styles.sol100645Container}>
-                    <p className={styles.sol1}>4.3698 SOL</p>
-                    <p className={styles.p}>$ 100.645</p>
-                  </div>
+                  {item.hasOwnProperty("balance") ? (
+                    <div className={styles.sol100645Container}>
+                      <p className={styles.sol1}>
+                        {item.balance} {item.symbol}
+                      </p>
+                      <p className={styles.p}>
+                        $ {Number((item.balance * item.price).toFixed(4))}
+                      </p>
+                    </div>
+                  ) : null}
                 </button>
               );
             })}
@@ -92,13 +121,7 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
         <button
           className={styles.createPositionButton11}
           onClick={() => {
-            const thisToken = tokens.find((item) => item.symbol === "USDT");
-            if (
-              firstToken.symbol !== thisToken.symbol &&
-              secondToken.symbol !== thisToken.symbol
-            )
-              setToken(thisToken);
-            onClose();
+            setDefaultTokens("USDT");
           }}
         >
           <img
@@ -111,13 +134,7 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
         <button
           className={styles.createPositionButton12}
           onClick={() => {
-            const thisToken = tokens.find((item) => item.symbol === "stSOL");
-            if (
-              firstToken.symbol !== thisToken.symbol &&
-              secondToken.symbol !== thisToken.symbol
-            )
-              setToken(thisToken);
-            onClose();
+            setDefaultTokens("stSOL");
           }}
         >
           <img
@@ -130,13 +147,7 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
         <button
           className={styles.createPositionButton13}
           onClick={() => {
-            const thisToken = tokens.find((item) => item.symbol === "mSOL");
-            if (
-              firstToken.symbol !== thisToken.symbol &&
-              secondToken.symbol !== thisToken.symbol
-            )
-              setToken(thisToken);
-            onClose();
+            setDefaultTokens("mSOL");
           }}
         >
           <img
@@ -149,13 +160,7 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
         <button
           className={styles.createPositionButton14}
           onClick={() => {
-            const thisToken = tokens.find((item) => item.symbol === "SOL");
-            if (
-              firstToken.symbol !== thisToken.symbol &&
-              secondToken.symbol !== thisToken.symbol
-            )
-              setToken(thisToken);
-            onClose();
+            setDefaultTokens("SOL");
           }}
         >
           <img
@@ -168,13 +173,7 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
         <button
           className={styles.createPositionButton15}
           onClick={() => {
-            const thisToken = tokens.find((item) => item.symbol === "ETH");
-            if (
-              firstToken.symbol !== thisToken.symbol &&
-              secondToken.symbol !== thisToken.symbol
-            )
-              setToken(thisToken);
-            onClose();
+            setDefaultTokens("ETH");
           }}
         >
           <img
