@@ -4,7 +4,7 @@ import SwapTokenListWindow from "../components/swap-token-list-window";
 import PortalPopup from "../components/portal-popup";
 import styles from "./index-swap.module.css";
 import Header from "../components/header";
-import { Jupiter, TOKEN_LIST_URL } from "@jup-ag/core";
+import { Jupiter, TOKEN_LIST_URL, getPlatformFeeAccounts } from "@jup-ag/core";
 import {
   getPrice,
   getTokenBalanceFromWallet,
@@ -14,13 +14,13 @@ import { connection } from "../utils/get-connection";
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
+  Transaction,
   TransactionMessage,
-  VersionedTransaction,
-  SystemProgram,
-  AddressLookupTableAccount,
   sendAndConfirmRawTransaction,
 } from "@solana/web3.js";
 import JSBI from "jsbi";
+import { Token } from "@solana/spl-token";
+import { RouteInfo } from "@jup-ag/react-hook";
 
 const IndexSwap: NextPage = () => {
   const [isSwapTokenListWindowPopupOpen, setSwapTokenListWindowPopupOpen] =
@@ -31,7 +31,8 @@ const IndexSwap: NextPage = () => {
   const [firstToken, setFirstToken] = useState(false);
   const [secondToken, setSecondToken] = useState(false);
   const [fetched, setFetched] = useState(false);
-  const [amount, setAmount] = useState(1);
+  const [amount, setAmount] = useState(0);
+  const [secondAmount, setSecondAmount] = useState(0);
   const openSwapTokenListWindowPopup = useCallback(() => {
     setSwapTokenListWindowPopupOpen(true);
   }, []);
@@ -48,29 +49,23 @@ const IndexSwap: NextPage = () => {
     setSwapTokenListWindowPopup1Open(false);
   }, []);
 
-  const onUSDC100EPjFDt1vClick = useCallback(() => {
-    window.open("solscan.io");
-  }, []);
-
-  const {
-    publicKey,
-    wallet,
-    signAllTransactions,
-    signTransaction,
-    sendTransaction,
-  } = useWallet();
-  const fetchTokenList = async () => {
-    const tokens: Token[] = await (
-      await fetch(TOKEN_LIST_URL["mainnet-beta"])
-    ).json();
-    setTokenList(tokens);
-
-    setFirstToken(tokens.find((t) => t.symbol === "SOL"));
-    setSecondToken(tokens.find((t) => t.symbol === "USDC"));
-    setFetched(true);
-  };
+  const { publicKey, wallet } = useWallet();
   useEffect(() => {
-    fetchTokenList();
+    if (!fetched) {
+      (async () => {
+        const tokens: Token[] = await (
+          await fetch(TOKEN_LIST_URL["mainnet-beta"])
+        ).json();
+        setTokenList(tokens);
+        const solana = tokens.find((t) => t.symbol === "SOL");
+        solana.price = await getPrice("SOL");
+        setFirstToken(solana);
+        const USDC = tokens.find((t) => t.symbol === "USDC");
+        USDC.price = await getPrice("USDC");
+        setSecondToken(USDC);
+        setFetched(true);
+      })();
+    }
   }, []);
   const fetchTokensWithWallet = async () => {
     const tokens = tokenList;
@@ -86,33 +81,35 @@ const IndexSwap: NextPage = () => {
     const solanaToken = tokens.find((token) => token.symbol === "SOL");
     solanaToken.balance =
       (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
-    solanaToken.price = await getPrice("SOL");
-    setFirstToken(tokens.find((t) => t.symbol === "SOL"));
-    setSecondToken(
-      tokens.find(async (t) => {
-        if (t.symbol === "USDC") {
-          t.price = await getPrice("USDC");
-          return t;
-        }
-      })
-    );
     setTokenList(tokens);
   };
+
+  useEffect(() => {
+    if (publicKey && fetched) fetchTokensWithWallet();
+  }, [publicKey, fetched]);
+
   const makeSwap = async () => {
-    const jupiter = await Jupiter.load({
-      connection,
-      cluster: "mainnet-beta",
-      user: publicKey, // or public key
-      // platformFeeAndAccounts:  NO_PLATFORM_FEE,
-      // routeCacheDuration: CACHE_DURATION_MS
-      // wrapUnwrapSOL: true (default) | false
-    });
-    const routeMap: Map<string, string[]> = jupiter.getRouteMap();
-    if (!Number.isNaN(amount)) {
+    try {
+      // If you want to add platformFee as integrator: https://docs.jup.ag/jupiter-core/adding-platform-fees
+      const platformFeeAndAccounts = {
+        feeBps: 50,
+        feeAccounts: await getPlatformFeeAccounts(
+          connection,
+          new PublicKey("BUX7s2ef2htTGb2KKoPHWkmzxPj4nTWMWRgs5CSbQxf9") // The platform fee account owner
+        ),
+      };
+      //  Load Jupiter
+      const jupiter = await Jupiter.load({
+        connection,
+        cluster: "mainnet-beta",
+        user: publicKey, // or public key
+        platformFeeAndAccounts,
+      });
+      console.log("jupiter");
       const routes = await jupiter.computeRoutes({
         inputMint: new PublicKey(firstToken.address),
         outputMint: new PublicKey(secondToken.address),
-        amount: JSBI.BigInt(Number(amount) * 10 ** firstToken.decimals), // 1000000 => 1 USDC if inputToken.address is USDC mint.
+        amount: JSBI.BigInt(parseInt(amount * 10 ** firstToken.decimals)), // 1000000 => 1 USDC if inputToken.address is USDC mint.
         slippageBps: 1, // 1 bps = 0.01%.
         // forceFetch (optional) => to force fetching routes and not use the cache.
         // intermediateTokens => if provided will only find routes that use the intermediate tokens.
@@ -125,17 +122,23 @@ const IndexSwap: NextPage = () => {
         await jupiter.exchange({
           routeInfo: routes.routesInfos[0],
         });
-
-      // decompile transaction message and add transfer instruction
-      let message = TransactionMessage.decompile(swapTransaction.message, {
+      var message = TransactionMessage.decompile(Transaction.message, {
         addressLookupTableAccounts: addressLookupTableAccounts,
       });
+
+      // decompile transaction message and add transfer instruction
+      message = TransactionMessage.decompile(swapTransaction.message, {
+        addressLookupTableAccounts: addressLookupTableAccounts,
+      });
+
+      // create your instruction and add it to message.instructions
+      const instruction = message.instructions.push(instruction); // add your own instruction here
+
       // compile the message and update the swapTransaction
       swapTransaction.message = message.compileToV0Message(
         addressLookupTableAccounts
       );
-      swapTransaction.sign([wallet?.adapter]);
-      // await sendTransaction(swapTransaction.serialize(), connection);
+      swapTransaction.sign([wallet.payer]);
       // Execute the transaction
       const rawTransaction = swapTransaction.serialize();
       const txid = await sendAndConfirmRawTransaction(
@@ -148,13 +151,25 @@ const IndexSwap: NextPage = () => {
         }
       );
       console.log(`https://solscan.io/tx/${txid}`);
+    } catch (error) {
+      console.log({ error });
     }
   };
-  useEffect(() => {
-    if (publicKey && fetched) fetchTokensWithWallet();
-  }, [publicKey, fetched]);
+
   const handleChangeAmount = (e) => {
     setAmount(e.target.value);
+  };
+
+  useEffect(() => {
+    setSecondAmount(amount * firstToken.price);
+  }, [amount, firstToken, secondToken]);
+
+  useEffect(() => {
+    setAmount(secondAmount / firstToken.price);
+  }, [secondAmount, firstToken, secondToken]);
+
+  const handleChangeSecondAmount = (e) => {
+    setSecondAmount(e.target.value);
   };
   return (
     <>
@@ -221,10 +236,16 @@ const IndexSwap: NextPage = () => {
             </button>
             <div className={styles.yourePaying}>{`You’re Paying `}</div>
             <div className={styles.balance100000000}>
-              Balance : {firstToken.balance || 0} {firstToken.symbol}
+              Balance : {firstToken.balance ? firstToken.balance : 0}{" "}
+              {firstToken.symbol}
             </div>
             <div className={styles.frameGroup}>
-              <input className={styles.frameChild} type="number" />
+              <input
+                className={styles.frameChild}
+                type="number"
+                value={secondAmount}
+                onChange={handleChangeSecondAmount}
+              />
               <div
                 className={styles.usdCoinUsdcLogo1Parent}
                 onClick={openSwapTokenListWindowPopup1}
@@ -244,7 +265,8 @@ const IndexSwap: NextPage = () => {
             </div>
             <div className={styles.toReceive}>To Receive</div>
             <div className={styles.balance1000000001}>
-              Balance : {secondToken.balance?.toFixed(4) || 0 + " "}
+              Balance :{" "}
+              {secondToken.balance ? secondToken.balance.toFixed(4) : 0 + " "}
               {secondToken?.symbol}
             </div>
             <div className={styles.usdc00438622717Container}>
