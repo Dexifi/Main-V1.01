@@ -1,0 +1,15 @@
+[features]
+seeds = false
+[programs.devnet]
+dexifi-staking = "CFaNXr6zPn8Kaf5ARhdw3hmXwHLR28rBJPzzR4rcpMaG"
+dexifi-lottery = "GTDpu3YpUcRiG7LBUb1u9QDnv3F8hWRhNVWHxHjdFwej"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "devnet"
+wallet = "../yeni.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
