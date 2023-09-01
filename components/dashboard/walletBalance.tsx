@@ -180,10 +180,10 @@ const WalletBalance: FC<WalletBalanceProps> = ({
                       {item.uiAmount.toFixed(2)}
                     </div>
                     <div className={styles.div28}>
-                      $ {item.value}
+                      $ {item.value.toFixed(2)}
                     </div>
                     <div className={styles.div29}>
-                      {Number(item.price)}
+                      {Number(item.price.toFixed(5))}
                     </div>
                     <div className={styles.div30}>
                       {walletBalance
