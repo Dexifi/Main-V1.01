@@ -8,7 +8,11 @@ import { useRouter } from "next/router";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-const Header: FC = ({ page }) => {
+type HeaderType = {
+  page?: any;
+}
+
+const Header = ({ page }: HeaderType) => {
   const frameButtonRef = useRef<HTMLButtonElement>(null);
   const [isWalletSettingPopupOpen, setWalletSettingPopupOpen] = useState(false);
   const frameButton1Ref = useRef<HTMLButtonElement>(null);

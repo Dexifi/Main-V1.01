@@ -27,7 +27,7 @@ const IndexSwap: NextPage = () => {
     useState(false);
   const [isSwapTokenListWindowPopup1Open, setSwapTokenListWindowPopup1Open] =
     useState(false);
-  const [tokenList, setTokenList] = useState([]);
+  const [tokenList, setTokenList] = useState([] as Token[]);
   const [firstToken, setFirstToken] = useState(false);
   const [secondToken, setSecondToken] = useState(false);
   const [fetched, setFetched] = useState(false);
@@ -57,7 +57,7 @@ const IndexSwap: NextPage = () => {
           await fetch(TOKEN_LIST_URL["mainnet-beta"])
         ).json();
         setTokenList(tokens);
-        const solana = tokens.find((t) => t.symbol === "SOL");
+        const solana = tokens.find((t: Token) => t.symbol === "SOL");
         solana.price = await getPrice("SOL");
         setFirstToken(solana);
         const USDC = tokens.find((t) => t.symbol === "USDC");
@@ -69,10 +69,13 @@ const IndexSwap: NextPage = () => {
   }, []);
   const fetchTokensWithWallet = async () => {
     const tokens = tokenList;
+    if (publicKey === null) {
+      return false;
+    }
     const walletTokens = await getTokenBalanceFromWallet(publicKey);
     walletTokens.map((item) => {
       tokens.forEach(async (token) => {
-        if (item.account.data.parsed.info.mint === token.address) {
+        if ('parsed' in item.account.data && item.account.data.parsed.info.mint === token.address) {
           token.balance = item.account.data.parsed.info.tokenAmount.uiAmount;
           token.price = await getPrice(token.symbol);
         }

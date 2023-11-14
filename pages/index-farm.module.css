@@ -43,7 +43,7 @@
 .serachinput {
   border: 0.5px solid var(--color-lightcyan-100);
   font-family: var(--tittle-16-m);
-  font-size: 22;
+  font-size: 15px;
   background-color: transparent;
   position: absolute;
   top: 2.38rem;
@@ -57,17 +57,19 @@
   padding: var(--padding-3xs);
   align-items: center;
   justify-content: center;
-  color: D9F8FF;
+  color: #d9f8ff;
 }
 .serachinput:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
-  font-size: 22;
-  color: D9F8FF;
+  font-size: 15px;
+  color: #d9f8ff;
+  padding: var(--padding-3xs);
 }
 .serachinput:focus {
   box-shadow: 0 0 5px 1px #d9f8ff;
-  color: D9F8FF;
-  font-size: 22;
+  color: #d9f8ff;
+  font-size: 15px;
+  padding: var(--padding-3xs);
 }
 .stakeLpTokens {
   margin: 0;
@@ -607,13 +609,28 @@
 }
 .openPositions {
   top: 2.19rem;
-  right: 12.88rem;
+  left: 3px;
   background-color: var(--color-gray-600);
   box-shadow: 0 0 4px #d9f8ff;
-  width: 65.56rem;
+  width: 84%;
   height: 2.38rem;
   font-size: var(--tittle-16-m-size);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 5px;
 }
+.openPositions > div,
+.openPositions > div button {
+  position: static !important;
+}
+
+.openPositions > div:last-of-type {
+  display: flex;
+  gap: 18px;
+}
+
 .mGroup {
   position: relative;
   width: 78.94rem;
@@ -646,7 +663,8 @@
 }
 .poolList {
   top: 10.56rem;
-  left: calc(50% - 661px);
+  left: 50%;
+  transform: translateX(-50%);
   background-color: var(--color-gray-300);
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
@@ -656,7 +674,8 @@
 }
 .listPanel {
   top: 9.38rem;
-  left: calc(50% - 675px);
+  left: 50%;
+  transform: translateX(-50%);
   background-color: var(--color-gray-100);
   box-shadow: 0 0 4px #88d6ff;
   width: 84.38rem;

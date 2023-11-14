@@ -1,5 +1,5 @@
 import styles from "../../pages/dashboard.module.css";
-import GetOrca from "./get-orca";
+// import GetOrca from "./get-orca";
 const GetFarm = () => {
   return (
     <div className={styles.farm}>
@@ -23,7 +23,7 @@ const GetFarm = () => {
           <div className={styles.reward}>Reward</div>
           <div className={styles.headerChild} />
         </div>
-        <GetOrca />
+        {/* <GetOrca /> */}
         <div className={styles.solUsdcParent}>
           <div className={styles.usturCssTier}>SOL-USDC</div>
           <div className={styles.raydium}>Raydium</div>

@@ -336,7 +336,7 @@ const IndexLiquiditymy: NextPage = () => {
           <CLMMPositionpopup onClose={closeCLMMPositionpopup1} />
         </PortalPopup>
       )}
-      {isWalletSettingPopupOpen && (
+      {/* TODO  closeWalletSettingPopup no function, closeDisconnectSettingPopup no function{isWalletSettingPopupOpen && (
         <PortalPopup
           overlayColor="rgba(13, 17, 27, 0.7)"
           placement="Top right"
@@ -357,7 +357,7 @@ const IndexLiquiditymy: NextPage = () => {
         >
           <DisconnectSetting onClose={closeDisconnectSettingPopup} />
         </PortalPopup>
-      )}
+      )} */}
     </>
   );
 };

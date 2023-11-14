@@ -9,6 +9,9 @@ import { useState, useEffect } from "react";
 
 type LendWithdrawpopupType = {
   onClose?: () => void;
+  lend: any;
+  pool: any;
+  user: any;
 };
 
 const LendWithdrawpopup: NextPage<LendWithdrawpopupType> = ({
@@ -19,27 +22,29 @@ const LendWithdrawpopup: NextPage<LendWithdrawpopupType> = ({
 }) => {
   const [amount, setAmount] = useState(0);
   const { sendTransaction, wallet, publicKey } = useWallet();
-  const [tokenBalance, setTokenBalance] = useState(null);
+  const [tokenBalance, setTokenBalance] = useState(0);
   useEffect(() => {
-    const token = user.deposits.find(
-      (item) => item.mintAddress === lend.config.liquidityToken.mint
+    const token = user.deposits?.find(
+      (item: any) => item.mintAddress === lend.config.liquidityToken.mint
     );
     if (token) setTokenBalance(token.info.user);
     else setTokenBalance(0);
   }, [publicKey]);
-  const handleChangeAmount = (event) => {
+  const handleChangeAmount = (event: any) => {
     if (event.target.value > lend.user) setAmount(lend.user);
     else setAmount(event.target.value);
   };
   const withdraw = async () => {
     const a = new BN(amount * (10 ** lend.stats.decimals));
+    if (wallet?.adapter.publicKey === null || wallet?.adapter.publicKey === undefined) {
+      return;
+    }
     const solendAction = await SolendAction.buildWithdrawTxns(
       connection,
       a,
       lend.stats.symbol,
-      wallet?.adapter.publicKey,
+      wallet.adapter.publicKey,
       "production",
-      undefined,
       new PublicKey(pool.config.address)
     );
     (await solendAction).sendTransactions(sendTransaction);

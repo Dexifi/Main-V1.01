@@ -35,7 +35,7 @@
 .sol {
   display: flex;
   align-items: center;
-  width: 3.63rem;
+  width: auto;
   height: 2.19rem;
   flex-shrink: 0;
 }
@@ -57,8 +57,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: var(--gap-65xl);
+  justify-content: space-between;
+
+  padding-left: 10px;
+  padding-right: 10px;
   font-size: var(--font-size-3xl);
   color: var(--color-lightcyan-100);
 }
@@ -80,27 +82,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 5px;
 }
 .sol1 {
   position: relative;
   font-weight: 500;
-  width: 4.25rem;
+  width: auto;
   height: 1.81rem;
   flex-shrink: 0;
 }
 .solana2Parent {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   position: absolute;
   top: 0.69rem;
   left: 1.69rem;
   border-radius: var(--br-6xl);
   background-color: var(--color-gray-700);
   box-shadow: 0 0 5px rgba(217, 248, 255, 0.25);
-  width: 7.75rem;
+  width: auto;
   height: 2.5rem;
   flex-direction: row;
   text-align: center;
   font-size: var(--font-size-xl);
   color: var(--color-lightcyan-100);
+  padding: 10px;
 }
 .lendBorrowpopupChild,
 .per1 {
@@ -125,9 +132,9 @@
   box-sizing: border-box;
   width: 12.5rem;
   height: 2.5rem;
-  color: #D9F8FF;
+  color: #d9f8ff;
   padding-left: 1rem;
-  font-size: 22;
+  font-size: 15px;
 }
 .lendBorrowpopupChild:hover {
   border: 1px solid var(--color-lightcyan-100);

@@ -1,3 +1,10 @@
+@font-face {
+  font-family: Geomatrix;
+  src: url('../public/fonts/GeomatrixThin.ttf');
+  font-style: normal;
+  font-weight: 100;
+}
+
 .circleMainIcon {
   position: absolute;
   top: calc(50% - 1459px);
@@ -184,6 +191,13 @@
 .groupWrapper:hover {
   border-radius: var(--br-xl);
   box-shadow: 0 0 4px 2px #500072;
+  transition: 0.6s;
+}
+
+.frame1,
+.frame,
+.groupWrapper {
+  transition: 0.6s;
 }
 .vectorIcon1 {
   position: absolute;
@@ -281,6 +295,7 @@
   line-height: 1.71rem;
   color: inherit;
   display: inline-block;
+  transition: 0.6s;
 }
 .whitepaper {
   top: 2.38rem;
@@ -293,6 +308,7 @@
 .documentation:hover,
 .whitepaper:hover {
   color: var(--color-dodgerblue-300);
+  transition: 0.6s;
 }
 .blog,
 .coingecko,
@@ -899,6 +915,7 @@
   height: 19.38rem;
   overflow: hidden;
   font-size: 6.25rem;
+  font-family: Geomatrix, serif;
 }
 .newSensation {
   line-height: 118.1%;
@@ -913,7 +930,7 @@
   margin: 0;
   line-height: 91.6%;
   font-weight: 100;
-  font-family: var(--font-geomatrix);
+  font-family: Geomatrix, serif;
   background: linear-gradient(
     265.8deg,
     #4434ff 3.59%,
@@ -978,12 +995,15 @@
   width: 9.38rem;
   height: 3.13rem;
   overflow: hidden;
+  transition: 0.6s;
 }
 .readDocsWrapper:hover {
   background-color: rgba(0, 145, 255, 0.5);
+  transition: 0.6s;
 }
 .readDocsWrapper:active {
   background-color: var(--color-dodgerblue-200);
+  transition: 0.6s;
 }
 .launchApp {
   position: absolute;
@@ -1010,9 +1030,11 @@
   width: 9.38rem;
   height: 3.13rem;
   display: none;
+  transition: 0.6s;
 }
 .launchAppWrapper:hover {
   background-color: var(--color-dodgerblue-300);
+  transition: 0.6s;
 }
 .launchAppWrapper:active {
   background-color: var(--color-dodgerblue-200);
@@ -1041,9 +1063,11 @@
   box-shadow: 0 0 5px #0085ff;
   width: 9.38rem;
   height: 3.13rem;
+  transition: 0.6s;
 }
 .readBlogWrapper:hover {
   background-color: var(--color-dodgerblue-300);
+  transition: 0.6s;
 }
 .readBlogWrapper:active {
   background-color: var(--color-dodgerblue-200);
@@ -1258,6 +1282,7 @@
 .doc:hover,
 .lunchApp:hover {
   color: var(--color-dodgerblue-300);
+  transition: 0.6s;
 }
 .lunchApp {
   cursor: pointer;
@@ -1269,6 +1294,7 @@
 .lunchApp {
   position: absolute;
   height: 2.5rem;
+  transition: 0.6s;
 }
 .blog1 {
   text-decoration: none;

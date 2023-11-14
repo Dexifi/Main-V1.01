@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import LendSupplypopup from "../components/lend-supplypopup";
 import PortalPopup from "../components/portal-popup";
 import LendBorrowpopup from "../components/lend-borrowpopup";
@@ -8,7 +8,7 @@ import LendWithdrawpopup from "../components/lend-withdrawpopup";
 import styles from "./index-lend.module.css";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Header from "../components/header";
-import { SolendMarket } from "@solendprotocol/solend-sdk";
+import { SolendMarket, SolendObligation, SolendReserve } from "@solendprotocol/solend-sdk";
 import { connection } from "../utils/get-connection";
 import BN from "bn.js";
 import { PublicKey } from "@solana/web3.js";
@@ -19,16 +19,16 @@ const IndexLend: NextPage = () => {
   const [isLendRepaypopupOpen, setLendRepaypopupOpen] = useState(false);
   const [isLendWithdrawpopupOpen, setLendWithdrawpopupOpen] = useState(false);
   const [selectedLend, setSelectedLend] = useState(null);
-  const [marketTVl, setMarketTVl] = useState({});
-  const [markets, setMarkets] = useState([]);
+  const [marketTVl, setMarketTVl] = useState({} as any);
+  const [markets, setMarkets] = useState([] as SolendReserve[]);
   const [loading, setLoading] = useState(true);
-  const [pool, setPool] = useState();
-  const [user, setUser] = useState(null);
+  const [pool, setPool] = useState({} as SolendMarket);
+  const [user, setUser] = useState({} as SolendObligation);
   const { publicKey } = useWallet();
   const [page, setPage] = useState("main");
 
-  const openLendSupplypopup = useCallback((lend) => {
-    setLendSupplypopupOpen(true);
+  const openLendSupplypopup = useCallback((lend: any) => {
+    setLendSupplypopupOpen(true);   
     setSelectedLend(lend);
   }, []);
 
@@ -36,7 +36,7 @@ const IndexLend: NextPage = () => {
     setLendSupplypopupOpen(false);
   }, []);
 
-  const openLendBorrowpopup = useCallback((lend) => {
+  const openLendBorrowpopup = useCallback((lend: any) => {
     setLendBorrowpopupOpen(true);
     setSelectedLend(lend);
   }, []);
@@ -45,7 +45,7 @@ const IndexLend: NextPage = () => {
     setLendBorrowpopupOpen(false);
   }, []);
 
-  const openLendRepaypopup = useCallback((lend) => {
+  const openLendRepaypopup = useCallback((lend: any) => {
     setLendRepaypopupOpen(true);
     setSelectedLend(lend);
   }, []);
@@ -54,7 +54,7 @@ const IndexLend: NextPage = () => {
     setLendRepaypopupOpen(false);
   }, []);
 
-  const openLendWithdrawpopup = useCallback((lend) => {
+  const openLendWithdrawpopup = useCallback((lend: any) => {
     setLendWithdrawpopupOpen(true);
     setSelectedLend(lend);
   }, []);
@@ -71,7 +71,7 @@ const IndexLend: NextPage = () => {
     let market = await SolendMarket.initialize(
       connection,
       "production", // optional environment argument
-      marketPubkey
+      marketPubkey !== undefined ? marketPubkey.toString() : undefined
     );
     await market.loadAll();
     setPool(market);
@@ -80,6 +80,9 @@ const IndexLend: NextPage = () => {
     await market.reserves.forEach(async (item) => {
       await item.load();
       let WAD = new BN(10).pow(new BN(18));
+      if(item.stats?.decimals === undefined) {
+        return;
+      }
       let TokenDecimals = new BN(10).pow(new BN(item.stats?.decimals));
       item.supply = item.stats?.totalDepositsWads
         .div(WAD)
@@ -112,7 +115,13 @@ const IndexLend: NextPage = () => {
     setMarkets(market.reserves);
   };
   const fetchData = async () => {
+    if (publicKey === null) {
+      return
+    }
     let userData = await pool.fetchObligationByWallet(publicKey);
+    if (userData === null) {
+      return;
+    }
     userData.totalSupply = 0;
     userData.totalBorrow = 0;
     userData?.deposits.forEach((deposit) => {
@@ -385,14 +394,14 @@ const IndexLend: NextPage = () => {
                 <div className={styles.netValueContainer}>
                   <span>{`Net value : `}</span>
                   <span className={styles.span}>
-                    ${user?.obligationStats.netAccountValue.toFixed(3)}
+                    ${user?.obligationStats?.netAccountValue.toFixed(3)}
                   </span>
                 </div>
                 <div className={styles.supplyBalanceContainer}>
                   <span>Supply</span>
                   <span className={styles.balance}>{` balance : `}</span>
                   <span className={styles.span}>
-                    $ {user?.obligationStats.userTotalDeposit.toFixed(3)}
+                    $ {user?.obligationStats?.userTotalDeposit.toFixed(3)}
                   </span>
                 </div>
                 <div className={styles.borrowBalanceContainer}>
@@ -400,7 +409,7 @@ const IndexLend: NextPage = () => {
                   <span className={styles.balance308778}>
                     <span>{` balance : `}</span>
                     <span className={styles.span}>
-                      $ {user?.obligationStats.userTotalBorrow.toFixed(3)}
+                      $ {user?.obligationStats?.userTotalBorrow.toFixed(3)}
                     </span>
                   </span>
                 </div>
@@ -412,14 +421,14 @@ const IndexLend: NextPage = () => {
                   <span>Borrow</span>
                   <span className={styles.balance}>{` limit : `}</span>
                   <span className={styles.span}>
-                    $ {user?.obligationStats.borrowLimit.toFixed(3)}
+                    $ {user?.obligationStats?.borrowLimit.toFixed(3)}
                   </span>
                 </div>
                 <div className={styles.liquidationThresholdContainer}>
                   <span>Liquidation</span>
                   <span className={styles.balance}>{` threshold `}</span>
                   <span className={styles.span}>
-                    $ {user?.obligationStats.liquidationThreshold.toFixed(8)}
+                    $ {user?.obligationStats?.liquidationThreshold.toFixed(8)}
                   </span>
                 </div>
                 <div className={styles.lineParent}>
@@ -444,7 +453,7 @@ const IndexLend: NextPage = () => {
                     <div
                       className={styles.waterBorrow}
                       style={{
-                        height: user
+                        height: user.obligationStats
                           ? (user.obligationStats.userTotalBorrow /
                               user.obligationStats.userTotalDeposit) *
                               100 +
@@ -457,7 +466,7 @@ const IndexLend: NextPage = () => {
                     <div
                       className={styles.waterBorrowLimit}
                       style={{
-                        height: user
+                        height: user.obligationStats
                           ? (user.obligationStats.userTotalBorrow /
                               user.obligationStats.borrowLimit) *
                               100 +
@@ -471,7 +480,7 @@ const IndexLend: NextPage = () => {
               </div>
               <div className={styles.scrollPosition}>
                 {user
-                  ? user.deposits?.map((item, index) => {
+                  ? user.deposits?.map((item: any, index: any) => {
                       return (
                         <div className={styles.assetSupplied} key={index + 1}>
                           <div className={styles.msol}>
@@ -509,7 +518,7 @@ const IndexLend: NextPage = () => {
                   </div>
                 </div>
                 {user
-                  ? user.borrows.map((item, index) => {
+                  ? user.borrows?.map((item: any, index: any) => {
                       return (
                         <div className={styles.assetBorrowed}>
                           <div className={styles.msol}>
@@ -621,7 +630,7 @@ const IndexLend: NextPage = () => {
             onClose={closeLendWithdrawpopup}
             lend={selectedLend}
             pool={pool}
-            page={page}
+            
             user={user}
           />
         </PortalPopup>

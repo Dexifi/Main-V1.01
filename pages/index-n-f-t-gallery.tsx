@@ -40,14 +40,14 @@ const IndexNFTGallery: NextPage = () => {
   }, [router]);
 
   const { publicKey } = useWallet();
-  const [NFTs, setNFTs] = useState([]);
+  const [NFTs, setNFTs] = useState([] as any[]);
   const [isLoading, setLoading] = useState(true);
   const fetchData = async () => {
     try {
       const { data } = await axios.get(
         `https://api-mainnet.magiceden.dev/v2/wallets/${publicKey}/tokens`
       );
-      const promises = data.map(async (item) => {
+      const promises = data.map(async (item: any) => {
         if (!item.hasOwnProperty("price")) {
           if (item.hasOwnProperty("collection")) {
             const floorPrice = await axios.get(
@@ -79,7 +79,7 @@ const IndexNFTGallery: NextPage = () => {
             <div className={styles.nftDetailWrapper}>
               {NFTs.length === 0
                 ? null
-                : NFTs.map((item, index) => {
+                : NFTs.map((item: any, index: any) => {
                     return (
                       <div className={styles.nftDetail} key={index + 1}>
                         <div className={styles.netWorth}>
@@ -106,7 +106,7 @@ const IndexNFTGallery: NextPage = () => {
                         <button
                           className={styles.transferDomainButton}
                           onClick={() => {
-                            openManagenftpopup(item);
+                            openManagenftpopup();
                             setSelectedNFT(item);
                           }}
                         >

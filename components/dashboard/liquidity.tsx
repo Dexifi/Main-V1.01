@@ -36,22 +36,25 @@ const GetLiquidity = () => {
   }
 
   async function demoFarm() {
-    let allLiquiditys = [];
+    let allLiquiditys: any[] = [];
     const OPENBOOK_PROGRAM_ID = new PublicKey(
       "srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX"
     );
 
     const owner = publicKey;
+    if (publicKey === null) {
+      return;
+    }
     const walletBalance = await getTokenBalanceFromWallet(publicKey);
     const tokenAccounts = await getTokenAccounts(connection, publicKey);
-    let walletFarms = [];
+    let walletFarms: any[] = [];
     walletBalance.forEach((item) => {
       let isFarm = liquidityData.official.find(
-        (farm) => farm.lpMint == item.account.data.parsed.info.mint
+        (farm: any) => farm.lpMint == item.account.data.parsed.info.mint
       );
       if (!isFarm)
         isFarm = liquidityData.unOfficial.find(
-          (farm) => farm.lpMint == item.account.data.parsed.info.mint
+          (farm: any) => farm.lpMint == item.account.data.parsed.info.mint
         );
       if (isFarm) walletFarms.push(isFarm);
     });

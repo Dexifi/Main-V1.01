@@ -6,6 +6,8 @@ import { findToken } from "./dashboard/walletBalance";
 
 type TradeTokenListWindowType = {
   onClose?: () => void;
+  markets?: any;
+  setSelectedMarket: any;
 };
 
 const TradeTokenListWindow: NextPage<TradeTokenListWindowType> = ({
@@ -32,7 +34,7 @@ const TradeTokenListWindow: NextPage<TradeTokenListWindowType> = ({
         <div className={styles.listPanel}>
           <div className={styles.lamp} />
           <div className={styles.row1Parent}>
-            {markets?.map((item, index) => {
+            {markets?.map((item: any, index: any) => {
               if (index % 2 === 0) {
                 return (
                   <button
@@ -40,7 +42,10 @@ const TradeTokenListWindow: NextPage<TradeTokenListWindowType> = ({
                     key={index + 1}
                     onClick={() => {
                       setSelectedMarket(item);
-                      onClose();
+                      if (onClose) {
+                        onClose();
+                      }
+                      
                     }}
                   >
                     <div className={styles.solana2Parent}>
@@ -79,7 +84,9 @@ const TradeTokenListWindow: NextPage<TradeTokenListWindowType> = ({
                     key={index + 1}
                     onClick={() => {
                       setSelectedMarket(item);
-                      onClose();
+                      if (onClose) {
+                        onClose();
+                      }
                     }}
                   >
                     <div className={styles.solana2Parent}>
@@ -131,7 +138,7 @@ const TradeTokenListWindow: NextPage<TradeTokenListWindowType> = ({
           placement="Top left"
           onOutsideClick={closeTradeTokenListWindowPopup1}
         >
-          <TradeTokenListWindow onClose={closeTradeTokenListWindowPopup1} />
+          <TradeTokenListWindow onClose={closeTradeTokenListWindowPopup1} setSelectedMarket={setSelectedMarket} />
         </PortalPopup>
       )}
     </>

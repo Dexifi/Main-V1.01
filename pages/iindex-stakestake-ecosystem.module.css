@@ -159,8 +159,9 @@
   width: 6.75rem;
   height: 2.19rem;
   overflow: hidden;
-  color: D9F8FF;
-  font-size: 22;
+  color: #D9F8FF;
+  font-size: 15px;
+  padding: var(--padding-3xs);
 }
 .per1Child:hover {
   border: 1px solid var(--color-lightcyan-100);
@@ -296,8 +297,9 @@
   box-sizing: border-box;
   width: 6.75rem;
   overflow: hidden;
-  color: D9F8FF;
-  font-size: 22;
+  color: #D9F8FF;
+  font-size: 15px;
+  padding: var(--padding-3xs);
 }
 .per1Item:hover {
   border: 1px solid var(--color-lightcyan-100);

@@ -14,6 +14,10 @@ import { BN } from "bn.js";
 
 type LendSupplypopupType = {
   onClose?: () => void;
+  reserve: any;
+  pool: any;
+  user: any;
+  page?: any;
 };
 
 const LendSupplypopup: NextPage<LendSupplypopupType> = ({
@@ -26,7 +30,7 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
   const { publicKey, sendTransaction, wallet, signTransaction } = useWallet();
   const [tokenBalance, setTokenBalance] = useState(0);
   const [amount, setAmount] = useState(0);
-  const [warning, setWarning] = useState(null);
+  const [warning, setWarning] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   if (isLoading && publicKey) {
     if (reserve.config.liquidityToken.symbol === "SOL")
@@ -42,7 +46,7 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
         {
           memcmp: {
             offset: 32, //location of our query in the account (bytes)
-            bytes: publicKey, //our search criteria, a base58 encoded string
+            bytes: publicKey.toString(), //our search criteria, a base58 encoded string
           },
         },
       ];
@@ -53,11 +57,13 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
         )
         .then((accounts) => {
           const balance = accounts.filter(
-            (account) =>
-              account.account.data.parsed.info.mint ===
-              reserve.stats.mintAddress
-          );
-          if (balance.length > 0)
+  (account) =>
+    'parsed' in account.account.data &&
+    'info' in account.account.data.parsed &&
+    'mint' in account.account.data.parsed.info &&
+    account.account.data.parsed.info.mint === reserve.stats.mintAddress
+);
+          if (balance.length > 0 && 'parsed' in balance[0].account.data)
             setTokenBalance(
               balance[0].account.data.parsed.info.tokenAmount.uiAmount
             );
@@ -66,13 +72,16 @@ const LendSupplypopup: NextPage<LendSupplypopupType> = ({
       if (tokenBalance) setIsLoading(false);
     }
   }
-  const handleChangeAmount = (event) => {
+  const handleChangeAmount = (event: any) => {
     setAmount(event.target.value);
   };
   const handleSupply = async () => {
     if (Number(amount) <= 0) return setWarning("Enter amount for supply!");
 
     const a = new BN(amount * LAMPORTS_PER_SOL);
+    if(publicKey === null) {
+      return;
+    }
     const solendAction = await SolendAction.buildDepositTxns(
       connection,
       a,

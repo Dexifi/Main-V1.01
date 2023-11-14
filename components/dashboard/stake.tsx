@@ -11,6 +11,9 @@ import {
 const GetStake = () => {
   const { publicKey } = useWallet();
   const fetchData = async () => {
+    if(publicKey === null) {
+      return;
+    }
     const data = await connection.getParsedProgramAccounts(
       new PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"),
       {
@@ -19,7 +22,7 @@ const GetStake = () => {
           {
             memcmp: {
               offset: 40,
-              bytes: publicKey,
+              bytes: publicKey.toString(),
             },
           },
         ],
@@ -83,3 +86,4 @@ const GetStake = () => {
   );
 };
 export default GetStake;
+// TODO

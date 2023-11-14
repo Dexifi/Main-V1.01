@@ -36,14 +36,14 @@ const IndexTrade: NextPage = () => {
     setMarketAddPopupOpen(false);
   }, []);
   const [orders, setOrders] = useState([]);
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState(0);
   const [limitPrice, setLimitPrice] = useState();
-  const [market, setMarket] = useState();
-  const [asks, setAsks] = useState([]);
-  const [bids, setBids] = useState([]);
+  const [market, setMarket] = useState({} as any);
+  const [asks, setAsks] = useState([] as any);
+  const [bids, setBids] = useState([] as any);
   const [side, setSide] = useState("buy");
-  const [selectedMarket, setSelectedMarket] = useState(MARKETS[0]);
-  const [tokenBalance, setTokenBalance] = useState();
+  const [selectedMarket, setSelectedMarket] = useState(MARKETS[0] as any);
+  const [tokenBalance, setTokenBalance] = useState(0);
   const { publicKey, wallet } = useWallet();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -55,6 +55,12 @@ const IndexTrade: NextPage = () => {
   }, []);
 
   const fetchOrders = async () => {
+    if (market === undefined) {
+      return;
+    }
+    if (!('loadOrdersForOwner' in market)) {
+      return;
+    }
     const orders = await market.loadOrdersForOwner(connection, publicKey);
     console.log(orders);
     setOrders(orders);
@@ -69,17 +75,22 @@ const IndexTrade: NextPage = () => {
         new PublicKey("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX")
       );
       // Fetching orderbooks
-      let bids = await market.loadBids(connection);
-      let asks = await market.loadAsks(connection);
+      let bids: any = await market.loadBids(connection);
+      let asks: any = await market.loadAsks(connection);
       let returnAsks = [],
         returnBids = [];
-      for (let order of asks) {
-        if (returnAsks.length !== 12)
-          returnAsks.push({
-            price: order.price,
-            size: order.size,
-            side: order.side,
-          });
+
+      for (let i = 0; i < asks.length; i++) {
+          const order = asks[i];
+          if (returnAsks.length !== 12) {
+              returnAsks.push({
+                  price: order.price,
+                  size: order.size,
+                  side: order.side,
+              });
+          } else {
+              break; // Прерываем цикл после добавления 12 элементов
+          }
       }
       for (let order of bids) {
         if (returnBids.length !== 12)
@@ -99,25 +110,46 @@ const IndexTrade: NextPage = () => {
   }, [selectedMarket]);
   const fetchTokenBalance = async () => {
     let balance = 0;
+    if (publicKey === null) {
+      return;
+    }
     const walletBalance = await getTokenBalanceFromWallet(publicKey);
     if (selectedMarket.tokenB.symbol !== "SOL") {
       const tokenB = walletBalance.find(
-        (item) =>
-          item.account.data.parsed.info.mint === selectedMarket.tokenB.address
+        (item) => {
+          if ('parsed' in item.account.data) {
+            item.account.data.parsed.info.mint === selectedMarket.tokenB.address
+          }
+          
+        }
+          
       );
-      selectedMarket.tokenB.balance =
-        tokenB?.account?.data?.parsed?.info?.tokenAmount?.uiAmount || 0;
+      if (tokenB?.account?.data !== undefined && 'parsed' in tokenB?.account?.data) {
+        selectedMarket.tokenB.balance =
+        tokenB?.account?.data.parsed.info?.tokenAmount?.uiAmount;
+      } else {
+        selectedMarket.tokenB.balance = 0
+      }
+
     } else {
       selectedMarket.tokenB.balance =
         (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
     }
     if (selectedMarket.tokenA.symbol !== "SOL") {
       const tokenA = walletBalance.find(
-        (item) =>
-          item.account.data.parsed.info.mint === selectedMarket.tokenA.address
+        (item) => {
+          if ('parsed' in item.account.data) {
+            item.account.data.parsed.info.mint === selectedMarket.tokenA.address
+          }
+        }
+        
       );
-      selectedMarket.tokenA.balance =
-        tokenA?.account?.data?.parsed?.info?.tokenAmount?.uiAmount || 0;
+      if (tokenA?.account?.data !== undefined && 'parsed' in tokenA?.account?.data) {
+        selectedMarket.tokenA.balance =
+        tokenA?.account?.data.parsed.info?.tokenAmount?.uiAmount;
+      } else {
+        selectedMarket.tokenB.balance = 0
+      }
     } else {
       selectedMarket.tokenA.balance =
         (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
@@ -171,7 +203,7 @@ const IndexTrade: NextPage = () => {
                 type="number"
                 disabled
                 readOnly
-                value={limitPrice * amount}
+                value={limitPrice !== undefined && amount !== undefined ? limitPrice * amount : 0}
               />
             </div>
             <div className={styles.usdcBalance0}>
@@ -183,7 +215,7 @@ const IndexTrade: NextPage = () => {
             <button
               className={styles.transferDomainButton}
               onClick={() => {
-                setAmount(tokenBalance * 0.25);
+                setAmount(tokenBalance !== undefined  ? tokenBalance * 0.25 : 0);
               }}
             >
               <div className={styles.transfer}>%25</div>
@@ -191,7 +223,7 @@ const IndexTrade: NextPage = () => {
             <button
               className={styles.transferDomainButton1}
               onClick={() => {
-                setAmount(tokenBalance * 0.5);
+                setAmount(tokenBalance !== undefined ? tokenBalance * 0.5 : 0);
               }}
             >
               <div className={styles.transfer}>%50</div>
@@ -199,7 +231,7 @@ const IndexTrade: NextPage = () => {
             <button
               className={styles.transferDomainButton2}
               onClick={() => {
-                setAmount(tokenBalance * 0.75);
+                setAmount(tokenBalance !== undefined  ? tokenBalance * 0.75 : 0);
               }}
             >
               <div className={styles.transfer}>%75</div>
@@ -207,7 +239,7 @@ const IndexTrade: NextPage = () => {
             <button
               className={styles.transferDomainButton3}
               onClick={() => {
-                setAmount(tokenBalance);
+                setAmount(tokenBalance !== undefined  ? tokenBalance * 0.25 : 0);
               }}
             >
               <div className={styles.transfer}>%100</div>
@@ -505,7 +537,7 @@ const IndexTrade: NextPage = () => {
                 <div className={styles.size1}>Size</div>
                 <div className={styles.price1}>Price</div>
               </div>
-              {bids.map((item, index) => {
+              {bids.map((item: any, index: any) => {
                 if (index < 6)
                   return (
                     <div
@@ -522,7 +554,7 @@ const IndexTrade: NextPage = () => {
               })}
               <img className={styles.frameChild2} alt="" src="/line-5.svg" />
               <div className={styles.asksWraper}></div>
-              {asks.map((item, index) => {
+              {asks.map((item: any, index: any) => {
                 if (index < 6)
                   return (
                     <div
