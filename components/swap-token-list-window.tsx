@@ -5,6 +5,10 @@ import { getPrice } from "./dashboard/walletBalance";
 
 type SwapTokenListWindowType = {
   onClose?: () => void;
+  tokens: any;
+  setToken: any;
+  firstToken: any;
+  secondToken: any;
 };
 
 const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
@@ -16,10 +20,10 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
 }) => {
   const [search, setSearch] = useState("");
 
-  const handleOnChangeSearch = (target) => {
+  const handleOnChangeSearch = (target: any) => {
     setSearch(target.target.value.toUpperCase());
   };
-  tokens.sort((a, b) => {
+  tokens.sort((a: any, b: any) => {
     // اگر balance وجود دارد، براساس آن مرتب کن
     if (a.balance != null && b.balance != null) {
       return b.balance - a.balance;
@@ -38,14 +42,16 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
     }
   });
   const setDefaultTokens = async (tokenSymbol: string) => {
-    const thisToken = tokens.find((item) => item.symbol === tokenSymbol);
+    const thisToken = tokens.find((item: any) => item.symbol === tokenSymbol);
     console.log(thisToken);
     if (
       firstToken.symbol !== thisToken.symbol &&
       secondToken.symbol !== thisToken.symbol
     )
       setToken(thisToken);
-    onClose();
+    if (onClose) {
+      onClose();
+    }
   };
   return (
     <div className={styles.swapTokenListWindow}>
@@ -72,8 +78,8 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
         </button>
         <div className={styles.createPositionButtonParent}>
           {tokens
-            .filter((t) => t.symbol.includes(search))
-            .map((item, index) => {
+            .filter((t: any) => t.symbol.includes(search))
+            .map((item: any, index: any) => {
               return (
                 <button
                   className={styles.createPositionButton2}
@@ -86,7 +92,10 @@ const SwapTokenListWindow: NextPage<SwapTokenListWindowType> = ({
                       (async () => {
                         item.price = await getPrice(item.symbol);
                         setToken(item);
-                        await onClose();
+                        if (onClose) {
+                          await onClose();
+                        }
+                        
                       })();
                   }}
                 >

@@ -250,16 +250,16 @@ const Dashboard: NextPage = () => {
               </div>
               <img className={styles.donutIcon} alt="" src="/donut.svg" />
             </div>
-            {/* <WalletBalance
+            <WalletBalance
               walletBalance={walletBalance}
               setWalletBalance={setWalletBalance}
-            /> */}
-            {/* <GetStake /> */}
-            {/* <GetLend /> */}
-            {/* <GetTrade /> */}
+            />
+            <GetStake />
+            <GetLend />
+            <GetTrade />
             <GetLiquidity />
-            {/* <GetFarm /> */}
-            {/* <GetNFT /> */}
+            <GetFarm />
+            <GetNFT />
           </div>
         </div>
         <div className={styles.v101202204202200UtcContainer}>
@@ -268,7 +268,7 @@ const Dashboard: NextPage = () => {
         </div>
       </div>
 
-      {isTransferDomainPopupOpen && (
+      {/*TODO no closeTransferDomainPopup function  {isTransferDomainPopupOpen && (
         <PortalPopup
           overlayColor="rgba(19, 35, 45, 0.7)"
           placement="Centered"
@@ -276,7 +276,7 @@ const Dashboard: NextPage = () => {
         >
           <TransferDomainPopup onClose={closeTransferDomainPopup} />
         </PortalPopup>
-      )}
+      )} */}
     </>
   );
 };

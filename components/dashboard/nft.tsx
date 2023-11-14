@@ -9,7 +9,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import styles from "../../pages/dashboard.module.css";
 import PortalPopup from "../portal-popup";
 import Managenftpopup from "../managenftpopup";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, SetStateAction } from "react";
 import axios from "axios";
 import { getPrice } from "./walletBalance";
 
@@ -33,8 +33,11 @@ const GetNFT = () => {
     const metaplex = Metaplex.make(connection)
       .use(keypairIdentity(wallet))
       .use(bundlrStorage());
+    if (publicKey === null) {
+      return;
+    }
     const userNft = await metaplex.nfts().findAllByOwner({ owner: publicKey });
-    let userNFTs = [];
+    let userNFTs: SetStateAction<never[]> = [];
     userNft.forEach(async (nft) => {
       const metaData = await axios.get(
         `https://api-mainnet.magiceden.dev/v2/tokens/${nft.mintAddress.toString()}`

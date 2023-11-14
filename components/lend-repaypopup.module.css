@@ -3,12 +3,12 @@
   top: 0;
   left: calc(50% - 251px);
   background: radial-gradient(
-      50% 50%at 50% 50%,
+      50% 50% at 50% 50%,
       rgba(119, 186, 234, 0.1),
       transparent
     ),
     radial-gradient(
-      50% 50%at 50% 50%,
+      50% 50% at 50% 50%,
       rgba(251, 0, 196, 0) 3.49%,
       rgba(119, 186, 234, 0) 7.6%,
       rgba(253, 0, 197, 0) 10.46%,
@@ -27,24 +27,28 @@
   height: 48.69rem;
   overflow: hidden;
 }
+
 .repay,
 .sol {
   position: relative;
   font-weight: 500;
 }
+
 .sol {
   display: flex;
   align-items: center;
-  width: 3.63rem;
+  width: auto;
   height: 2.19rem;
   flex-shrink: 0;
 }
+
 .solana2Icon {
   position: relative;
   width: 1.5rem;
   height: 1.5rem;
   object-fit: cover;
 }
+
 .repayParent {
   position: absolute;
   top: 1.38rem;
@@ -57,56 +61,65 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: var(--gap-65xl);
+  justify-content: space-between;
+
+  padding-left: 10px;
+  padding-right: 10px;
   font-size: var(--font-size-3xl);
   color: var(--color-lightcyan-100);
 }
+
 .balance11366987,
 .div {
   position: absolute;
   font-weight: 500;
 }
+
 .balance11366987 {
   top: 6.25rem;
   left: 2.44rem;
 }
+
 .div {
   top: 3.13rem;
-  left: calc(50% + 114px);
+  left: calc(50% + 85px);
 }
-.sol1,
+
 .solana2Parent {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
-}
-.sol1 {
-  position: relative;
-  font-weight: 500;
-  width: 4.25rem;
-  height: 1.81rem;
-  flex-shrink: 0;
-}
-.solana2Parent {
   position: absolute;
   top: 0.69rem;
   left: 1.69rem;
   border-radius: var(--br-6xl);
   background-color: var(--color-gray-700);
   box-shadow: 0 0 5px rgba(217, 248, 255, 0.25);
-  width: 7.75rem;
+  width: auto;
   height: 2.5rem;
   flex-direction: row;
   text-align: center;
   font-size: var(--font-size-xl);
   color: var(--color-lightcyan-100);
+  padding: 10px;
+  gap: 5px;
 }
+
+.sol1 {
+  font-weight: 500;
+  width: auto;
+  height: 1.81rem;
+  flex-shrink: 0;
+  padding-left: 10px;
+}
+
 .lendRepaypopupChild,
 .per1 {
   position: absolute;
   overflow: hidden;
+  padding: 5px 21px;
 }
+
 .per1 {
   top: 7.75rem;
   left: 2.13rem;
@@ -116,6 +129,7 @@
   width: 26.25rem;
   height: 4.44rem;
 }
+
 .lendRepaypopupChild {
   border: 1px solid var(--color-lightcyan-400);
   background-color: transparent;
@@ -125,19 +139,23 @@
   box-sizing: border-box;
   width: 12.5rem;
   height: 2.5rem;
-  color: #D9F8FF;
-  font-size: 22;
+  color: #d9f8ff;
+  font-size: 15px;
+  padding: var(--padding-3xs);
 }
+
 .lendRepaypopupChild:hover {
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
 }
+
 .lendRepaypopupChild:focus {
   border-radius: var(--br-xl);
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
   box-shadow: 0 0 4px #d9f8ff;
 }
+
 .max {
   position: absolute;
   top: 0.25rem;
@@ -153,6 +171,7 @@
   width: 3.75rem;
   height: 1.44rem;
 }
+
 .maxbutton,
 .maxbutton1 {
   cursor: pointer;
@@ -167,30 +186,38 @@
   width: 5.25rem;
   height: 2.19rem;
 }
+
 .maxbutton:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .maxbutton:active {
   background-color: var(--color-lightcyan-800);
 }
+
 .maxbutton1 {
   left: 16.56rem;
 }
+
 .maxbutton1:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .maxbutton1:active {
   background-color: var(--color-lightcyan-800);
 }
+
 .div1,
 .repay1 {
   font-weight: 500;
 }
+
 .div1 {
   position: absolute;
   top: 13.13rem;
   left: 2.75rem;
 }
+
 .repay1 {
   position: relative;
   font-size: var(--font-size-3xl);
@@ -198,6 +225,7 @@
   color: var(--color-lightcyan-100);
   text-align: left;
 }
+
 .createPositionButton {
   cursor: pointer;
   border: 1px solid var(--color-lightcyan-700);
@@ -215,21 +243,26 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin: 24px 0;
 }
+
 .createPositionButton:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
     1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .price {
   margin: 0;
 }
+
 .priceUserBorrowContainer,
 .to531782Container {
   position: relative;
@@ -238,17 +271,20 @@
   height: 5.81rem;
   flex-shrink: 0;
 }
+
 .to531782Container {
   font-weight: 500;
   color: var(--color-slategray-100);
   white-space: pre-wrap;
   text-align: right;
 }
+
 .details,
 .inputAmountYou {
   position: absolute;
   font-size: var(--tittle-16-m-size);
 }
+
 .details {
   top: 17.25rem;
   left: 2.13rem;
@@ -259,6 +295,7 @@
   gap: var(--gap-33xl);
   color: var(--color-lightcyan-100);
 }
+
 .inputAmountYou {
   top: 4.94rem;
   left: 2.44rem;
@@ -266,13 +303,14 @@
   display: inline-block;
   width: 18.81rem;
 }
+
 .lendRepaypopup {
   position: relative;
   border-radius: var(--br-21xl);
   background-color: var(--color-gray-600);
   box-shadow: 0 0 20px 1px rgba(217, 248, 255, 0.25);
   width: 30.63rem;
-  height: 29.13rem;
+  height: 30.13rem;
   overflow: hidden;
   max-width: 100%;
   max-height: 100%;
@@ -280,4 +318,5 @@
   font-size: var(--font-size-sm);
   color: var(--color-slategray-100);
   font-family: var(--tittle-16-m);
+  white-space: pre;
 }

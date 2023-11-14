@@ -25,7 +25,10 @@ const IndexAccounts: NextPage = () => {
   }, [router]);
   const { publicKey } = useWallet();
   const fetchAccounts = async () => {
-    const test = await connection.getParsedProgramAccounts();
+    if (publicKey === null) {
+      return;
+    }
+    const test = await connection.getParsedProgramAccounts(publicKey);
     console.log(test);
   };
   fetchAccounts();

@@ -9,6 +9,9 @@ import { connection } from "../utils/get-connection";
 
 type LendBorrowpopupType = {
   onClose?: () => void;
+  lend: any;
+  pool: any;
+  user: any;
 };
 
 const LendBorrowpopup: NextPage<LendBorrowpopupType> = ({
@@ -19,22 +22,30 @@ const LendBorrowpopup: NextPage<LendBorrowpopupType> = ({
 }) => {
   const { publicKey, sendTransaction } = useWallet();
   const [amount, setAmount] = useState(0);
-  const [warning, setWarning] = useState(null);
+  const [warning, setWarning] = useState('');
   console.log(user)
-  const [userBoorrowLimit, setUserBoorrowLimit] = useState(undefined);
-  if (!userBoorrowLimit)
+  const [userBoorrowLimit, setUserBoorrowLimit] = useState(0);
+  const [userBoorrowLimitSwitcher, setUserBoorrowLimitSwitcher] = useState(false);
+  if (!userBoorrowLimitSwitcher) {
     setUserBoorrowLimit(
-      (
+      user.obligationStats ?
+      Number((
         (user.obligationStats.borrowLimit - user.obligationStats.userTotalBorrow - 0.01) /
         lend.stats.assetPriceUSD.toFixed(2)
-      ).toFixed(7)
-    ) || 0;
-  const handleChangeAmount = (event) => {
+      ).toFixed(7)) : 0 ) ;
+    setUserBoorrowLimitSwitcher(true);
+  }
+    
+
+  const handleChangeAmount = (event: any) => {
     setAmount(event.target.value);
   };
   const handleBorrow = async () => {
     if (Number(amount) <= 0) return setWarning("Enter amount for supply!");
     const a = new BN(Number(amount) * 10 ** lend.stats.decimals);
+    if (publicKey === null) {
+      return
+    }
     const solendAction = await SolendAction.buildBorrowTxns(
       connection,
       a,

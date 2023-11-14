@@ -23,6 +23,7 @@ import {
 import axios from "axios";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { DecimalUtil, TokenUtil } from "@orca-so/common-sdk";
+import { Address } from 'cluster';
 
 const IndexLiquidity: NextPage = () => {
   const [isManagePositionPopupOpen, setManagePositionPopupOpen] =
@@ -33,8 +34,8 @@ const IndexLiquidity: NextPage = () => {
   const [isRemoveAMMpopupOpen, setRemoveAMMpopupOpen] = useState(false);
   const [isAddAMMpopupOpen, setAddAMMpopupOpen] = useState(false);
   const [fetched, setFetched] = useState(false);
-  const [orcaList, setOrcaList] = useState({});
-  const [userLiquidity, setUserLiquidity] = useState([]);
+  const [orcaList, setOrcaList] = useState({} as any);
+  const [userLiquidity, setUserLiquidity] = useState([] as any);
   const [search, setSearch] = useState("");
   const router = useRouter();
 
@@ -90,7 +91,7 @@ const IndexLiquidity: NextPage = () => {
 
       let sum = 0;
       await Promise.all(
-        tokenInfo.data.whirlpools.map(async (item) => {
+        tokenInfo.data.whirlpools.map(async (item: any) => {
           if (item.tvl) sum = item.tvl + sum;
           item.symbol = `${item.tokenA.symbol}-${item.tokenB.symbol}`;
         })
@@ -98,121 +99,127 @@ const IndexLiquidity: NextPage = () => {
       setOrcaList({ pools: tokenInfo.data.whirlpools, sum });
     })();
   }, []);
-  const fetchData = async () => {
-    const ctx = WhirlpoolContext.from(
-      connection,
-      wallet?.adapter,
-      ORCA_WHIRLPOOL_PROGRAM_ID
-    );
-    let accountLiquidity = [];
-    const fetcher = new AccountFetcher(connection);
-    const client = buildWhirlpoolClient(ctx, fetcher);
-    const token_accounts = (
-      await ctx.connection.getTokenAccountsByOwner(ctx.wallet.publicKey, {
-        programId: TOKEN_PROGRAM_ID,
-      })
-    ).value;
-    const whirlpool_position_candidate_pubkeys = token_accounts
-      .map((ta) => {
-        const parsed = TokenUtil.deserializeTokenAccount(ta.account.data);
+  // const fetchData = async () => {
+  //   if (wallet === null) {
+  //     return;
+  //   }
 
-        // Derive the address of Whirlpool's position from the mint address (whether or not it exists)
-        const pda = PDAUtil.getPosition(ctx.program.programId, parsed.mint);
+  //   const ctx = WhirlpoolContext.from(
+  //     connection,
+  //     wallet,
+  //     ORCA_WHIRLPOOL_PROGRAM_ID
+  //   );
+  //   let accountLiquidity = [];
+  //   const fetcher = new AccountFetcher(connection);
+  //   const client = buildWhirlpoolClient(ctx);
+  //   const token_accounts = (
+  //     await ctx.connection.getTokenAccountsByOwner(ctx.wallet.publicKey, {
+  //       programId: TOKEN_PROGRAM_ID,
+  //     })
+  //   ).value;
+  //   const whirlpool_position_candidate_pubkeys: = token_accounts
+  //     .map((ta) => {
+  //       const parsed = TokenUtil.deserializeTokenAccount(ta.account.data);
+  //       if (parsed === null) {
+  //         return;
+  //       }
+  //       // Derive the address of Whirlpool's position from the mint address (whether or not it exists)
+  //       const pda = PDAUtil.getPosition(ctx.program.programId, parsed.mint);
 
-        // Returns the address of the Whirlpool position only if the number of tokens is 1 (ignores empty token accounts and non-NFTs)
-        return new BN(parsed.amount.toString()).eq(new BN(1))
-          ? pda.publicKey
-          : undefined;
-      })
-      .filter((pubkey) => pubkey !== undefined);
+  //       // Returns the address of the Whirlpool position only if the number of tokens is 1 (ignores empty token accounts and non-NFTs)
+  //       return new BN(parsed.amount.toString()).eq(new BN(1))
+  //         ? pda.publicKey
+  //         : undefined;
+  //     })
+  //     .filter((pubkey) => pubkey !== undefined);
 
-    // Get data from Whirlpool position addresses
-    const whirlpool_position_candidate_datas = await ctx.fetcher.listPositions(
-      whirlpool_position_candidate_pubkeys,
-      true
-    );
-    // Leave only addresses with correct data acquisition as position addresses
-    const whirlpool_positions = whirlpool_position_candidate_pubkeys.filter(
-      (pubkey, i) => whirlpool_position_candidate_datas[i] !== null
-    );
+  //   // Get data from Whirlpool position addresses
+  //   const whirlpool_position_candidate_datas = await ctx.fetcher.listPositions(
+  //     whirlpool_position_candidate_pubkeys,
+  //     true
+  //   );
+  //   // Leave only addresses with correct data acquisition as position addresses
+  //   const whirlpool_positions = whirlpool_position_candidate_pubkeys.filter(
+  //     (pubkey, i) => whirlpool_position_candidate_datas[i] !== null
+  //   );
 
-    // Output the status of the positions
-    for (let i = 0; i < whirlpool_positions.length; i++) {
-      const p = whirlpool_positions[i];
+  //   // Output the status of the positions
+  //   for (let i = 0; i < whirlpool_positions.length; i++) {
+  //     const p = whirlpool_positions[i];
 
-      // Get the status of the position
-      const position = await client.getPosition(p);
-      const data = position.getData();
+  //     // Get the status of the position
+  //     const position = await client.getPosition(p);
+  //     const data = position.getData();
 
-      // Get the pool to which the position belongs
-      const pool = await client.getPool(data.whirlpool);
-      const token_a = pool.getTokenAInfo();
-      const token_b = pool.getTokenBInfo();
-      const price = PriceMath.sqrtPriceX64ToPrice(
-        pool.getData().sqrtPrice,
-        token_a.decimals,
-        token_b.decimals
-      );
+  //     // Get the pool to which the position belongs
+  //     const pool = await client.getPool(data.whirlpool);
+  //     const token_a = pool.getTokenAInfo();
+  //     const token_b = pool.getTokenBInfo();
+  //     const price = PriceMath.sqrtPriceX64ToPrice(
+  //       pool.getData().sqrtPrice,
+  //       token_a.decimals,
+  //       token_b.decimals
+  //     );
 
-      // Get the price range of the position
-      const lower_price = PriceMath.tickIndexToPrice(
-        data.tickLowerIndex,
-        token_a.decimals,
-        token_b.decimals
-      );
-      const upper_price = PriceMath.tickIndexToPrice(
-        data.tickUpperIndex,
-        token_a.decimals,
-        token_b.decimals
-      );
+  //     // Get the price range of the position
+  //     const lower_price = PriceMath.tickIndexToPrice(
+  //       data.tickLowerIndex,
+  //       token_a.decimals,
+  //       token_b.decimals
+  //     );
+  //     const upper_price = PriceMath.tickIndexToPrice(
+  //       data.tickUpperIndex,
+  //       token_a.decimals,
+  //       token_b.decimals
+  //     );
 
-      // Calculate the amount of tokens that can be withdrawn from the position
-      const amounts = PoolUtil.getTokenAmountsFromLiquidity(
-        data.liquidity,
-        pool.getData().sqrtPrice,
-        PriceMath.tickIndexToSqrtPriceX64(data.tickLowerIndex),
-        PriceMath.tickIndexToSqrtPriceX64(data.tickUpperIndex),
-        true
-      );
-      // Output the status of the position
-      accountLiquidity.push({
-        position: p.toBase58(),
-        whirlpoolAddress: data.whirlpool.toBase58(),
-        whirlpoolPrice: price.toFixed(token_b.decimals),
-        liquidity: data.liquidity.toString(),
-        amountA: DecimalUtil.fromU64(
-          amounts.tokenA,
-          token_a.decimals
-        ).toString(),
-        amountB: DecimalUtil.fromU64(
-          amounts.tokenB,
-          token_b.decimals
-        ).toString(),
-        lower_price: lower_price.toNumber(),
-        upper_price: upper_price.toNumber(),
-      });
-    }
-    return accountLiquidity;
-  };
+  //     // Calculate the amount of tokens that can be withdrawn from the position
+  //     const amounts = PoolUtil.getTokenAmountsFromLiquidity(
+  //       data.liquidity,
+  //       pool.getData().sqrtPrice,
+  //       PriceMath.tickIndexToSqrtPriceX64(data.tickLowerIndex),
+  //       PriceMath.tickIndexToSqrtPriceX64(data.tickUpperIndex),
+  //       true
+  //     );
+  //     // Output the status of the position
+  //     accountLiquidity.push({
+  //       position: p,
+  //       whirlpoolAddress: data.whirlpool.toBase58(),
+  //       whirlpoolPrice: price.toFixed(token_b.decimals),
+  //       liquidity: data.liquidity.toString(),
+  //       amountA: DecimalUtil.fromU64(
+  //         amounts.tokenA,
+  //         token_a.decimals
+  //       ).toString(),
+  //       amountB: DecimalUtil.fromU64(
+  //         amounts.tokenB,
+  //         token_b.decimals
+  //       ).toString(),
+  //       lower_price: lower_price.toNumber(),
+  //       upper_price: upper_price.toNumber(),
+  //     });
+  //   }
+  //   return accountLiquidity;
+  // };
   useEffect(() => {
     if (publicKey) {
-      fetchData().then((res) => {
-        setUserLiquidity(res);
-      });
+      // fetchData().then((res) => {
+      //   setUserLiquidity(res);
+      // });
     }
     
   }, [publicKey]);
   if (fetched) {
-    userLiquidity.forEach((item) => {
+    userLiquidity.forEach((item: any) => {
       const liqudityFarmData = orcaList.pools.find(
-        (i) => i.address == item.whirlpoolAddress
+        (i: any) => i.address == item.whirlpoolAddress
       );
       liqudityFarmData.user = item;
       console.log(liqudityFarmData);
     });
-    orcaList.pools.sort((a, b) => (a.user === b.user ? 0 : a.user ? -1 : 1));
+    orcaList.pools.sort((a: any, b: any) => (a.user === b.user ? 0 : a.user ? -1 : 1));
   }
-  const handleSearch = (e) => {
+  const handleSearch = (e: any) => {
     setSearch(e.target.value);
   };
   return (
@@ -345,13 +352,13 @@ const IndexLiquidity: NextPage = () => {
                     {fetched
                       ? orcaList.pools
                           .filter(
-                            (i) =>
+                            (i: any) =>
                               i.symbol
                                 .toLowerCase()
                                 .includes(search.toLowerCase()) ||
                               i.address == search
                           )
-                          .map((item, index) => {
+                          .map((item: any, index: any) => {
                             return (
                               <div className={styles.mParent} key={index + 1}>
                                 <div className={styles.m}>

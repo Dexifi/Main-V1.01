@@ -7,6 +7,7 @@ import styles from "./managenftpopup.module.css";
 
 type ManagenftpopupType = {
   onClose?: () => void;
+  NFT: any;
 };
 
 const Managenftpopup: NextPage<ManagenftpopupType> = ({ onClose, NFT }) => {

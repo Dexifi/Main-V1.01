@@ -142,7 +142,7 @@
 .listPanelChild {
   border: 1px solid var(--color-lightcyan-400);
   font-family: var(--tittle-16-m);
-  font-size: 22;
+  font-size: 15px;
   background-color: transparent;
   position: absolute;
   top: 3.19rem;
@@ -153,17 +153,22 @@
   width: 26.88rem;
   height: 2.5rem;
   overflow: hidden;
-  color: D9F8FF;
+  color: #D9F8FF;
+  padding: var(--padding-3xs);
 }
 .listPanelChild:hover {
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
+  padding: var(--padding-3xs);
+
 }
 .listPanelChild:focus {
-  border-radius: var(--br-xl);
+  border-radius: var(--br-mini);
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
   box-shadow: 0 0 4px #d9f8ff;
+  padding: var(--padding-3xs);
+
 }
 .vectorIcon {
   position: absolute;
@@ -202,7 +207,7 @@
 .tradeTokenListWindow {
   border-radius: var(--br-3xs);
   width: 31.38rem;
-  height: 41.19rem;
+  height: 42.6rem;
 }
 .listPanel {
   position: absolute;

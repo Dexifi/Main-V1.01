@@ -144,8 +144,9 @@
   width: 6.69rem;
   height: 2.81rem;
   overflow: hidden;
-  color: FFFFFF;
-  font-size: 20;
+  color: #FFFFFF;
+  font-size: 15px;
+  padding: var(--padding-3xs);
 }
 .slippagecustom:focus {
   box-shadow: 0 0 5px 1px #fff;
@@ -246,6 +247,9 @@
   position: absolute;
   box-sizing: border-box;
   overflow: hidden;
+  padding: var(--padding-3xs);
+  color: #D9F8FF;
+  font-size: 15px;
 }
 .createPositionButton {
   cursor: pointer;

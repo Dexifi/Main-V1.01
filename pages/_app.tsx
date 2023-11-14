@@ -13,6 +13,7 @@ import {
   SafePalWalletAdapter,
   LedgerWalletAdapter,
   CoinbaseWalletAdapter,
+  LedgerWalletAdapterConfig,
 } from "@solana/wallet-adapter-wallets";
 import { NETWORK } from "../components/contexts/endpoints";
 import PropTypes from "prop-types";
@@ -50,7 +51,7 @@ export default function MyApp(props: any) {
       new SolletExtensionWalletAdapter({ network }),
       new BraveWalletAdapter({ network }),
       new SafePalWalletAdapter({ network }),
-      new LedgerWalletAdapter({ network }),
+      new LedgerWalletAdapter({ network } as LedgerWalletAdapterConfig),
       new CoinbaseWalletAdapter({ network }),
     ],
     [network]
@@ -65,9 +66,9 @@ export default function MyApp(props: any) {
         />
       </Head>
       <ThemeProvider theme={muiTheme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. TODO wallets={walletAdapters} */}
         <ConnectionProvider endpoint={NETWORK}>
-          <WalletProvider wallets={walletAdapters} autoConnect>
+           <WalletProvider  autoConnect> 
             <CssBaseline />
             <Component {...pageProps} />
           </WalletProvider>

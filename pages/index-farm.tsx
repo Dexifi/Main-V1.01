@@ -252,12 +252,15 @@ const IndexFarm: NextPage = () => {
                       <div
                         className={styles.depositValue}
                       >{`Deposit Value : $ 100,000.66 `}</div>
-                      <button className={styles.createPositionButton2}>
+                      <div className="button-container">
+                        <button className={styles.createPositionButton2}>
                         <div className={styles.addLiquidity}>Claim Pending</div>
                       </button>
                       <button className={styles.createPositionButton3}>
                         <div className={styles.addLiquidity}>Remove Farm</div>
                       </button>
+                      </div>
+                      
                     </div>
                   </div>
                 </div>

@@ -4,7 +4,7 @@
   top: -32.25rem;
   left: calc(50% - 850px);
   background: radial-gradient(
-    50% 50%at 50% 50%,
+    50% 50% at 50% 50%,
     rgba(119, 186, 234, 0.2),
     rgba(37, 58, 73, 0.06) 47.92%,
     transparent
@@ -13,12 +13,14 @@
   height: 112.5rem;
   overflow: hidden;
 }
+
 .lamp1 {
   top: -38.19rem;
   left: calc(50% - 259px);
   width: 32.38rem;
   height: 76.31rem;
 }
+
 .placeOrder {
   position: relative;
   font-size: var(--font-size-3xl);
@@ -26,6 +28,7 @@
   color: var(--color-lightcyan-100);
   text-align: left;
 }
+
 .createPositionButton {
   cursor: pointer;
   border: 0;
@@ -45,17 +48,20 @@
   align-items: center;
   justify-content: center;
 }
+
 .createPositionButton:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
     1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .limitPrice {
   position: absolute;
   top: 1.13rem;
@@ -65,6 +71,7 @@
   width: 8.38rem;
   height: 1.88rem;
 }
+
 .frameChild {
   border: 1px solid var(--color-lightcyan-400);
   background-color: transparent;
@@ -76,19 +83,23 @@
   width: 10.63rem;
   height: 2.5rem;
   overflow: hidden;
-  color: #D9F8FF;
-  font-size: 22;
+  color: #d9f8ff;
+  font-size: 15px;
+  padding: var(--padding-3xs);
 }
+
 .frameChild:hover {
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
 }
+
 .frameChild:focus {
   border-radius: var(--br-xl);
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
   box-shadow: 0 0 4px #d9f8ff;
 }
+
 .limitPriceParent {
   position: absolute;
   top: 3.56rem;
@@ -99,6 +110,7 @@
   width: 17.5rem;
   height: 4.06rem;
 }
+
 .frameItem {
   border: 1px solid var(--color-lightcyan-400);
   background-color: transparent;
@@ -110,19 +122,23 @@
   width: 10.38rem;
   height: 2.5rem;
   overflow: hidden;
-  color: #D9F8FF;
-  font-size: 22;
+  color: #d9f8ff;
+  font-size: 15px;
+  padding: var(--padding-3xs);
 }
+
 .frameItem:hover {
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
 }
+
 .frameItem:focus {
   border-radius: var(--br-xl);
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
   box-shadow: 0 0 4px #d9f8ff;
 }
+
 .amountParent {
   top: 8.31rem;
   border-radius: var(--br-3xs);
@@ -131,12 +147,14 @@
   width: 17.5rem;
   height: 4.06rem;
 }
+
 .amountParent,
 .totalParent,
 .usdcBalance0 {
   position: absolute;
   left: 1.56rem;
 }
+
 .totalParent {
   top: 13.06rem;
   border-radius: var(--br-3xs);
@@ -145,6 +163,7 @@
   width: 17.5rem;
   height: 4.06rem;
 }
+
 .usdcBalance0 {
   top: 21.38rem;
   line-height: 1.71rem;
@@ -152,6 +171,7 @@
   display: inline-block;
   height: 1.88rem;
 }
+
 .transfer {
   position: relative;
   font-size: var(--font-size-sm);
@@ -160,11 +180,13 @@
   color: var(--color-lightcyan-100);
   text-align: left;
 }
+
 .transferDomainButton,
 .transferDomainButton:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
 }
+
 .transferDomainButton {
   cursor: pointer;
   padding: var(--padding-3xs);
@@ -181,17 +203,21 @@
   align-items: center;
   justify-content: center;
 }
+
 .transferDomainButton:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .transferDomainButton1,
 .transferDomainButton1:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
 }
+
 .transferDomainButton1 {
   cursor: pointer;
   padding: var(--padding-3xs);
@@ -208,17 +234,21 @@
   align-items: center;
   justify-content: center;
 }
+
 .transferDomainButton1:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton1:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .transferDomainButton2,
 .transferDomainButton2:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
 }
+
 .transferDomainButton2 {
   cursor: pointer;
   padding: var(--padding-3xs);
@@ -235,17 +265,21 @@
   align-items: center;
   justify-content: center;
 }
+
 .transferDomainButton2:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton2:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .transferDomainButton3,
 .transferDomainButton3:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
 }
+
 .transferDomainButton3 {
   cursor: pointer;
   padding: var(--padding-3xs);
@@ -262,12 +296,15 @@
   align-items: center;
   justify-content: center;
 }
+
 .transferDomainButton3:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton3:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .limitOrder {
   position: absolute;
   top: 1rem;
@@ -278,6 +315,7 @@
   width: 5.94rem;
   height: 1.88rem;
 }
+
 .instanceChild {
   position: absolute;
   top: 0;
@@ -287,35 +325,42 @@
   width: 5.75rem;
   height: 1.63rem;
 }
+
 .buy {
-  left: calc(50% - 38px);
-  line-height: 1.71rem;
-  display: inline-block;
-  width: 2.75rem;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 .buy,
 .instanceItem,
 .sell {
   position: absolute;
   top: 0;
   height: 1.63rem;
+  cursor: pointer;
 }
+
 .sell {
-  left: calc(50% + 7px);
-  line-height: 1.71rem;
-  display: inline-block;
-  width: 1.81rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 55px;
+  width: auto;
 }
-.activeSide{
+
+.activeSide {
   border-radius: var(--br-6xl);
   background-color: var(--color-lightcyan-200);
   box-shadow: 0 0 5px #d9f8ff;
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
-  width: 2.75rem;
-  padding: 0 1rem 0 .5rem;
-  /* margin-right: 1.5rem; */
+  width: auto;
+  padding: 0 8px;
+  margin-right: 1.5rem;
 }
+
 .rectangleParent {
   position: absolute;
   top: 1rem;
@@ -325,6 +370,7 @@
   font-size: var(--font-size-sm);
   color: var(--color1);
 }
+
 .listPanel {
   top: 5.06rem;
   left: calc(50% + 349px);
@@ -336,16 +382,18 @@
   font-size: var(--font-size-mini);
   color: var(--color-lightcyan-100);
 }
+
 .chart1,
 .lamp2,
 .listPanel {
   position: absolute;
 }
+
 .lamp2 {
   top: 0;
   left: calc(50% - 507.5px);
   background: radial-gradient(
-    50% 50%at 50% 50%,
+    50% 50% at 50% 50%,
     rgba(119, 186, 234, 0.2),
     rgba(37, 58, 73, 0.06) 47.92%,
     transparent
@@ -354,6 +402,7 @@
   height: 56.88rem;
   overflow: hidden;
 }
+
 .chart1 {
   top: 0.88rem;
   left: 2.25rem;
@@ -362,6 +411,7 @@
   width: 3.25rem;
   height: 1.88rem;
 }
+
 .instanceInner {
   position: absolute;
   top: 0;
@@ -371,6 +421,7 @@
   width: 12.75rem;
   height: 1.81rem;
 }
+
 .d,
 .h {
   position: relative;
@@ -380,9 +431,11 @@
   height: 1.63rem;
   flex-shrink: 0;
 }
+
 .d {
   width: 1.88rem;
 }
+
 .hParent {
   position: absolute;
   top: 0.13rem;
@@ -393,6 +446,7 @@
   justify-content: center;
   gap: var(--gap-xs);
 }
+
 .rectangleDiv {
   position: absolute;
   top: 0;
@@ -405,6 +459,7 @@
   width: 2.25rem;
   height: 1.81rem;
 }
+
 .rectangleGroup {
   top: 1.13rem;
   left: 48.63rem;
@@ -413,15 +468,18 @@
   font-size: var(--font-size-sm);
   color: var(--color1);
 }
+
 .div,
 .lineIcon,
 .rectangleGroup {
   position: absolute;
 }
+
 .div {
   top: -0.56rem;
   left: -0.94rem;
 }
+
 .lineIcon {
   width: 100%;
   top: 0;
@@ -431,18 +489,22 @@
   overflow: hidden;
   height: 0.06rem;
 }
+
 .lineChild,
 .yAxis {
   align-self: stretch;
   position: relative;
 }
+
 .yAxis {
   flex: 1;
 }
+
 .lineChild {
   background-color: var(--color2);
   height: 0.06rem;
 }
+
 .line {
   position: absolute;
   width: 100%;
@@ -454,15 +516,18 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .yAxis0 {
   align-self: stretch;
   position: relative;
   height: 0.06rem;
 }
+
 .text,
 .y {
   position: absolute;
 }
+
 .y {
   height: 100%;
   width: 100%;
@@ -476,10 +541,12 @@
   justify-content: flex-start;
   text-align: right;
 }
+
 .text {
   right: -0.75rem;
   bottom: -1.25rem;
 }
+
 .lineItem {
   height: 100%;
   top: 0;
@@ -487,12 +554,14 @@
   background-color: var(--color2);
   width: 0.06rem;
 }
+
 .line1,
 .lineItem,
 .xAxis0Child {
   position: absolute;
   right: 0;
 }
+
 .line1 {
   height: 100%;
   width: 100%;
@@ -500,22 +569,26 @@
   bottom: 0;
   left: 0;
 }
+
 .xAxis0Child {
   bottom: -0.19rem;
   background-color: var(--color2);
   width: 0.06rem;
   height: 0.19rem;
 }
+
 .xAxis0 {
   align-self: stretch;
   position: relative;
   width: 0.06rem;
 }
+
 .text1 {
   position: absolute;
   right: -0.72rem;
   bottom: -1.25rem;
 }
+
 .lineInner {
   position: absolute;
   height: 100%;
@@ -525,11 +598,13 @@
   background-color: var(--color3);
   width: 0.06rem;
 }
+
 .line2,
 .xAxisChild {
   position: absolute;
   right: -0.03rem;
 }
+
 .line2 {
   height: 100%;
   width: calc(100% + 0.5px);
@@ -537,32 +612,39 @@
   bottom: 0;
   left: 0;
 }
+
 .xAxisChild {
   bottom: -0.19rem;
   background-color: var(--color3);
   width: 0.06rem;
   height: 0.19rem;
 }
+
 .text2,
 .text3 {
   bottom: -1.25rem;
 }
+
 .text2 {
   position: absolute;
   right: -0.59rem;
 }
+
 .text3 {
   right: -0.53rem;
 }
+
 .text3,
 .text4,
 .x {
   position: absolute;
 }
+
 .text4 {
   right: -0.66rem;
   bottom: -1.25rem;
 }
+
 .x {
   width: 100%;
   right: 0;
@@ -574,6 +656,7 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .text7,
 .text8 {
   position: absolute;
@@ -581,9 +664,11 @@
   bottom: -1.25rem;
   display: none;
 }
+
 .text8 {
   right: -0.91rem;
 }
+
 .lineIcon6 {
   height: 100%;
   width: calc(100% + 0.5px);
@@ -594,12 +679,14 @@
   overflow: hidden;
   max-height: 100%;
 }
+
 .chart9Icon,
 .lineIcon6,
 .x1 {
   position: absolute;
   top: 0;
 }
+
 .x1 {
   height: 100%;
   width: 100%;
@@ -611,11 +698,13 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .chart9Icon {
   left: -0.01rem;
   width: 59.26rem;
   height: 27.43rem;
 }
+
 .hoverLineIcon {
   position: absolute;
   height: 100%;
@@ -628,12 +717,14 @@
   overflow: hidden;
   max-height: 100%;
 }
+
 .text14 {
   align-self: stretch;
   position: relative;
   font-size: var(--font-size-sm);
   color: var(--color1);
 }
+
 .div8 {
   position: absolute;
   top: 0.13rem;
@@ -643,14 +734,17 @@
   width: 0.5rem;
   height: 0.5rem;
 }
+
 .wrapper {
   width: 0.75rem;
   height: 0.75rem;
 }
+
 .legend1,
 .wrapper {
   position: relative;
 }
+
 .legendinfo {
   display: flex;
   flex-direction: row;
@@ -658,10 +752,12 @@
   justify-content: flex-start;
   gap: var(--gap-5xs);
 }
+
 .div9 {
   position: relative;
   color: var(--color1);
 }
+
 .div7 {
   align-self: stretch;
   display: flex;
@@ -669,9 +765,11 @@
   align-items: center;
   justify-content: space-between;
 }
+
 .div11 {
   background: linear-gradient(270deg, #f6db7a, #adff00);
 }
+
 .div11,
 .div14,
 .div17 {
@@ -682,12 +780,15 @@
   width: 0.5rem;
   height: 0.5rem;
 }
+
 .div14 {
   background-color: #1fcbf1;
 }
+
 .div17 {
   background-color: var(--color-dodgerblue-100);
 }
+
 .div16 {
   align-self: stretch;
   display: none;
@@ -696,6 +797,7 @@
   justify-content: space-between;
   font-family: var(--regular-12);
 }
+
 .hoverTips {
   position: absolute;
   top: calc(50% - 29.91px);
@@ -713,6 +815,7 @@
   justify-content: flex-start;
   gap: var(--gap-5xs);
 }
+
 .hover {
   position: absolute;
   height: 99.78%;
@@ -723,12 +826,14 @@
   left: 35.31%;
   text-align: left;
 }
+
 .grid,
 .transfer4 {
   font-size: var(--regular-12-size);
   font-family: var(--font-roboto);
   color: var(--color);
 }
+
 .grid {
   position: absolute;
   top: 4.13rem;
@@ -737,25 +842,30 @@
   height: 29.06rem;
   text-align: center;
 }
+
 .transfer4 {
   position: relative;
   text-align: left;
   display: none;
 }
+
 .transferDomainButton4 {
   border: 1px solid #563def;
   left: calc(50% + 174.5px);
   background: linear-gradient(270deg, #6353d8, #514ab1, #373c78);
   box-shadow: 0 0 5px rgba(86, 61, 239, 0.5);
 }
+
 .transferDomainButton4:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton4:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .transferDomainButton4,
 .transferDomainButton5,
 .transferDomainButton6 {
@@ -773,39 +883,47 @@
   align-items: center;
   justify-content: center;
 }
+
 .transferDomainButton5 {
   border: 1px solid #3ddaef;
   left: calc(50% + 230.5px);
   background: linear-gradient(270deg, #1fcbf1, #1fcbf1, #0d7d96);
   box-shadow: 0 0 5px rgba(61, 218, 239, 0.5);
 }
+
 .transferDomainButton5:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton5:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .transferDomainButton6 {
   border: 0;
   left: calc(50% + 202.5px);
   background: linear-gradient(270deg, #affe03, #efdf6d);
   box-shadow: 0 0 5px rgba(175, 254, 3, 0.5);
 }
+
 .transferDomainButton6:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton6:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .chart,
 .lamp3 {
   position: absolute;
   overflow: hidden;
 }
+
 .chart {
   top: 11.5rem;
   left: calc(50% - 675px);
@@ -815,11 +933,12 @@
   height: 35.75rem;
   font-size: var(--font-size-mini);
 }
+
 .lamp3 {
   top: -38.19rem;
   left: calc(50% - 249px);
   background: radial-gradient(
-    50% 50%at 50% 50%,
+    50% 50% at 50% 50%,
     rgba(119, 186, 234, 0.2),
     rgba(37, 58, 73, 0.06) 47.92%,
     transparent
@@ -827,6 +946,7 @@
   width: 32.38rem;
   height: 76.31rem;
 }
+
 .dxe {
   top: 0;
   left: 4.38rem;
@@ -834,11 +954,13 @@
   display: inline-block;
   width: 6.56rem;
 }
+
 .dxe,
 .lineDiv,
 .usdc {
   position: absolute;
 }
+
 .usdc {
   top: 0;
   left: 10.44rem;
@@ -846,6 +968,7 @@
   display: inline-block;
   width: 6.56rem;
 }
+
 .lineDiv {
   top: 1.53rem;
   left: 0.09rem;
@@ -854,6 +977,7 @@
   width: 16.69rem;
   height: 0.06rem;
 }
+
 .dxeParent {
   position: absolute;
   top: 0.63rem;
@@ -862,6 +986,7 @@
   height: 1.63rem;
   color: var(--color-lightcyan-100);
 }
+
 .wallet {
   position: absolute;
   top: 0;
@@ -870,6 +995,7 @@
   display: inline-block;
   width: 6.5rem;
 }
+
 .dexParent,
 .walletParent {
   position: absolute;
@@ -878,9 +1004,11 @@
   width: 16.75rem;
   height: 1.63rem;
 }
+
 .dexParent {
   top: 4.31rem;
 }
+
 .div21,
 .div22 {
   position: absolute;
@@ -890,9 +1018,11 @@
   display: inline-block;
   width: 6.56rem;
 }
+
 .div22 {
   top: 4.31rem;
 }
+
 .settle {
   position: relative;
   font-size: var(--font-size-sm);
@@ -900,6 +1030,7 @@
   color: var(--color-lightcyan-100);
   text-align: left;
 }
+
 .createPositionButton1,
 .createPositionButton2 {
   cursor: pointer;
@@ -920,31 +1051,37 @@
   align-items: center;
   justify-content: center;
 }
+
 .createPositionButton1:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
     1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton1:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .createPositionButton2 {
   left: 11.19rem;
 }
+
 .createPositionButton2:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
     1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton2:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .frameParent {
   position: absolute;
   top: 3.75rem;
@@ -955,6 +1092,7 @@
   width: 17.5rem;
   height: 10rem;
 }
+
 .blance1 {
   position: absolute;
   top: 0.88rem;
@@ -965,6 +1103,7 @@
   width: 5.69rem;
   height: 1.88rem;
 }
+
 .createPositionButton3 {
   cursor: pointer;
   border: 0;
@@ -982,23 +1121,27 @@
   align-items: center;
   justify-content: center;
 }
+
 .createPositionButton3:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
     1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton3:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .blance,
 .createPositionButton3,
 .lamp4 {
   position: absolute;
   overflow: hidden;
 }
+
 .blance {
   top: 48rem;
   left: calc(50% + 30px);
@@ -1007,11 +1150,12 @@
   width: 19.38rem;
   height: 15rem;
 }
+
 .lamp4 {
   top: -38.19rem;
   left: calc(50% - 345px);
   background: radial-gradient(
-    50% 50%at 50% 50%,
+    50% 50% at 50% 50%,
     rgba(119, 186, 234, 0.2),
     rgba(37, 58, 73, 0.06) 47.92%,
     transparent
@@ -1019,6 +1163,7 @@
   width: 43.13rem;
   height: 76.31rem;
 }
+
 .price,
 .side,
 .size {
@@ -1027,19 +1172,23 @@
   line-height: 1.71rem;
   display: inline-block;
 }
+
 .side {
   left: 6.5rem;
   width: 4.75rem;
   height: 1.88rem;
 }
+
 .price,
 .size {
   left: 12rem;
   width: 6.56rem;
 }
+
 .price {
   left: 20.44rem;
 }
+
 .frameChild1 {
   position: absolute;
   top: 1.53rem;
@@ -1049,6 +1198,7 @@
   width: 38.38rem;
   height: 0.06rem;
 }
+
 .marketParent {
   position: absolute;
   top: 0.63rem;
@@ -1057,6 +1207,7 @@
   height: 1.63rem;
   color: var(--color-lightcyan-100);
 }
+
 .createPositionButton4 {
   cursor: pointer;
   border: 0;
@@ -1076,17 +1227,20 @@
   align-items: center;
   justify-content: center;
 }
+
 .createPositionButton4:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
     1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton4:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .dxeusdcGroup,
 .dxeusdcParent {
   position: absolute;
@@ -1095,9 +1249,11 @@
   width: 38.44rem;
   height: 1.63rem;
 }
+
 .dxeusdcGroup {
   top: 3.81rem;
 }
+
 .dxeusdcContainer,
 .dxeusdcParent1,
 .dxeusdcParent2,
@@ -1108,15 +1264,18 @@
   width: 38.44rem;
   height: 1.63rem;
 }
+
 .dxeusdcParent1,
 .dxeusdcParent2,
 .frameGroup {
   top: 7.19rem;
 }
+
 .dxeusdcParent2,
 .frameGroup {
   top: 8.94rem;
 }
+
 .frameGroup {
   top: 3.75rem;
   left: 0.94rem;
@@ -1126,6 +1285,7 @@
   width: 40.44rem;
   height: 11.63rem;
 }
+
 .orders1 {
   position: absolute;
   top: 0.88rem;
@@ -1136,6 +1296,7 @@
   width: 3.25rem;
   height: 1.88rem;
 }
+
 .component4Child {
   position: absolute;
   height: 89.66%;
@@ -1147,6 +1308,7 @@
   border-radius: var(--br-6xl);
   background-color: var(--color-gray-600);
 }
+
 .all {
   position: relative;
   line-height: 1.71rem;
@@ -1155,6 +1317,7 @@
   height: 1.63rem;
   flex-shrink: 0;
 }
+
 .allParent,
 .component4Item {
   position: absolute;
@@ -1162,6 +1325,7 @@
   top: 0;
   bottom: 10.34%;
 }
+
 .allParent {
   width: 84.25%;
   right: 7.52%;
@@ -1172,6 +1336,7 @@
   justify-content: flex-start;
   gap: var(--gap-xs);
 }
+
 .component4Item {
   width: 34.25%;
   right: 65.75%;
@@ -1182,6 +1347,7 @@
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
 }
+
 .component4 {
   position: absolute;
   top: 0.88rem;
@@ -1191,11 +1357,13 @@
   font-size: var(--font-size-sm);
   color: var(--color1);
 }
+
 .createPositionButton9,
 .orders {
   position: absolute;
   overflow: hidden;
 }
+
 .createPositionButton9 {
   cursor: pointer;
   border: 0;
@@ -1213,17 +1381,20 @@
   align-items: center;
   justify-content: center;
 }
+
 .createPositionButton9:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
     1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton9:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .orders {
   top: 48rem;
   left: calc(50% - 675px);
@@ -1232,6 +1403,7 @@
   width: 43.13rem;
   height: 16.25rem;
 }
+
 .size1 {
   top: 0;
   left: 0;
@@ -1239,12 +1411,14 @@
   display: inline-block;
   width: 5.25rem;
 }
+
 .price1,
 .size1,
 .sizeParent {
   position: absolute;
   height: 1.88rem;
 }
+
 .price1 {
   top: 0;
   left: 13rem;
@@ -1253,6 +1427,7 @@
   display: inline-block;
   width: 3.75rem;
 }
+
 .sizeParent {
   top: 0.31rem;
   left: 0.94rem;
@@ -1260,21 +1435,25 @@
   font-size: var(--font-size-mini);
   color: var(--color-slategray-100);
 }
+
 .div33,
 .div34 {
   line-height: 1.71rem;
   display: inline-block;
 }
+
 .div33 {
   left: 0;
   width: 8.5rem;
 }
+
 .div34 {
   left: 14rem;
   text-align: right;
   width: 7.5rem;
   height: 1.88rem;
 }
+
 .frameChild2,
 .group,
 .parent,
@@ -1287,6 +1466,7 @@
   width: 16.25rem;
   height: 1.88rem;
 }
+
 .frameChild2,
 .group,
 .parent1,
@@ -1294,37 +1474,45 @@
 .parent3 {
   top: 4.06rem;
 }
+
 .frameChild2,
 .parent1,
 .parent2,
 .parent3 {
   top: 5.94rem;
 }
+
 .frameChild2,
 .parent2,
 .parent3 {
   top: 7.81rem;
 }
+
 .frameChild2,
 .parent3 {
   top: 9.69rem;
 }
-.parent4{
+
+.parent4 {
   position: relative;
   top: 2rem;
   left: 1rem;
 }
+
 .frameChild2 {
   top: 11.56rem;
 }
+
 .frameChild2 {
   top: 13.41rem;
   width: 16.75rem;
   height: 0.06rem;
 }
-.asksWraper{
+
+.asksWraper {
   margin-top: 2rem;
 }
+
 .parent5 {
   position: relative;
   left: 1rem;
@@ -1332,20 +1520,24 @@
   height: 1.88rem;
   color: var(--color-firebrick-200);
 }
+
 .parent6,
 .parent7 {
   position: absolute;
   left: 0.94rem;
 }
+
 .parent6 {
   top: 15.31rem;
   width: 16.25rem;
   height: 1.88rem;
   color: var(--color-firebrick-200);
 }
+
 .parent7 {
   top: 17.19rem;
 }
+
 .parent7,
 .parent8,
 .parent9 {
@@ -1353,26 +1545,31 @@
   height: 1.88rem;
   color: var(--color-firebrick-200);
 }
+
 .parent8 {
   position: absolute;
   top: 19.06rem;
   left: 0.94rem;
 }
+
 .parent9 {
   top: 20.94rem;
 }
+
 .frameContainer,
 .parent10,
 .parent9 {
   position: absolute;
   left: 0.94rem;
 }
+
 .parent10 {
   top: 22.81rem;
   width: 16.25rem;
   height: 1.88rem;
   color: var(--color-firebrick-200);
 }
+
 .frameContainer {
   top: 3.13rem;
   border-radius: var(--br-3xs);
@@ -1381,11 +1578,13 @@
   width: 18.75rem;
   height: 25.56rem;
 }
+
 .component41,
 .orderBook1 {
   position: absolute;
   top: 0.69rem;
 }
+
 .orderBook1 {
   left: 2.25rem;
   font-size: var(--font-size-mini);
@@ -1395,6 +1594,7 @@
   width: 5.13rem;
   height: 1.88rem;
 }
+
 .component41 {
   left: 9.75rem;
   width: 9.13rem;
@@ -1402,6 +1602,7 @@
   font-size: var(--font-size-sm);
   color: var(--color1);
 }
+
 .orderBook {
   top: 33rem;
   left: calc(50% + 349px);
@@ -1411,17 +1612,19 @@
   height: 30rem;
   color: var(--color-aquamarine);
 }
+
 .lamp6,
 .orderBook,
 .vectorIcon {
   position: absolute;
   overflow: hidden;
 }
+
 .lamp6 {
   top: -12.5rem;
   left: calc(50% - 507.5px);
   background: radial-gradient(
-    50% 50%at 50% 50%,
+    50% 50% at 50% 50%,
     rgba(119, 186, 234, 0.1),
     rgba(37, 58, 73, 0.03) 47.92%,
     transparent
@@ -1429,6 +1632,7 @@
   width: 63.44rem;
   height: 25.06rem;
 }
+
 .vectorIcon {
   height: 57.14%;
   width: 7.94%;
@@ -1439,6 +1643,7 @@
   max-width: 100%;
   max-height: 100%;
 }
+
 .selectMarket {
   position: absolute;
   height: 62.86%;
@@ -1453,6 +1658,7 @@
   display: flex;
   align-items: center;
 }
+
 .vectorParent {
   cursor: pointer;
   border: 0;
@@ -1467,6 +1673,7 @@
   height: 2.19rem;
   color: D9F8FF;
 }
+
 .dxeusdc5,
 .totalVolume {
   position: absolute;
@@ -1476,20 +1683,24 @@
   justify-content: center;
   width: 14.13rem;
 }
+
 .dxeusdc5 {
   top: 0.81rem;
   left: 18.5rem;
 }
+
 .totalVolume {
   top: 0;
   left: 32.63rem;
   height: 3.38rem;
 }
+
 .lastOrder {
   top: 0;
   left: 46.75rem;
   display: flex;
 }
+
 .div57,
 .div58,
 .lastOrder,
@@ -1501,12 +1712,14 @@
   width: 14.13rem;
   height: 3.38rem;
 }
+
 .lastOrder1 {
   top: 0;
   left: 46.75rem;
   font-size: var(--font-size-xl);
   display: none;
 }
+
 .div57,
 .div58 {
   top: 2.13rem;
@@ -1515,10 +1728,12 @@
   color: var(--color-slategray-100);
   display: flex;
 }
+
 .div58 {
   left: 46.75rem;
   color: var(--color-aquamarine);
 }
+
 .usdCoinUsdcLogo2Icon {
   position: absolute;
   top: 3.19rem;
@@ -1527,11 +1742,13 @@
   height: 1.31rem;
   object-fit: cover;
 }
+
 .circlePlusSolid1,
 .vectorIcon1 {
   position: absolute;
   overflow: hidden;
 }
+
 .vectorIcon1 {
   height: 100%;
   width: 100%;
@@ -1542,6 +1759,7 @@
   max-width: 100%;
   max-height: 100%;
 }
+
 .circlePlusSolid1 {
   cursor: pointer;
   border: 0;
@@ -1553,6 +1771,7 @@
   width: 1.25rem;
   height: 1.25rem;
 }
+
 .arrowUpSolid1Icon {
   position: absolute;
   top: 3.13rem;
@@ -1561,6 +1780,7 @@
   height: 1.33rem;
   overflow: hidden;
 }
+
 .sitelogoCopy1 {
   position: absolute;
   top: 2.94rem;
@@ -1569,6 +1789,7 @@
   height: 1.88rem;
   object-fit: cover;
 }
+
 .market2 {
   position: absolute;
   top: 0.25rem;
@@ -1581,6 +1802,7 @@
   width: 5.94rem;
   height: 1.63rem;
 }
+
 .market1 {
   position: absolute;
   top: 5.06rem;
@@ -1594,6 +1816,7 @@
   font-size: var(--font-size-lg);
   color: var(--color-lightcyan-100);
 }
+
 .tradePanel {
   position: absolute;
   top: 0;
@@ -1602,17 +1825,18 @@
   height: 75rem;
   overflow-y: auto;
 }
+
 .lamp7 {
   position: absolute;
   top: -14.81rem;
   left: calc(50% - 550px);
   background: radial-gradient(
-      50% 50%at 50% 50%,
+      50% 50% at 50% 50%,
       rgba(119, 206, 234, 0.2),
       transparent
     ),
     radial-gradient(
-      50% 50%at 50% 50%,
+      50% 50% at 50% 50%,
       rgba(251, 0, 196, 0) 3.49%,
       rgba(119, 186, 234, 0) 7.6%,
       rgba(253, 0, 197, 0) 10.46%,
@@ -1631,11 +1855,13 @@
   height: 18.81rem;
   overflow: hidden;
 }
+
 .lend,
 .swap {
   color: inherit;
   display: inline-block;
 }
+
 .swap {
   text-decoration: none;
   position: absolute;
@@ -1645,6 +1871,7 @@
   width: 3.94rem;
   cursor: pointer;
 }
+
 .dao:hover,
 .dashbord:hover,
 .farm:hover,
@@ -1656,10 +1883,12 @@
 .yield:hover {
   color: var(--color-lightcyan-100);
 }
+
 .lend {
   left: calc(50% - 128px);
   width: 3.88rem;
 }
+
 .farm,
 .lend,
 .stake,
@@ -1671,29 +1900,35 @@
   line-height: 1.71rem;
   cursor: pointer;
 }
+
 .trade {
   left: calc(50% - 223px);
   color: var(--color-lightcyan-100);
   display: inline-block;
   width: 3.94rem;
 }
+
 .farm,
 .stake,
 .yield {
   color: inherit;
 }
+
 .yield {
   left: calc(50% - 34px);
   display: inline-block;
   width: 6.63rem;
 }
+
 .farm,
 .stake {
   left: calc(50% + 120px);
 }
+
 .stake {
   left: calc(50% + 220px);
 }
+
 .frameChild3 {
   position: absolute;
   top: 2.78rem;
@@ -1704,6 +1939,7 @@
   width: 4rem;
   height: 0.06rem;
 }
+
 .dao,
 .dashbord,
 .stake1 {
@@ -1714,20 +1950,24 @@
   color: inherit;
   cursor: pointer;
 }
+
 .dashbord {
   left: calc(50% - 468px);
   display: inline-block;
   width: 7.38rem;
 }
+
 .dao,
 .stake1 {
   left: calc(50% + 425px);
 }
+
 .dao {
   left: calc(50% + 316px);
   display: inline-block;
   width: 4.81rem;
 }
+
 .swapParent {
   position: absolute;
   top: 0.44rem;
@@ -1736,6 +1976,7 @@
   height: 3.13rem;
   overflow: hidden;
 }
+
 .dexifiLogoIcon {
   position: absolute;
   top: 0.31rem;
@@ -1745,6 +1986,7 @@
   object-fit: cover;
   cursor: pointer;
 }
+
 .connectWallet {
   cursor: pointer;
   border: 0;
@@ -1757,6 +1999,7 @@
   text-align: left;
   display: inline-block;
 }
+
 .connectWalletWrapper {
   cursor: pointer;
   border: 1px solid var(--color-lightcyan-400);
@@ -1775,14 +2018,17 @@
   align-items: center;
   justify-content: center;
 }
+
 .connectWalletWrapper:hover {
   background-color: var(--color-lightcyan-500);
   box-shadow: 0 0 4px 3px rgba(217, 248, 255, 0.25);
 }
+
 .connectWalletWrapper:active {
   mix-blend-mode: luminosity;
   background-color: var(--color-lightcyan-400);
 }
+
 .vectorIcon2,
 .vectorIcon3 {
   position: absolute;
@@ -1791,12 +2037,14 @@
   width: 1.53rem;
   height: 1.53rem;
 }
+
 .vectorIcon3 {
   top: calc(50% - 4.25px);
   left: calc(50% - 4.25px);
   width: 0.53rem;
   height: 0.53rem;
 }
+
 .iconSettings {
   cursor: pointer;
   border: 0;
@@ -1806,6 +2054,7 @@
   width: 1.44rem;
   height: 1.44rem;
 }
+
 .iconSettingsWrapper {
   cursor: pointer;
   border: 1px solid var(--color-slategray-100);
@@ -1822,24 +2071,29 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .iconSettingsWrapper:hover {
   background-color: var(--color-lightcyan-500);
 }
+
 .iconSettingsWrapper:active {
   mix-blend-mode: luminosity;
   background-color: var(--color-lightcyan-400);
 }
+
 .header,
 .instanceParent {
   position: absolute;
   top: 0;
   right: 0;
 }
+
 .instanceParent {
   width: 17.88rem;
   height: 4.44rem;
   overflow: hidden;
 }
+
 .header {
   width: 100%;
   left: 0;
@@ -1849,9 +2103,11 @@
   font-size: var(--font-size-5xl);
   font-family: var(--font-helvetica);
 }
+
 .utc {
   margin: 0;
 }
+
 .v101202204202200UtcContainer {
   position: absolute;
   bottom: 0.38rem;
@@ -1864,6 +2120,7 @@
   display: inline-block;
   width: 13.03rem;
 }
+
 .indextrade {
   position: relative;
   background-color: var(--color-gray-600);
@@ -1875,6 +2132,7 @@
   color: var(--color-slategray-100);
   font-family: var(--tittle-16-m);
 }
+
 @media screen and (max-width: 1200px) {
   .circlePlusSolid1:hover,
   .vectorParent:hover {

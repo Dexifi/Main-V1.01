@@ -25,7 +25,10 @@ const DisconnectSetting: NextPage<DisconnectSettingType> = ({ onClose }) => {
 
   const handleCopyAddress = async () => {
     try {
-      await navigator.clipboard.writeText(publicKey);
+      if (publicKey === null) {
+        return;
+      }
+      await navigator.clipboard.writeText(publicKey.toString());
       onClose && onClose();
     } catch (err) {
       console.error("Failed to copy: ", err);

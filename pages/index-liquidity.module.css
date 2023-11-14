@@ -3,30 +3,31 @@
   top: -32.25rem;
   left: calc(50% - 850px);
   background: radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(119, 186, 234, 0.2),
-      transparent
-    ),
-    radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(251, 0, 196, 0) 3.49%,
-      rgba(119, 186, 234, 0) 7.6%,
-      rgba(253, 0, 197, 0) 10.46%,
-      rgba(119, 186, 234, 0) 14.46%,
-      rgba(255, 0, 199, 0) 18.56%,
-      rgba(3, 0, 3, 0) 19.53%,
-      transparent 79.82%,
-      rgba(246, 0, 192, 0) 81.08%,
-      rgba(119, 186, 234, 0) 84.04%,
-      rgba(247, 0, 193, 0) 86.61%,
-      rgba(119, 186, 234, 0) 91.01%,
-      rgba(249, 0, 194, 0) 95.16%,
-      rgba(119, 186, 234, 0) 98.6%
-    );
+    50% 50% at 50% 50%,
+    rgba(119, 186, 234, 0.2),
+    transparent
+  ),
+  radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(251, 0, 196, 0) 3.49%,
+    rgba(119, 186, 234, 0) 7.6%,
+    rgba(253, 0, 197, 0) 10.46%,
+    rgba(119, 186, 234, 0) 14.46%,
+    rgba(255, 0, 199, 0) 18.56%,
+    rgba(3, 0, 3, 0) 19.53%,
+    transparent 79.82%,
+    rgba(246, 0, 192, 0) 81.08%,
+    rgba(119, 186, 234, 0) 84.04%,
+    rgba(247, 0, 193, 0) 86.61%,
+    rgba(119, 186, 234, 0) 91.01%,
+    rgba(249, 0, 194, 0) 95.16%,
+    rgba(119, 186, 234, 0) 98.6%
+  );
   width: 105.06rem;
   height: 63.63rem;
   overflow: hidden;
 }
+
 .listOfAll {
   position: absolute;
   top: 0.38rem;
@@ -39,10 +40,11 @@
   width: 41.5rem;
   height: 2.19rem;
 }
+
 .serachinput {
   border: 0.5px solid var(--color-lightcyan-100);
   font-family: var(--tittle-16-m);
-  font-size: 22;
+  font-size: 15px;
   background-color: transparent;
   position: absolute;
   top: 5.31rem;
@@ -58,19 +60,16 @@
   justify-content: center;
   color: #D9F8FF;
 }
-.serachinput:hover {
-  box-shadow: 0 0 4px 1px #d9f8ff;
-  font-size: 22;
-  color: D9F8FF;
-}
+
+.serachinput:hover,
 .serachinput:focus {
-  box-shadow: 0 0 5px 1px #d9f8ff;
-  color: D9F8FF;
-  font-size: 22;
+  box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .earnYieldOn {
   margin: 0;
 }
+
 .earnYieldOnContainer {
   position: absolute;
   top: 2.94rem;
@@ -82,6 +81,7 @@
   width: 26.25rem;
   height: 1.75rem;
 }
+
 .instanceChild {
   position: absolute;
   top: 0;
@@ -91,6 +91,7 @@
   width: 15.94rem;
   height: 3rem;
 }
+
 .all,
 .orca {
   display: flex;
@@ -98,15 +99,18 @@
   justify-content: center;
   width: 4.81rem;
 }
+
 .all {
   position: absolute;
   top: 0;
   left: 0;
   height: 3rem;
 }
+
 .orca {
   left: 11.13rem;
 }
+
 .instanceItem,
 .orca,
 .raydium {
@@ -114,6 +118,7 @@
   top: 0;
   height: 3rem;
 }
+
 .raydium {
   left: 4.81rem;
   display: flex;
@@ -121,6 +126,7 @@
   justify-content: center;
   width: 6.31rem;
 }
+
 .instanceItem {
   cursor: pointer;
   border: 1px solid var(--color-lightcyan-100);
@@ -132,6 +138,7 @@
   box-sizing: border-box;
   width: 4.81rem;
 }
+
 .rectangleParent {
   position: absolute;
   top: 0.94rem;
@@ -139,6 +146,7 @@
   width: 15.94rem;
   height: 3rem;
 }
+
 .instanceInner,
 .rectangleDiv {
   position: absolute;
@@ -149,6 +157,7 @@
   width: 15.31rem;
   height: 3rem;
 }
+
 .rectangleDiv {
   background-color: var(--color-darkslategray-400);
   box-shadow: 0 0 5px #d9f8ff;
@@ -156,6 +165,7 @@
   box-sizing: border-box;
   width: 4.56rem;
 }
+
 .all1,
 .clmm {
   top: 0;
@@ -163,22 +173,26 @@
   align-items: center;
   justify-content: center;
 }
+
 .all1 {
   position: absolute;
   left: 0;
   width: 4.56rem;
   height: 3rem;
 }
+
 .clmm {
   left: 9.63rem;
   width: 5.69rem;
 }
+
 .amm,
 .clmm,
 .rectangleGroup {
   position: absolute;
   height: 3rem;
 }
+
 .amm {
   top: 0;
   left: 4.56rem;
@@ -187,11 +201,13 @@
   justify-content: center;
   width: 5.06rem;
 }
+
 .rectangleGroup {
   top: 0.94rem;
   left: 56.25rem;
   width: 15.31rem;
 }
+
 .instanceChild1,
 .instanceChild2 {
   position: absolute;
@@ -202,6 +218,7 @@
   width: 8rem;
   height: 3rem;
 }
+
 .instanceChild2 {
   background-color: var(--color-darkslategray-400);
   box-shadow: 0 0 5px #d9f8ff;
@@ -209,6 +226,7 @@
   box-sizing: border-box;
   width: 3.88rem;
 }
+
 .apr,
 .tvl {
   position: absolute;
@@ -220,9 +238,11 @@
   width: 3.13rem;
   height: 1.75rem;
 }
+
 .apr {
   left: 4.38rem;
 }
+
 .rectangleContainer {
   position: absolute;
   top: 0.94rem;
@@ -230,6 +250,7 @@
   width: 8rem;
   height: 3rem;
 }
+
 .instanceChild3,
 .instanceChild4 {
   position: absolute;
@@ -240,6 +261,7 @@
   width: 51.19rem;
   height: 3rem;
 }
+
 .instanceChild4 {
   background-color: var(--color-lightcyan-200);
   box-shadow: 0 0 5px #d9f8ff;
@@ -247,17 +269,20 @@
   box-sizing: border-box;
   width: 3.56rem;
 }
+
 .solana1Icon {
   position: relative;
   width: 1.5rem;
   height: 1.5rem;
   object-fit: cover;
 }
+
 .sol,
 .solana1Parent {
   display: flex;
   align-items: center;
 }
+
 .sol {
   position: relative;
   justify-content: center;
@@ -265,6 +290,7 @@
   height: 3rem;
   flex-shrink: 0;
 }
+
 .solana1Parent {
   position: absolute;
   top: 0;
@@ -273,6 +299,7 @@
   padding: 0 0 0 var(--padding-lg);
   justify-content: flex-start;
 }
+
 .frameWrapper {
   position: absolute;
   top: 0;
@@ -280,6 +307,7 @@
   width: 7.63rem;
   height: 3rem;
 }
+
 .all2 {
   position: relative;
   display: flex;
@@ -289,28 +317,33 @@
   height: 3rem;
   flex-shrink: 0;
 }
+
 .allWrapper,
 .frameContainer {
   position: absolute;
   top: 0;
   left: 0;
 }
+
 .allWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
 }
+
 .frameContainer {
   width: 3.75rem;
   height: 3rem;
 }
+
 .ethereumEthLogo1Icon {
   position: relative;
   width: 1.88rem;
   height: 1.88rem;
   object-fit: cover;
 }
+
 .groupDiv {
   position: absolute;
   top: 0;
@@ -318,12 +351,14 @@
   width: 8rem;
   height: 3rem;
 }
+
 .lidoForSolanaLogo2Icon {
   position: relative;
   width: 2.44rem;
   height: 2.44rem;
   object-fit: cover;
 }
+
 .frameWrapper1 {
   position: absolute;
   top: 0;
@@ -331,12 +366,14 @@
   width: 8.56rem;
   height: 3rem;
 }
+
 .marinadeLogoCopy1 {
   position: relative;
   width: 2.06rem;
   height: 2.06rem;
   object-fit: cover;
 }
+
 .frameWrapper2 {
   position: absolute;
   top: 0;
@@ -344,66 +381,74 @@
   width: 8.19rem;
   height: 3rem;
 }
+
 .frameWrapper3 {
   top: 0;
   left: 27rem;
   width: 7.63rem;
 }
+
 .frameDiv,
 .frameWrapper3,
 .frameWrapper4 {
   position: absolute;
   height: 3rem;
 }
+
 .frameWrapper4 {
   top: 0;
   left: 19.38rem;
   width: 7.63rem;
 }
+
 .frameDiv {
   top: 4.69rem;
   left: 29.44rem;
   width: 51.38rem;
   color: var(--color1);
 }
+
 .lamp1,
 .poolOverwiew {
   position: absolute;
   overflow: hidden;
 }
+
 .poolOverwiew {
   top: 1.44rem;
   left: 1.19rem;
   width: 82.69rem;
   height: 12.13rem;
 }
+
 .lamp1 {
   top: -0.12rem;
   left: calc(50% - 623.5px);
   background: radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(119, 186, 234, 0.1),
-      transparent
-    ),
-    radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(251, 0, 196, 0) 3.49%,
-      rgba(119, 186, 234, 0) 7.6%,
-      rgba(253, 0, 197, 0) 10.46%,
-      rgba(119, 186, 234, 0) 14.46%,
-      rgba(255, 0, 199, 0) 18.56%,
-      rgba(3, 0, 3, 0) 19.53%,
-      transparent 79.82%,
-      rgba(246, 0, 192, 0) 81.08%,
-      rgba(119, 186, 234, 0) 84.04%,
-      rgba(247, 0, 193, 0) 86.61%,
-      rgba(119, 186, 234, 0) 91.01%,
-      rgba(249, 0, 194, 0) 95.16%,
-      rgba(119, 186, 234, 0) 98.6%
-    );
+    50% 50% at 50% 50%,
+    rgba(119, 186, 234, 0.1),
+    transparent
+  ),
+  radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(251, 0, 196, 0) 3.49%,
+    rgba(119, 186, 234, 0) 7.6%,
+    rgba(253, 0, 197, 0) 10.46%,
+    rgba(119, 186, 234, 0) 14.46%,
+    rgba(255, 0, 199, 0) 18.56%,
+    rgba(3, 0, 3, 0) 19.53%,
+    transparent 79.82%,
+    rgba(246, 0, 192, 0) 81.08%,
+    rgba(119, 186, 234, 0) 84.04%,
+    rgba(247, 0, 193, 0) 86.61%,
+    rgba(119, 186, 234, 0) 91.01%,
+    rgba(249, 0, 194, 0) 95.16%,
+    rgba(119, 186, 234, 0) 98.6%
+  );
   width: 77.94rem;
   height: 41.88rem;
 }
+
 .poolLiquidity,
 .protocol {
   position: absolute;
@@ -411,18 +456,22 @@
   text-transform: capitalize;
   font-weight: 500;
 }
+
 .protocol {
   left: 12.06rem;
   display: inline-block;
   width: 6rem;
 }
+
 .poolLiquidity {
   left: 35.06rem;
 }
+
 .protocolTvl {
   left: 21.5rem;
   font-weight: 500;
 }
+
 .fee,
 .protocolTvl,
 .volume {
@@ -430,33 +479,40 @@
   top: 2rem;
   text-transform: capitalize;
 }
+
 .volume {
   left: 46.75rem;
   font-weight: 500;
 }
+
 .fee {
   left: 56.88rem;
 }
+
 .apr1,
 .fee,
 .pool {
   font-weight: 500;
 }
+
 .apr1 {
   position: absolute;
   top: 2rem;
   left: 64.69rem;
   text-transform: uppercase;
 }
+
 .pool {
   top: 1.94rem;
   left: 0.63rem;
 }
+
 .pool,
 .tab,
 .tabChild {
   position: absolute;
 }
+
 .tabChild {
   top: 3.59rem;
   left: -0.03rem;
@@ -465,6 +521,7 @@
   width: 79rem;
   height: 0.06rem;
 }
+
 .tab {
   top: calc(50% - 365.5px);
   left: calc(50% - 631.5px);
@@ -472,9 +529,11 @@
   height: 4rem;
   overflow: hidden;
 }
+
 .m {
   left: 35.06rem;
 }
+
 .m,
 .orca1,
 .solUsdc {
@@ -482,11 +541,13 @@
   top: 0.13rem;
   font-weight: 500;
 }
+
 .solUsdc {
   left: 0.5rem;
   font-size: var(--font-size-xl);
   color: var(--color-lightcyan-100);
 }
+
 .orca1 {
   left: 12.06rem;
   font-size: var(--font-size-lg);
@@ -494,6 +555,7 @@
   width: 8.75rem;
   height: 1.31rem;
 }
+
 .frameChild {
   position: absolute;
   top: 7.34rem;
@@ -503,28 +565,34 @@
   width: 78.69rem;
   height: 0.06rem;
 }
+
 .m1,
 .m2 {
   top: 0.19rem;
 }
+
 .m1 {
   position: absolute;
   left: 47rem;
   font-weight: 500;
 }
+
 .m2 {
   left: 56.94rem;
 }
+
 .div,
 .m2,
 .m3 {
   position: absolute;
   font-weight: 500;
 }
+
 .div {
   top: 0.19rem;
   left: 64.56rem;
 }
+
 .m3 {
   top: 0;
   left: 21.56rem;
@@ -533,6 +601,7 @@
   width: 7rem;
   height: 1.63rem;
 }
+
 .solana2Icon,
 .usdCoinUsdcLogo1Icon1 {
   position: absolute;
@@ -542,9 +611,11 @@
   height: 1.88rem;
   object-fit: cover;
 }
+
 .usdCoinUsdcLogo1Icon1 {
   left: 4.25rem;
 }
+
 .manage {
   position: relative;
   font-size: var(--font-size-mini);
@@ -553,6 +624,7 @@
   color: var(--color-lightcyan-100);
   text-align: left;
 }
+
 .managePositionButton {
   cursor: pointer;
   border: 1px solid var(--color-lightcyan-700);
@@ -571,31 +643,37 @@
   align-items: center;
   justify-content: center;
 }
+
 .managePositionButton:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
-    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+  1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .managePositionButton:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .apr108065,
 .usdcPerSol {
   position: absolute;
   top: 0.56rem;
   font-weight: 500;
 }
+
 .usdcPerSol {
   left: 16.5rem;
   display: inline-block;
   width: 18rem;
 }
+
 .apr108065 {
   left: 8.75rem;
 }
+
 .circleXmarkRegular1Icon {
   position: relative;
   width: 1.56rem;
@@ -603,10 +681,12 @@
   overflow: hidden;
   flex-shrink: 0;
 }
+
 .outOfRange {
   position: relative;
   font-weight: 500;
 }
+
 .circleXmarkRegular1Parent {
   position: absolute;
   top: 0.44rem;
@@ -618,6 +698,7 @@
   text-align: center;
   color: var(--color-firebrick-200);
 }
+
 .openPositions {
   position: absolute;
   top: 1.88rem;
@@ -629,6 +710,7 @@
   height: 2.38rem;
   overflow: hidden;
 }
+
 .circleCheckRegular1Parent {
   position: absolute;
   top: 0.44rem;
@@ -640,12 +722,14 @@
   gap: var(--gap-10xs);
   color: var(--color-mediumaquamarine);
 }
+
 .createPositionButton,
 .openPositions1 {
   position: absolute;
   border-radius: var(--br-6xl);
   overflow: hidden;
 }
+
 .openPositions1 {
   top: 4.5rem;
   right: 0.63rem;
@@ -654,6 +738,7 @@
   width: 43.88rem;
   height: 2.38rem;
 }
+
 .createPositionButton {
   cursor: pointer;
   border: 1px solid var(--color-lightcyan-700);
@@ -669,17 +754,20 @@
   align-items: center;
   justify-content: center;
 }
+
 .createPositionButton:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
-    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+  1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .orcaaef56d302Icon {
   position: absolute;
   top: 0;
@@ -688,6 +776,7 @@
   height: 1.5rem;
   overflow: hidden;
 }
+
 .clmm1 {
   position: absolute;
   top: 2.25rem;
@@ -698,11 +787,13 @@
   width: 5rem;
   height: 1.31rem;
 }
+
 .mParent {
   position: relative;
   width: 78.94rem;
   height: 7.5rem;
 }
+
 .frameItem {
   position: absolute;
   top: 4.84rem;
@@ -712,6 +803,7 @@
   width: 78.69rem;
   height: 0.06rem;
 }
+
 .raydiumRayCoin1Icon {
   position: absolute;
   top: 0;
@@ -720,6 +812,7 @@
   height: 1.88rem;
   object-fit: cover;
 }
+
 .createPositionButton1 {
   cursor: pointer;
   border: 0;
@@ -739,17 +832,20 @@
   align-items: center;
   justify-content: center;
 }
+
 .createPositionButton1:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
-    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+  1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton1:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .lpTokens,
 .value,
 .yourShare {
@@ -760,20 +856,24 @@
   display: inline-block;
   width: 12.56rem;
 }
+
 .lpTokens,
 .yourShare {
   left: 13.88rem;
 }
+
 .yourShare {
   left: 27.75rem;
   width: 10.06rem;
 }
+
 .createPositionButton2,
 .openPositions2 {
   position: absolute;
   border-radius: var(--br-6xl);
   overflow: hidden;
 }
+
 .openPositions2 {
   top: 2.06rem;
   right: 0.31rem;
@@ -782,6 +882,7 @@
   width: 48.63rem;
   height: 2.38rem;
 }
+
 .createPositionButton2 {
   cursor: pointer;
   border: 0;
@@ -798,22 +899,26 @@
   align-items: center;
   justify-content: center;
 }
+
 .createPositionButton2:hover {
   border: 1px solid var(--color-lightcyan-600);
   box-sizing: border-box;
   box-shadow: -1px -1px 4px 1px rgba(217, 248, 255, 0.5),
-    1px 1px 4px 1px rgba(217, 248, 255, 0.5);
+  1px 1px 4px 1px rgba(217, 248, 255, 0.5);
 }
+
 .createPositionButton2:active {
   background-color: var(--color-lightcyan-500);
   border: 1px solid var(--color-slategray-400);
   box-sizing: border-box;
 }
+
 .mGroup {
   position: relative;
   width: 78.94rem;
   height: 5rem;
 }
+
 .frameParent {
   position: absolute;
   top: 0;
@@ -823,6 +928,7 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .scrollFrame {
   position: absolute;
   top: calc(50% - 304.5px);
@@ -833,12 +939,14 @@
   font-size: var(--tittle-16-m-size);
   color: var(--color-slategray-100);
 }
+
 .listPanel,
 .poolList {
   position: absolute;
   border-radius: var(--br-21xl);
   overflow: hidden;
 }
+
 .poolList {
   top: 9.88rem;
   left: calc(50% - 661px);
@@ -848,6 +956,7 @@
   height: 44.06rem;
   text-align: left;
 }
+
 .listPanel {
   top: 9.38rem;
   left: calc(50% - 675px);
@@ -856,12 +965,14 @@
   width: 84.38rem;
   height: 55.19rem;
 }
+
 .instanceChild5 {
   left: 0;
   border-radius: var(--br-6xl);
   background-color: var(--color-gray-600);
   width: 14.81rem;
 }
+
 .instanceChild5,
 .myPositions,
 .pools,
@@ -870,6 +981,7 @@
   top: 0;
   height: 3.44rem;
 }
+
 .pools {
   left: 0;
   display: flex;
@@ -877,10 +989,12 @@
   justify-content: center;
   width: 5.44rem;
 }
+
 .myPositions,
 .rectangleButton {
   cursor: pointer;
 }
+
 .myPositions {
   text-decoration: none;
   left: 5.44rem;
@@ -890,6 +1004,7 @@
   justify-content: center;
   width: 9.38rem;
 }
+
 .rectangleButton {
   border: 1px solid var(--color-lightcyan-100);
   padding: 0;
@@ -900,6 +1015,7 @@
   box-sizing: border-box;
   width: 5.44rem;
 }
+
 .rectangleParent1 {
   position: absolute;
   top: 5rem;
@@ -907,6 +1023,7 @@
   width: 14.81rem;
   height: 3.44rem;
 }
+
 .liquidityPanel {
   position: absolute;
   top: 0;
@@ -915,6 +1032,7 @@
   height: 75rem;
   overflow: hidden;
 }
+
 .liquidityPanelWrapper {
   position: absolute;
   top: 0;
@@ -923,38 +1041,41 @@
   height: 75rem;
   overflow-x: auto;
 }
+
 .lamp2,
 .swap {
   position: absolute;
 }
+
 .lamp2 {
   top: -14.81rem;
   left: calc(50% - 550px);
   background: radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(119, 206, 234, 0.2),
-      transparent
-    ),
-    radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(251, 0, 196, 0) 3.49%,
-      rgba(119, 186, 234, 0) 7.6%,
-      rgba(253, 0, 197, 0) 10.46%,
-      rgba(119, 186, 234, 0) 14.46%,
-      rgba(255, 0, 199, 0) 18.56%,
-      rgba(3, 0, 3, 0) 19.53%,
-      transparent 79.82%,
-      rgba(246, 0, 192, 0) 81.08%,
-      rgba(119, 186, 234, 0) 84.04%,
-      rgba(247, 0, 193, 0) 86.61%,
-      rgba(119, 186, 234, 0) 91.01%,
-      rgba(249, 0, 194, 0) 95.16%,
-      rgba(119, 186, 234, 0) 98.6%
-    );
+    50% 50% at 50% 50%,
+    rgba(119, 206, 234, 0.2),
+    transparent
+  ),
+  radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(251, 0, 196, 0) 3.49%,
+    rgba(119, 186, 234, 0) 7.6%,
+    rgba(253, 0, 197, 0) 10.46%,
+    rgba(119, 186, 234, 0) 14.46%,
+    rgba(255, 0, 199, 0) 18.56%,
+    rgba(3, 0, 3, 0) 19.53%,
+    transparent 79.82%,
+    rgba(246, 0, 192, 0) 81.08%,
+    rgba(119, 186, 234, 0) 84.04%,
+    rgba(247, 0, 193, 0) 86.61%,
+    rgba(119, 186, 234, 0) 91.01%,
+    rgba(249, 0, 194, 0) 95.16%,
+    rgba(119, 186, 234, 0) 98.6%
+  );
   width: 70.81rem;
   height: 18.81rem;
   overflow: hidden;
 }
+
 .swap {
   text-decoration: none;
   top: 0.94rem;
@@ -963,6 +1084,7 @@
   width: 3.94rem;
   cursor: pointer;
 }
+
 .dao:hover,
 .dashbord:hover,
 .farm:hover,
@@ -974,12 +1096,14 @@
 .yield:hover {
   color: var(--color-lightcyan-100);
 }
+
 .lend,
 .swap,
 .trade {
   color: inherit;
   display: inline-block;
 }
+
 .lend {
   text-decoration: none;
   position: absolute;
@@ -989,10 +1113,12 @@
   width: 3.88rem;
   cursor: pointer;
 }
+
 .trade {
   left: calc(50% - 223px);
   width: 3.94rem;
 }
+
 .farm,
 .stake,
 .trade,
@@ -1003,20 +1129,24 @@
   line-height: 1.71rem;
   cursor: pointer;
 }
+
 .yield {
   left: calc(50% - 34px);
   color: var(--color-lightcyan-100);
   display: inline-block;
   width: 6.63rem;
 }
+
 .farm,
 .stake {
   left: calc(50% + 120px);
   color: inherit;
 }
+
 .stake {
   left: calc(50% + 220px);
 }
+
 .frameInner {
   position: absolute;
   top: 2.78rem;
@@ -1027,6 +1157,7 @@
   width: 5.75rem;
   height: 0.06rem;
 }
+
 .dao,
 .dashbord,
 .stake1 {
@@ -1037,20 +1168,24 @@
   color: inherit;
   cursor: pointer;
 }
+
 .dashbord {
   left: calc(50% - 468px);
   display: inline-block;
   width: 7.38rem;
 }
+
 .dao,
 .stake1 {
   left: calc(50% + 425px);
 }
+
 .dao {
   left: calc(50% + 316px);
   display: inline-block;
   width: 4.81rem;
 }
+
 .swapParent {
   position: absolute;
   top: 0.44rem;
@@ -1059,6 +1194,7 @@
   height: 3.13rem;
   overflow: hidden;
 }
+
 .dexifiLogoIcon {
   position: absolute;
   top: 0.31rem;
@@ -1068,6 +1204,7 @@
   object-fit: cover;
   cursor: pointer;
 }
+
 .connectWallet {
   cursor: pointer;
   border: 0;
@@ -1080,6 +1217,7 @@
   text-align: left;
   display: inline-block;
 }
+
 .connectWalletWrapper {
   cursor: pointer;
   border: 1px solid var(--color-lightcyan-400);
@@ -1098,14 +1236,17 @@
   align-items: center;
   justify-content: center;
 }
+
 .connectWalletWrapper:hover {
   background-color: var(--color-lightcyan-500);
   box-shadow: 0 0 4px 3px rgba(217, 248, 255, 0.25);
 }
+
 .connectWalletWrapper:active {
   mix-blend-mode: luminosity;
   background-color: var(--color-lightcyan-400);
 }
+
 .vectorIcon,
 .vectorIcon1 {
   position: absolute;
@@ -1114,12 +1255,14 @@
   width: 1.53rem;
   height: 1.53rem;
 }
+
 .vectorIcon1 {
   top: calc(50% - 4.25px);
   left: calc(50% - 4.25px);
   width: 0.53rem;
   height: 0.53rem;
 }
+
 .iconSettings {
   cursor: pointer;
   border: 0;
@@ -1129,6 +1272,7 @@
   width: 1.44rem;
   height: 1.44rem;
 }
+
 .iconSettingsWrapper {
   cursor: pointer;
   border: 1px solid var(--color-slategray-100);
@@ -1145,24 +1289,29 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .iconSettingsWrapper:hover {
   background-color: var(--color-lightcyan-500);
 }
+
 .iconSettingsWrapper:active {
   mix-blend-mode: luminosity;
   background-color: var(--color-lightcyan-400);
 }
+
 .header,
 .instanceParent {
   position: absolute;
   top: 0;
   right: 0;
 }
+
 .instanceParent {
   width: 17.88rem;
   height: 4.44rem;
   overflow: hidden;
 }
+
 .header {
   width: 100%;
   left: 0;
@@ -1172,6 +1321,7 @@
   color: var(--color-slategray-100);
   font-family: var(--font-helvetica);
 }
+
 .v101202204202200UtcContainer {
   position: absolute;
   bottom: 0.38rem;
@@ -1185,6 +1335,7 @@
   display: inline-block;
   width: 13.03rem;
 }
+
 .indexliquidity {
   position: relative;
   background-color: var(--color-gray-600);

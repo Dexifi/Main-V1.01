@@ -208,7 +208,7 @@
 }
 .nft {
   position: absolute;
-  top: 129.38rem;
+  top: 131.6rem;
   left: calc(50% - 566px);
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -392,7 +392,7 @@
   position: absolute;
 }
 .farm {
-  top: 113.75rem;
+  top: 116rem;
   left: calc(50% - 566px);
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -595,7 +595,7 @@
   font-size: var(--font-size-xl);
 }
 .liquidity {
-  top: 98.75rem;
+  top: 101rem;
   left: calc(50% - 566px);
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -857,7 +857,7 @@
 }
 .marginTradingBalance {
   position: absolute;
-  top: 78.13rem;
+  top: 80.5rem;
   left: calc(50% - 566px);
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -1011,7 +1011,7 @@
   font-size: var(--font-size-xl);
 }
 .lendingBalance {
-  top: 58.75rem;
+  top: 61.25rem;
   left: calc(50% - 565px);
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -1186,7 +1186,7 @@
   font-size: var(--font-size-xl);
 }
 .stakingBalance {
-  top: 34.63rem;
+  top: 32rem;
   left: calc(50% - 566px);
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -1897,6 +1897,7 @@
 .trade:hover,
 .yield:hover {
   color: var(--color-lightcyan-100);
+  transition: 0.6s;
 }
 .lend,
 .swap,
@@ -1957,6 +1958,7 @@
   position: absolute;
   top: 0.94rem;
   line-height: 1.71rem;
+  transition: 0.6s;
 }
 .dashbord {
   left: calc(50% - 468px);
@@ -2109,11 +2111,10 @@
   font-family: var(--tittle-16-m);
 }
 .activeHeader {
-  box-shadow: 0 1px 0px 0 #88d6ff;
   border-bottom: 1px solid var(--color-lightcyan-300);
   color: var(--color-lightcyan-100);
 }
-.allWalletBalance{
+.allWalletBalance {
   display: flex;
   position: relative;
 }

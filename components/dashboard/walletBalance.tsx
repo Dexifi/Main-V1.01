@@ -46,7 +46,7 @@ const getTokenBalanceFromWallet = async (owner: PublicKey) => {
         {
           memcmp: {
             offset: 32, // number of bytes
-            bytes: owner,
+            bytes: owner.toString(),
           },
         },
       ],
@@ -89,6 +89,9 @@ const WalletBalance: FC<WalletBalanceProps> = ({
   const fetchData = async () => {
     try {
       let mint: { mint: string; uiAmount: number }[] = [];
+      if (publicKey === null) {
+        return;
+      }
       const balanceAccounts = await getTokenBalanceFromWallet(publicKey);
       for (const i of balanceAccounts) {
         if (i.account.data.parsed.info.tokenAmount.uiAmount > 0)

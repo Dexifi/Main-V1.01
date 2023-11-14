@@ -1,10 +1,10 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import styles from "../../pages/dashboard.module.css";
 import React, { useEffect, useState, useMemo } from "react";
-import { connection } from "../../utils/get-connection";
-import { SolendMarket } from "@solendprotocol/solend-sdk";
-import GetMain from "./solend/getMain.tsx";
-import GetTurbo from "./solend/turbo-market";
+// import { connection } from "../../utils/get-connection";
+// import { SolendMarket } from "@solendprotocol/solend-sdk";
+// import GetMain from "./solend/getMain";
+// import GetTurbo from "./solend/turbo-market";
 
 const GetLend = () => {
   const { publicKey } = useWallet();
@@ -22,8 +22,8 @@ const GetLend = () => {
           <div className={styles.pool2}>Pool</div>
           <div className={styles.heaadChild} />
         </div>
-        <GetMain setLendValue={setLendValue} lendValue={lendValue} />
-        <GetTurbo setLendValue={setLendValue} lendValue={lendValue} />
+        {/* <GetMain setLendValue={setLendValue} lendValue={lendValue} /> */}
+        {/* <GetTurbo setLendValue={setLendValue} lendValue={lendValue} /> */}
       </div>
       <div className={styles.netWorth4}>
         <div className={styles.lendingContainer}>

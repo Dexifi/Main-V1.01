@@ -26,27 +26,36 @@ const IndexTransaction: NextPage = () => {
   }, [router]);
 
   const { publicKey } = useWallet();
-  const getTransactions = async (address, numTx) => {
+  const getTransactions = async (address: any, numTx: any) => {
     const pubKey = new PublicKey(address);
     let transactionList = await connection.getSignaturesForAddress(pubKey );
     console.log(transactionList);
     let signatureList = transactionList.map(
       (transaction) => transaction.signature
     );
-    let transactionDetails = await connection.getParsedTransactions(
+    let transactionDetails: any[] = await connection.getParsedTransactions(
       signatureList,
       { maxSupportedTransactionVersion: 0 }
     );
-
+    
     transactionList.forEach((transaction, i) => {
+      if (transaction.blockTime === null || transaction.blockTime === undefined) {
+        return;
+      }
+      if (transactionDetails === null) {
+        return;
+      }
       const date = new Date(transaction.blockTime * 1000);
+      if(transactionDetails[i] === null) {
+        return;
+      }
       const transactionInstructions =
         transactionDetails[i].transaction.message.instructions;
       console.log(`Transaction No: ${i + 1}`);
       console.log(`Signature: ${transaction.signature}`);
       console.log(`Time: ${date}`);
       console.log(`Status: ${transaction.confirmationStatus}`);
-      transactionInstructions.forEach((instruction, n) => {
+      transactionInstructions.forEach((instruction: any, n: any) => {
         console.log(
           `---Instructions ${n + 1}: ${instruction.programId.toString()}`
         );
