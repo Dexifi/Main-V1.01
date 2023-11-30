@@ -31,7 +31,7 @@
 .stake,
 .vault {
   position: relative;
-  font-weight: 500;
+  
 }
 .stake {
   font-family: var(--tittle-16-m);
@@ -73,7 +73,7 @@
 }
 .balance11366987,
 .stake1 {
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
 }
 .balance11366987 {
@@ -120,7 +120,7 @@
   position: absolute;
   top: 3.13rem;
   left: calc(50% + 114px);
-  font-weight: 500;
+  
 }
 .ray1,
 .raydiumRayCoin1Parent {
@@ -130,7 +130,7 @@
 }
 .ray1 {
   position: relative;
-  font-weight: 500;
+  
   width: 4.25rem;
   height: 1.81rem;
   flex-shrink: 0;
@@ -199,7 +199,7 @@
   top: 0;
   left: 4.88rem;
   line-height: 1.71rem;
-  font-weight: 500;
+  
   display: flex;
   align-items: center;
   width: 8.38rem;
@@ -219,7 +219,7 @@
   top: 0;
   left: 0;
   line-height: 1.71rem;
-  font-weight: 500;
+  
   display: flex;
   align-items: center;
   width: 8.38rem;
@@ -242,7 +242,7 @@
   top: 0.25rem;
   left: calc(50% - 28px);
   font-size: var(--tittle-16-m-size);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color1);
   text-align: center;

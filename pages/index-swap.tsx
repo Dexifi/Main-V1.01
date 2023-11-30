@@ -1,26 +1,27 @@
-import type { NextPage } from "next";
-import { useState, useRef, useCallback, useEffect } from "react";
-import SwapTokenListWindow from "../components/swap-token-list-window";
-import PortalPopup from "../components/portal-popup";
-import styles from "./index-swap.module.css";
-import Header from "../components/header";
-import { Jupiter, TOKEN_LIST_URL, getPlatformFeeAccounts } from "@jup-ag/core";
+import type { NextPage } from 'next';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import SwapTokenListWindow from '../components/swap-token-list-window';
+import PortalPopup from '../components/portal-popup';
+import styles from './index-swap.module.css';
+import global from './global-classes.module.css';
+import Header from '../components/header';
+import { Jupiter, TOKEN_LIST_URL, getPlatformFeeAccounts } from '@jup-ag/core';
 import {
   getPrice,
   getTokenBalanceFromWallet,
-} from "../components/dashboard/walletBalance";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { connection } from "../utils/get-connection";
+} from '../components/dashboard/walletBalance';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { connection } from '../utils/get-connection';
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
   Transaction,
   TransactionMessage,
   sendAndConfirmRawTransaction,
-} from "@solana/web3.js";
-import JSBI from "jsbi";
-import { Token } from "@solana/spl-token";
-import { RouteInfo } from "@jup-ag/react-hook";
+} from '@solana/web3.js';
+import JSBI from 'jsbi';
+import { Token } from '@solana/spl-token';
+import { RouteInfo } from '@jup-ag/react-hook';
 
 const IndexSwap: NextPage = () => {
   const [isSwapTokenListWindowPopupOpen, setSwapTokenListWindowPopupOpen] =
@@ -54,14 +55,14 @@ const IndexSwap: NextPage = () => {
     if (!fetched) {
       (async () => {
         const tokens: Token[] = await (
-          await fetch(TOKEN_LIST_URL["mainnet-beta"])
+          await fetch(TOKEN_LIST_URL['mainnet-beta'])
         ).json();
         setTokenList(tokens);
-        const solana = tokens.find((t: Token) => t.symbol === "SOL");
-        solana.price = await getPrice("SOL");
+        const solana = tokens.find((t: Token) => t.symbol === 'SOL');
+        solana.price = await getPrice('SOL');
         setFirstToken(solana);
-        const USDC = tokens.find((t) => t.symbol === "USDC");
-        USDC.price = await getPrice("USDC");
+        const USDC = tokens.find((t) => t.symbol === 'USDC');
+        USDC.price = await getPrice('USDC');
         setSecondToken(USDC);
         setFetched(true);
       })();
@@ -75,13 +76,16 @@ const IndexSwap: NextPage = () => {
     const walletTokens = await getTokenBalanceFromWallet(publicKey);
     walletTokens.map((item) => {
       tokens.forEach(async (token) => {
-        if ('parsed' in item.account.data && item.account.data.parsed.info.mint === token.address) {
+        if (
+          'parsed' in item.account.data &&
+          item.account.data.parsed.info.mint === token.address
+        ) {
           token.balance = item.account.data.parsed.info.tokenAmount.uiAmount;
           token.price = await getPrice(token.symbol);
         }
       });
     });
-    const solanaToken = tokens.find((token) => token.symbol === "SOL");
+    const solanaToken = tokens.find((token) => token.symbol === 'SOL');
     solanaToken.balance =
       (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
     setTokenList(tokens);
@@ -98,17 +102,17 @@ const IndexSwap: NextPage = () => {
         feeBps: 50,
         feeAccounts: await getPlatformFeeAccounts(
           connection,
-          new PublicKey("BUX7s2ef2htTGb2KKoPHWkmzxPj4nTWMWRgs5CSbQxf9") // The platform fee account owner
+          new PublicKey('BUX7s2ef2htTGb2KKoPHWkmzxPj4nTWMWRgs5CSbQxf9') // The platform fee account owner
         ),
       };
       //  Load Jupiter
       const jupiter = await Jupiter.load({
         connection,
-        cluster: "mainnet-beta",
+        cluster: 'mainnet-beta',
         user: publicKey, // or public key
         platformFeeAndAccounts,
       });
-      console.log("jupiter");
+      console.log('jupiter');
       const routes = await jupiter.computeRoutes({
         inputMint: new PublicKey(firstToken.address),
         outputMint: new PublicKey(secondToken.address),
@@ -149,7 +153,7 @@ const IndexSwap: NextPage = () => {
         rawTransaction,
         {
           skipPreflight: true,
-          commitment: "confirmed",
+          commitment: 'confirmed',
           maxRetries: 2,
         }
       );
@@ -176,114 +180,155 @@ const IndexSwap: NextPage = () => {
   };
   return (
     <>
-      <main></main>
       <div className={styles.indexswap}>
+        <Header page={'swap'} />
         <div className={styles.lamp} />
         <div className={styles.liquidityPanel}>
+          <div className={styles.swapWithTheBestRouteParent}>
+            <b className={styles.swapWithThe}>Swap with the best route</b>
+            <img
+              className={styles.screenshot20230312214007C}
+              alt=''
+              src='/1screenshot-20230312-214007-copy-1@2x.png'
+            />
+          </div>
           <div className={styles.listPanel}>
             <div className={styles.lamp1} />
-            <button
-              className={styles.createPositionButton}
-              onClick={makeSwap}
-              disabled={!publicKey}
+            <div
+              className={`${styles.balanceContainer} ${global.row} ${global.spaceBetween}`}
             >
-              <b className={styles.swap}>Swap</b>
-            </button>
+              <div className={styles.yourePaying}>{`You’re Paying `}</div>
+              <div className={styles.balance100000000}></div>
+              Balance : {firstToken.balance ? firstToken.balance : 0}{' '}
+              {firstToken.symbol}
+            </div>
+
             <div className={styles.frameParent}>
-              <input
-                className={styles.frameChild}
-                type="number"
-                value={amount}
-                onChange={handleChangeAmount}
-              />
               <button
                 className={styles.solana2Parent}
                 onClick={openSwapTokenListWindowPopup}
               >
                 <img
                   className={styles.solana2Icon}
-                  alt=""
+                  alt=''
                   src={firstToken?.logoURI}
                 />
                 <div className={styles.sol}>{firstToken?.symbol}</div>
                 <img
                   className={styles.anglesDownSolid1Icon}
-                  alt=""
-                  src="/anglesdownsolid-1.svg"
+                  alt=''
+                  src='/anglesdownsolid-1.svg'
                 />
               </button>
-            </div>
-            <button
-              className={styles.transferDomainButton}
-              onClick={() => setAmount(firstToken.balance * 0.25)}
-            >
-              <div className={styles.transfer}>%25</div>
-            </button>
-            <button
-              className={styles.transferDomainButton1}
-              onClick={() => setAmount(firstToken.balance * 0.5)}
-            >
-              <div className={styles.transfer}>%50</div>
-            </button>
-            <button
-              className={styles.transferDomainButton2}
-              onClick={() => setAmount(firstToken.balance * 0.75)}
-            >
-              <div className={styles.transfer}>%75</div>
-            </button>
-            <button
-              className={styles.transferDomainButton3}
-              onClick={() => setAmount(firstToken.balance)}
-            >
-              <div className={styles.transfer}>%100</div>
-            </button>
-            <div className={styles.yourePaying}>{`You’re Paying `}</div>
-            <div className={styles.balance100000000}>
-              Balance : {firstToken.balance ? firstToken.balance : 0}{" "}
-              {firstToken.symbol}
-            </div>
-            <div className={styles.frameGroup}>
               <input
                 className={styles.frameChild}
-                type="number"
-                value={secondAmount}
-                onChange={handleChangeSecondAmount}
+                type='number'
+                value={amount}
+                onChange={handleChangeAmount}
               />
-              <div
-                className={styles.usdCoinUsdcLogo1Parent}
+            </div>
+            <div
+              className={`${styles.procentButtons} ${global.row} ${global.spaceBetween}`}
+            >
+              <button
+                className={styles.ellipseParent}
+                onClick={() => {
+                  const util = secondToken;
+                  setSecondToken(firstToken);
+                  setFirstToken(secondToken);
+                }}
+              >
+                <img
+                  className={styles.rotateRightSolid1Icon}
+                  alt=''
+                  src='/rotaterightsolid-1.svg'
+                />
+              </button>
+
+              <div className={`${global.row} ${styles.gap}`}>
+                <button
+                  className={styles.transferDomainButton}
+                  onClick={() => setAmount(firstToken.balance * 0.25)}
+                >
+                  <div className={styles.transfer}>%25</div>
+                </button>
+                <button
+                  className={styles.transferDomainButton}
+                  onClick={() => setAmount(firstToken.balance * 0.5)}
+                >
+                  <div className={styles.transfer}>%50</div>
+                </button>
+                <button
+                  className={styles.transferDomainButton}
+                  onClick={() => setAmount(firstToken.balance * 0.75)}
+                >
+                  <div className={styles.transfer}>%75</div>
+                </button>
+                <button
+                  className={styles.transferDomainButton}
+                  onClick={() => setAmount(firstToken.balance)}
+                >
+                  <div className={styles.transfer}>%100</div>
+                </button>
+              </div>
+            </div>
+
+            <div
+              className={`${styles.balanceContainer} ${global.row} ${global.spaceBetween}`}
+            >
+              <div className={styles.toReceive}>To Receive</div>
+              <div className={styles.balance1000000001}></div>
+              Balance :{' '}
+              {secondToken.balance ? secondToken.balance.toFixed(4) : 0 + ' '}
+              {secondToken?.symbol}
+            </div>
+
+            <div className={styles.frameParent}>
+              <button
+                className={styles.solana2Parent}
                 onClick={openSwapTokenListWindowPopup1}
               >
                 <img
                   className={styles.solana2Icon}
-                  alt=""
+                  alt=''
                   src={secondToken?.logoURI}
                 />
                 <div className={styles.usdc}>{secondToken?.symbol}</div>
                 <img
                   className={styles.anglesDownSolid1Icon}
-                  alt=""
-                  src="/anglesdownsolid-1.svg"
+                  alt=''
+                  src='/anglesdownsolid-1.svg'
                 />
-              </div>
+              </button>
+              <input
+                className={styles.frameChild}
+                type='number'
+                value={secondAmount}
+                onChange={handleChangeSecondAmount}
+              />
             </div>
-            <div className={styles.toReceive}>To Receive</div>
-            <div className={styles.balance1000000001}>
-              Balance :{" "}
-              {secondToken.balance ? secondToken.balance.toFixed(4) : 0 + " "}
-              {secondToken?.symbol}
-            </div>
+
             <div className={styles.usdc00438622717Container}>
               <p className={styles.priceImpact}>
-                1 {secondToken.symbol} ≈ {secondToken.price / firstToken.price}{" "}
+                1 {secondToken.symbol} ≈ {secondToken.price / firstToken.price}{' '}
                 SOL
               </p>
               <p className={styles.priceImpact}>
-                1 {firstToken.symbol} ≈ {firstToken.price / secondToken.price}{" "}
+                1 {firstToken.symbol} ≈ {firstToken.price / secondToken.price}{' '}
                 USDC
               </p>
+              <img
+                className={styles.icon1}
+                alt=''
+                src='/1.svg'
+              />
             </div>
-            <img className={styles.icon} alt="" src="/1.svg" />
-            <img className={styles.icon1} alt="" src="/1.svg" />
+
+            <img
+              className={styles.icon}
+              alt=''
+              src='/1.svg'
+            />
             <div className={styles.frameContainer}>
               <div className={styles.moreInfoWrapper}>
                 <div className={styles.moreInfo}>More info</div>
@@ -303,14 +348,13 @@ const IndexSwap: NextPage = () => {
                   <p className={styles.priceImpact}>
                     0.00203928 SOL for 1 ATA account
                   </p>
-                  <p className={styles.priceImpact}>&nbsp;</p>
                 </div>
               </div>
             </div>
             <div className={styles.details1}>
               <img
                 className={styles.solana2Icon}
-                alt=""
+                alt=''
                 src={firstToken.logoURI}
               />
               <div
@@ -329,7 +373,7 @@ const IndexSwap: NextPage = () => {
               </div>
               <img
                 className={styles.solana2Icon}
-                alt=""
+                alt=''
                 src={secondToken.logoURI}
               />
               <div
@@ -347,59 +391,44 @@ const IndexSwap: NextPage = () => {
                 </p>
               </div>
             </div>
+
             <button
-              className={styles.ellipseParent}
-              onClick={() => {
-                const util = secondToken;
-                setSecondToken(firstToken);
-                setFirstToken(secondToken);
-              }}
+              className={styles.createPositionButton}
+              onClick={makeSwap}
+              disabled={!publicKey}
             >
-              <div className={styles.ellipseDiv} />
-              <img
-                className={styles.rotateRightSolid1Icon}
-                alt=""
-                src="/rotaterightsolid-1.svg"
-              />
+              <b className={styles.swap}>Swap</b>
             </button>
           </div>
           <div className={styles.poweredByJupiterParent}>
-            <div className={styles.moreInfo}>Powered by Jupiter</div>
+            <div className={styles.powered}>Powered by Jupiter</div>
             <img
               className={styles.jupiterLogo11Icon}
-              alt=""
-              src="/jupiterlogo1-1.svg"
+              alt=''
+              src='/jupiterlogo1-1.svg'
             />
           </div>
-          <div className={styles.liquidityPanelChild} />
-          <div className={styles.swapWithTheBestRouteParent}>
-            <b className={styles.swapWithThe}>Swap with the best route</b>
-            <img
-              className={styles.screenshot20230312214007C}
-              alt=""
-              src="/1screenshot-20230312-214007-copy-1@2x.png"
-            />
-          </div>
+
           <button className={styles.anglesDownSolid1Parent}>
             <img
               className={styles.anglesDownSolid1Icon2}
-              alt=""
-              src="/anglesdownsolid-11.svg"
+              alt=''
+              src='/anglesdownsolid-11.svg'
             />
             <img
               className={styles.solana2Icon}
-              alt=""
-              src="/solana-24@2x.png"
+              alt=''
+              src='/solana-24@2x.png'
             />
             <img
               className={styles.solana2Icon}
-              alt=""
-              src="/usdcoinusdclogo-14@2x.png"
+              alt=''
+              src='/usdcoinusdclogo-14@2x.png'
             />
             <div className={styles.solUsdc}>SOL-USDC</div>
           </button>
         </div>
-        <Header page={"swap"} />
+
         <div className={styles.v101202204202200UtcContainer}>
           <p className={styles.priceImpact}>V1.0.1</p>
           <p className={styles.priceImpact}>2022-04-20 22:00 UTC</p>
@@ -407,8 +436,8 @@ const IndexSwap: NextPage = () => {
       </div>
       {isSwapTokenListWindowPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(13, 17, 27, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(13, 17, 27, 0.7)'
+          placement='Centered'
           onOutsideClick={closeSwapTokenListWindowPopup}
         >
           <SwapTokenListWindow
@@ -422,8 +451,8 @@ const IndexSwap: NextPage = () => {
       )}
       {isSwapTokenListWindowPopup1Open && (
         <PortalPopup
-          overlayColor="rgba(18, 28, 43, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(18, 28, 43, 0.7)'
+          placement='Centered'
           onOutsideClick={closeSwapTokenListWindowPopup1}
         >
           <SwapTokenListWindow

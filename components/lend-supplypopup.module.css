@@ -30,7 +30,7 @@
 .sol,
 .supply {
   position: relative;
-  font-weight: 500;
+  
 }
 .sol {
   display: flex;
@@ -67,7 +67,7 @@
 .balance11366987,
 .div {
   position: absolute;
-  font-weight: 500;
+  
 }
 .balance11366987 {
   top: 6.25rem;
@@ -87,7 +87,7 @@
 }
 .sol1 {
   position: relative;
-  font-weight: 500;
+  
   width: auto;
   height: 1.81rem;
   flex-shrink: 0;
@@ -152,7 +152,7 @@
   top: 0.25rem;
   left: calc(50% - 28px);
   font-size: var(--tittle-16-m-size);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color1);
   text-align: center;
@@ -195,12 +195,12 @@
   position: absolute;
   top: 13.13rem;
   left: 2.75rem;
-  font-weight: 500;
+  
 }
 .supply1 {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -246,7 +246,7 @@
   flex-shrink: 0;
 }
 .to531782Container {
-  font-weight: 500;
+  
   color: var(--color-slategray-100);
   white-space: pre-wrap;
   text-align: right;
@@ -269,7 +269,7 @@
 .inputAmountYou {
   top: 4.94rem;
   left: 2.44rem;
-  font-weight: 500;
+  
   display: inline-block;
   width: 18.81rem;
 }

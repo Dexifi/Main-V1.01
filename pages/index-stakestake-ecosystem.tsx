@@ -1,12 +1,14 @@
-import type { NextPage } from "next";
-import { useState, useRef, useCallback } from "react";
-import DepositStakepopup from "../components/deposit-stakepopup";
-import PortalPopup from "../components/portal-popup";
-import Unstakepopup3 from "../components/unstakepopup3";
-import WalletSetting from "../components/wallet-setting";
-import DisconnectSetting from "../components/disconnect-setting";
-import { useRouter } from "next/router";
-import styles from "./index-stakestake-ecosystem.module.css";
+import type { NextPage } from 'next';
+import { useState, useRef, useCallback } from 'react';
+import DepositStakepopup from '../components/deposit-stakepopup';
+import PortalPopup from '../components/portal-popup';
+import Unstakepopup3 from '../components/unstakepopup3';
+import WalletSetting from '../components/wallet-setting';
+import DisconnectSetting from '../components/disconnect-setting';
+import global from './global-classes.module.css';
+import styles from './index-stakestake-ecosystem.module.css';
+import Header from '../components/header';
+import StakeNav from './stake-nav';
 const IndexStakestakeEcosystem: NextPage = () => {
   const [isDepositStakepopupOpen, setDepositStakepopupOpen] = useState(false);
   const [isUnstakepopupOpen, setUnstakepopupOpen] = useState(false);
@@ -15,7 +17,6 @@ const IndexStakestakeEcosystem: NextPage = () => {
   const frameButton1Ref = useRef<HTMLButtonElement>(null);
   const [isDisconnectSettingPopupOpen, setDisconnectSettingPopupOpen] =
     useState(false);
-  const router = useRouter();
 
   const openDepositStakepopup = useCallback(() => {
     setDepositStakepopupOpen(true);
@@ -33,79 +34,21 @@ const IndexStakestakeEcosystem: NextPage = () => {
     setUnstakepopupOpen(false);
   }, []);
 
-  const openWalletSettingPopup = useCallback(() => {
-    setWalletSettingPopupOpen(true);
-  }, []);
-
   const closeWalletSettingPopup = useCallback(() => {
     setWalletSettingPopupOpen(false);
-  }, []);
-
-  const openDisconnectSettingPopup = useCallback(() => {
-    setDisconnectSettingPopupOpen(true);
   }, []);
 
   const closeDisconnectSettingPopup = useCallback(() => {
     setDisconnectSettingPopupOpen(false);
   }, []);
 
-  const onDEXIFILOGOImageClick = useCallback(() => {
-    router.push("/index-stake");
-  }, [router]);
-
-  const onMyVaultsTextClick = useCallback(() => {
-    router.push("/index-stakemy");
-  }, [router]);
-
-  const onLiquidityStakeTextClick = useCallback(() => {
-    router.push("/iindex-stakestake-ecosystem");
-  }, [router]);
-
-  const onSwapClick = useCallback(() => {
-    router.push("/index-swap");
-  }, [router]);
-
-  const onLendClick = useCallback(() => {
-    router.push("/index-lend");
-  }, [router]);
-
-  const onTradeClick = useCallback(() => {
-    router.push("/index-trade");
-  }, [router]);
-
-  const onYieldClick = useCallback(() => {
-    router.push("/index-liquidity");
-  }, [router]);
-
-  const onFarmClick = useCallback(() => {
-    router.push("/index-farm");
-  }, [router]);
-
-  const onStakeClick = useCallback(() => {
-    router.push("/index-stake");
-  }, [router]);
-
-  const onDashbordClick = useCallback(() => {
-    router.push("/dashboard");
-  }, [router]);
-
-  const onStake1Click = useCallback(() => {
-    window.open("nft.dexifi.io");
-  }, []);
-
-  const onDAOClick = useCallback(() => {
-    router.push("/index-i-d-o");
-  }, [router]);
-
-  const onDEXIFILOGOImage1Click = useCallback(() => {
-    router.push("/");
-  }, [router]);
-
   return (
     <>
       <div className={styles.indexstakeecosystem}>
         <div className={styles.lamp} />
+        <Header page={'stake'} />
         <div className={styles.liquidityPanel}>
+          <StakeNav activePage='ecosystem' />
           <div className={styles.listPanel}>
             <div className={styles.poolOverwiew}>
               <div className={styles.listOfAll}>
@@ -113,71 +56,67 @@ const IndexStakestakeEcosystem: NextPage = () => {
               </div>
             </div>
             <div className={styles.myLocksParent}>
-              <div className={styles.myLocks}>My Locks</div>
-              <div className={styles.value}>Value</div>
-              <div className={styles.rewards}>Rewards</div>
-              <div className={styles.div}>$ 2000.05</div>
-              <div className={styles.total}>Total</div>
-              <div className={styles.div1}>$ 2100.750</div>
-              <div className={styles.div2}>$ 100.75</div>
-            </div>
-          </div>
-          <div className={styles.rectangleParent}>
-            <div className={styles.instanceChild} />
-            <div className={styles.instanceItem} />
-            <img
-              className={styles.dexifiLogoIcon}
-              alt=""
-              src="/dexifi-logo1@2x.png"
-              onClick={onDEXIFILOGOImageClick}
-            />
-            <div className={styles.ecosystem}>Ecosystem</div>
-            <div className={styles.myVaults} onClick={onMyVaultsTextClick}>
-              My Vaults
-            </div>
-            <div
-              className={styles.liquidityStake}
-              onClick={onLiquidityStakeTextClick}
-            >
-              Liquidity Stake
+              <div className={`${styles.grid}`}>
+                <div className={styles.lockTitle}>My Locks</div>
+                <div className={styles.lockTitle}>Total</div>
+                <div className={styles.lockTitle}>Value</div>
+                <div className={styles.lockTitle}>Rewards</div>
+              </div>
+
+              <div className={`${styles.grid}`}>
+                <div></div>
+                <p className={styles.lockText}>$ 2100.750</p>
+                <p className={styles.lockText}>$ 2000.05</p>
+                <p className={styles.lockText}>$ 100.75</p>
+              </div>
             </div>
           </div>
           <div className={styles.listPanel1}>
-            <div className={styles.raydiumRay537397824051Wrapper}>
-              <div className={styles.raydiumRay5373978Container}>
-                <span className={styles.raydiumRay5373978Container1}>
-                  <p className={styles.p}>10.0 %</p>
-                  <p className={styles.p}>Raydium</p>
-                  <p className={styles.p}>RAY</p>
-                  <p className={styles.p}>$5,373,978</p>
-                  <p className={styles.p}>24.051.027 RAY</p>
-                  <p className={styles.p}>-</p>
-                  <p className={styles.p}>-</p>
-                </span>
-              </div>
-            </div>
-            <div className={styles.aprProviderRewardTvlTvlWrapper}>
-              <div className={styles.aprProviderRewardContainer}>
-                <span className={styles.raydiumRay5373978Container1}>
-                  <p className={styles.p}>APR</p>
-                  <p className={styles.p}>Provider</p>
-                  <p className={styles.p}>Reward</p>
-                  <p className={styles.p}>TVL</p>
-                  <p className={styles.p}>TVL $</p>
-                  <p className={styles.p}>Lock Time</p>
-                  <p className={styles.p}>Withdraw Pending</p>
-                </span>
-              </div>
-            </div>
             <div className={styles.vaultsParent}>
               <div className={styles.vaults}>{`Vaults `}</div>
-              <div className={styles.vaults}>RAY</div>
+              <div className={styles.dxe4}>RAY</div>
               <img
                 className={styles.raydiumRayCoin1Icon}
-                alt=""
-                src="/raydiumraycoin-1@2x.png"
+                alt=''
+                src='/raydiumraycoin-1@2x.png'
               />
             </div>
+
+            <div className={`${global.column}`}>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>APY</p>
+                <p className={styles.statisticText}>10.0 %</p>
+              </div>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>Provider</p>
+                <p className={styles.statisticText}>Raydium</p>
+              </div>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>Reward</p>
+                <p className={styles.statisticText}>RAY</p>
+              </div>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>TVL</p>
+                <p className={styles.statisticText}>$5,373,978</p>
+              </div>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>TVL $</p>
+                <p className={styles.statisticText}>24.051.027 RAY</p>
+              </div>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>Lock Time</p>
+                <p className={styles.statisticText}>365 Days</p>
+              </div>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>Withdraw</p>
+                <p className={styles.statisticText}>-</p>
+              </div>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>Pendding</p>
+                <p className={styles.statisticText}>-</p>
+              </div>
+            </div>
+
             <button
               className={styles.createPositionButton}
               onClick={openDepositStakepopup}
@@ -185,22 +124,25 @@ const IndexStakestakeEcosystem: NextPage = () => {
               <div className={styles.deposit}>Deposit</div>
             </button>
             <div className={styles.createPositionButtonParent}>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>{`Deposited `}</p>
+                <div className={`${global.column}`}>
+                  <p className={styles.statisticText}>200.035 Ray</p>
+                  <p className={styles.statisticText}>$ 200.05</p>
+                </div>
+              </div>
+              <div className={`${global.row} ${global.spaceBetween}`}>
+                <p className={styles.statisticTitle}>Pending Rewards</p>
+                <div className={`${global.column}`}>
+                  <p className={styles.statisticText}>200.035 Ray</p>
+                  <p className={styles.statisticText}>$ 200.05</p>
+                </div>
+              </div>
               <button className={styles.createPositionButton1}>
                 <div className={styles.claimPending}>Claim Pending</div>
               </button>
-              <div className={styles.depositedPendingRewardsContainer}>
-                <p className={styles.p}>{`Deposited `}</p>
-                <p className={styles.p}>&nbsp;</p>
-                <p className={styles.p}>Pending Rewards</p>
-              </div>
-              <div className={styles.ray20005Container}>
-                <p className={styles.p}>200.035 Ray</p>
-                <p className={styles.p}>$ 200.05</p>
-                <p className={styles.p}>200.035 Ray</p>
-                <p className={styles.p}>$ 200.05</p>
-              </div>
               <button
-                className={styles.createPositionButton2}
+                className={styles.createPositionButton1}
                 onClick={openUnstakepopup}
               >
                 <div className={styles.claimPending}>Unstake</div>
@@ -208,68 +150,7 @@ const IndexStakestakeEcosystem: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className={styles.header}>
-          <div className={styles.lamp1} />
-          <div className={styles.swapParent}>
-            <a className={styles.swap} onClick={onSwapClick}>
-              Swap
-            </a>
-            <a className={styles.lend} onClick={onLendClick}>
-              Lend
-            </a>
-            <a className={styles.trade} onClick={onTradeClick}>
-              Trade
-            </a>
-            <a className={styles.yield} onClick={onYieldClick}>
-              Liquidity
-            </a>
-            <a className={styles.farm} onClick={onFarmClick}>
-              Farm
-            </a>
-            <a className={styles.stake} onClick={onStakeClick}>
-              Stake
-            </a>
-            <div className={styles.frameChild} />
-            <a className={styles.dashbord} onClick={onDashbordClick}>
-              Dashboard
-            </a>
-            <a className={styles.stake1} onClick={onStake1Click}>
-              NFT
-            </a>
-            <a className={styles.dao} onClick={onDAOClick}>
-              IDO
-            </a>
-          </div>
-          <img
-            className={styles.dexifiLogoIcon1}
-            alt=""
-            src="/dexifi-logo@2x.png"
-            onClick={onDEXIFILOGOImage1Click}
-          />
-          <div className={styles.instanceParent}>
-            <button
-              className={styles.connectWalletWrapper}
-              ref={frameButtonRef}
-              onClick={openWalletSettingPopup}
-            >
-              <button className={styles.connectWallet}>Connect Wallet</button>
-            </button>
-            <button
-              className={styles.iconSettingsWrapper}
-              ref={frameButton1Ref}
-              onClick={openDisconnectSettingPopup}
-            >
-              <button className={styles.iconSettings}>
-                <img className={styles.vectorIcon} alt="" src="/vector15.svg" />
-                <img
-                  className={styles.vectorIcon1}
-                  alt=""
-                  src="/vector16.svg"
-                />
-              </button>
-            </button>
-          </div>
-        </div>
+
         <div className={styles.v101202204202200UtcContainer}>
           <p className={styles.p}>V1.0.1</p>
           <p className={styles.p}>2022-04-20 22:00 UTC</p>
@@ -277,8 +158,8 @@ const IndexStakestakeEcosystem: NextPage = () => {
       </div>
       {isDepositStakepopupOpen && (
         <PortalPopup
-          overlayColor="rgba(113, 113, 113, 0.3)"
-          placement="Centered"
+          overlayColor='rgba(113, 113, 113, 0.3)'
+          placement='Centered'
           onOutsideClick={closeDepositStakepopup}
         >
           <DepositStakepopup onClose={closeDepositStakepopup} />
@@ -286,8 +167,8 @@ const IndexStakestakeEcosystem: NextPage = () => {
       )}
       {isUnstakepopupOpen && (
         <PortalPopup
-          overlayColor="rgba(113, 113, 113, 0.3)"
-          placement="Centered"
+          overlayColor='rgba(113, 113, 113, 0.3)'
+          placement='Centered'
           onOutsideClick={closeUnstakepopup}
         >
           <Unstakepopup3 onClose={closeUnstakepopup} />
@@ -295,8 +176,8 @@ const IndexStakestakeEcosystem: NextPage = () => {
       )}
       {isWalletSettingPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(13, 17, 27, 0.7)"
-          placement="Top right"
+          overlayColor='rgba(13, 17, 27, 0.7)'
+          placement='Top right'
           top={-520}
           relativeLayerRef={frameButtonRef}
           onOutsideClick={closeWalletSettingPopup}
@@ -306,8 +187,8 @@ const IndexStakestakeEcosystem: NextPage = () => {
       )}
       {isDisconnectSettingPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(13, 17, 27, 0.7)"
-          placement="Top right"
+          overlayColor='rgba(13, 17, 27, 0.7)'
+          placement='Top right'
           top={-250}
           relativeLayerRef={frameButton1Ref}
           onOutsideClick={closeDisconnectSettingPopup}

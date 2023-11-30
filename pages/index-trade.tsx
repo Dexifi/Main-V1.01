@@ -1,19 +1,20 @@
-import type { NextPage } from "next";
-import { useState, useRef, useCallback, useEffect } from "react";
-import TradeTokenListWindow from "../components/trade-token-list-window";
-import PortalPopup from "../components/portal-popup";
-import MarketAdd from "../components/market-add";
-import styles from "./index-trade.module.css";
-import Header from "../components/header";
-import { Market, MARKETS } from "@openbook-dex/openbook";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { connection } from "../utils/get-connection";
+import type { NextPage } from 'next';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import TradeTokenListWindow from '../components/trade-token-list-window';
+import PortalPopup from '../components/portal-popup';
+import MarketAdd from '../components/market-add';
+import styles from './index-trade.module.css';
+import global from './global-classes.module.css';
+import Header from '../components/header';
+import { Market, MARKETS } from '@openbook-dex/openbook';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { connection } from '../utils/get-connection';
 import {
   findToken,
   getTokenBalanceFromWallet,
-} from "../components/dashboard/walletBalance";
-import { PublicKey } from "@metaplex-foundation/js";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+} from '../components/dashboard/walletBalance';
+import { PublicKey } from '@metaplex-foundation/js';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 const IndexTrade: NextPage = () => {
   const [isTradeTokenListWindowPopupOpen, setTradeTokenListWindowPopupOpen] =
@@ -41,15 +42,15 @@ const IndexTrade: NextPage = () => {
   const [market, setMarket] = useState({} as any);
   const [asks, setAsks] = useState([] as any);
   const [bids, setBids] = useState([] as any);
-  const [side, setSide] = useState("buy");
+  const [side, setSide] = useState('buy');
   const [selectedMarket, setSelectedMarket] = useState(MARKETS[0] as any);
   const [tokenBalance, setTokenBalance] = useState(0);
   const { publicKey, wallet } = useWallet();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     MARKETS.forEach(async (item) => {
-      item.tokenA = await findToken(item.name.split("/")[0]);
-      item.tokenB = await findToken(item.name.split("/")[1]);
+      item.tokenA = await findToken(item.name.split('/')[0]);
+      item.tokenB = await findToken(item.name.split('/')[1]);
       setSelectedMarket(MARKETS[0]);
     });
   }, []);
@@ -72,7 +73,7 @@ const IndexTrade: NextPage = () => {
         connection,
         new PublicKey(selectedMarket.address),
         {},
-        new PublicKey("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX")
+        new PublicKey('srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX')
       );
       // Fetching orderbooks
       let bids: any = await market.loadBids(connection);
@@ -81,16 +82,16 @@ const IndexTrade: NextPage = () => {
         returnBids = [];
 
       for (let i = 0; i < asks.length; i++) {
-          const order = asks[i];
-          if (returnAsks.length !== 12) {
-              returnAsks.push({
-                  price: order.price,
-                  size: order.size,
-                  side: order.side,
-              });
-          } else {
-              break; // Прерываем цикл после добавления 12 элементов
-          }
+        const order = asks[i];
+        if (returnAsks.length !== 12) {
+          returnAsks.push({
+            price: order.price,
+            size: order.size,
+            side: order.side,
+          });
+        } else {
+          break; // Прерываем цикл после добавления 12 элементов
+        }
       }
       for (let order of bids) {
         if (returnBids.length !== 12)
@@ -114,47 +115,45 @@ const IndexTrade: NextPage = () => {
       return;
     }
     const walletBalance = await getTokenBalanceFromWallet(publicKey);
-    if (selectedMarket.tokenB.symbol !== "SOL") {
-      const tokenB = walletBalance.find(
-        (item) => {
-          if ('parsed' in item.account.data) {
-            item.account.data.parsed.info.mint === selectedMarket.tokenB.address
-          }
-          
+    if (selectedMarket.tokenB.symbol !== 'SOL') {
+      const tokenB = walletBalance.find((item) => {
+        if ('parsed' in item.account.data) {
+          item.account.data.parsed.info.mint === selectedMarket.tokenB.address;
         }
-          
-      );
-      if (tokenB?.account?.data !== undefined && 'parsed' in tokenB?.account?.data) {
+      });
+      if (
+        tokenB?.account?.data !== undefined &&
+        'parsed' in tokenB?.account?.data
+      ) {
         selectedMarket.tokenB.balance =
-        tokenB?.account?.data.parsed.info?.tokenAmount?.uiAmount;
+          tokenB?.account?.data.parsed.info?.tokenAmount?.uiAmount;
       } else {
-        selectedMarket.tokenB.balance = 0
+        selectedMarket.tokenB.balance = 0;
       }
-
     } else {
       selectedMarket.tokenB.balance =
         (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
     }
-    if (selectedMarket.tokenA.symbol !== "SOL") {
-      const tokenA = walletBalance.find(
-        (item) => {
-          if ('parsed' in item.account.data) {
-            item.account.data.parsed.info.mint === selectedMarket.tokenA.address
-          }
+    if (selectedMarket.tokenA.symbol !== 'SOL') {
+      const tokenA = walletBalance.find((item) => {
+        if ('parsed' in item.account.data) {
+          item.account.data.parsed.info.mint === selectedMarket.tokenA.address;
         }
-        
-      );
-      if (tokenA?.account?.data !== undefined && 'parsed' in tokenA?.account?.data) {
+      });
+      if (
+        tokenA?.account?.data !== undefined &&
+        'parsed' in tokenA?.account?.data
+      ) {
         selectedMarket.tokenA.balance =
-        tokenA?.account?.data.parsed.info?.tokenAmount?.uiAmount;
+          tokenA?.account?.data.parsed.info?.tokenAmount?.uiAmount;
       } else {
-        selectedMarket.tokenB.balance = 0
+        selectedMarket.tokenB.balance = 0;
       }
     } else {
       selectedMarket.tokenA.balance =
         (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
     }
-    if (side === "buy") balance = selectedMarket.tokenB.balance;
+    if (side === 'buy') balance = selectedMarket.tokenB.balance;
     else balance = selectedMarket.tokenA.balance;
     setTokenBalance(balance);
   };
@@ -169,458 +168,605 @@ const IndexTrade: NextPage = () => {
     <>
       <div className={styles.indextrade}>
         <div className={styles.lamp} />
+        <Header page={'trade'} />
         <div className={styles.tradePanel}>
-          <div className={styles.listPanel}>
-            <div className={styles.lamp1} />
-            <button
-              className={styles.createPositionButton}
-              onClick={handlePlaceOrder}
-            >
-              <div className={styles.placeOrder}>Place Order</div>
-            </button>
-            <div className={styles.limitPriceParent}>
-              <div className={styles.limitPrice}>Limit Price</div>
-              <input
-                className={styles.frameChild}
-                type="number"
-                required
-                value={limitPrice}
-              />
-            </div>
-            <div className={styles.amountParent}>
-              <div className={styles.limitPrice}>Amount</div>
-              <input
-                className={styles.frameItem}
-                type="number"
-                required
-                value={amount}
-              />
-            </div>
-            <div className={styles.totalParent}>
-              <div className={styles.limitPrice}>Total</div>
-              <input
-                className={styles.frameItem}
-                type="number"
-                disabled
-                readOnly
-                value={limitPrice !== undefined && amount !== undefined ? limitPrice * amount : 0}
-              />
-            </div>
-            <div className={styles.usdcBalance0}>
-              {side === "buy"
-                ? selectedMarket?.tokenB?.symbol
-                : selectedMarket?.tokenA?.symbol}{" "}
-              Balance: {tokenBalance?.toFixed(4) || 0}
-            </div>
-            <button
-              className={styles.transferDomainButton}
-              onClick={() => {
-                setAmount(tokenBalance !== undefined  ? tokenBalance * 0.25 : 0);
-              }}
-            >
-              <div className={styles.transfer}>%25</div>
-            </button>
-            <button
-              className={styles.transferDomainButton1}
-              onClick={() => {
-                setAmount(tokenBalance !== undefined ? tokenBalance * 0.5 : 0);
-              }}
-            >
-              <div className={styles.transfer}>%50</div>
-            </button>
-            <button
-              className={styles.transferDomainButton2}
-              onClick={() => {
-                setAmount(tokenBalance !== undefined  ? tokenBalance * 0.75 : 0);
-              }}
-            >
-              <div className={styles.transfer}>%75</div>
-            </button>
-            <button
-              className={styles.transferDomainButton3}
-              onClick={() => {
-                setAmount(tokenBalance !== undefined  ? tokenBalance * 0.25 : 0);
-              }}
-            >
-              <div className={styles.transfer}>%100</div>
-            </button>
-            <div className={styles.limitOrder}>Limit Order</div>
-            <div className={styles.rectangleParent}>
-              <div className={styles.instanceChild} />
+          <div className={`${global.column} ${styles.gap}`}>
+            <div className={styles.market1}>
+              <div className={styles.lamp6} />
+              <div className={`${global.column}`}>
+                <div className={styles.market2}>Market</div>
+                <button
+                  className={styles.vectorParent}
+                  onClick={openTradeTokenListWindowPopup}
+                >
+                  <div className={styles.selectMarket}>
+                    {selectedMarket.name}
+                  </div>
+                  <img
+                    className={styles.iconDown}
+                    src='/vector1.svg'
+                    alt=''
+                  />
+                  <button
+                    className={styles.circlePlusSolid1}
+                    onClick={openMarketAddPopup}
+                  >
+                    <img
+                      className={styles.vectorIcon1}
+                      alt=''
+                      src='/vector10.svg'
+                    />
+                  </button>
+                </button>
+              </div>
+
               <div
-                className={`${styles.buy} ${
-                  side === "buy" ? styles.activeSide : ""
-                }`}
-                onClick={() => setSide("buy")}
+                className={`${global.column} ${styles.gap} ${global.center}`}
               >
-                Buy
+                <div className={styles.dxeusdc5}>{selectedMarket?.name}</div>
+
+                <div
+                  className={`${global.row} ${styles.gap} ${global.alignCenter} ${global.center}`}
+                >
+                  <img
+                    className={styles.usdCoinUsdcLogo2Icon}
+                    alt=''
+                    src={selectedMarket.tokenA?.logoURI}
+                  />
+                  <img
+                    className={styles.sitelogoCopy1}
+                    alt=''
+                    src={selectedMarket.tokenB?.logoURI}
+                  />
+                </div>
               </div>
+
               <div
-                onClick={() => setSide("sell")}
-                className={`${styles.sell} ${
-                  side === "sell" ? styles.activeSide : ""
-                }`}
+                className={`${global.column} ${styles.gap} ${global.center}`}
               >
-                Sell
+                <div className={styles.totalVolume}>Total Volume</div>
+                <div className={styles.div57}>$ 100,000,000.00</div>
               </div>
-              <div className={styles.instanceItem} />
-            </div>
-          </div>
-          <div className={styles.chart}>
-            <div className={styles.lamp2} />
-            <div className={styles.chart1}>Chart</div>
-            <div className={styles.rectangleGroup}>
-              <div className={styles.instanceInner} />
-              <div className={styles.hParent}>
-                <div className={styles.h}>1H</div>
-                <div className={styles.d}>{`12H `}</div>
-                <div className={styles.d}>1D</div>
-                <div className={styles.d}>7D</div>
-                <div className={styles.d}>1M</div>
-              </div>
-              <div className={styles.rectangleDiv} />
-            </div>
-            <div className={styles.grid}>
-              <div className={styles.y}>
-                <div className={styles.yAxis}>
-                  <div className={styles.div}>0</div>
-                  <img className={styles.lineIcon} alt="" src="/line.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.div}>0</div>
-                  <img className={styles.lineIcon} alt="" src="/line1.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.div}>0</div>
-                  <img className={styles.lineIcon} alt="" src="/line2.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.div}>0</div>
-                  <img className={styles.lineIcon} alt="" src="/line.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.div}>0</div>
-                  <img className={styles.lineIcon} alt="" src="/line1.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.div}>0</div>
-                  <img className={styles.lineIcon} alt="" src="/line2.svg" />
-                </div>
-                <div className={styles.yAxis0}>
-                  <div className={styles.div}>0</div>
-                  <div className={styles.line}>
-                    <div className={styles.lineChild} />
-                  </div>
-                </div>
-              </div>
-              <div className={styles.x}>
-                <div className={styles.xAxis0}>
-                  <div className={styles.text}>April</div>
-                  <div className={styles.line1}>
-                    <div className={styles.lineItem} />
-                  </div>
-                  <div className={styles.xAxis0Child} />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text1}>May</div>
-                  <div className={styles.line2}>
-                    <div className={styles.lineInner} />
-                  </div>
-                  <div className={styles.xAxisChild} />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text2}>Jun</div>
-                  <div className={styles.line2}>
-                    <div className={styles.lineInner} />
-                  </div>
-                  <div className={styles.xAxisChild} />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text3}>Jul</div>
-                  <div className={styles.line2}>
-                    <div className={styles.lineInner} />
-                  </div>
-                  <div className={styles.xAxisChild} />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text4}>Agu</div>
-                  <div className={styles.line2}>
-                    <div className={styles.lineInner} />
-                  </div>
-                  <div className={styles.xAxisChild} />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text4}>Sep</div>
-                  <div className={styles.line2}>
-                    <div className={styles.lineInner} />
-                  </div>
-                  <div className={styles.xAxisChild} />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text2}>Oct</div>
-                  <div className={styles.line2}>
-                    <div className={styles.lineInner} />
-                  </div>
-                  <div className={styles.xAxisChild} />
-                </div>
-              </div>
-              <div className={styles.x1}>
-                <div className={styles.xAxis0}>
-                  <div className={styles.text7}>TEXT</div>
-                  <div className={styles.line1}>
-                    <div className={styles.lineItem} />
-                  </div>
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text8}>TEXT</div>
-                  <img className={styles.lineIcon6} alt="" src="/line3.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text8}>TEXT</div>
-                  <img className={styles.lineIcon6} alt="" src="/line4.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text8}>TEXT</div>
-                  <img className={styles.lineIcon6} alt="" src="/line3.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text8}>TEXT</div>
-                  <img className={styles.lineIcon6} alt="" src="/line4.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text8}>TEXT</div>
-                  <img className={styles.lineIcon6} alt="" src="/line3.svg" />
-                </div>
-                <div className={styles.yAxis}>
-                  <div className={styles.text8}>TEXT</div>
-                  <img className={styles.lineIcon6} alt="" src="/line4.svg" />
-                </div>
-              </div>
-              <img className={styles.chart9Icon} alt="" src="/chart-9.svg" />
-              <div className={styles.hover}>
+
+              <div
+                className={`${global.column} ${styles.gap} ${global.center}`}
+              >
+                <div className={styles.lastOrder}>Last Order</div>
+                <div className={styles.div58}>{`$ 1.000  `}</div>
                 <img
-                  className={styles.hoverLineIcon}
-                  alt=""
-                  src="/hover-line.svg"
+                  className={styles.arrowUpSolid1Icon}
+                  alt=''
+                  src='/arrowupsolid-1.svg'
                 />
-                <div className={styles.hoverTips}>
-                  <div className={styles.text14}>KO5</div>
-                  <div className={styles.div7}>
-                    <div className={styles.legendinfo}>
-                      <div className={styles.wrapper}>
-                        <div className={styles.div8} />
-                      </div>
-                      <div className={styles.legend1}>SOL/USDC</div>
-                    </div>
-                    <div className={styles.div9}>30</div>
+              </div>
+
+              <div className={styles.lastOrder1}>Last Order</div>
+            </div>
+
+            <div className={styles.chart}>
+              <div className={styles.lamp2} />
+              <div className={styles.chart1}>Chart</div>
+              <div className={styles.rectangleGroup}>
+                <div className={styles.instanceInner} />
+                <div className={styles.hParent}>
+                  <div className={styles.h}>1H</div>
+                  <div className={styles.h}>{`12H `}</div>
+                  <div className={styles.h}>1D</div>
+                  <div className={styles.h}>7D</div>
+                  <div className={styles.h}>1M</div>
+                </div>
+                <div className={styles.rectangleDiv} />
+              </div>
+              <div className={styles.grid}>
+                <div className={styles.y}>
+                  <div className={styles.yAxis}>
+                    <div className={styles.div}>0</div>
+                    <img
+                      className={styles.lineIcon}
+                      alt=''
+                      src='/line.svg'
+                    />
                   </div>
-                  <div className={styles.div7}>
-                    <div className={styles.legendinfo}>
-                      <div className={styles.wrapper}>
-                        <div className={styles.div11} />
-                      </div>
-                      <div className={styles.legend1}>SOL/USD</div>
-                    </div>
-                    <div className={styles.div9}>$13</div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.div}>0</div>
+                    <img
+                      className={styles.lineIcon}
+                      alt=''
+                      src='/line1.svg'
+                    />
                   </div>
-                  <div className={styles.div7}>
-                    <div className={styles.legendinfo}>
-                      <div className={styles.wrapper}>
-                        <div className={styles.div14} />
-                      </div>
-                      <div className={styles.legend1}>USDC/USD</div>
-                    </div>
-                    <div className={styles.div9}>$15</div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.div}>0</div>
+                    <img
+                      className={styles.lineIcon}
+                      alt=''
+                      src='/line2.svg'
+                    />
                   </div>
-                  <div className={styles.div16}>
-                    <div className={styles.legendinfo}>
-                      <div className={styles.wrapper}>
-                        <div className={styles.div17} />
-                      </div>
-                      <div className={styles.legend1}>legend4</div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.div}>0</div>
+                    <img
+                      className={styles.lineIcon}
+                      alt=''
+                      src='/line.svg'
+                    />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.div}>0</div>
+                    <img
+                      className={styles.lineIcon}
+                      alt=''
+                      src='/line1.svg'
+                    />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.div}>0</div>
+                    <img
+                      className={styles.lineIcon}
+                      alt=''
+                      src='/line2.svg'
+                    />
+                  </div>
+                  <div className={styles.yAxis0}>
+                    <div className={styles.div}>0</div>
+                    <div className={styles.line}>
+                      <div className={styles.lineChild} />
                     </div>
-                    <div className={styles.div9}>15</div>
                   </div>
                 </div>
+                <div className={styles.x}>
+                  <div className={styles.xAxis0}>
+                    <div className={styles.text}>April</div>
+                    <div className={styles.line1}>
+                      <div className={styles.lineItem} />
+                    </div>
+                    <div className={styles.xAxis0Child} />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text1}>May</div>
+                    <div className={styles.line2}>
+                      <div className={styles.lineInner} />
+                    </div>
+                    <div className={styles.xAxisChild} />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text2}>Jun</div>
+                    <div className={styles.line2}>
+                      <div className={styles.lineInner} />
+                    </div>
+                    <div className={styles.xAxisChild} />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text3}>Jul</div>
+                    <div className={styles.line2}>
+                      <div className={styles.lineInner} />
+                    </div>
+                    <div className={styles.xAxisChild} />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text4}>Agu</div>
+                    <div className={styles.line2}>
+                      <div className={styles.lineInner} />
+                    </div>
+                    <div className={styles.xAxisChild} />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text4}>Sep</div>
+                    <div className={styles.line2}>
+                      <div className={styles.lineInner} />
+                    </div>
+                    <div className={styles.xAxisChild} />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text2}>Oct</div>
+                    <div className={styles.line2}>
+                      <div className={styles.lineInner} />
+                    </div>
+                    <div className={styles.xAxisChild} />
+                  </div>
+                </div>
+                <div className={styles.x1}>
+                  <div className={styles.xAxis0}>
+                    <div className={styles.text7}>TEXT</div>
+                    <div className={styles.line1}>
+                      <div className={styles.lineItem} />
+                    </div>
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text8}>TEXT</div>
+                    <img
+                      className={styles.lineIcon6}
+                      alt=''
+                      src='/line3.svg'
+                    />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text8}>TEXT</div>
+                    <img
+                      className={styles.lineIcon6}
+                      alt=''
+                      src='/line4.svg'
+                    />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text8}>TEXT</div>
+                    <img
+                      className={styles.lineIcon6}
+                      alt=''
+                      src='/line3.svg'
+                    />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text8}>TEXT</div>
+                    <img
+                      className={styles.lineIcon6}
+                      alt=''
+                      src='/line4.svg'
+                    />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text8}>TEXT</div>
+                    <img
+                      className={styles.lineIcon6}
+                      alt=''
+                      src='/line3.svg'
+                    />
+                  </div>
+                  <div className={styles.yAxis}>
+                    <div className={styles.text8}>TEXT</div>
+                    <img
+                      className={styles.lineIcon6}
+                      alt=''
+                      src='/line4.svg'
+                    />
+                  </div>
+                </div>
+                <img
+                  className={styles.chart9Icon}
+                  alt=''
+                  src='/chart-9.svg'
+                />
+                <div className={styles.hover}>
+                  <img
+                    className={styles.hoverLineIcon}
+                    alt=''
+                    src='/hover-line.svg'
+                  />
+                  <div className={styles.hoverTips}>
+                    <div className={styles.text14}>KO5</div>
+                    <div className={styles.div7}>
+                      <div className={styles.legendinfo}>
+                        <div className={styles.wrapper}>
+                          <div className={styles.div8} />
+                        </div>
+                        <div className={styles.legend1}>SOL/USDC</div>
+                      </div>
+                      <div className={styles.div9}>30</div>
+                    </div>
+                    <div className={styles.div7}>
+                      <div className={styles.legendinfo}>
+                        <div className={styles.wrapper}>
+                          <div className={styles.div11} />
+                        </div>
+                        <div className={styles.legend1}>SOL/USD</div>
+                      </div>
+                      <div className={styles.div9}>$13</div>
+                    </div>
+                    <div className={styles.div7}>
+                      <div className={styles.legendinfo}>
+                        <div className={styles.wrapper}>
+                          <div className={styles.div14} />
+                        </div>
+                        <div className={styles.legend1}>USDC/USD</div>
+                      </div>
+                      <div className={styles.div9}>$15</div>
+                    </div>
+                    <div className={styles.div16}>
+                      <div className={styles.legendinfo}>
+                        <div className={styles.wrapper}>
+                          <div className={styles.div17} />
+                        </div>
+                        <div className={styles.legend1}>legend4</div>
+                      </div>
+                      <div className={styles.div9}>15</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.coloredButtons}>
+                <button className={styles.transferDomainButton4}>
+                  <div className={styles.transfer4}>SOL/USDC</div>
+                </button>
+                <button className={styles.transferDomainButton5}>
+                  <div className={styles.transfer4}>SOL/USDC</div>
+                </button>
+                <button className={styles.transferDomainButton6}>
+                  <div className={styles.transfer4}>SOL/USDC</div>
+                </button>
               </div>
             </div>
-            <button className={styles.transferDomainButton4}>
-              <div className={styles.transfer4}>SOL/USDC</div>
-            </button>
-            <button className={styles.transferDomainButton5}>
-              <div className={styles.transfer4}>SOL/USDC</div>
-            </button>
-            <button className={styles.transferDomainButton6}>
-              <div className={styles.transfer4}>SOL/USDC</div>
-            </button>
-          </div>
-          <div className={styles.blance}>
-            <div className={styles.lamp3} />
-            <div className={styles.frameParent}>
-              <div className={styles.dxeParent}>
-                <div className={styles.dxe}>
-                  {selectedMarket.tokenA?.symbol}
-                </div>
-                <div className={styles.usdc}>
-                  {selectedMarket.tokenB?.symbol}
-                </div>
-                <div className={styles.lineDiv} />
-              </div>
-              <div className={styles.walletParent}>
-                <div className={styles.wallet}>Wallet</div>
-                <div className={styles.dxe}>
-                  {selectedMarket.tokenA?.balance}
-                </div>
-              </div>
-              <div className={styles.dexParent}>
-                <div className={styles.wallet}>DEX</div>
-                <div className={styles.dxe}>100,000.00</div>
-              </div>
-              <div className={styles.div21}>
-                {selectedMarket.tokenB?.balance}
-              </div>
-              <div className={styles.div22}>100,000.00</div>
-              <button className={styles.createPositionButton1}>
-                <div className={styles.settle}>{`Settle `}</div>
-              </button>
-              <button className={styles.createPositionButton2}>
-                <div className={styles.settle}>{`Settle `}</div>
-              </button>
-            </div>
-            <div className={styles.blance1}>Blance</div>
-            <button className={styles.createPositionButton3}>
-              <div className={styles.settle}>Settle All</div>
-            </button>
-          </div>
-          <div className={styles.orders}>
-            <div className={styles.lamp4} />
-            <div className={styles.frameGroup}>
-              <div className={styles.marketParent}>
-                <div className={styles.wallet}>Market</div>
-                <div className={styles.side}>side</div>
-                <div className={styles.size}>size</div>
-                <div className={styles.price}>Price</div>
-                <div className={styles.frameChild1} />
-              </div>
-              {orders.map((item, index) => {
-                return (
-                  <div className={styles.dxeusdcParent}>
-                    <div className={styles.wallet}>DXE/USDC</div>
-                    <div className={styles.side}>Buy</div>
-                    <div className={styles.size}>100,000.00</div>
-                    <div className={styles.price}>100,000.00</div>
-                    <button className={styles.createPositionButton4}>
-                      <div className={styles.settle}>Cancel</div>
+            <div className={`${global.row} ${styles.gap}`}>
+              <div className={styles.orders}>
+                <div className={styles.lamp4} />
+                <div
+                  className={`${styles.createPositionHeader} ${global.row} ${global.spaceBetween}`}
+                >
+                  <div className={styles.orders1}>Orders</div>
+                  <div
+                    className={`${styles.createPositionHeader} ${global.row} ${styles.gap}`}
+                  >
+                    <div className={styles.component41}>
+                      <div className={styles.allParent}>
+                        <div className={`${styles.buy} ${styles.activeSide}`}>
+                          ALL
+                        </div>
+                        <div className={styles.buy}>{`Buy `}</div>
+                        <div className={styles.sell}>Sell</div>
+                      </div>
+                    </div>
+                    <button className={styles.createPositionButton9}>
+                      <div className={styles.settle}>Cancel All</div>
                     </button>
                   </div>
-                );
-              })}
-            </div>
-            <div className={styles.orders1}>Orders</div>
-            <div className={styles.component4}>
-              <div className={styles.component4Child} />
-              <div className={styles.allParent}>
-                <div className={styles.all}>ALL</div>
-                <div className={styles.d}>{`Buy `}</div>
-                <div className={styles.d}>Sell</div>
+                </div>
+                <div className={styles.frameGroup}>
+                  <div className={styles.marketParent}>
+                    <div className={styles.wallet}>Market</div>
+                    <div className={styles.side}>side</div>
+                    <div className={styles.size}>size</div>
+                    <div className={styles.price}>Price</div>
+                    <div className={styles.frameChild1} />
+                  </div>
+                  {orders.map((item, index) => {
+                    return (
+                      <div className={styles.dxeusdcParent}>
+                        <div className={styles.wallet}>DXE/USDC</div>
+                        <div className={styles.side}>Buy</div>
+                        <div className={styles.size}>100,000.00</div>
+                        <div className={styles.price}>100,000.00</div>
+                        <button className={styles.createPositionButton4}>
+                          <div className={styles.settle}>Cancel</div>
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <div className={styles.component4Item} />
-            </div>
-            <button className={styles.createPositionButton9}>
-              <div className={styles.settle}>Cancel All</div>
-            </button>
-          </div>
-          <div className={styles.orderBook}>
-            <div className={styles.lamp1} />
-            <div className={styles.frameContainer}>
-              <div className={styles.sizeParent}>
-                <div className={styles.size1}>Size</div>
-                <div className={styles.price1}>Price</div>
-              </div>
-              {bids.map((item: any, index: any) => {
-                if (index < 6)
-                  return (
-                    <div
-                      className={styles.parent4}
-                      onClick={() => {
-                        setAmount(item.size);
-                        setLimitPrice(item.price);
-                      }}
-                    >
-                      <div className={styles.div33}>{item.size}</div>
-                      <div className={styles.div34}>{item.price}</div>
+
+              <div className={styles.blance}>
+                <div className={styles.lamp3} />
+                <div
+                  className={`${styles.createPositionHeader} ${global.row} ${global.spaceBetween}`}
+                >
+                  <div className={styles.blance1}>Blance</div>
+                  <button className={styles.createPositionButton3}>
+                    <div className={styles.settle}>Settle All</div>
+                  </button>
+                </div>
+                <div className={styles.frameParent}>
+                  <div className={styles.dxeHeader}>
+                    <div>{/* Needed for grid container */}</div>
+                    <div className={styles.dxe}>
+                      {selectedMarket.tokenA?.symbol}
                     </div>
-                  );
-              })}
-              <img className={styles.frameChild2} alt="" src="/line-5.svg" />
-              <div className={styles.asksWraper}></div>
-              {asks.map((item: any, index: any) => {
-                if (index < 6)
-                  return (
-                    <div
-                      className={styles.parent5}
-                      onClick={() => {
-                        setAmount(item.size);
-                        setLimitPrice(item.price);
-                      }}
-                    >
-                      <div className={styles.div33}>{item.size}</div>
-                      <div className={styles.div34}>{item.price}</div>
+                    <div className={styles.usdc}>
+                      {selectedMarket.tokenB?.symbol}
                     </div>
-                  );
-              })}
-            </div>
-            <div className={styles.orderBook1}>Order Book</div>
-            <div className={styles.component41}>
-              <div className={styles.component4Child} />
-              <div className={styles.allParent}>
-                <div className={styles.all}>ALL</div>
-                <div className={styles.d}>{`Buy `}</div>
-                <div className={styles.d}>Sell</div>
+                  </div>
+                  <div className={styles.walletParent}>
+                    <div className={styles.wallet}>Wallet</div>
+                    <div className={`${global.row} ${styles.gap}`}>
+                      <div className={styles.dxe}>
+                        {selectedMarket.tokenA?.balance}
+                      </div>
+                      <div className={styles.dxe}>
+                        {selectedMarket.tokenB?.balance}
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.dexParent}>
+                    <div className={styles.wallet}>DEX</div>
+                    <div className={`${global.row} ${styles.gap}`}>
+                      <div className={styles.dxe}>100,000.00</div>
+                      <div className={styles.dxe}>100,000.00</div>
+                    </div>
+                  </div>
+
+                  <div className={`${styles.buttonsContainer} ${global.row} ${styles.gap}`}>
+                    <button className={styles.createPositionButton1}>
+                      <div className={styles.settle}>{`Settle `}</div>
+                    </button>
+                    <button className={styles.createPositionButton2}>
+                      <div className={styles.settle}>{`Settle `}</div>
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className={styles.component4Item} />
             </div>
           </div>
-          <div className={styles.market1}>
-            <div className={styles.lamp6} />
-            <button
-              className={styles.vectorParent}
-              onClick={openTradeTokenListWindowPopup}
-            >
-              <img className={styles.vectorIcon} alt="" src="/vector1.svg" />
-              <div className={styles.selectMarket}>{selectedMarket.name}</div>
-            </button>
-            <div className={styles.dxeusdc5}>{selectedMarket?.name}</div>
-            <div className={styles.totalVolume}>Total Volume</div>
-            <div className={styles.lastOrder}>Last Order</div>
-            <div className={styles.lastOrder1}>Last Order</div>
-            <div className={styles.div57}>$ 100,000,000.00</div>
-            <div className={styles.div58}>{`$ 1.000  `}</div>
-            <img
-              className={styles.usdCoinUsdcLogo2Icon}
-              alt=""
-              src={selectedMarket.tokenA?.logoURI}
-            />
-            <button
-              className={styles.circlePlusSolid1}
-              onClick={openMarketAddPopup}
-            >
-              <img className={styles.vectorIcon1} alt="" src="/vector10.svg" />
-            </button>
-            <img
-              className={styles.arrowUpSolid1Icon}
-              alt=""
-              src="/arrowupsolid-1.svg"
-            />
-            <img
-              className={styles.sitelogoCopy1}
-              alt=""
-              src={selectedMarket.tokenB?.logoURI}
-            />
-            <div className={styles.market2}>Market</div>
+
+          <div className={`${global.column} ${styles.gap}`}>
+            <div className={styles.listPanel}>
+              <div className={styles.lamp1} />
+              <div
+                className={`${styles.createPositionHeader} ${global.row} ${global.spaceBetween}`}
+              >
+                <div className={styles.limitOrder}>Limit Order</div>
+                <div className={styles.rectangleParent}>
+                  <div
+                    className={`${styles.buy} ${
+                      side === 'buy' ? styles.activeSide : ''
+                    }`}
+                    onClick={() => setSide('buy')}
+                  >
+                    Buy
+                  </div>
+                  <div
+                    onClick={() => setSide('sell')}
+                    className={`${styles.sell} ${
+                      side === 'sell' ? styles.activeSide : ''
+                    }`}
+                  >
+                    Sell
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.createPositionInputs}>
+                <div className={styles.createPositionInputContainer}>
+                  <div className={styles.limitPrice}>Limit Price</div>
+                  <input
+                    className={styles.frameChild}
+                    type='number'
+                    required
+                    value={limitPrice}
+                  />
+                </div>
+                <div className={styles.createPositionInputContainer}>
+                  <div className={styles.limitPrice}>Amount</div>
+                  <input
+                    className={styles.frameItem}
+                    type='number'
+                    required
+                    value={amount}
+                  />
+                </div>
+                <div className={styles.createPositionInputContainer}>
+                  <div className={styles.limitPrice}>Total</div>
+                  <input
+                    className={styles.frameItem}
+                    type='number'
+                    disabled
+                    readOnly
+                    value={
+                      limitPrice !== undefined && amount !== undefined
+                        ? limitPrice * amount
+                        : 0
+                    }
+                  />
+                </div>
+              </div>
+
+              <div
+                className={`${styles.procentContainer} ${global.row} ${styles.gap}`}
+              >
+                <button
+                  className={styles.transferDomainButton}
+                  onClick={() => {
+                    setAmount(
+                      tokenBalance !== undefined ? tokenBalance * 0.25 : 0
+                    );
+                  }}
+                >
+                  <div className={styles.transfer}>%25</div>
+                </button>
+                <button
+                  className={styles.transferDomainButton}
+                  onClick={() => {
+                    setAmount(
+                      tokenBalance !== undefined ? tokenBalance * 0.5 : 0
+                    );
+                  }}
+                >
+                  <div className={styles.transfer}>%50</div>
+                </button>
+                <button
+                  className={styles.transferDomainButton}
+                  onClick={() => {
+                    setAmount(
+                      tokenBalance !== undefined ? tokenBalance * 0.75 : 0
+                    );
+                  }}
+                >
+                  <div className={styles.transfer}>%75</div>
+                </button>
+                <button
+                  className={styles.transferDomainButton}
+                  onClick={() => {
+                    setAmount(
+                      tokenBalance !== undefined ? tokenBalance * 0.25 : 0
+                    );
+                  }}
+                >
+                  <div className={styles.transfer}>%100</div>
+                </button>
+              </div>
+
+              <div className={styles.usdcBalance0}>
+                {side === 'buy'
+                  ? selectedMarket?.tokenB?.symbol
+                  : selectedMarket?.tokenA?.symbol}{' '}
+                Balance: {tokenBalance?.toFixed(4) || 0}
+              </div>
+              <button
+                className={styles.createPositionButton}
+                onClick={handlePlaceOrder}
+              >
+                <div className={styles.placeOrder}>Place Order</div>
+              </button>
+            </div>
+            <div className={styles.orderBook}>
+              <div className={styles.lamp1} />
+              <div
+                className={`${styles.createPositionHeader} ${global.row} ${global.spaceBetween}`}
+              >
+                <div className={styles.orderBook1}>Order Book</div>
+                <div className={styles.component41}>
+                  <div className={styles.allParent}>
+                    <div className={`${styles.buy} ${styles.activeSide}`}>
+                      ALL
+                    </div>
+                    <div className={styles.buy}>{`Buy `}</div>
+                    <div className={styles.sell}>Sell</div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.frameContainer}>
+                <div className={styles.sizeParent}>
+                  <div className={styles.size1}>Size</div>
+                  <div className={styles.price1}>Price</div>
+                </div>
+                {bids.map((item: any, index: any) => {
+                  if (index < 6)
+                    return (
+                      <div
+                        className={styles.parent4}
+                        onClick={() => {
+                          setAmount(item.size);
+                          setLimitPrice(item.price);
+                        }}
+                      >
+                        <div className={styles.div33}>{item.size}</div>
+                        <div className={styles.div34}>{item.price}</div>
+                      </div>
+                    );
+                })}
+                <img
+                  className={styles.frameChild2}
+                  alt=''
+                  src='/line-5.svg'
+                />
+                <div className={styles.asksWraper}></div>
+                {asks.map((item: any, index: any) => {
+                  if (index < 6)
+                    return (
+                      <div
+                        className={styles.parent5}
+                        onClick={() => {
+                          setAmount(item.size);
+                          setLimitPrice(item.price);
+                        }}
+                      >
+                        <div className={styles.div33}>{item.size}</div>
+                        <div className={styles.div34}>{item.price}</div>
+                      </div>
+                    );
+                })}
+              </div>
+            </div>
           </div>
         </div>
-        <Header page={"trade"} />
+
         <div className={styles.v101202204202200UtcContainer}>
           <p className={styles.utc}>V1.0.1</p>
           <p className={styles.utc}>2022-04-20 22:00 UTC</p>
@@ -628,8 +774,8 @@ const IndexTrade: NextPage = () => {
       </div>
       {isTradeTokenListWindowPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(13, 17, 27, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(13, 17, 27, 0.7)'
+          placement='Centered'
           onOutsideClick={closeTradeTokenListWindowPopup}
         >
           <TradeTokenListWindow
@@ -641,8 +787,8 @@ const IndexTrade: NextPage = () => {
       )}
       {isMarketAddPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(20, 32, 48, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(20, 32, 48, 0.7)'
+          placement='Centered'
           onOutsideClick={closeMarketAddPopup}
         >
           <MarketAdd onClose={closeMarketAddPopup} />

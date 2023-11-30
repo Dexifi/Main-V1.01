@@ -30,7 +30,6 @@
 .addAmm,
 .solUsdc {
   position: relative;
-  font-weight: 500;
 }
 .solUsdc {
   display: flex;
@@ -67,14 +66,9 @@
   position: absolute;
   top: 6.25rem;
   left: calc(50% - 212px);
-  font-weight: 500;
 }
 .balance113669871 {
   top: 15.94rem;
-}
-.div,
-.sol {
-  font-weight: 500;
 }
 .div {
   position: absolute;
@@ -150,7 +144,6 @@
   top: 0.25rem;
   left: calc(50% - 28px);
   font-size: var(--tittle-16-m-size);
-  font-weight: 500;
   font-family: var(--tittle-16-m);
   color: var(--color1);
   text-align: center;
@@ -315,7 +308,6 @@
   position: absolute;
   top: 22.94rem;
   left: calc(50% - 207px);
-  font-weight: 500;
 }
 .changeper,
 .vectorIcon1 {
@@ -345,7 +337,6 @@
 .addLiquidity {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -391,7 +382,6 @@
   flex-shrink: 0;
 }
 .sol503295635RayContainer {
-  font-weight: 500;
   color: var(--color-slategray-100);
   text-align: right;
 }

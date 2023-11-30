@@ -1,21 +1,21 @@
-import { useWallet } from "@solana/wallet-adapter-react";
-import styles from "../../pages/dashboard.module.css";
-import { connection } from "../../utils/get-connection";
-import { PublicKey } from "@solana/web3.js";
+import { useWallet } from '@solana/wallet-adapter-react';
+import styles from '../../pages/dashboard.module.css';
+import { connection } from '../../utils/get-connection';
+import { PublicKey } from '@solana/web3.js';
 import {
   MAINNET_PROGRAM_ID,
   RAYDIUM_MAINNET,
   Utils1216,
-} from "@raydium-io/raydium-sdk";
+} from '@raydium-io/raydium-sdk';
 
 const GetStake = () => {
   const { publicKey } = useWallet();
   const fetchData = async () => {
-    if(publicKey === null) {
+    if (publicKey === null) {
       return;
     }
     const data = await connection.getParsedProgramAccounts(
-      new PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"),
+      new PublicKey('EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q'),
       {
         filters: [
           { dataSize: 88 },
@@ -51,35 +51,36 @@ const GetStake = () => {
       </div>
       <div className={styles.headContainer}>
         <div className={styles.head2}>
-          <div className={styles.amount}>Amount</div>
-          <div className={styles.nftContainer}>Token</div>
-          <div className={styles.apy}>APY</div>
-          <div className={styles.value3}>Value</div>
-          <div className={styles.pendingReward2}>Pending Reward $</div>
-          <div className={styles.pendingReward3}>Pending Reward</div>
-          <div className={styles.headInner} />
+          <div className={styles.head2Container}>
+            <div className={styles.nftContainer}>Token</div>
+            <div className={styles.amount}>Amount</div>
+            <div className={styles.value3}>Value</div>
+            <div className={styles.apy}>APY</div>
+
+            <div className={styles.pendingReward3}>Pending Reward</div>
+            <div className={styles.pendingReward2}>Pending Reward $</div>
+          </div>
         </div>
-        <div className={styles.atlasParent}>
-          <div className={styles.atlas}>ATLAS</div>
-          <div className={styles.div23}>100.00</div>
-          <div className={styles.div24}>$ 20,000.00</div>
-          <div className={styles.div25}>14.45 %</div>
-          <div className={styles.div26}>22.4666 $</div>
-          <div className={styles.polis05456}>POLIS 0.5456</div>
-          <div className={styles.frameChild1} />
-          <img
-            className={styles.raydiumRayCoin1Icon2}
-            alt=""
-            src="/raydiumraycoin-111@2x.png"
-          />
+        <div className={styles.tokenFlexContainer}>
+          <div className={styles.atlasParent}>
+            <div className={styles.tokenContainer}>
+              <div className={styles.atlas}>ATLAS</div>
+              <img
+                className={styles.raydiumRayCoin1Icon2}
+                alt=''
+                src='/raydiumraycoin-111@2x.png'
+              />
+            </div>
+
+            <div className={styles.div23}>100.00</div>
+            <div className={styles.div24}>$ 20,000.00</div>
+            <div className={styles.div25}>14.45 %</div>
+            <div className={styles.div26}>22.4666 $</div>
+            <div className={styles.polis05456}>POLIS 0.5456</div>
+          </div>
           <button className={styles.transferDomainButton1}>
             <div className={styles.transfer}>Claim Pending</div>
           </button>
-          <img
-            className={styles.raydiumRayCoin2Icon1}
-            alt=""
-            src="/raydiumraycoin-111@2x.png"
-          />
         </div>
       </div>
     </div>

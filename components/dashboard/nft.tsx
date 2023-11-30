@@ -67,33 +67,35 @@ const GetNFT = () => {
     <>
       <div className={styles.nft}>
         <div className={styles.netWorth}>
-          <div className={styles.nftContainer}>
-            <span>NFT</span>
-            <span className={styles.span}>{` `}</span>
-            <span className={styles.span1}>*</span>
-            <span className={styles.span2}>{`  `}</span>
-            <span>$ {NFTBalance}</span>
-          </div>
+          <span>NFT</span>
+          <span className={styles.span}>{` `}</span>
+          <span className={styles.span1}>*</span>
+          <span className={styles.span2}>{`  `}</span>
+          <span>$ {NFTBalance}</span>
         </div>
         <div className={styles.headParent}>
           <div className={styles.head}>
-            <div className={styles.headChild} />
-            <div className={styles.mintParent}>
-              <div className={styles.nftContainer}>Mint</div>
-              <div className={styles.collection}>Collection</div>
-              <div className={styles.balance}>Balance</div>
-              <div className={styles.nftSupply}>NFT Supply</div>
-              <div className={styles.value}>Value</div>
-              <div className={styles.price}>Price</div>
-            </div>
+            <div></div>
+            <div className={styles.nftContainer}>Mint</div>
+            <div className={styles.collection}>Collection</div>
+            <div className={styles.balance}>Balance</div>
+            <div className={styles.nftSupply}>NFT Supply</div>
+            <div className={styles.value}>Value</div>
+            <div className={styles.price}>Price</div>
           </div>
           {isLoading ? (
             <div className={styles.div}>Loading...</div>
           ) : (
             NFTs.map((item, index) => {
               return (
-                <div className={styles.div} key={index+1}>
-                  <div className={styles.j7a3brfy}>{item.mintAddress.toString().slice(0,3)}...{item.mintAddress.toString().slice(-3)}</div>
+                <div
+                  className={styles.div}
+                  key={index + 1}
+                >
+                  <div className={styles.j7a3brfy}>
+                    {item.mintAddress.toString().slice(0, 3)}...
+                    {item.mintAddress.toString().slice(-3)}
+                  </div>
                   <div className={styles.div1}>1</div>
                   <div className={styles.ray}>{item.supply}</div>
                   <div className={styles.div3}>$ {item.price}</div>
@@ -115,8 +117,8 @@ const GetNFT = () => {
       </div>
       {isManagenftpopupOpen && (
         <PortalPopup
-          overlayColor="rgba(19, 35, 45, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(19, 35, 45, 0.7)'
+          placement='Centered'
           onOutsideClick={closeManagenftpopup}
         >
           <Managenftpopup onClose={closeManagenftpopup} />

@@ -14,6 +14,7 @@ import {
 } from "@metaplex-foundation/js";
 import { connection } from "../utils/get-connection";
 import axios from "axios";
+import DashboardHeader from './dashboard-header';
 
 const IndexNFTGallery: NextPage = () => {
   const [isManagenftpopupOpen, setManagenftpopupOpen] = useState(false);
@@ -27,18 +28,6 @@ const IndexNFTGallery: NextPage = () => {
     setManagenftpopupOpen(false);
   }, []);
 
-  const onAccountPageButtonClick = useCallback(() => {
-    router.push("/dashboard");
-  }, [router]);
-
-  const onAccountsClick = useCallback(() => {
-    router.push("/index-accounts");
-  }, [router]);
-
-  const onTransactionsClick = useCallback(() => {
-    router.push("/index-transaction");
-  }, [router]);
-
   const { publicKey } = useWallet();
   const [NFTs, setNFTs] = useState([] as any[]);
   const [isLoading, setLoading] = useState(true);
@@ -48,8 +37,8 @@ const IndexNFTGallery: NextPage = () => {
         `https://api-mainnet.magiceden.dev/v2/wallets/${publicKey}/tokens`
       );
       const promises = data.map(async (item: any) => {
-        if (!item.hasOwnProperty("price")) {
-          if (item.hasOwnProperty("collection")) {
+        if (!item.hasOwnProperty('price')) {
+          if (item.hasOwnProperty('collection')) {
             const floorPrice = await axios.get(
               `https://api-mainnet.magiceden.dev/v2/collections/${item.collection}/stats`
             );
@@ -81,7 +70,10 @@ const IndexNFTGallery: NextPage = () => {
                 ? null
                 : NFTs.map((item: any, index: any) => {
                     return (
-                      <div className={styles.nftDetail} key={index + 1}>
+                      <div
+                        className={styles.nftDetail}
+                        key={index + 1}
+                      >
                         <div className={styles.netWorth}>
                           <div className={styles.collectionBalanceBidContainer}>
                             <p className={styles.collection}>Collection</p>
@@ -90,7 +82,7 @@ const IndexNFTGallery: NextPage = () => {
                           </div>
                           <div className={styles.starAtlas1Container}>
                             <p className={styles.collection}>
-                              {item.collection ? item.collection : "?"}
+                              {item.collection ? item.collection : '?'}
                             </p>
                             <p className={styles.collection}>1</p>
                             <p className={styles.collection}>
@@ -100,7 +92,7 @@ const IndexNFTGallery: NextPage = () => {
                         </div>
                         <img
                           className={styles.nftDetailChild}
-                          alt=""
+                          alt=''
                           src={item.image}
                         />
                         <button
@@ -119,26 +111,7 @@ const IndexNFTGallery: NextPage = () => {
                     );
                   })}
             </div>
-            <button
-              className={styles.accountPageButton}
-              onClick={onAccountPageButtonClick}
-            >
-              <div className={styles.transactions}>{`<<      Back`}</div>
-            </button>
-            <div className={styles.dashboardPageSwitcher}>
-              <div className={styles.dashboardPageSwitcherChild} />
-              <div className={styles.nftGallery}>NFT Gallery</div>
-              <button className={styles.accounts} onClick={onAccountsClick}>
-                Accounts
-              </button>
-              <button
-                className={styles.transactions1}
-                onClick={onTransactionsClick}
-              >
-                Transactions
-              </button>
-              <div className={styles.dashboardPageSwitcherItem} />
-            </div>
+            <DashboardHeader activePage='nft' />
           </div>
         </div>
         <Header />
@@ -149,11 +122,14 @@ const IndexNFTGallery: NextPage = () => {
       </div>
       {isManagenftpopupOpen && (
         <PortalPopup
-          overlayColor="rgba(32, 45, 58, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(32, 45, 58, 0.7)'
+          placement='Centered'
           onOutsideClick={closeManagenftpopup}
         >
-          <Managenftpopup onClose={closeManagenftpopup} NFT={selectedNFT} />
+          <Managenftpopup
+            onClose={closeManagenftpopup}
+            NFT={selectedNFT}
+          />
         </PortalPopup>
       )}
     </>

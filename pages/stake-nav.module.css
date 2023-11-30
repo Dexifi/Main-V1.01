@@ -1,0 +1,33 @@
+.rectangleParent {
+  display: flex;
+  border-radius: 25px;
+  background: #0d111b;
+  text-align: center;
+  z-index: 2;
+  font-size: var(--font-size-xl);
+  color: var(--color1);
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+.stakeHeaderButton {
+  padding: 0 10px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stakeHeaderButton:not(.navActive) {
+  cursor: pointer;
+}
+.navActive {
+  border: 1px solid var(--color-lightcyan-100);
+  background-color: var(--color-lightcyan-200);
+  border-radius: var(--br-6xl);
+  box-shadow: 0 0 5px #d9f8ff;
+  box-sizing: border-box;
+}
+.dexifiLogoIcon1 {
+  left: 0.69rem;
+  width: 4.04rem;
+  object-fit: cover;
+}

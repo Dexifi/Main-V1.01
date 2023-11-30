@@ -1,16 +1,16 @@
-import React from "react";
-import { FC, useCallback, useState, useRef } from "react";
-import WalletSetting from "../components/wallet-setting";
-import DisconnectSetting from "../components/disconnect-setting";
-import styles from "../pages/dashboard.module.css";
-import PortalPopup from "./portal-popup";
-import { useRouter } from "next/router";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { useWallet } from "@solana/wallet-adapter-react";
+import React from 'react';
+import { FC, useCallback, useState, useRef } from 'react';
+import WalletSetting from '../components/wallet-setting';
+import DisconnectSetting from '../components/disconnect-setting';
+import styles from '../pages/dashboard.module.css';
+import PortalPopup from './portal-popup';
+import { useRouter } from 'next/router';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 type HeaderType = {
   page?: any;
-}
+};
 
 const Header = ({ page }: HeaderType) => {
   const frameButtonRef = useRef<HTMLButtonElement>(null);
@@ -36,43 +36,43 @@ const Header = ({ page }: HeaderType) => {
   const router = useRouter();
 
   const onSwapClick = useCallback(() => {
-    router.push("/index-swap");
+    router.push('/index-swap');
   }, [router]);
 
   const onLendClick = useCallback(() => {
-    router.push("/index-lend");
+    router.push('/index-lend');
   }, [router]);
 
   const onTradeClick = useCallback(() => {
-    router.push("/index-trade");
+    router.push('/index-trade');
   }, [router]);
 
   const onYieldClick = useCallback(() => {
-    router.push("/index-liquidity");
+    router.push('/index-liquidity');
   }, [router]);
 
   const onFarm1Click = useCallback(() => {
-    router.push("/index-farm");
+    router.push('/index-farm');
   }, [router]);
 
   const onStakeClick = useCallback(() => {
-    router.push("/index-stake");
+    router.push('/index-stake');
   }, [router]);
 
   const onStake1Click = useCallback(() => {
-    window.open("nft.dexifi.io");
+    window.open('nft.dexifi.io');
   }, []);
 
   const onDAOClick = useCallback(() => {
-    router.push("/index-i-d-o");
+    router.push('/index-i-d-o');
   }, [router]);
 
   const onDEXIFILOGOImageClick = useCallback(() => {
-    router.push("/");
+    router.push('/');
   }, [router]);
 
   const onDashboardClick = useCallback(() => {
-    router.push("/dashboard");
+    router.push('/dashboard');
   }, [router]);
 
   const { publicKey } = useWallet();
@@ -80,63 +80,105 @@ const Header = ({ page }: HeaderType) => {
     <>
       <div className={styles.header1}>
         <div className={styles.lamp1} />
+        <img
+          className={styles.dexifiLogoIcon}
+          alt=''
+          src='/dexifi-logo@2x.png'
+          onClick={onDEXIFILOGOImageClick}
+        />
         <div className={styles.swapParent}>
           <a
-            className={`${styles.swap} ${
-              page === "swap" ? styles.activeHeader : ""
+            className={`${styles.headerLink} ${
+              page === 'dashboard' ? styles.activeHeader : ''
+            }`}
+            onClick={onDashboardClick}
+          >
+            Dashboard
+          </a>
+          <a
+            className={` ${styles.headerLink} ${
+              page === 'swap' ? styles.activeHeader : ''
             }`}
             onClick={onSwapClick}
           >
             Swap
           </a>
           <a
-            className={`${styles.lend} ${
-              page === "lend" ? styles.activeHeader : ""
+            className={` ${styles.headerLink} ${
+              page === 'trade' ? styles.activeHeader : ''
+            }`}
+            onClick={onTradeClick}
+          >
+            Trade
+          </a>
+          <a
+            className={` ${styles.headerLink} ${
+              page === 'lend' ? styles.activeHeader : ''
             }`}
             onClick={onLendClick}
           >
             Lend
           </a>
-          <a className={`${styles.trade} ${page==="trade"?styles.activeHeader:""}`} onClick={onTradeClick}>
-            Trade
-          </a>
+
           <a
-            className={`${styles.yield} ${
-              page === "liquidity" ? styles.activeHeader : ""
+            className={` ${styles.headerLink} ${
+              page === 'liquidity' ? styles.activeHeader : ''
             }`}
             onClick={onYieldClick}
           >
             Liquidity
           </a>
-          <a className={styles.farm3} onClick={onFarm1Click}>
+          <a
+            className={` ${styles.headerLink} ${
+              page === 'farm' ? styles.activeHeader : ''
+            }`}
+            onClick={onFarm1Click}
+          >
             Farm
           </a>
-          <a className={styles.stake} onClick={onStakeClick}>
+          <a
+            className={` ${styles.headerLink} ${
+              page === 'stake' ? styles.activeHeader : ''
+            }`}
+            onClick={onStakeClick}
+          >
             Stake
           </a>
-          <div className={styles.frameChild13} />
           <a
-            className={`${styles.dashbord} ${
-              page === "dashboard" ? styles.activeHeader : ""
+            className={` ${styles.headerLink} ${
+              page === 'ido' ? styles.activeHeader : ''
             }`}
-            onClick={onDashboardClick}
+            onClick={onDAOClick}
           >
-            Dashboard
-          </a>
-          <a className={styles.stake1} onClick={onStake1Click}>
-            NFT
-          </a>
-          <a className={styles.dao} onClick={onDAOClick}>
             IDO
           </a>
+          <a
+            className={` ${styles.headerLink}`}
+            onClick={onStake1Click}
+          >
+            NFT
+          </a>
         </div>
-        <img
-          className={styles.dexifiLogoIcon}
-          alt=""
-          src="/dexifi-logo@2x.png"
-          onClick={onDEXIFILOGOImageClick}
-        />
+
         <div className={styles.componentParent}>
+          <button
+            className={styles.iconSettingsWrapper}
+            ref={frameButton1Ref}
+            onClick={openWalletSettingPopup}
+          >
+            <button className={styles.iconSettings}>
+              <img
+                className={styles.vectorIcon}
+                alt=''
+                src='/vector21.svg'
+              />
+              <img
+                className={styles.vectorIcon1}
+                alt=''
+                src='/vector11.svg'
+              />
+            </button>
+          </button>
           <button
             className={styles.connectWalletWrapper}
             ref={frameButtonRef}
@@ -146,22 +188,12 @@ const Header = ({ page }: HeaderType) => {
           >
             <WalletMultiButton className={styles.connectWallet} />
           </button>
-          <button
-            className={styles.iconSettingsWrapper}
-            ref={frameButton1Ref}
-            onClick={openWalletSettingPopup}
-          >
-            <button className={styles.iconSettings}>
-              <img className={styles.vectorIcon} alt="" src="/vector21.svg" />
-              <img className={styles.vectorIcon1} alt="" src="/vector11.svg" />
-            </button>
-          </button>
         </div>
       </div>
       {isWalletSettingPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(13, 17, 27, 0.7)"
-          placement="Top right"
+          overlayColor='rgba(13, 17, 27, 0.7)'
+          placement='Top right'
           top={-520}
           relativeLayerRef={frameButtonRef}
           onOutsideClick={closeWalletSettingPopup}
@@ -171,8 +203,8 @@ const Header = ({ page }: HeaderType) => {
       )}
       {isDisconnectSettingPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(13, 17, 27, 0.7)"
-          placement="Top right"
+          overlayColor='rgba(13, 17, 27, 0.7)'
+          placement='Top right'
           top={-250}
           right={-200}
           relativeLayerRef={frameButton1Ref}

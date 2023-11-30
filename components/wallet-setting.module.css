@@ -2,7 +2,7 @@
   position: absolute;
   top: 1.94rem;
   left: 1.63rem;
-  font-weight: 500;
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,7 +64,7 @@
 .div,
 .slippage {
   position: absolute;
-  font-weight: 500;
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,7 +170,7 @@
   top: 0.63rem;
   left: 0;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   display: inline-block;
   width: 20.44rem;
   height: 2.19rem;
@@ -186,7 +186,7 @@
 }
 .option {
   position: relative;
-  font-weight: 500;
+  
   background: conic-gradient(
     from 180deg at 50% 50%,
     #94e59f 0deg,
@@ -229,7 +229,7 @@
   position: absolute;
   top: 2.38rem;
   left: 0;
-  font-weight: 500;
+  
   display: inline-block;
   width: 12.19rem;
   height: 1.25rem;
@@ -237,7 +237,7 @@
 .switch {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;

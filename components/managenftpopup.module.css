@@ -30,7 +30,7 @@
 .send {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -84,7 +84,7 @@
   position: absolute;
   top: 0.75rem;
   left: 2rem;
-  font-weight: 500;
+  
 }
 .vectorIcon {
   position: relative;
@@ -142,15 +142,12 @@
   top: 41.56rem;
   left: 2.88rem;
   font-size: var(--tittle-16-m-size);
-  font-weight: 500;
+  
   color: var(--gray-dark-4);
   display: flex;
   align-items: center;
   width: 24.44rem;
   height: 13.56rem;
-}
-.span {
-  font-weight: 500;
 }
 .csslu11 {
   font-weight: 300;

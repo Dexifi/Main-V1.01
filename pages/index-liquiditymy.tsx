@@ -1,13 +1,15 @@
-import type { NextPage } from "next";
-import { useState, useRef, useCallback } from "react";
-import ManagePositionPopup from "../components/manage-position-popup";
-import PortalPopup from "../components/portal-popup";
-import CLMMPositionpopup from "../components/c-l-m-m-positionpopup";
-import WalletSetting from "../components/wallet-setting";
-import DisconnectSetting from "../components/disconnect-setting";
-import { useRouter } from "next/router";
-import styles from "./index-liquiditymy.module.css";
-import Header from "../components/header";
+import type { NextPage } from 'next';
+import { useState, useRef, useCallback } from 'react';
+import ManagePositionPopup from '../components/manage-position-popup';
+import PortalPopup from '../components/portal-popup';
+import CLMMPositionpopup from '../components/c-l-m-m-positionpopup';
+import WalletSetting from '../components/wallet-setting';
+import DisconnectSetting from '../components/disconnect-setting';
+import global from './global-classes.module.css';
+import styles from './index-liquiditymy.module.css';
+import Header from '../components/header';
+import LiquidityUniversal from './liquidity-universal';
+import LiquidityNav from './liquidity-nav';
 
 const IndexLiquiditymy: NextPage = () => {
   const [isManagePositionPopupOpen, setManagePositionPopupOpen] =
@@ -25,7 +27,6 @@ const IndexLiquiditymy: NextPage = () => {
   const frameButton1Ref = useRef<HTMLButtonElement>(null);
   const [isDisconnectSettingPopupOpen, setDisconnectSettingPopupOpen] =
     useState(false);
-  const router = useRouter();
 
   const openManagePositionPopup = useCallback(() => {
     setManagePositionPopupOpen(true);
@@ -75,165 +76,227 @@ const IndexLiquiditymy: NextPage = () => {
     setCLMMPositionpopup1Open(false);
   }, []);
 
-  const onPoolsClick = useCallback(() => {
-    router.push("/index-liquidity");
-  }, [router]);
-
   return (
     <>
       <div className={styles.indexliquiditymy}>
         <div className={styles.lamp} />
+        <Header page={'liquidity'} />
         <div className={styles.liquidityPanelWrapper}>
-          <div className={styles.liquidityPanel}>
-            <div className={styles.lamp1} />
-            <div className={styles.listPanel}>
-              <div className={styles.poolOverwiew}>
+          <div className={styles.lamp1} />
+          <LiquidityNav
+            activeBlock='liquidity'
+            activePage='position'
+          />
+          <div className={styles.listPanel}>
+            <div className={styles.poolOverwiew}>
+              <div className={`${styles.titleContainer} ${global.column}`}>
                 <div
                   className={styles.listOfAll}
                 >{`List of All of My Positions `}</div>
                 <div className={styles.netValue}>Net Value : $ 10,000.00</div>
                 <div className={styles.positions3}>Positions : 3</div>
-                <div className={styles.inRange}>In Range : 2</div>
-                <div className={styles.outOfRange}>Out of Range : 1</div>
-                <div className={styles.pendingReward}>
-                  Pending Reward : $ 10,000.00
-                </div>
-                <button
-                  className={styles.managePositionButton}
-                  onClick={openManagePositionPopup}
-                >
-                  <div className={styles.claimAllPending}>
-                    Claim All Pending
-                  </div>
-                </button>
-                <button
-                  className={styles.managePositionButton1}
-                  onClick={openManagePositionPopup1}
-                >
-                  <div className={styles.removeAllPosition}>
-                    Remove All Position Out of Range
-                  </div>
-                </button>
-                <button
-                  className={styles.managePositionButton2}
-                  onClick={openManagePositionPopup2}
-                >
-                  <div className={styles.removeAllPosition1}>
-                    Remove All Position in Range
-                  </div>
-                </button>
+              </div>
+
+              <div className={`${global.column} ${styles.headerContent}`}>
                 <div className={styles.rectangleParent}>
-                  <div className={styles.instanceChild} />
-                  <div className={styles.instanceItem} />
-                  <div className={styles.outOfRange1}>Out of Range</div>
-                  <div className={styles.inRange1}>In Range</div>
-                  <div className={styles.all}>All</div>
+                  <div className={`${styles.poolButton} ${styles.navActive}`}>
+                    All
+                  </div>
+                  <div className={`${styles.poolButton}`}>Out of Range</div>
+                  <div className={`${styles.poolButton}`}>In Range</div>
+                </div>
+                <div
+                  className={`${global.row} ${styles.headerInner} ${styles.bigGap}`}
+                >
+                  <div className={`${global.column} ${global.alignCenter}`}>
+                    <div className={styles.inRange}>In Range : 2</div>
+                    <button
+                      className={styles.managePositionButton2}
+                      onClick={openManagePositionPopup2}
+                    >
+                      <div className={styles.removeAllPosition1}>
+                        Remove All Position in Range
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className={`${global.column} ${global.alignCenter}`}>
+                    <div className={styles.outOfRange}>Out of Range : 1</div>
+                    <button
+                      className={styles.managePositionButton1}
+                      onClick={openManagePositionPopup1}
+                    >
+                      <div className={styles.removeAllPosition}>
+                        Remove All Position Out of Range
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className={`${global.column} ${global.alignCenter}`}>
+                    <div className={styles.pendingReward}>
+                      Pending Reward : $ 10,000.00
+                    </div>
+                    <button
+                      className={styles.managePositionButton}
+                      onClick={openManagePositionPopup}
+                    >
+                      <div className={styles.claimAllPending}>
+                        Claim All Pending
+                      </div>
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div className={styles.poolList}>
-                <div className={styles.lamp2} />
-                <div className={styles.tab}>
-                  <div className={styles.protocol}>Protocol</div>
-                  <div className={styles.poolLiquidity}>Pool Liquidity</div>
-                  <div className={styles.protocolTvl}>Protocol TVL</div>
-                  <div className={styles.volume}>Volume</div>
-                  <div className={styles.fee}>Fee</div>
-                  <div className={styles.apr}>ApR</div>
-                  <div className={styles.pool}>Pool</div>
-                  <div className={styles.tabChild} />
-                </div>
-                <div className={styles.scrollFrame}>
-                  <div className={styles.frameParent}>
-                    <div className={styles.mParent}>
-                      <div className={styles.m}>$ 12.65 m</div>
-                      <div className={styles.solUsdc}>SOL-USDC</div>
-                      <div className={styles.raydium}>Raydium</div>
-                      <div className={styles.clmm}>CLMM</div>
-                      <div className={styles.frameChild} />
-                      <div className={styles.m1}>$ 2.65 m</div>
-                      <div className={styles.m2}>$ 2.65 m</div>
-                      <div className={styles.div}>65.64 %</div>
-                      <div className={styles.m3}>$ 47.65 m</div>
-                      <img
-                        className={styles.solana2Icon}
-                        alt=""
-                        src="/solana-23@2x.png"
-                      />
-                      <img
-                        className={styles.usdCoinUsdcLogo1Icon}
-                        alt=""
-                        src="/usdcoinusdclogo-1@2x.png"
-                      />
-                      <img
-                        className={styles.raydiumRayCoin1Icon}
-                        alt=""
-                        src="/raydiumraycoin-12@2x.png"
-                      />
-                      <div className={styles.openPositions}>
-                        <button
-                          className={styles.managePositionButton3}
-                          onClick={openManagePositionPopup3}
-                        >
-                          <div className={styles.claimAllPending}>Manage</div>
-                        </button>
-                        <div className={styles.range18263}>
-                          Range : 18.263 - 23.682 USDC per SOL
-                        </div>
-                        <div className={styles.apr8065}>APR : 80.65 %</div>
-                        <div className={styles.levX1818}>Lev : x18.18</div>
-                        <div className={styles.pendingYield}>
-                          Pending Yield : $ 1,000.69
-                        </div>
-                        <div className={styles.circleCheckRegular1Parent}>
+            </div>
+            <div className={styles.poolList}>
+              <div className={styles.lamp2} />
+              <div className={styles.tab}>
+                <div className={styles.pool}>Pool</div>
+                <div className={styles.protocol}>Protocol</div>
+                <div className={styles.protocolTvl}>Protocol TVL</div>
+                <div className={styles.poolLiquidity}>Pool Liquidity</div>
+
+                <div className={styles.volume}>Volume</div>
+                <div className={styles.fee}>Fee</div>
+                <div className={styles.apr1}>ApR</div>
+              </div>
+              <div className={styles.scrollFrame}>
+                <div className={styles.frameParent}>
+                  <div className={styles.mParent}>
+                    <div className={styles.mParentTop}>
+                      <div
+                        className={`${global.column} ${global.spaceBetween}`}
+                      >
+                        <div className={styles.solUsdc}>SOL-USDC</div>
+                        <div className={`${global.row} ${styles.gap}`}>
                           <img
-                            className={styles.circleCheckRegular1Icon}
-                            alt=""
-                            src="/circlecheckregular-11.svg"
+                            className={styles.solana2Icon}
+                            alt=''
+                            src='/solana-23@2x.png'
                           />
-                          <div className={styles.inRange2}>{` In Range `}</div>
+                          <img
+                            className={styles.usdCoinUsdcLogo1Icon1}
+                            alt=''
+                            src='/usdcoinusdclogo-1@2x.png'
+                          />
                         </div>
-                        <div
-                          className={styles.value}
-                        >{`Value : $ 100,000.66 `}</div>
                       </div>
                       <div
-                        className={styles.tokenPriceIndex}
-                      >{`Token Price Index : 22.654 $        `}</div>
-                      <button
-                        className={styles.createPositionButton}
-                        onClick={openCLMMPositionpopup}
+                        className={`${global.column} ${global.spaceBetween}`}
                       >
-                        <div className={styles.claimAllPending}>
-                          Create Position
+                        <div className={styles.orca1}>Raydium</div>
+                        <div className={styles.clmm1}>CLMM</div>
+                      </div>
+
+                      <div
+                        className={`${global.column} ${global.spaceBetween}`}
+                      >
+                        <div className={`${styles.gridRow}`}>
+                          <div className={`${global.row}`}>
+                            <img
+                              className={styles.raydiumRayCoin1Icon}
+                              alt=''
+                              src='/raydiumraycoin-12@2x.png'
+                            />
+                            <div className={styles.m3}>$ 47.65 m</div>
+                          </div>
+
+                          <div className={styles.m}>$ 12.65 m</div>
+                          <div className={styles.m1}>$ 2.65 m</div>
+                          <div className={styles.m2}>$ 2.65 m</div>
+                          <div className={styles.div}>65.64 %</div>
                         </div>
+                        <div className={`${global.row} ${global.spaceBetween}`}>
+                          <div
+                            className={styles.tokenPriceIndex}
+                          >{`Token Price Index : 22.654 $        `}</div>
+                          <button
+                            className={styles.createPositionButton}
+                            onClick={openCLMMPositionpopup}
+                          >
+                            <div className={styles.claimAllPending}>
+                              Create Position
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={styles.openPositions}>
+                      <div className={styles.circleCheckRegular1Parent}>
+                        <img
+                          className={styles.circleCheckRegular1Icon}
+                          alt=''
+                          src='/circlecheckregular-11.svg'
+                        />
+                        <div className={styles.inRange2}>{` In Range `}</div>
+                      </div>
+                      <div
+                        className={styles.value}
+                      >{`Value : $ 100,000.66 `}</div>
+                      <div className={styles.apr8065}>APR : 80.65 %</div>
+                      <div className={styles.range18263}>
+                        Range : 18.263 - 23.682 USDC per SOL
+                      </div>
+
+                      <div className={styles.pendingYield}>
+                        Pending Yield : $ 1,000.69
+                      </div>
+                      <div className={styles.levX1818}>Lev : x18.18</div>
+                      <button
+                        className={styles.managePositionButton3}
+                        onClick={openManagePositionPopup3}
+                      >
+                        <div className={styles.claimAllPending}>Manage</div>
                       </button>
                     </div>
-                    <div className={styles.mGroup}>
-                      <div className={styles.m}>$ 12.65 m</div>
+                  </div>
+                  <div className={styles.mGroup}>
+                    <div className={`${global.column} ${global.spaceBetween}`}>
                       <div className={styles.solUsdc}>SOL-USDC</div>
-                      <div className={styles.raydium}>Raydium</div>
-                      <div className={styles.clmm}>AMM</div>
-                      <div className={styles.frameItem} />
-                      <div className={styles.m1}>$ 2.65 m</div>
-                      <div className={styles.m2}>$ 2.65 m</div>
-                      <div className={styles.div}>65.64 %</div>
-                      <div className={styles.m3}>$ 47.65 m</div>
-                      <img
-                        className={styles.solana2Icon}
-                        alt=""
-                        src="/solana-23@2x.png"
-                      />
-                      <img
-                        className={styles.usdCoinUsdcLogo1Icon}
-                        alt=""
-                        src="/usdcoinusdclogo-1@2x.png"
-                      />
-                      <img
-                        className={styles.raydiumRayCoin1Icon}
-                        alt=""
-                        src="/raydiumraycoin-12@2x.png"
-                      />
+                      <div className={`${global.row} ${styles.gap}`}>
+                        <img
+                          className={styles.solana2Icon}
+                          alt=''
+                          src='/solana-23@2x.png'
+                        />
+                        <img
+                          className={styles.usdCoinUsdcLogo1Icon1}
+                          alt=''
+                          src='/usdcoinusdclogo-1@2x.png'
+                        />
+                      </div>
+                    </div>
+                    <div className={`${global.column} ${global.spaceBetween}`}>
+                      <div className={styles.orca1}>Raydium</div>
+                      <div className={styles.clmm1}>AMM</div>
+                    </div>
+
+                    <div className={`${global.column}`}>
+                      <div className={`${styles.gridRow}`}>
+                        <div className={`${global.row}`}>
+                          <img
+                            className={styles.raydiumRayCoin1Icon}
+                            alt=''
+                            src='/raydiumraycoin-12@2x.png'
+                          />
+                          <div className={styles.m3}>$ 47.65 m</div>
+                        </div>
+                        <div className={styles.m}>$ 12.65 m</div>
+                        <div className={styles.m1}>$ 2.65 m</div>
+                        <div className={styles.m2}>$ 2.65 m</div>
+                        <div className={styles.div}>65.64 %</div>
+                      </div>
                       <div className={styles.openPositions1}>
+                        <div
+                          className={styles.value1}
+                        >{`Value : $ 100,000.66 `}</div>
+                        <div className={styles.lpTokens}>
+                          LP Tokens : 15334.63 LP
+                        </div>
+                        <div
+                          className={styles.yourShare}
+                        >{`Your share : 0.01 % <`}</div>
                         <button className={styles.createPositionButton1}>
                           <div className={styles.claimAllPending}>
                             Add Liquidity
@@ -247,45 +310,21 @@ const IndexLiquiditymy: NextPage = () => {
                             Remove Liquidity
                           </div>
                         </button>
-                        <div
-                          className={styles.value1}
-                        >{`Value : $ 100,000.66 `}</div>
-                        <div className={styles.lpTokens}>
-                          LP Tokens : 15334.63 LP
-                        </div>
-                        <div
-                          className={styles.yourShare}
-                        >{`Your share : 0.01 % <`}</div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className={styles.rectangleGroup}>
-              <div className={styles.instanceInner} />
-              <a className={styles.pools} onClick={onPoolsClick}>
-                Pools
-              </a>
-              <div className={styles.myPositions}>My Positions</div>
-              <img
-                className={styles.rectangleIcon}
-                alt=""
-                src="/rectangle-4202.svg"
-              />
-            </div>
           </div>
         </div>
-        <Header page={"liquidity"} />
-        <div className={styles.v101202204202200UtcContainer}>
-          <p className={styles.utc}>V1.0.1</p>
-          <p className={styles.utc}>2022-04-20 22:00 UTC</p>
-        </div>
+
+        <LiquidityUniversal />
       </div>
       {isManagePositionPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeManagePositionPopup}
         >
           <ManagePositionPopup onClose={closeManagePositionPopup} />
@@ -293,8 +332,8 @@ const IndexLiquiditymy: NextPage = () => {
       )}
       {isManagePositionPopup1Open && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeManagePositionPopup1}
         >
           <ManagePositionPopup onClose={closeManagePositionPopup1} />
@@ -302,8 +341,8 @@ const IndexLiquiditymy: NextPage = () => {
       )}
       {isManagePositionPopup2Open && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeManagePositionPopup2}
         >
           <ManagePositionPopup onClose={closeManagePositionPopup2} />
@@ -311,8 +350,8 @@ const IndexLiquiditymy: NextPage = () => {
       )}
       {isManagePositionPopup3Open && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeManagePositionPopup3}
         >
           <ManagePositionPopup onClose={closeManagePositionPopup3} />
@@ -320,8 +359,8 @@ const IndexLiquiditymy: NextPage = () => {
       )}
       {isCLMMPositionpopupOpen && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeCLMMPositionpopup}
         >
           <CLMMPositionpopup onClose={closeCLMMPositionpopup} />
@@ -329,8 +368,8 @@ const IndexLiquiditymy: NextPage = () => {
       )}
       {isCLMMPositionpopup1Open && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeCLMMPositionpopup1}
         >
           <CLMMPositionpopup onClose={closeCLMMPositionpopup1} />

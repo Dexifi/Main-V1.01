@@ -1,4 +1,5 @@
 .lamp {
+  pointer-events: none;
   position: absolute;
   top: -32.25rem;
   left: calc(50% - 850px);
@@ -20,40 +21,28 @@
   width: 100%;
 }
 .marinadeMsol5373978Container {
-  position: absolute;
-  top: 0;
-  left: 1.38rem;
   line-height: 1.71rem;
-  font-weight: 500;
+
   display: flex;
   align-items: center;
   width: 8.38rem;
   height: 14.38rem;
 }
 .marinadeMsol53739782405Wrapper {
-  position: absolute;
-  top: 3.44rem;
-  left: 8.5rem;
   width: 9.75rem;
   height: 14.38rem;
   text-align: right;
   color: var(--color-slategray-100);
 }
 .aprProviderTokenContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
   line-height: 1.71rem;
-  font-weight: 500;
+
   display: flex;
   align-items: center;
   width: 8.38rem;
   height: 14.38rem;
 }
 .aprProviderTokenTvlTvlDWrapper {
-  position: absolute;
-  top: 3.44rem;
-  left: 1.38rem;
   width: 9.75rem;
   height: 14.38rem;
 }
@@ -61,7 +50,7 @@
 .sol1 {
   position: relative;
   line-height: 1.71rem;
-  font-weight: 500;
+
   display: flex;
   align-items: center;
   width: 4.06rem;
@@ -78,9 +67,6 @@
   object-fit: cover;
 }
 .assetParent {
-  position: absolute;
-  top: 0.94rem;
-  left: 0.94rem;
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
   width: 18.13rem;
@@ -97,7 +83,7 @@
 .stake {
   position: relative;
   font-size: var(--font-size-lg);
-  font-weight: 500;
+
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -107,18 +93,16 @@
   border: 0;
   padding: 0 var(--padding-xs);
   background-color: var(--color-darkslategray-100);
-  position: absolute;
-  top: 12.5rem;
-  left: 0.94rem;
   border-radius: var(--br-6xl);
   box-shadow: 0 0 5px #d9f8ff;
-  width: 16.25rem;
+  width: 100%;
   height: 2.19rem;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
   align-items: center;
+  margin-top: 12px;
   justify-content: center;
 }
 .createPositionButton:hover {
@@ -134,16 +118,9 @@
 }
 .exchangeRateValueContainer,
 .sol090790Container {
-  position: absolute;
-  top: 7.19rem;
-  left: calc(50% - 112px);
-  font-weight: 500;
-  display: inline-block;
   width: 8.56rem;
 }
 .sol090790Container {
-  top: 8.38rem;
-  left: calc(50% - 67px);
   color: var(--color-slategray-100);
   text-align: right;
   width: 11.63rem;
@@ -151,15 +128,12 @@
 .per1Child {
   border: 1px solid var(--color-lightcyan-400);
   background-color: transparent;
-  position: absolute;
-  top: 0.31rem;
-  left: 9.19rem;
   border-radius: var(--br-6xl);
   box-sizing: border-box;
   width: 6.75rem;
   height: 2.19rem;
   overflow: hidden;
-  color: #D9F8FF;
+  color: #d9f8ff;
   font-size: 15px;
   padding: var(--padding-3xs);
 }
@@ -187,15 +161,12 @@
 }
 .sol2 {
   position: relative;
-  font-weight: 500;
+
   width: 4.25rem;
   height: 1.81rem;
   flex-shrink: 0;
 }
 .solana3Parent {
-  position: absolute;
-  top: 0.31rem;
-  left: 0.5rem;
   border-radius: var(--br-6xl);
   background-color: var(--color-gray-700);
   box-shadow: 0 0 5px rgba(217, 248, 255, 0.25);
@@ -204,35 +175,25 @@
   flex-direction: row;
 }
 .balance11366987 {
-  position: absolute;
-  top: 2.81rem;
-  left: calc(50% - 124.5px);
   font-size: var(--font-size-sm);
-  font-weight: 500;
+
   color: var(--color-slategray-100);
   text-align: left;
+  margin-top: 5px;
 }
 .per1 {
-  top: 0.75rem;
-  left: 0.63rem;
   border-radius: var(--br-3xs);
   background-color: var(--color-darkslategray-100);
-  width: 16.56rem;
-  height: 4.19rem;
+  width: 100%;
+  padding: 5px;
   overflow: hidden;
   text-align: center;
   font-size: var(--font-size-xl);
-}
-.max,
-.maxbutton,
-.per1 {
-  position: absolute;
+  margin-bottom: 10px;
 }
 .max {
-  top: 0.25rem;
-  left: calc(50% - 28px);
   font-size: var(--tittle-16-m-size);
-  font-weight: 500;
+
   font-family: var(--tittle-16-m);
   color: var(--color1);
   text-align: center;
@@ -247,13 +208,14 @@
   border: 0;
   padding: 0;
   background-color: var(--color-darkslategray-100);
-  top: 5.63rem;
-  left: calc(50% + 51px);
   border-radius: var(--br-mini);
   box-shadow: 0 0 5px #d9f8ff;
   width: 4.38rem;
   height: 1.88rem;
   overflow: hidden;
+  margin-left: auto;
+  margin-bottom: 10px;
+  display: block;
 }
 .maxbutton:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
@@ -262,26 +224,21 @@
   background-color: var(--color-lightcyan-800);
 }
 .createPositionButtonParent {
-  position: absolute;
-  top: 18rem;
-  left: 0.94rem;
   border-radius: var(--br-3xs);
   background-color: var(--color-gray-600);
   box-shadow: 0 0 5px #fff;
-  width: 18.13rem;
-  height: 15.63rem;
+  width: 100%;
   font-size: var(--font-size-sm);
   font-family: var(--tittle-16-m);
+  margin-top: 15px;
+  padding: 13px;
 }
 .marinadeLogoCopy1Parent,
 .per1Item {
-  position: absolute;
-  top: 0.31rem;
   border-radius: var(--br-6xl);
   height: 2.19rem;
 }
 .marinadeLogoCopy1Parent {
-  left: 0.31rem;
   background-color: var(--color-gray-700);
   box-shadow: 0 0 5px rgba(217, 248, 255, 0.25);
   width: 7.75rem;
@@ -293,11 +250,10 @@
 .per1Item {
   border: 1px solid var(--color-lightcyan-400);
   background-color: transparent;
-  left: 9.13rem;
   box-sizing: border-box;
   width: 6.75rem;
   overflow: hidden;
-  color: #D9F8FF;
+  color: #d9f8ff;
   font-size: 15px;
   padding: var(--padding-3xs);
 }
@@ -313,12 +269,9 @@
 }
 .createPositionButtonGroup,
 .per11 {
-  position: absolute;
   border-radius: var(--br-3xs);
 }
 .per11 {
-  top: 0.81rem;
-  left: 0.63rem;
   background-color: var(--color-darkslategray-100);
   width: 16.56rem;
   height: 4.06rem;
@@ -327,8 +280,6 @@
   font-size: var(--font-size-xl);
 }
 .createPositionButtonGroup {
-  top: 34.69rem;
-  left: 0.94rem;
   background-color: var(--color-gray-600);
   box-shadow: 0 0 5px #fff;
   width: 18.13rem;
@@ -337,39 +288,48 @@
   font-family: var(--tittle-16-m);
 }
 .listPanel {
-  position: absolute;
-  top: 17.81rem;
-  left: calc(50% - 675px);
-  border-radius: var(--br-xl);
   background-color: var(--color-gray-300);
   box-shadow: 0 0 4px #88d6ff;
   width: 20rem;
-  height: 51.56rem;
+  margin-right: auto;
   overflow: hidden;
-  font-family: var(--font-helvetica);
+  position: relative;
+  padding: 15px 20px;
+  font-size: var(--tittle-16-m-size);
+  border-radius: 20px;
 }
-.listOfAll,
+.vaultsParent {
+  border-radius: var(--br-6xl);
+  background-color: var(--color-gray-600);
+  width: 100%;
+  height: 2.5rem;
+  display: flex;
+  flex-direction: row;
+  padding: 0 var(--padding-7xs) 0 var(--padding-3xs);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--gap-6xl);
+  font-size: var(--font-size-xl);
+  font-family: var(--tittle-16-m);
+  margin-bottom: 10px;
+}
+.listOfAll {
+  color: #d9f8ff;
+
+  font-family: DM Sans;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 27.3px; /* 75.833% */
+  margin-bottom: 10px;
+}
 .noteThatUnstaking {
-  position: absolute;
-  top: 1.81rem;
-  left: 2.25rem;
   line-height: 1.71rem;
-  display: inline-block;
-  width: 69.5rem;
-  height: 2.19rem;
-}
-.noteThatUnstaking {
-  top: 4.13rem;
-  left: 2.06rem;
   font-size: var(--font-size-lg);
   color: var(--color-slategray-100);
-  width: 55.38rem;
-  height: 4.63rem;
 }
 .solana4Icon {
-  position: absolute;
-  top: 1.81rem;
-  left: 78rem;
   width: 3.75rem;
   height: 3.75rem;
   object-fit: cover;
@@ -379,26 +339,25 @@
   background-color: var(--color-gray-600);
 }
 .listPanel1 {
-  position: absolute;
-  top: 9.38rem;
-  left: calc(50% - 675px);
   border-radius: var(--br-xl);
   box-shadow: 0 0 4px #88d6ff;
-  width: 84.38rem;
-  height: 7.19rem;
+  width: 100%;
   overflow: hidden;
   font-size: var(--font-size-17xl);
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 15px;
 }
 .instanceChild {
-  left: 0;
   border-radius: var(--br-6xl);
   width: 30.88rem;
 }
 .dexifiLogoIcon,
 .instanceChild,
 .instanceItem {
-  position: absolute;
-  top: 0;
   height: 3.13rem;
 }
 .instanceItem {
@@ -410,56 +369,16 @@
   box-sizing: border-box;
   width: 10.31rem;
 }
-.dexifiLogoIcon {
-  left: 0.69rem;
-  width: 4.04rem;
-  object-fit: cover;
-  cursor: pointer;
-}
-.ecosystem {
-  left: 4.75rem;
-  width: 8rem;
-  cursor: pointer;
-}
-.ecosystem,
-.liquidityStake,
-.myVaults {
-  position: absolute;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 3.13rem;
-}
-.myVaults {
-  left: 23.06rem;
-  width: 7.81rem;
-  cursor: pointer;
-}
-.liquidityStake {
-  left: 12.75rem;
-  width: 10.31rem;
-}
-.rectangleParent {
-  position: absolute;
-  top: 5rem;
-  left: 28.31rem;
-  width: 30.88rem;
-  height: 3.13rem;
-  text-align: center;
-  font-size: var(--font-size-xl);
-  color: var(--color1);
-}
-.lamp1,
-.liquidityPanel {
+
+.lamp1 {
   position: absolute;
   top: 0.5rem;
   left: calc(50% - 709px);
   width: 87.5rem;
   height: 75rem;
   overflow: hidden;
-}
-.lamp1 {
+
+  pointer-events: none;
   top: -14.81rem;
   left: calc(50% - 550px);
   background: radial-gradient(
@@ -486,227 +405,13 @@
   width: 70.81rem;
   height: 18.81rem;
 }
-.lend,
-.swap {
-  text-decoration: none;
-  position: absolute;
-  top: 0.94rem;
-  line-height: 1.71rem;
-  cursor: pointer;
-}
-.swap {
-  left: calc(50% - 318px);
-  color: inherit;
-  display: inline-block;
-  width: 3.94rem;
-}
-.dao:hover,
-.dashbord:hover,
-.farm:hover,
-.lend:hover,
-.stake1:hover,
-.stake2:hover,
-.swap:hover,
-.trade:hover,
-.yield:hover {
-  color: var(--color-lightcyan-100);
-}
-.lend {
-  left: calc(50% - 128px);
-  width: 3.88rem;
-}
-.lend,
-.trade,
-.yield {
-  color: inherit;
-  display: inline-block;
-}
-.trade {
-  text-decoration: none;
-  position: absolute;
-  top: 0.94rem;
-  left: calc(50% - 223px);
-  line-height: 1.71rem;
-  width: 3.94rem;
-  cursor: pointer;
-}
-.yield {
-  left: calc(50% - 34px);
-  width: 6.63rem;
-}
-.farm,
-.stake1,
-.yield {
-  text-decoration: none;
-  position: absolute;
-  top: 0.94rem;
-  line-height: 1.71rem;
-  cursor: pointer;
-}
-.farm {
-  left: calc(50% + 120px);
-  color: inherit;
-}
-.stake1 {
-  left: calc(50% + 220px);
-  color: var(--color-lightcyan-100);
-}
-.frameChild {
-  position: absolute;
-  top: 2.78rem;
-  left: calc(50% + 220.5px);
-  box-shadow: 0 0 2px #88d6ff;
-  border-top: 1px solid var(--color-lightcyan-300);
-  box-sizing: border-box;
-  width: 3.81rem;
-  height: 0.06rem;
-}
-.dao,
-.dashbord,
-.stake2 {
-  text-decoration: none;
-  position: absolute;
-  top: 0.94rem;
-  line-height: 1.71rem;
-  color: inherit;
-  cursor: pointer;
-}
-.dashbord {
-  left: calc(50% - 468px);
-  display: inline-block;
-  width: 7.38rem;
-}
-.dao,
-.stake2 {
-  left: calc(50% + 425px);
-}
-.dao {
-  left: calc(50% + 316px);
-  display: inline-block;
-  width: 4.81rem;
-}
-.swapParent {
-  position: absolute;
-  top: 0.44rem;
-  left: calc(50% - 566px);
-  width: 59.38rem;
-  height: 3.13rem;
-  overflow: hidden;
-}
-.dexifiLogoIcon1 {
-  position: absolute;
-  top: 0.31rem;
-  left: 0.63rem;
-  width: 4.81rem;
-  height: 3.69rem;
-  object-fit: cover;
-  cursor: pointer;
-}
-.connectWallet {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  background-color: transparent;
-  position: relative;
-  font-size: var(--font-size-lgi);
-  font-family: var(--tittle-16-m);
-  color: var(--color-lightcyan-100);
-  text-align: left;
-  display: inline-block;
-}
-.connectWalletWrapper {
-  cursor: pointer;
-  border: 1px solid var(--color-lightcyan-400);
-  padding: var(--padding-8xs) var(--padding-5xl);
-  background-color: var(--color-gray-600);
-  position: absolute;
-  top: 0.88rem;
-  left: 4.38rem;
-  border-radius: var(--br-23xl);
-  box-shadow: 0 0 4px 1px rgba(217, 248, 255, 0.25);
-  box-sizing: border-box;
-  height: 2.56rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.connectWalletWrapper:hover {
-  background-color: var(--color-lightcyan-500);
-  box-shadow: 0 0 4px 3px rgba(217, 248, 255, 0.25);
-}
-.connectWalletWrapper:active {
-  mix-blend-mode: luminosity;
-  background-color: var(--color-lightcyan-400);
-}
-.vectorIcon,
-.vectorIcon1 {
-  position: absolute;
-  top: calc(50% - 12.25px);
-  left: calc(50% - 12.25px);
-  width: 1.53rem;
-  height: 1.53rem;
-}
-.vectorIcon1 {
-  top: calc(50% - 4.25px);
-  left: calc(50% - 4.25px);
-  width: 0.53rem;
-  height: 0.53rem;
-}
-.iconSettings {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  background-color: transparent;
-  position: relative;
-  width: 1.44rem;
-  height: 1.44rem;
-}
-.iconSettingsWrapper {
-  cursor: pointer;
-  border: 1px solid var(--color-slategray-100);
-  padding: var(--padding-4xs);
-  background-color: var(--color-gray-600);
-  position: absolute;
-  top: 0.88rem;
-  right: 14.56rem;
-  border-radius: var(--br-23xl);
-  box-shadow: 0 0 5px #d9f8ff;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-.iconSettingsWrapper:hover {
-  background-color: var(--color-lightcyan-500);
-}
-.iconSettingsWrapper:active {
-  mix-blend-mode: luminosity;
-  background-color: var(--color-lightcyan-400);
-}
-.header,
-.instanceParent {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
+
 .instanceParent {
   width: 17.88rem;
   height: 4.44rem;
   overflow: hidden;
 }
-.header {
-  width: 100%;
-  left: 0;
-  background-color: var(--color-gray-500);
-  height: 4.06rem;
-  text-align: center;
-  font-size: var(--font-size-5xl);
-  color: var(--color-slategray-100);
-  font-family: var(--font-helvetica);
-}
+
 .v101202204202200UtcContainer {
   position: absolute;
   bottom: 0.38rem;
@@ -722,10 +427,41 @@
   position: relative;
   background-color: var(--color-gray-600);
   width: 100%;
-  height: 75rem;
+  min-height: 100vh;
   overflow: hidden;
   text-align: left;
   font-size: var(--tittle-16-m-size);
   color: var(--color-lightcyan-100);
   font-family: var(--tittle-16-m);
+}
+.liquidityPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+  padding-bottom: 160px;
+  margin: 0 auto;
+  width: 90vw;
+}
+.statisticTitle {
+  color: #D9F8FF;
+
+  font-family: Helvetica;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 170.625% */
+  margin: 0;
+}
+
+.statisticText {
+  color: #757788;
+
+  text-align: right;
+  font-family: Helvetica;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 170.625% */
+  margin: 0;
 }

@@ -30,7 +30,7 @@
 .send {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -68,7 +68,7 @@
 .burn,
 .usturCssTier {
   position: relative;
-  font-weight: 500;
+  
 }
 .usturCssTier {
   color: var(--color-lightcyan-100);
@@ -135,7 +135,7 @@
   position: absolute;
   top: 4.63rem;
   left: 0.81rem;
-  font-weight: 500;
+  
   display: inline-block;
   width: 6.19rem;
   height: 4rem;
@@ -147,7 +147,7 @@
 .iUnderstandThis,
 .usturCssTierContainer {
   position: absolute;
-  font-weight: 500;
+  
   display: inline-block;
 }
 .usturCssTierContainer {

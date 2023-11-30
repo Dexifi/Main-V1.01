@@ -31,7 +31,7 @@
 .repay,
 .sol {
   position: relative;
-  font-weight: 500;
+  
 }
 
 .sol {
@@ -72,7 +72,7 @@
 .balance11366987,
 .div {
   position: absolute;
-  font-weight: 500;
+  
 }
 
 .balance11366987 {
@@ -106,7 +106,7 @@
 }
 
 .sol1 {
-  font-weight: 500;
+  
   width: auto;
   height: 1.81rem;
   flex-shrink: 0;
@@ -161,7 +161,7 @@
   top: 0.25rem;
   left: calc(50% - 28px);
   font-size: var(--tittle-16-m-size);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color1);
   text-align: center;
@@ -205,11 +205,6 @@
 
 .maxbutton1:active {
   background-color: var(--color-lightcyan-800);
-}
-
-.div1,
-.repay1 {
-  font-weight: 500;
 }
 
 .div1 {
@@ -273,7 +268,7 @@
 }
 
 .to531782Container {
-  font-weight: 500;
+  
   color: var(--color-slategray-100);
   white-space: pre-wrap;
   text-align: right;
@@ -299,7 +294,7 @@
 .inputAmountYou {
   top: 4.94rem;
   left: 2.44rem;
-  font-weight: 500;
+  
   display: inline-block;
   width: 18.81rem;
 }

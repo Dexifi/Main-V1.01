@@ -1,20 +1,20 @@
-import { useCallback, useState, FC, useEffect } from "react";
-import styles from "../../pages/dashboard.module.css";
-import PortalPopup from "../portal-popup";
-import TransferDomainPopup from "../transfer-domain-popup";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { TokenInfo, TokenListProvider } from "@solana/spl-token-registry";
-import { connection } from "../../utils/get-connection";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import axios from "axios";
-import { TokenList } from "@raydium-io/raydium-sdk";
+import { useCallback, useState, FC, useEffect } from 'react';
+import styles from '../../pages/dashboard.module.css';
+import PortalPopup from '../portal-popup';
+import TransferDomainPopup from '../transfer-domain-popup';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { TokenInfo, TokenListProvider } from '@solana/spl-token-registry';
+import { connection } from '../../utils/get-connection';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import axios from 'axios';
+import { TokenList } from '@raydium-io/raydium-sdk';
 import {
   getDomainKey,
   NameRegistryState,
   getAllDomains,
   performReverseLookup,
-} from "@bonfida/spl-name-service";
+} from '@bonfida/spl-name-service';
 
 interface WalletBalanceProps {
   walletBalance: number;
@@ -117,15 +117,15 @@ const WalletBalance: FC<WalletBalanceProps> = ({
         }
       }
       updatedTokensList = updatedTokensList.filter(
-        (t) => !t.symbol.includes("-")
+        (t) => !t.symbol.includes('-')
       );
       const balance = await connection.getBalance(publicKey);
       updatedTokensList.push({
-        symbol: "SOL",
-        name: "Solana",
+        symbol: 'SOL',
+        name: 'Solana',
         decimals: 9,
         uiAmount: balance / LAMPORTS_PER_SOL,
-        logoURI: "/solana-copy-2@2x.png",
+        logoURI: '/solana-copy-2@2x.png',
       });
       try {
         for (let t of updatedTokensList) {
@@ -165,19 +165,21 @@ const WalletBalance: FC<WalletBalanceProps> = ({
         <div className={styles.allWalletBalance}>
           <div className={styles.frameGroup}>
             <div className={styles.amountParent}>
-              <div className={styles.amount1}>Amount</div>
               <div className={styles.nftContainer}>Token</div>
-              <div className={styles.tokenIndex}>Token Index</div>
+              <div className={styles.amount1}>Amount</div>
               <div className={styles.value4}>Value</div>
+              <div className={styles.tokenIndex}>Token Index</div>
               <div className={styles.valuenetworth}>Value/NetWorth %</div>
-              <div className={styles.frameChild2} />
             </div>
             {isLoading ? (
               <div className={styles.solParent}>Loading...</div>
             ) : (
               tokensList.map((item, index) => {
                 return (
-                  <div className={styles.solParent} key={index + 1}>
+                  <div
+                    className={styles.solParent}
+                    key={index + 1}
+                  >
                     <div className={styles.usturCssTier}>{item.symbol}</div>
                     <div className={styles.div27}>
                       {item.uiAmount.toFixed(2)}
@@ -195,7 +197,7 @@ const WalletBalance: FC<WalletBalanceProps> = ({
                     </div>
                     <img
                       className={styles.solanaCopy24}
-                      alt=""
+                      alt=''
                       src={item.logoURI}
                     />
                     <div className={styles.frameChild3} />
@@ -208,40 +210,35 @@ const WalletBalance: FC<WalletBalanceProps> = ({
             <div className={styles.frameDiv}>
               <div className={styles.head3}>
                 <div className={styles.domains}>Domains</div>
-                <div className={styles.headChild1} />
               </div>
-              <div className={styles.div31}>
-                <img className={styles.rectangleIcon} alt="" />
-                <div className={styles.dexifisol}>dexifi.sol</div>
-                <div className={styles.child1} />
-                <button
-                  className={styles.transferDomainButton2}
-                  onClick={openTransferDomainPopup}
-                >
-                  <div className={styles.transfer}>Transfer</div>
-                </button>
-              </div>
-              <div className={styles.div31}>
-                <img className={styles.rectangleIcon} alt="" />
-                <div className={styles.dexifisol}>dexifi.sol</div>
-                <div className={styles.child1} />
-                <button
-                  className={styles.transferDomainButton2}
-                  onClick={openTransferDomainPopup}
-                >
-                  <div className={styles.transfer}>Transfer</div>
-                </button>
-              </div>
-              <div className={styles.div31}>
-                <img className={styles.rectangleIcon} alt="" />
-                <div className={styles.dexifisol}>dexifi.sol</div>
-                <div className={styles.child1} />
-                <button
-                  className={styles.transferDomainButton2}
-                  onClick={openTransferDomainPopup}
-                >
-                  <div className={styles.transfer}>Transfer</div>
-                </button>
+              <div className={styles.walletBalanceContentContainer}>
+                <div className={styles.div31}>
+                  <div className={styles.dexifisol}>dexifi.sol</div>
+                  <button
+                    className={styles.transferDomainButton2}
+                    onClick={openTransferDomainPopup}
+                  >
+                    <div className={styles.transfer}>Transfer</div>
+                  </button>
+                </div>
+                <div className={styles.div31}>
+                  <div className={styles.dexifisol}>dexifi.sol</div>
+                  <button
+                    className={styles.transferDomainButton2}
+                    onClick={openTransferDomainPopup}
+                  >
+                    <div className={styles.transfer}>Transfer</div>
+                  </button>
+                </div>
+                <div className={styles.div31}>
+                  <div className={styles.dexifisol}>dexifi.sol</div>
+                  <button
+                    className={styles.transferDomainButton2}
+                    onClick={openTransferDomainPopup}
+                  >
+                    <div className={styles.transfer}>Transfer</div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -249,8 +246,8 @@ const WalletBalance: FC<WalletBalanceProps> = ({
       </div>
       {isTransferDomainPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(19, 35, 45, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(19, 35, 45, 0.7)'
+          placement='Centered'
           onOutsideClick={closeTransferDomainPopup}
         >
           <TransferDomainPopup onClose={closeTransferDomainPopup} />

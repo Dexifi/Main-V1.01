@@ -33,7 +33,7 @@
 .solUsdc {
   top: 1.63rem;
   left: 2.13rem;
-  font-weight: 500;
+  
 }
 .headChild {
   position: absolute;
@@ -61,7 +61,7 @@
 .r {
   position: relative;
   font-size: var(--font-size-mini);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;

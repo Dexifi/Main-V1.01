@@ -30,7 +30,7 @@
 .removeAmm,
 .solUsdc {
   position: relative;
-  font-weight: 500;
+  
 }
 .solUsdc {
   display: flex;
@@ -67,7 +67,7 @@
   position: absolute;
   top: 6.25rem;
   left: calc(50% - 212px);
-  font-weight: 500;
+  
 }
 .div {
   top: 3.13rem;
@@ -75,7 +75,7 @@
 }
 .solUsdc1 {
   position: relative;
-  font-weight: 500;
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,7 +143,7 @@
   top: 0.25rem;
   left: calc(50% - 28px);
   font-size: var(--tittle-16-m-size);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color1);
   text-align: center;
@@ -186,7 +186,7 @@
 .removeLiquidity {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;

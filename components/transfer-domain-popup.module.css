@@ -30,7 +30,7 @@
 .send {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -67,7 +67,7 @@
 }
 .domain {
   position: relative;
-  font-weight: 500;
+  
 }
 .vectorIcon {
   position: relative;

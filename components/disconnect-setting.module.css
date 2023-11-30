@@ -32,7 +32,7 @@
   top: calc(50% - 15px);
   left: calc(50% - 99.5px);
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -64,7 +64,7 @@
   top: calc(50% - 18px);
   left: calc(50% - 131.5px);
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -89,7 +89,7 @@
   top: calc(50% - 18px);
   left: calc(50% - 111.5px);
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;

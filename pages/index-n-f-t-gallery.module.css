@@ -140,13 +140,12 @@
 .transactions {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
 }
-.accountPageButton,
-.dashboardPageSwitcherChild {
+.accountPageButton {
   position: absolute;
   background-color: var(--color-gray-600);
 }
@@ -172,13 +171,7 @@
 .accountPageButton:active {
   background-color: var(--color-lightcyan-200);
 }
-.dashboardPageSwitcherChild {
-  top: 0;
-  left: 0;
-  border-radius: var(--br-231xl);
-  width: 31.88rem;
-  height: 3.13rem;
-}
+
 .accounts,
 .nftGallery {
   display: flex;
@@ -204,7 +197,6 @@
   text-align: center;
 }
 .accounts,
-.dashboardPageSwitcherItem,
 .transactions1 {
   position: absolute;
   top: 0;
@@ -226,23 +218,22 @@
   justify-content: center;
 }
 .dashboardPageSwitcherItem {
+  width: 10.63rem;
+  height: 3.13rem;
+  cursor: pointer;
   left: 0;
   border-radius: var(--br-6xl);
   background-color: var(--color-lightcyan-200);
   box-shadow: 0 0 5px #d9f8ff;
   border: 1px solid var(--color-lightcyan-100);
   box-sizing: border-box;
+  display: none;
 }
 .dashboardPageSwitcher {
-  position: absolute;
-  top: 5rem;
-  left: 21.81rem;
-  width: 31.94rem;
-  height: 3.13rem;
-  text-align: center;
-  font-size: var(--font-size-5xl);
-  color: var(--color-lightcyan-100);
-  font-family: var(--tittle-16-m);
+  display: flex;
+  border-radius: 250px;
+  background: #0d111b;
+  margin-bottom: 20px;
 }
 .frameParent {
   position: absolute;

@@ -31,7 +31,7 @@
 .untake,
 .vault {
   position: relative;
-  font-weight: 500;
+  
 }
 .untake {
   font-family: var(--tittle-16-m);
@@ -76,12 +76,12 @@
   position: absolute;
   top: 6rem;
   left: calc(50% - 212px);
-  font-weight: 500;
+  
 }
 .unstake {
   position: relative;
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
   text-align: left;
@@ -119,7 +119,7 @@
   position: absolute;
   top: 3.13rem;
   left: calc(50% + 114px);
-  font-weight: 500;
+  
 }
 .ray1,
 .raydiumRayCoin1Parent {
@@ -129,7 +129,7 @@
 }
 .ray1 {
   position: relative;
-  font-weight: 500;
+  
   width: 4.25rem;
   height: 1.81rem;
   flex-shrink: 0;
@@ -194,7 +194,7 @@
   top: 0.25rem;
   left: calc(50% - 28px);
   font-size: var(--tittle-16-m-size);
-  font-weight: 500;
+  
   font-family: var(--tittle-16-m);
   color: var(--color1);
   text-align: center;

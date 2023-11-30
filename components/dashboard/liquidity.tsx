@@ -1,19 +1,19 @@
-import styles from "../../pages/dashboard.module.css";
-import { Connection, PublicKey } from "@solana/web3.js";
+import styles from '../../pages/dashboard.module.css';
+import { Connection, PublicKey } from '@solana/web3.js';
 import {
   LIQUIDITY_STATE_LAYOUT_V4,
   SPL_ACCOUNT_LAYOUT,
   TokenAccount,
-} from "@raydium-io/raydium-sdk";
-import axios from "axios";
-import BN from "bn.js";
-import { useWallet } from "@solana/wallet-adapter-react";
-import liquidityData from "./Raydiumdb/liquidityData.json";
-import { connection } from "../../utils/get-connection";
-import { findToken, getTokenBalanceFromWallet } from "./walletBalance";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { OpenOrders } from "@project-serum/serum";
-import { useState } from "react";
+} from '@raydium-io/raydium-sdk';
+import axios from 'axios';
+import BN from 'bn.js';
+import { useWallet } from '@solana/wallet-adapter-react';
+import liquidityData from './Raydiumdb/liquidityData.json';
+import { connection } from '../../utils/get-connection';
+import { findToken, getTokenBalanceFromWallet } from './walletBalance';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { OpenOrders } from '@project-serum/serum';
+import { useState } from 'react';
 
 const GetLiquidity = () => {
   const { publicKey } = useWallet();
@@ -38,7 +38,7 @@ const GetLiquidity = () => {
   async function demoFarm() {
     let allLiquiditys: any[] = [];
     const OPENBOOK_PROGRAM_ID = new PublicKey(
-      "srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX"
+      'srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX'
     );
 
     const owner = publicKey;
@@ -126,9 +126,17 @@ const GetLiquidity = () => {
   console.log(userLiquidity);
   return (
     <div className={styles.liquidity}>
+      <div className={styles.netWorth2}>
+        <div className={styles.liquidityContainer}>
+          <span>Liquidity</span>
+          <span className={styles.span}>{` `}</span>
+          <span className={styles.span6}>*</span>
+          <span className={styles.span}>{` `}</span>
+          <span>$ 12,500.00</span>
+        </div>
+      </div>
       <div className={styles.headGroup}>
         <div className={styles.head1}>
-          <div className={styles.headItem} />
           <div className={styles.apr1}>APR</div>
           <div className={styles.protocol1}>Protocol</div>
           <div className={styles.value2}>Value</div>
@@ -141,64 +149,89 @@ const GetLiquidity = () => {
           <div className={styles.leverage}>Leverage</div>
         </div>
         <div className={styles.div10}>
-          <div className={styles.item} />
-          <div className={styles.usturCssTier}>SOL-USDC</div>
-          <div className={styles.raydium}>Raydium</div>
-          <div className={styles.normal}>Normal</div>
-          <img
-            className={styles.solanaCopy21}
-            alt=""
-            src="/solana-copy-2@2x.png"
-          />
+          <div className={styles.frameWrapperColumn}>
+            <div
+              className={`${styles.frameWrapperRow} ${styles.frameWrapperRowStart}`}
+            >
+              <div className={styles.usturCssTier}>SOL-USDC</div>
+              <img
+                className={styles.solanaCopy21}
+                alt=''
+                src='/solana-copy-2@2x.png'
+              />
+              <img
+                className={styles.usdCoinUsdcLogo2Icon1}
+                alt=''
+                src='/usdcoinusdclogo-2@2x.png'
+              />
+            </div>
+            <div className={styles.tvl}>TVL : $ 12.0 m</div>
+          </div>
+
+          <div className={styles.frameWrapperColumn}>
+            <div
+              className={`${styles.frameWrapperRow} ${styles.frameWrapperRowStart}`}
+            >
+              <div className={styles.raydium}>Raydium</div>
+              <img
+                className={styles.raydiumRayCoin1Icon1}
+                alt=''
+                src='/raydiumraycoin-11@2x.png'
+              />
+            </div>
+
+            <div className={styles.indexTp22654}>Index TP: 22.654 $</div>
+          </div>
+
+          <div className={styles.frameWrapperColumn}>
+            <div className={styles.normal}>Normal</div>
+            <div className={styles.range189231}>
+              Range : 18.9231 - 23.6432 USDC per SOL
+            </div>
+          </div>
+
           <div className={styles.div11}>6.15%</div>
           <div className={styles.div12}>$ 4,812.99</div>
-          <img
-            className={styles.usdCoinUsdcLogo2Icon1}
-            alt=""
-            src="/usdcoinusdclogo-2@2x.png"
-          />
-          <img
-            className={styles.raydiumRayCoin1Icon1}
-            alt=""
-            src="/raydiumraycoin-11@2x.png"
-          />
-          <div className={styles.tvl}>TVL : $ 12.0 m</div>
-          <div className={styles.div13}>$ 222.21</div>
+          <div className={styles.frameWrapperColumn}>
+            <div className={styles.div13}>$ 222.21</div>
+            <div className={styles.statusInContainer}>
+              <span>{`Status : `}</span>
+              <span className={styles.inRange}>In Range</span>
+            </div>
+          </div>
+          <div className={styles.frameWrapperColumn}>
+            <div className={styles.sol4556}>SOL 45.56 %</div>
+            <div className={styles.usdc5444}>USDC 54.44 %</div>
+          </div>
+
           <div className={styles.x1818}>x18.18</div>
-          <div className={styles.range189231}>
-            Range : 18.9231 - 23.6432 USDC per SOL
-          </div>
-          <div className={styles.indexTp22654}>Index TP: 22.654 $</div>
-          <div className={styles.statusInContainer}>
-            <span>{`Status : `}</span>
-            <span className={styles.inRange}>In Range</span>
-          </div>
-          <div className={styles.sol4556}>SOL 45.56 %</div>
-          <div className={styles.usdc5444}>USDC 54.44 %</div>
         </div>
         {userLiquidity.map((item, index) => {
           return (
-            <div className={styles.div10} key={index+1}>
+            <div
+              className={styles.div10}
+              key={index + 1}
+            >
               <div className={styles.item} />
               <div className={styles.usturCssTier}>{item.name}</div>
               <div className={styles.raydium}>Raydium</div>
               <div className={styles.normal}>Normal</div>
               <img
                 className={styles.solanaCopy21}
-                alt=""
-                src="/solana-copy-2@2x.png"
+                alt=''
+                src='/solana-copy-2@2x.png'
               />
               <div className={styles.div11}>6.15%</div>
               <div className={styles.div12}>$ 4,812.99</div>
               <img
                 className={styles.usdCoinUsdcLogo2Icon1}
-                alt=""
-                src="/usdcoinusdclogo-2@2x.png"
+                alt=''
+                src='/usdcoinusdclogo-2@2x.png'
               />
               <img
                 className={styles.raydiumRayCoin1Icon1}
-                alt=""
-                src="/raydiumraycoin-11@2x.png"
+                alt=''
+                src='/raydiumraycoin-11@2x.png'
               />
               <div className={styles.tvl}>TVL : $ 12.0 m</div>
               <div className={styles.div13}>$ 222.21</div>
@@ -216,15 +249,6 @@ const GetLiquidity = () => {
             </div>
           );
         })}
-      </div>
-      <div className={styles.netWorth2}>
-        <div className={styles.liquidityContainer}>
-          <span>Liquidity</span>
-          <span className={styles.span}>{` `}</span>
-          <span className={styles.span6}>*</span>
-          <span className={styles.span}>{` `}</span>
-          <span>$ 12,500.00</span>
-        </div>
       </div>
     </div>
   );

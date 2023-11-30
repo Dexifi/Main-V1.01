@@ -1,0 +1,70 @@
+.dashboardPageSwitcher {
+  display: flex;
+  margin: 0 auto;
+  width: fit-content;
+  margin-bottom: 20px;
+  gap: 180px;
+  align-items: center;
+  margin-top: 25px;
+}
+
+.dashboardPageButton {
+  border: 0;
+  background-color: transparent;
+  font-size: var(--font-size-5xl);
+  font-family: var(--tittle-16-m);
+  color: var(--color-lightcyan-100);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 10px 20px;
+  width: max-content;
+}
+
+.dashboardPageButton.active {
+  border-radius: var(--br-6xl);
+  background-color: var(--color-lightcyan-200);
+  box-shadow: 0 0 5px #d9f8ff;
+  border: 1px solid var(--color-lightcyan-100);
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+  border-radius: 250px;
+  background: #0d111b;
+  z-index: 2;
+}
+
+.hidden {
+  display: none;
+}
+
+.accountPageButton {
+  cursor: pointer;
+  background-color: var(--color-gray-600);
+  border: 1px solid var(--color-lightcyan-400);
+  padding: var(--padding-3xs);
+  border-radius: var(--br-6xl);
+  box-shadow: 0 0 5px #d9f8ff;
+  box-sizing: border-box;
+  width: 9.31rem;
+  color: var(--color-lightcyan-100);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.accountPageButton:hover {
+  box-shadow: 0 0 4px 1px #d9f8ff;
+}
+.accountPageButton:active {
+  background-color: var(--color-lightcyan-200);
+}
+
+.nftHeader {
+  margin-top: 80px;
+}

@@ -25,17 +25,13 @@ const LendBorrowpopup: NextPage<LendBorrowpopupType> = ({
   const [warning, setWarning] = useState('');
   console.log(user)
   const [userBoorrowLimit, setUserBoorrowLimit] = useState(0);
-  const [userBoorrowLimitSwitcher, setUserBoorrowLimitSwitcher] = useState(false);
-  if (!userBoorrowLimitSwitcher) {
+
     setUserBoorrowLimit(
       user.obligationStats ?
       Number((
         (user.obligationStats.borrowLimit - user.obligationStats.userTotalBorrow - 0.01) /
         lend.stats.assetPriceUSD.toFixed(2)
       ).toFixed(7)) : 0 ) ;
-    setUserBoorrowLimitSwitcher(true);
-  }
-    
 
   const handleChangeAmount = (event: any) => {
     setAmount(event.target.value);

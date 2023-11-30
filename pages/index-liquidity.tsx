@@ -1,16 +1,17 @@
-import type { NextPage } from "next";
-import { useState, useRef, useCallback, useEffect } from "react";
-import ManagePositionPopup from "../components/manage-position-popup";
-import PortalPopup from "../components/portal-popup";
-import CLMMPositionpopup from "../components/c-l-m-m-positionpopup";
-import RemoveAMMpopup from "../components/remove-a-m-mpopup";
-import AddAMMpopup from "../components/add-a-m-mpopup";
-import { useRouter } from "next/router";
-import styles from "./index-liquidity.module.css";
-import Header from "../components/header";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { connection } from "../utils/get-connection";
-import { AnchorProvider, BN } from "@project-serum/anchor";
+import type { NextPage } from 'next';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import ManagePositionPopup from '../components/manage-position-popup';
+import PortalPopup from '../components/portal-popup';
+import CLMMPositionpopup from '../components/c-l-m-m-positionpopup';
+import RemoveAMMpopup from '../components/remove-a-m-mpopup';
+import AddAMMpopup from '../components/add-a-m-mpopup';
+
+import styles from './index-liquidity.module.css';
+import global from './global-classes.module.css';
+import Header from '../components/header';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { connection } from '../utils/get-connection';
+import { AnchorProvider, BN } from '@project-serum/anchor';
 import {
   WhirlpoolContext,
   buildWhirlpoolClient,
@@ -19,11 +20,13 @@ import {
   PriceMath,
   PoolUtil,
   AccountFetcher,
-} from "@orca-so/whirlpools-sdk";
-import axios from "axios";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { DecimalUtil, TokenUtil } from "@orca-so/common-sdk";
+} from '@orca-so/whirlpools-sdk';
+import axios from 'axios';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { DecimalUtil, TokenUtil } from '@orca-so/common-sdk';
 import { Address } from 'cluster';
+import LiquidityUniversal from './liquidity-universal';
+import LiquidityNav from './liquidity-nav';
 
 const IndexLiquidity: NextPage = () => {
   const [isManagePositionPopupOpen, setManagePositionPopupOpen] =
@@ -36,8 +39,7 @@ const IndexLiquidity: NextPage = () => {
   const [fetched, setFetched] = useState(false);
   const [orcaList, setOrcaList] = useState({} as any);
   const [userLiquidity, setUserLiquidity] = useState([] as any);
-  const [search, setSearch] = useState("");
-  const router = useRouter();
+  const [search, setSearch] = useState('');
 
   const openManagePositionPopup = useCallback(() => {
     setManagePositionPopupOpen(true);
@@ -79,14 +81,11 @@ const IndexLiquidity: NextPage = () => {
     setAddAMMpopupOpen(false);
   }, []);
 
-  const onMyPositionsClick = useCallback(() => {
-    router.push("/index-liquiditymy");
-  }, [router]);
   const { publicKey, wallet } = useWallet();
   useEffect(() => {
     (async () => {
       const tokenInfo = await axios.get(
-        "https://api.mainnet.orca.so/v1/whirlpool/list"
+        'https://api.mainnet.orca.so/v1/whirlpool/list'
       );
 
       let sum = 0;
@@ -207,7 +206,6 @@ const IndexLiquidity: NextPage = () => {
       //   setUserLiquidity(res);
       // });
     }
-    
   }, [publicKey]);
   if (fetched) {
     userLiquidity.forEach((item: any) => {
@@ -217,7 +215,9 @@ const IndexLiquidity: NextPage = () => {
       liqudityFarmData.user = item;
       console.log(liqudityFarmData);
     });
-    orcaList.pools.sort((a: any, b: any) => (a.user === b.user ? 0 : a.user ? -1 : 1));
+    orcaList.pools.sort((a: any, b: any) =>
+      a.user === b.user ? 0 : a.user ? -1 : 1
+    );
   }
   const handleSearch = (e: any) => {
     setSearch(e.target.value);
@@ -225,323 +225,322 @@ const IndexLiquidity: NextPage = () => {
   return (
     <>
       <div className={styles.indexliquidity}>
+        <Header page={'liquidity'} />
         <div className={styles.lamp} />
         <div className={styles.liquidityPanelWrapper}>
-          <div className={styles.liquidityPanel}>
-            <div className={styles.listPanel}>
-              <div className={styles.poolOverwiew}>
+          <LiquidityNav activeBlock='liquidity' activePage='pools' />
+          <div className={styles.listPanel}>
+            <div className={`${styles.poolOverwiew} ${global.row}`}>
+              <div className={`${styles.titleContainer} ${global.column}`}>
                 <div className={styles.listOfAll}>
                   List of All Active Pools in Ecosystem
                 </div>
-                <input
-                  className={styles.serachinput}
-                  type="search"
-                  placeholder="Search"
-                  onChange={handleSearch}
-                  value={search}
-                />
                 <div className={styles.earnYieldOnContainer}>
                   <p className={styles.earnYieldOn}>
                     Earn yield on trading fees by providing liquidity
                   </p>
                 </div>
+                <input
+                  className={styles.serachinput}
+                  type='search'
+                  placeholder='Search'
+                  onChange={handleSearch}
+                  value={search}
+                />
+              </div>
+
+              <div
+                className={`${styles.poolHeader} ${global.column} ${styles.gap}`}
+              >
+                <div className={`${global.row} ${styles.gap}`}>
+                  <div className={styles.rectangleParent}>
+                    <div className={`${styles.poolButton} ${styles.navActive}`}>
+                      All
+                    </div>
+                    <div className={styles.poolButton}>Raydium</div>
+                    <div className={styles.poolButton}>Orca</div>
+                  </div>
+
+                  <div className={styles.rectangleParent}>
+                    <div className={`${styles.poolButton} ${styles.navActive}`}>
+                      All
+                    </div>
+                    <div className={styles.poolButton}>AMM</div>
+                    <div className={styles.poolButton}>CLMM</div>
+                  </div>
+                  <div className={styles.rectangleParent}>
+                    <div className={`${styles.poolButton} ${styles.navActive}`}>
+                      TVL
+                    </div>
+                    <div className={styles.poolButton}>APR</div>
+                  </div>
+                </div>
+
                 <div className={styles.rectangleParent}>
-                  <div className={styles.instanceChild} />
-                  <div className={styles.all}>All</div>
-                  <div className={styles.orca}>Orca</div>
-                  <div className={styles.raydium}>Raydium</div>
-                  <button className={styles.instanceItem} />
-                </div>
-                <div className={styles.rectangleGroup}>
-                  <div className={styles.instanceInner} />
-                  <div className={styles.rectangleDiv} />
-                  <div className={styles.all1}>All</div>
-                  <div className={styles.clmm}>CLMM</div>
-                  <div className={styles.amm}>AMM</div>
-                </div>
-                <div className={styles.rectangleContainer}>
-                  <div className={styles.instanceChild1} />
-                  <div className={styles.instanceChild2} />
-                  <div className={styles.tvl}>TVL</div>
-                  <div className={styles.apr}>APR</div>
-                </div>
-                <div className={styles.frameDiv}>
-                  <div className={styles.instanceChild3} />
-                  <div className={styles.instanceChild4} />
-                  <div className={styles.frameWrapper}>
-                    <div className={styles.solana1Parent}>
-                      <img
-                        className={styles.solana1Icon}
-                        alt=""
-                        src="/solana-2@2x.png"
-                      />
-                      <div className={styles.sol}>SOL</div>
-                    </div>
+                  <div
+                    className={`${styles.poolImageButton} ${styles.navActive}`}
+                  >
+                    <div className={styles.poolImageButtonText}>All</div>
                   </div>
-                  <div className={styles.frameContainer}>
-                    <div className={styles.allWrapper}>
-                      <div className={styles.all2}>All</div>
-                    </div>
+                  <div className={`${styles.poolImageButton} `}>
+                    <img
+                      className={styles.solana1Icon}
+                      alt=''
+                      src='/solana-2@2x.png'
+                    />
+                    <div className={styles.sol}>SOL</div>
                   </div>
-                  <div className={styles.groupDiv}>
-                    <div className={styles.solana1Parent}>
-                      <img
-                        className={styles.ethereumEthLogo1Icon}
-                        alt=""
-                        src="/ethereumethlogo-1@2x.png"
-                      />
-                      <div className={styles.sol}>ETH</div>
-                    </div>
+                  <div className={`${styles.poolImageButton}`}>
+                    <img
+                      className={styles.ethereumEthLogo1Icon}
+                      alt=''
+                      src='/ethereumethlogo-1@2x.png'
+                    />
+                    <div className={styles.poolImageButtonText}>ETH</div>
                   </div>
-                  <div className={styles.frameWrapper1}>
-                    <div className={styles.solana1Parent}>
-                      <img
-                        className={styles.lidoForSolanaLogo2Icon}
-                        alt=""
-                        src="/lidoforsolanalogo-2@2x.png"
-                      />
-                      <div className={styles.sol}>stSOL</div>
-                    </div>
+                  <div className={`${styles.poolImageButton}`}>
+                    <img
+                      className={styles.lidoForSolanaLogo2Icon}
+                      alt=''
+                      src='/lidoforsolanalogo-2@2x.png'
+                    />
+                    <div className={styles.poolImageButtonText}>stSOL</div>
                   </div>
-                  <div className={styles.frameWrapper2}>
-                    <div className={styles.solana1Parent}>
-                      <img
-                        className={styles.marinadeLogoCopy1}
-                        alt=""
-                        src="/marinadelogo-copy-1@2x.png"
-                      />
-                      <div className={styles.sol}>mSOL</div>
-                    </div>
+                  <div className={`${styles.poolImageButton}`}>
+                    <img
+                      className={styles.marinadeLogoCopy1}
+                      alt=''
+                      src='/marinadelogo-copy-1@2x.png'
+                    />
+                    <div className={styles.poolImageButtonText}>mSOL</div>
                   </div>
-                  <div className={styles.frameWrapper3}>
-                    <div className={styles.solana1Parent}>
-                      <img
-                        className={styles.solana1Icon}
-                        alt=""
-                        src="/tetherusdtlogo-2@2x.png"
-                      />
-                      <div className={styles.sol}>USDT</div>
-                    </div>
+                  <div className={`${styles.poolImageButton}`}>
+                    <img
+                      className={styles.solana1Icon}
+                      alt=''
+                      src='/tetherusdtlogo-2@2x.png'
+                    />
+                    <div className={styles.poolImageButtonText}>USDT</div>
                   </div>
-                  <div className={styles.frameWrapper4}>
-                    <div className={styles.solana1Parent}>
-                      <img
-                        className={styles.solana1Icon}
-                        alt=""
-                        src="/usdcoinusdclogo-2@2x.png"
-                      />
-                      <div className={styles.sol}>USDC</div>
-                    </div>
+                  <div className={`${styles.poolImageButton}`}>
+                    <img
+                      className={styles.solana1Icon}
+                      alt=''
+                      src='/usdcoinusdclogo-2@2x.png'
+                    />
+                    <div className={styles.poolImageButtonText}>USDC</div>
                   </div>
                 </div>
               </div>
-              <div className={styles.poolList}>
-                <div className={styles.lamp1} />
-                <div className={styles.tab}>
-                  <div className={styles.protocol}>Protocol</div>
-                  <div className={styles.poolLiquidity}>Pool Liquidity</div>
-                  <div className={styles.protocolTvl}>Protocol TVL</div>
-                  <div className={styles.volume}>Volume</div>
-                  <div className={styles.fee}>Fee</div>
-                  <div className={styles.apr1}>ApR</div>
-                  <div className={styles.pool}>Pool</div>
-                  <div className={styles.tabChild} />
-                </div>
-                <div className={styles.scrollFrame}>
-                  <div className={styles.frameParent}>
-                    {fetched
-                      ? orcaList.pools
-                          .filter(
-                            (i: any) =>
-                              i.symbol
-                                .toLowerCase()
-                                .includes(search.toLowerCase()) ||
-                              i.address == search
-                          )
-                          .map((item: any, index: any) => {
-                            return (
-                              <div className={styles.mParent} key={index + 1}>
-                                <div className={styles.m}>
-                                  $ {Number(item.tvl / 1000000).toFixed(2)} m
-                                </div>
-                                <div className={styles.solUsdc}>
-                                  {item.symbol}
-                                </div>
-                                <div className={styles.orca1}>Orca</div>
-                                <div className={styles.frameChild} />
-                                <div className={styles.m1}>
-                                  ${" "}
-                                  {Number(item.volume?.day / 1000000).toFixed(
-                                    2
-                                  )}{" "}
-                                  m
-                                </div>
-                                <div className={styles.m2}>
-                                  ${" "}
-                                  {(item.lpFeeRate * item.volume?.day).toFixed(
-                                    2
-                                  )}
-                                </div>
-                                <div className={styles.div}>
-                                  {(item.totalApr?.day * 100).toFixed(2)} %
-                                </div>
-                                <div className={styles.m3}>
-                                  $ {Number(orcaList.sum / 1000000).toFixed(2)}{" "}
-                                  m
-                                </div>
-                                <img
-                                  className={styles.solana2Icon}
-                                  alt=""
-                                  src={item.tokenA.logoURI}
-                                />
-                                <img
-                                  className={styles.usdCoinUsdcLogo1Icon1}
-                                  alt=""
-                                  src={item.tokenB.logoURI}
-                                />
-                                <div className={styles.openPositions}>
-                                  <button
-                                    className={styles.managePositionButton}
-                                    onClick={openManagePositionPopup}
-                                  >
-                                    <div className={styles.manage}>Manage</div>
-                                  </button>
-                                  <div className={styles.usdcPerSol}>
-                                    22.56 - 23.000 USDC per SOL
-                                  </div>
-                                  <div className={styles.apr108065}>
-                                    APR : 1080.65 %
-                                  </div>
-                                  <div
-                                    className={styles.circleXmarkRegular1Parent}
-                                  >
-                                    <img
-                                      className={styles.circleXmarkRegular1Icon}
-                                      alt=""
-                                      src="/circlexmarkregular-1.svg"
-                                    />
-                                    <div className={styles.outOfRange}>
-                                      Out of Range
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className={styles.openPositions1}>
-                                  <button
-                                    className={styles.managePositionButton}
-                                    onClick={openManagePositionPopup1}
-                                  >
-                                    <div className={styles.manage}>Manage</div>
-                                  </button>
-                                  <div className={styles.usdcPerSol}>
-                                    18.263 - 23.682 USDC per SOL
-                                  </div>
-                                  <div className={styles.apr108065}>
-                                    APR : 80.65 %
-                                  </div>
-                                  <div
-                                    className={styles.circleCheckRegular1Parent}
-                                  >
-                                    <img
-                                      className={styles.circleXmarkRegular1Icon}
-                                      alt=""
-                                      src="/circlecheckregular-11.svg"
-                                    />
-                                    <div
-                                      className={styles.outOfRange}
-                                    >{` In Range `}</div>
-                                  </div>
-                                </div>
-                                <button
-                                  className={styles.createPositionButton}
-                                  onClick={openCLMMPositionpopup}
-                                >
-                                  <div className={styles.manage}>
-                                    Create Position
-                                  </div>
-                                </button>
-                                <img
-                                  className={styles.orcaaef56d302Icon}
-                                  alt=""
-                                  src="/orcaaef56d30-2.svg"
-                                />
-                                <div className={styles.clmm1}>CLMM</div>
+            </div>
+            <div className={styles.poolList}>
+              <div className={styles.lamp1} />
+              <div className={styles.tab}>
+                <div className={styles.pool}>Pool</div>
+                <div className={styles.protocol}>Protocol</div>
+                <div className={styles.protocolTvl}>Protocol TVL</div>
+                <div className={styles.poolLiquidity}>Pool Liquidity</div>
+
+                <div className={styles.volume}>Volume</div>
+                <div className={styles.fee}>Fee</div>
+                <div className={styles.apr1}>ApR</div>
+              </div>
+              <div className={styles.scrollFrame}>
+                <div className={styles.frameParent}>
+                  {fetched
+                    ? orcaList.pools
+                        .filter(
+                          (i: any) =>
+                            i.symbol
+                              .toLowerCase()
+                              .includes(search.toLowerCase()) ||
+                            i.address == search
+                        )
+                        .map((item: any, index: any) => {
+                          return (
+                            <div
+                              className={styles.mParent}
+                              key={index + 1}
+                            >
+                              <div className={styles.m}>
+                                $ {Number(item.tvl / 1000000).toFixed(2)} m
                               </div>
-                            );
-                          })
-                      : null}
-                    <div className={styles.mGroup}>
-                      <div className={styles.m}>$ 12.65 m</div>
-                      <div className={styles.solUsdc}>SOL-USDC</div>
-                      <div className={styles.orca1}>Raydium</div>
-                      <div className={styles.frameItem} />
-                      <div className={styles.m1}>$ 2.65 m</div>
-                      <div className={styles.m2}>$ 2.65 m</div>
-                      <div className={styles.div}>65.64 %</div>
-                      <div className={styles.m3}>$ 47.65 m</div>
+                              <div className={styles.solUsdc}>
+                                {item.symbol}
+                              </div>
+                              <div className={styles.orca1}>Orca</div>
+                              <div className={styles.frameChild} />
+                              <div className={styles.m1}>
+                                ${' '}
+                                {Number(item.volume?.day / 1000000).toFixed(2)}{' '}
+                                m
+                              </div>
+                              <div className={styles.m2}>
+                                ${' '}
+                                {(item.lpFeeRate * item.volume?.day).toFixed(2)}
+                              </div>
+                              <div className={styles.div}>
+                                {(item.totalApr?.day * 100).toFixed(2)} %
+                              </div>
+                              <div className={styles.m3}>
+                                $ {Number(orcaList.sum / 1000000).toFixed(2)} m
+                              </div>
+                              <img
+                                className={styles.solana2Icon}
+                                alt=''
+                                src={item.tokenA.logoURI}
+                              />
+                              <img
+                                className={styles.usdCoinUsdcLogo1Icon1}
+                                alt=''
+                                src={item.tokenB.logoURI}
+                              />
+                              <div className={styles.openPositions}>
+                                <button
+                                  className={styles.managePositionButton}
+                                  onClick={openManagePositionPopup}
+                                >
+                                  <div className={styles.manage}>Manage</div>
+                                </button>
+                                <div className={styles.usdcPerSol}>
+                                  22.56 - 23.000 USDC per SOL
+                                </div>
+                                <div className={styles.apr108065}>
+                                  APR : 1080.65 %
+                                </div>
+                                <div
+                                  className={styles.circleXmarkRegular1Parent}
+                                >
+                                  <img
+                                    className={styles.circleXmarkRegular1Icon}
+                                    alt=''
+                                    src='/circlexmarkregular-1.svg'
+                                  />
+                                  <div className={styles.outOfRange}>
+                                    Out of Range
+                                  </div>
+                                </div>
+                              </div>
+                              <div className={styles.openPositions1}>
+                                <button
+                                  className={styles.managePositionButton}
+                                  onClick={openManagePositionPopup1}
+                                >
+                                  <div className={styles.manage}>Manage</div>
+                                </button>
+                                <div className={styles.usdcPerSol}>
+                                  18.263 - 23.682 USDC per SOL
+                                </div>
+                                <div className={styles.apr108065}>
+                                  APR : 80.65 %
+                                </div>
+                                <div
+                                  className={styles.circleCheckRegular1Parent}
+                                >
+                                  <img
+                                    className={styles.circleXmarkRegular1Icon}
+                                    alt=''
+                                    src='/circlecheckregular-11.svg'
+                                  />
+                                  <div
+                                    className={styles.outOfRange}
+                                  >{` In Range `}</div>
+                                </div>
+                              </div>
+                              <button
+                                className={styles.createPositionButton}
+                                onClick={openCLMMPositionpopup}
+                              >
+                                <div className={styles.manage}>
+                                  Create Position
+                                </div>
+                              </button>
+                              <img
+                                className={styles.orcaaef56d302Icon}
+                                alt=''
+                                src='/orcaaef56d30-2.svg'
+                              />
+                              <div className={styles.clmm1}>CLMM</div>
+                            </div>
+                          );
+                        })
+                    : null}
+
+                  <div className={`${global.column}`}>
+                    <div className={styles.solUsdc}>SOL-USDC</div>
+                    <div className={`${global.row} ${styles.gap}`}>
                       <img
                         className={styles.solana2Icon}
-                        alt=""
-                        src="/solana-23@2x.png"
+                        alt=''
+                        src='/solana-23@2x.png'
                       />
                       <img
                         className={styles.usdCoinUsdcLogo1Icon1}
-                        alt=""
-                        src="/usdcoinusdclogo-1@2x.png"
+                        alt=''
+                        src='/usdcoinusdclogo-1@2x.png'
                       />
+                    </div>
+                  </div>
+                  <div className={`${global.column}`}>
+                    <div className={styles.orca1}>Raydium</div>
+                    <div className={styles.clmm1}>AMM</div>
+                  </div>
+
+                  <div className={`${global.column} ${global.spaceBetween}`}>
+                    <div className={`${global.row} ${styles.gap}`}>
                       <img
                         className={styles.raydiumRayCoin1Icon}
-                        alt=""
-                        src="/raydiumraycoin-12@2x.png"
+                        alt=''
+                        src='/raydiumraycoin-12@2x.png'
                       />
-                      <div className={styles.clmm1}>AMM</div>
-                      <div className={styles.openPositions2}>
-                        <button
-                          className={styles.createPositionButton1}
-                          onClick={openRemoveAMMpopup}
-                        >
-                          <div className={styles.manage}>Remove Liquidity</div>
-                        </button>
-                        <div
-                          className={styles.value}
-                        >{`Value : $ 100,000.66 `}</div>
-                        <div className={styles.lpTokens}>
-                          LP Tokens : 15334.63 LP
-                        </div>
-                        <div
-                          className={styles.yourShare}
-                        >{`Your share : 0.01 % <`}</div>
+                      <div className={styles.m3}>$ 47.65 m</div>
+                    </div>
+
+                    <button
+                      className={styles.createPositionButton2}
+                      onClick={openAddAMMpopup}
+                    >
+                      <div className={styles.manage}>Add Liquidity</div>
+                    </button>
+                  </div>
+
+                  <div className={`${global.column} ${global.spaceBetween}`}>
+                    <div className={`${styles.gridRow}`}>
+                      <div className={styles.m}>$ 12.65 m</div>
+                      <div className={styles.m1}>$ 2.65 m</div>
+                      <div className={styles.m2}>$ 2.65 m</div>
+                      <div className={styles.div}>65.64 %</div>
+                    </div>
+                    <div className={styles.openPositions2}>
+                      <div
+                        className={styles.value}
+                      >{`Value : $ 100,000.66 `}</div>
+                      <div className={styles.lpTokens}>
+                        LP Tokens : 15334.63 LP
                       </div>
+                      <div
+                        className={styles.yourShare}
+                      >{`Your share : 0.01 % <`}</div>
                       <button
-                        className={styles.createPositionButton2}
-                        onClick={openAddAMMpopup}
+                        className={styles.createPositionButton1}
+                        onClick={openRemoveAMMpopup}
                       >
-                        <div className={styles.manage}>Add Liquidity</div>
+                        <div className={styles.manage}>Remove Liquidity</div>
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className={styles.rectangleParent1}>
-              <div className={styles.instanceChild5} />
-              <div className={styles.pools}>Pools</div>
-              <a className={styles.myPositions} onClick={onMyPositionsClick}>
-                My Positions
-              </a>
-              <button className={styles.rectangleButton} />
-            </div>
           </div>
         </div>
-        <Header page={"liquidity"} />
-        <div className={styles.v101202204202200UtcContainer}>
-          <p className={styles.earnYieldOn}>V1.0.1</p>
-          <p className={styles.earnYieldOn}>2022-04-20 22:00 UTC</p>
-        </div>
+
+        <LiquidityUniversal />
       </div>
       {isManagePositionPopupOpen && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeManagePositionPopup}
         >
           <ManagePositionPopup onClose={closeManagePositionPopup} />
@@ -549,8 +548,8 @@ const IndexLiquidity: NextPage = () => {
       )}
       {isManagePositionPopup1Open && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeManagePositionPopup1}
         >
           <ManagePositionPopup onClose={closeManagePositionPopup1} />
@@ -558,8 +557,8 @@ const IndexLiquidity: NextPage = () => {
       )}
       {isCLMMPositionpopupOpen && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeCLMMPositionpopup}
         >
           <CLMMPositionpopup onClose={closeCLMMPositionpopup} />
@@ -567,8 +566,8 @@ const IndexLiquidity: NextPage = () => {
       )}
       {isRemoveAMMpopupOpen && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeRemoveAMMpopup}
         >
           <RemoveAMMpopup onClose={closeRemoveAMMpopup} />
@@ -576,8 +575,8 @@ const IndexLiquidity: NextPage = () => {
       )}
       {isAddAMMpopupOpen && (
         <PortalPopup
-          overlayColor="rgba(17, 27, 42, 0.7)"
-          placement="Centered"
+          overlayColor='rgba(17, 27, 42, 0.7)'
+          placement='Centered'
           onOutsideClick={closeAddAMMpopup}
         >
           <AddAMMpopup onClose={closeAddAMMpopup} />
