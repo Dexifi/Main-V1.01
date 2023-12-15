@@ -1,4 +1,4 @@
-.readDocs {
+.firstScreenButtonTitle {
   position: absolute;
   top: 0.69rem;
   left: 2.13rem;
@@ -7,6 +7,7 @@
   width: 5.13rem;
   height: 1.81rem;
 }
+
 .readDocsParent {
   position: relative;
   border-radius: var(--br-3xs);

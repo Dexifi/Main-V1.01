@@ -58,9 +58,11 @@
   align-items: center;
   justify-content: center;
 }
+
 .accountPageButton:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .accountPageButton:active {
   background-color: var(--color-lightcyan-200);
 }

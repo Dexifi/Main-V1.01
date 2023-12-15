@@ -3,36 +3,46 @@
   top: -31.5rem;
   left: calc(50% - 866px);
   background: radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(119, 186, 234, 0.2),
-      transparent
-    ),
-    radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(251, 0, 196, 0) 3.49%,
-      rgba(119, 186, 234, 0) 7.6%,
-      rgba(253, 0, 197, 0) 10.46%,
-      rgba(119, 186, 234, 0) 14.46%,
-      rgba(255, 0, 199, 0) 18.56%,
-      rgba(3, 0, 3, 0) 19.53%,
-      transparent 79.82%,
-      rgba(246, 0, 192, 0) 81.08%,
-      rgba(119, 186, 234, 0) 84.04%,
-      rgba(247, 0, 193, 0) 86.61%,
-      rgba(119, 186, 234, 0) 91.01%,
-      rgba(249, 0, 194, 0) 95.16%,
-      rgba(119, 186, 234, 0) 98.6%
-    );
+    50% 50% at 50% 50%,
+    rgba(119, 186, 234, 0.2),
+    transparent
+  ),
+  radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(251, 0, 196, 0) 3.49%,
+    rgba(119, 186, 234, 0) 7.6%,
+    rgba(253, 0, 197, 0) 10.46%,
+    rgba(119, 186, 234, 0) 14.46%,
+    rgba(255, 0, 199, 0) 18.56%,
+    rgba(3, 0, 3, 0) 19.53%,
+    transparent 79.82%,
+    rgba(246, 0, 192, 0) 81.08%,
+    rgba(119, 186, 234, 0) 84.04%,
+    rgba(247, 0, 193, 0) 86.61%,
+    rgba(119, 186, 234, 0) 91.01%,
+    rgba(249, 0, 194, 0) 95.16%,
+    rgba(119, 186, 234, 0) 98.6%
+  );
   width: 108.25rem;
   height: 63.63rem;
   overflow: hidden;
 }
+
+@media (max-width: 767px) {
+  .lamp {
+    width: 54.125rem;
+    height: 31.68rem;
+  }
+}
+
 .span {
   color: var(--gray-dark-4);
 }
+
 .span1 {
   color: var(--color-blue);
 }
+
 .span2 {
   color: #67ad87;
 }
@@ -47,7 +57,7 @@
 .price,
 .value {
 
-  
+
 }
 
 .head {
@@ -57,23 +67,27 @@
   padding-bottom: 5px;
   border-bottom: 1px solid var(--color-slategray-300);
 }
+
 .j7a3brfy {
   top: 0.31rem;
   left: 14.56rem;
   text-decoration: underline;
-  
+
   color: var(--color-lightcyan-100);
 }
+
 .div1,
 .div3,
 .j7a3brfy {
   position: absolute;
 }
+
 .div1 {
   top: 0.31rem;
   left: 32.13rem;
-  
+
 }
+
 .div3 {
   left: 56.25rem;
 }
@@ -86,6 +100,7 @@
   width: 68.13rem;
   height: 0.06rem;
 }
+
 .transfer {
   position: relative;
   font-size: var(--tittle-16-m-size);
@@ -93,11 +108,13 @@
   color: var(--color-lightcyan-100);
   text-align: left;
 }
+
 .transferDomainButton,
 .transferDomainButton:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
 }
+
 .transferDomainButton {
   cursor: pointer;
   padding: var(--padding-3xs);
@@ -114,16 +131,20 @@
   align-items: center;
   justify-content: center;
 }
+
 .transferDomainButton:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .div {
   color: var(--gray-dark-4);
   margin-right: auto;
 }
+
 .headParent {
   display: flex;
   flex-direction: column;
@@ -132,6 +153,7 @@
   gap: 0.31rem;
   font-size: var(--tittle-16-m-size);
 }
+
 .nft {
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -140,6 +162,7 @@
   padding: 19px 21px;
   min-height: 240px;
 }
+
 .span4 {
   color: var(--color-firebrick-200);
 }
@@ -156,10 +179,12 @@
   border-bottom: 1px solid var(--color-slategray-300);
   padding-bottom: 5px;
 }
+
 .raydium {
 
-  
+
 }
+
 .raydiumRayCoin1Icon,
 .raydiumRayCoin2Icon,
 .solanaCopy2,
@@ -178,6 +203,7 @@
   border-bottom: 1px solid var(--color-slategray-300);
   padding-bottom: 5px;
 }
+
 .headerParent {
   display: flex;
   flex-direction: column;
@@ -185,6 +211,7 @@
   justify-content: flex-start;
   font-size: var(--tittle-16-m-size);
 }
+
 .farm {
   padding: 19px 21px;
   border-radius: var(--br-xl);
@@ -195,19 +222,23 @@
   font-size: var(--font-size-xl);
   min-height: 235px;
 }
+
 .depositRatio {
   left: 50.5rem;
   display: inline-block;
   width: 7.56rem;
   height: 1.31rem;
 }
+
 .leverage,
 .type {
   left: 21rem;
 }
+
 .leverage {
   left: 60.69rem;
 }
+
 .head1 {
   display: grid;
   grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr 1.3fr 1fr 1fr;
@@ -226,7 +257,7 @@
   height: 1.5rem;
   object-fit: cover;
 }
- 
+
 .raydiumRayCoin1Icon1,
 .usdCoinUsdcLogo2Icon1 {
   width: 1.5rem;
@@ -236,7 +267,7 @@
 
 .tvl {
   font-size: var(--font-size-sm);
-  
+
 }
 
 
@@ -254,9 +285,11 @@
   top: 0.25rem;
   left: 50.5rem;
 }
+
 .usdc5444 {
   top: 1.81rem;
 }
+
 .div10 {
   display: grid;
   border-bottom: 1px solid var(--color-slategray-300);
@@ -264,12 +297,14 @@
   width: 100%;
   color: var(--gray-dark-4);
 }
+
 .headGroup {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
 }
+
 .span6 {
   color: var(--color-gold);
 }
@@ -278,6 +313,7 @@
   font-size: var(--font-size-xl);
   margin-bottom: 15px;
 }
+
 .liquidity {
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -314,6 +350,7 @@
   justify-content: flex-start !important;
   gap: 10px !important;
 }
+
 .adcc1db02d660497f9957eDriftFIcon1 {
   width: 1.51rem;
   height: 1.5rem;
@@ -330,11 +367,12 @@
 .div18 {
   top: 0.13rem;
   left: 0.5rem;
-  
+
   display: inline-block;
   width: 7.63rem;
   height: 1.38rem;
 }
+
 .wrapper {
   border-radius: var(--br-8xs);
   background-color: var(--color-gray-600);
@@ -347,6 +385,7 @@
   top: 1.75rem;
   color: #06f;
 }
+
 .longParent {
   border-radius: var(--br-8xs);
   background-color: var(--color-gray-600);
@@ -359,14 +398,17 @@
   flex-direction: column;
   gap: 5px;
 }
-.frameWrapperRow{
+
+.frameWrapperRow {
   display: flex;
   justify-content: space-between;
 }
+
 .frameWrapperRowBig {
   gap: 40px;
   justify-content: flex-start;
 }
+
 .frameWrapper {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 1fr 2fr;
@@ -376,9 +418,10 @@
   border-bottom: 1px solid var(--color-lightcyan-100);
   color: var(--color-slategray-200);
 }
+
 .usdc {
 
-  
+
 }
 
 .frameParent {
@@ -392,18 +435,22 @@
   width: 100%;
   grid-template-columns: 152px auto;
 }
+
 .span9 {
   color: var(--color-chocolate);
 }
+
 .tradingContainer {
 
-  
+
   margin-bottom: 15px;
 }
+
 .netWorth3 {
 
   font-size: var(--font-size-xl);
 }
+
 .marginTradingBalance {
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -420,21 +467,25 @@
   padding-bottom: 5px;
   width: 100%;
 }
+
 .div20,
 .solend,
 .turboSol {
   position: absolute;
   top: 0.38rem;
   left: 7.75rem;
-  
+
 }
+
 .div20,
 .turboSol {
   left: 17.75rem;
 }
+
 .div20 {
   left: 35.25rem;
 }
+
 .image1Icon,
 .solanaCopy23 {
   position: absolute;
@@ -444,31 +495,38 @@
   height: 1.5rem;
   object-fit: cover;
 }
+
 .image1Icon {
   left: 13.88rem;
 }
+
 .div21,
 .m {
   top: 0.38rem;
-  
+
 }
+
 .m {
   position: absolute;
   left: 25.88rem;
 }
+
 .div21 {
   left: 48.06rem;
 }
+
 .div21,
 .div22,
 .inner {
   position: absolute;
 }
+
 .div22 {
   top: 0.38rem;
   left: 59.94rem;
-  
+
 }
+
 .inner {
   top: 1.72rem;
   left: -0.03rem;
@@ -477,6 +535,7 @@
   width: 65.13rem;
   height: 0.06rem;
 }
+
 .div19 {
   position: relative;
   width: 65.06rem;
@@ -485,6 +544,7 @@
   flex-shrink: 0;
   color: var(--gray-dark-4);
 }
+
 .heaadParent {
   display: flex;
   flex-direction: column;
@@ -492,17 +552,20 @@
   justify-content: flex-start;
   padding-left: 15px;
 }
+
 .span11 {
   color: var(--color-aqua);
 }
+
 .lendingContainer {
-  
+
   margin-bottom: 15px;
 }
 
 .netWorth4 {
   font-size: var(--font-size-xl);
 }
+
 .lendingBalance {
   border-radius: var(--br-xl);
   background-color: var(--color-gray-600);
@@ -516,11 +579,13 @@
   height: 1.5rem;
   object-fit: cover;
 }
+
 .transferDomainButton1,
 .transferDomainButton1:hover {
   border: 1px solid var(--color-lightcyan-400);
   box-sizing: border-box;
 }
+
 .transferDomainButton1 {
   cursor: pointer;
   padding: 0 9px;
@@ -532,12 +597,15 @@
   align-items: center;
   justify-content: center;
 }
+
 .transferDomainButton1:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton1:active {
   background-color: var(--color-lightcyan-200);
 }
+
 .raydiumRayCoin2Icon1 {
   position: absolute;
   top: 0.13rem;
@@ -546,6 +614,7 @@
   height: 1.5rem;
   object-fit: cover;
 }
+
 .atlasParent {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -554,10 +623,12 @@
   width: 88%;
   padding-left: 13px;
 }
+
 .tokenContainer {
   display: flex;
   gap: 42px;
 }
+
 .headContainer {
   display: flex;
   flex-direction: column;
@@ -581,6 +652,7 @@
   box-shadow: 0 0 4px #88d6ff;
   min-height: 200px;
 }
+
 .frameChild2 {
   position: absolute;
   top: 1.78rem;
@@ -590,12 +662,14 @@
   width: 48.06rem;
   height: 0.06rem;
 }
+
 .amountParent {
   display: flex;
   width: 100%;
   justify-content: space-between;
   border-bottom: 1px solid rgba(217, 248, 255, 0.7);
 }
+
 .div27,
 .div28,
 .div29,
@@ -603,21 +677,25 @@
   position: absolute;
   top: 0.31rem;
   left: 7.38rem;
-  
+
 }
+
 .div28,
 .div29,
 .div30 {
   left: 15.25rem;
 }
+
 .div29,
 .div30 {
   left: 25.75rem;
 }
+
 .div30 {
   top: 0.25rem;
   left: 37.31rem;
 }
+
 .solanaCopy24 {
   position: absolute;
   top: 0.13rem;
@@ -626,6 +704,7 @@
   height: 1.5rem;
   object-fit: cover;
 }
+
 .frameChild3 {
   position: absolute;
   top: 1.78rem;
@@ -635,6 +714,7 @@
   width: 48.06rem;
   height: 0.06rem;
 }
+
 .solParent {
   position: relative;
   width: 47.5rem;
@@ -643,12 +723,14 @@
   flex-shrink: 0;
   color: var(--color-lightslategray);
 }
+
 .frameGroup {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .span15 {
   color: var(--color-fuchsia);
 }
@@ -680,9 +762,11 @@
   justify-content: center;
   width: 89px;
 }
+
 .transferDomainButton2:hover {
   box-shadow: 0 0 4px 1px #d9f8ff;
 }
+
 .transferDomainButton2:active {
   background-color: var(--color-lightcyan-200);
 }
@@ -702,12 +786,14 @@
   border-bottom: 1px solid rgba(124, 124, 141, 0.7);
   padding-bottom: 3px;
 }
+
 .frameDiv {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
 }
+
 .tokenFlexContainer {
   display: flex;
   width: 100%;
@@ -735,19 +821,21 @@
   border-radius: var(--br-xl);
   overflow: hidden;
 }
+
 .walletBalanceInner {
   background-color: var(--color-darkslategray-200);
   backdrop-filter: blur(4px);
   min-width: 17.44rem;
   padding: 15px;
 }
+
 .walletBalance {
   background-color: var(--color-gray-600);
   box-shadow: 0 0 4px #88d6ff;
   min-height: 220px;
 }
 
-.dashboardContainer {
+.dashboardContent {
   width: 65.53vw;
   display: flex;
   flex-direction: column;
@@ -761,6 +849,7 @@
   width: 0.06rem;
   height: 0.06rem;
 }
+
 .div33 {
   position: absolute;
   top: 0.13rem;
@@ -770,14 +859,17 @@
   width: 0.5rem;
   height: 0.5rem;
 }
+
 .container {
   width: 0.75rem;
   height: 0.75rem;
 }
+
 .container,
 .legend1 {
   position: relative;
 }
+
 .legendinfo {
   display: flex;
   flex-direction: row;
@@ -785,10 +877,12 @@
   justify-content: flex-start;
   gap: var(--gap-5xs);
 }
+
 .div34 {
   position: relative;
   color: var(--color-lightcyan-100);
 }
+
 .div32 {
   align-self: stretch;
   display: flex;
@@ -796,6 +890,7 @@
   align-items: center;
   justify-content: space-between;
 }
+
 .div36 {
   position: absolute;
   top: 0.13rem;
@@ -805,12 +900,14 @@
   width: 0.5rem;
   height: 0.5rem;
 }
+
 .div37 {
   position: relative;
   font-size: var(--font-size-2xs);
   font-family: var(--tittle-16-m);
   color: var(--color-lightcyan-100);
 }
+
 .div35 {
   align-self: stretch;
   display: flex;
@@ -820,10 +917,12 @@
   font-size: var(--regular-12-size);
   font-family: var(--font-roboto);
 }
+
 .div40 {
   position: relative;
   color: #9c9c9c;
 }
+
 .div38 {
   align-self: stretch;
   display: none;
@@ -834,6 +933,7 @@
   font-size: var(--regular-12-size);
   font-family: var(--font-roboto);
 }
+
 .div42,
 .div45 {
   position: absolute;
@@ -844,15 +944,18 @@
   width: 0.5rem;
   height: 0.5rem;
 }
+
 .div45 {
   background-color: #760000;
 }
+
 .div46 {
   position: relative;
   font-size: var(--regular-12-size);
   font-family: var(--font-roboto);
   color: var(--color-lightcyan-100);
 }
+
 .div48,
 .div51,
 .div54 {
@@ -864,13 +967,16 @@
   width: 0.5rem;
   height: 0.5rem;
 }
+
 .div51,
 .div54 {
   background-color: #2c3e6d;
 }
+
 .div54 {
   background-color: #255a34;
 }
+
 .hoverTips,
 .hoverTips1 {
   display: flex;
@@ -878,6 +984,7 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .hoverTips1 {
   width: 9.38rem;
 }
@@ -886,6 +993,7 @@
   width: 160px;
   height: 160px;
 }
+
 .pieChartPanel {
   border-radius: var(--br-xl);
   width: 20rem;
@@ -905,7 +1013,7 @@
   gap: 10px;
 }
 
-.dashboardRow {
+.dashboardNetWorth {
   display: flex;
   gap: 10px;
   min-height: 340px;
@@ -918,6 +1026,7 @@
   width: 8.95rem;
   height: 8.95rem;
 }
+
 .groupChild,
 .groupInner,
 .groupItem {
@@ -926,6 +1035,7 @@
   transform: rotate(-45deg);
   transform-origin: 0 0;
 }
+
 .groupItem {
   top: 6.33rem;
   left: 0;
@@ -934,6 +1044,7 @@
   width: 8.95rem;
   height: 8.95rem;
 }
+
 .groupInner {
   top: 9.27rem;
   left: 1.66rem;
@@ -942,6 +1053,7 @@
   width: 7.1rem;
   height: 2.4rem;
 }
+
 .ellipseDiv {
   position: absolute;
   top: 5.56rem;
@@ -952,6 +1064,7 @@
   width: 0.98rem;
   height: 0.98rem;
 }
+
 .rectangleParent {
   position: absolute;
   top: 20px;
@@ -960,21 +1073,25 @@
   height: 12.66rem;
   opacity: 0.3;
 }
-.pendingValue,
-.value5,
-.valuenetworth1 {
+
+.pendingValueColumn,
+.valueColumn,
+.worthValueColumn {
   position: absolute;
   top: 0;
   left: 9.5rem;
-  
+
 }
-.pendingValue,
-.valuenetworth1 {
+
+.pendingValueColumn,
+.worthValueColumn {
   left: 20.13rem;
 }
-.valuenetworth1 {
+
+.worthValueColumn {
   left: 31.81rem;
 }
+
 .headChild2 {
   position: absolute;
   top: 1.78rem;
@@ -984,7 +1101,8 @@
   width: 41.13rem;
   height: 0.06rem;
 }
-.head4 {
+
+.tableHead {
   position: relative;
   width: 41.06rem;
   height: 1.88rem;
@@ -992,29 +1110,34 @@
   flex-shrink: 0;
   color: var(--color-lightcyan-100);
 }
+
 .walletBalanceContainer1 {
   position: absolute;
   top: 0.31rem;
   left: 0;
-  
+
   color: var(--color-lightcyan-100);
 }
+
 .div56,
 .div57,
 .div58 {
   position: absolute;
   top: 0.31rem;
   left: 9.63rem;
-  
+
 }
+
 .div57,
 .div58 {
   left: 21.13rem;
 }
+
 .div58 {
   top: 0.25rem;
   left: 33.63rem;
 }
+
 .walletBalanceChild {
   position: absolute;
   top: 1.78rem;
@@ -1024,12 +1147,14 @@
   width: 41.13rem;
   height: 0.06rem;
 }
+
 .div61 {
   position: absolute;
   top: 0.31rem;
   left: 33.63rem;
-  
+
 }
+
 .staking {
   position: relative;
   width: 43.75rem;
@@ -1037,37 +1162,38 @@
   overflow: hidden;
   flex-shrink: 0;
 }
-.headParent1 {
+
+.dashboardNetWorthTable {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
 }
-.span30 {
+
+.dashboardNetWorthTitlePrice {
   font-size: var(--font-size-3xl);
 }
 
-.netWorth7 {
+.dashboardNetWorthTitle {
   overflow: hidden;
   font-size: var(--font-size-5xl);
   color: var(--color-lightcyan-100);
 }
 
-.walletNetwortPanel {
+.dashboardNetWorthContainer {
   border-radius: var(--br-xl);
   box-shadow: 0 0 4px #88d6ff;
   background-color: var(--color-gray-600);
   width: 50rem;
   overflow: hidden;
-  
+
   color: var(--gray-dark-4);
   padding-top: 20px;
   padding-left: 35px;
   padding-bottom: 12px;
   position: relative;
 }
-
 
 .walletOverview {
   padding-top: 80px;
@@ -1082,9 +1208,11 @@
   width: 100vw;
   padding-bottom: 126px;
 }
+
 .utc {
   margin: 0;
 }
+
 .v101202204202200UtcContainer {
   position: absolute;
   bottom: 1.69rem;
@@ -1096,6 +1224,7 @@
   display: inline-block;
   width: 13.03rem;
 }
+
 .lamp1 {
   position: absolute;
 }
@@ -1104,26 +1233,26 @@
   top: -14.81rem;
   left: calc(50% - 550px);
   background: radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(119, 206, 234, 0.2),
-      transparent
-    ),
-    radial-gradient(
-      50% 50%at 50% 50%,
-      rgba(251, 0, 196, 0) 3.49%,
-      rgba(119, 186, 234, 0) 7.6%,
-      rgba(253, 0, 197, 0) 10.46%,
-      rgba(119, 186, 234, 0) 14.46%,
-      rgba(255, 0, 199, 0) 18.56%,
-      rgba(3, 0, 3, 0) 19.53%,
-      transparent 79.82%,
-      rgba(246, 0, 192, 0) 81.08%,
-      rgba(119, 186, 234, 0) 84.04%,
-      rgba(247, 0, 193, 0) 86.61%,
-      rgba(119, 186, 234, 0) 91.01%,
-      rgba(249, 0, 194, 0) 95.16%,
-      rgba(119, 186, 234, 0) 98.6%
-    );
+    50% 50% at 50% 50%,
+    rgba(119, 206, 234, 0.2),
+    transparent
+  ),
+  radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(251, 0, 196, 0) 3.49%,
+    rgba(119, 186, 234, 0) 7.6%,
+    rgba(253, 0, 197, 0) 10.46%,
+    rgba(119, 186, 234, 0) 14.46%,
+    rgba(255, 0, 199, 0) 18.56%,
+    rgba(3, 0, 3, 0) 19.53%,
+    transparent 79.82%,
+    rgba(246, 0, 192, 0) 81.08%,
+    rgba(119, 186, 234, 0) 84.04%,
+    rgba(247, 0, 193, 0) 86.61%,
+    rgba(119, 186, 234, 0) 91.01%,
+    rgba(249, 0, 194, 0) 95.16%,
+    rgba(119, 186, 234, 0) 98.6%
+  );
   width: 70.81rem;
   height: 18.81rem;
   overflow: hidden;
@@ -1156,12 +1285,14 @@
   gap: 32px;
   z-index: 1;
 }
+
 .dexifiLogoIcon {
   width: 4.81rem;
   height: 3.69rem;
   object-fit: cover;
   cursor: pointer;
 }
+
 .connectWallet {
   cursor: pointer;
   border: 0;
@@ -1174,6 +1305,7 @@
   text-align: left;
   display: inline-block;
 }
+
 .connectWalletWrapper {
   cursor: pointer;
   border: 1px solid var(--color-lightcyan-400);
@@ -1205,6 +1337,7 @@
   mix-blend-mode: luminosity;
   background-color: var(--color-lightcyan-400);
 }
+
 .vectorIcon,
 .vectorIcon1 {
   position: absolute;
@@ -1213,12 +1346,14 @@
   width: 1.47rem;
   height: 1.47rem;
 }
+
 .vectorIcon1 {
   top: calc(50% - 3.77px);
   left: calc(50% - 3.77px);
   width: 0.47rem;
   height: 0.47rem;
 }
+
 .iconSettings {
   cursor: pointer;
   border: 0;
@@ -1228,6 +1363,7 @@
   width: 1.44rem;
   height: 1.44rem;
 }
+
 .iconSettingsWrapper {
   cursor: pointer;
   border: 1px solid var(--color-lightcyan-400);
@@ -1241,9 +1377,11 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .iconSettingsWrapper:hover {
   background-color: var(--color-lightcyan-500);
 }
+
 .iconSettingsWrapper:active {
   mix-blend-mode: luminosity;
   background-color: var(--color-lightcyan-400);
@@ -1272,6 +1410,7 @@
   font-family: var(--font-helvetica);
   z-index: 99999;
 }
+
 .dashboard {
   position: relative;
   background-color: var(--color-gray-600);
@@ -1282,10 +1421,12 @@
   color: var(--color-lightcyan-100);
   font-family: var(--tittle-16-m);
 }
+
 .activeHeader {
   border-bottom: 1px solid var(--color-lightcyan-300);
   color: var(--color-lightcyan-100);
 }
+
 .allWalletBalance {
   display: flex;
   position: relative;

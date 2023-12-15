@@ -21,37 +21,38 @@ const Dashboard: NextPage = () => {
 
   return (
     <>
-      <Header page={'dashboard'} />
+      <Header page={'dashboard'}/>
       <div className={styles.dashboard}>
-        <div className={styles.lamp} />
+        <div className={styles.lamp}/>
         <div className={styles.walletOverviewWrapper}>
           <div className={styles.walletOverview}>
-            <DashboardHeader activePage=''/>
+            <DashboardHeader activePage=""/>
 
-            <div className={styles.dashboardContainer}>
-              <div className={`${styles.dashboardRow} ${styles.dashboardRow1}`}>
-                <div className={styles.walletNetwortPanel}>
-                  <div className={styles.netWorth7}>
-                    <div className={styles.netWorthContainer}>
-                      <span>{`Net Worth   `}</span>
-                      <span className={styles.span30}>$ 100,000.00</span>
+            <div className={styles.dashboardContent}>
+
+              <div className={styles.dashboardNetWorth}>
+                <div className={styles.dashboardNetWorthContainer}>
+                  <div className={styles.dashboardNetWorthTitle}>
+                    <div>
+                      <span>Net Worth</span>
+                      <span className={styles.dashboardNetWorthTitlePrice}>$ 100,000.00</span>
                     </div>
                   </div>
-                  <div className={styles.groupParent}>
+                  <div>
                     <div className={styles.rectangleParent}>
-                      <div className={styles.groupChild} />
-                      <div className={styles.groupItem} />
-                      <div className={styles.groupInner} />
-                      <div className={styles.ellipseDiv} />
+                      <div className={styles.groupChild}/>
+                      <div className={styles.groupItem}/>
+                      <div className={styles.groupInner}/>
+                      <div className={styles.ellipseDiv}/>
                     </div>
-                    <div className={styles.headParent1}>
-                      <div className={styles.head4}>
-                        <div className={styles.value5}>Value</div>
-                        <div className={styles.pendingValue}>Pending Value</div>
-                        <div className={styles.valuenetworth1}>
+                    <div className={styles.dashboardNetWorthTable}>
+                      <div className={styles.tableHead}>
+                        <div className={styles.valueColumn}>Value</div>
+                        <div className={styles.pendingValueColumn}>Pending Value</div>
+                        <div className={styles.worthValueColumn}>
                           Value/NetWorth %
                         </div>
-                        <div className={styles.headChild2} />
+                        <div className={styles.headChild2}/>
                       </div>
                       <div className={styles.staking}>
                         <div className={styles.walletBalanceContainer1}>
@@ -61,7 +62,7 @@ const Dashboard: NextPage = () => {
                         <div className={styles.div56}>$ 25,000.00</div>
                         <div className={styles.div57}>{`$ 0.00 `}</div>
                         <div className={styles.div58}>25.00 %</div>
-                        <div className={styles.walletBalanceChild} />
+                        <div className={styles.walletBalanceChild}/>
                       </div>
                       <div className={styles.staking}>
                         <div className={styles.walletBalanceContainer1}>
@@ -71,7 +72,7 @@ const Dashboard: NextPage = () => {
                         </div>
                         <div className={styles.div56}>$ 12,500.00</div>
                         <div className={styles.div57}>$ 150.0</div>
-                        <div className={styles.walletBalanceChild} />
+                        <div className={styles.walletBalanceChild}/>
                         <div className={styles.div61}>12.50%</div>
                       </div>
                       <div className={styles.staking}>
@@ -83,7 +84,7 @@ const Dashboard: NextPage = () => {
                         <div className={styles.div56}>$ 12,500.00</div>
                         <div className={styles.div61}>12.50 %</div>
                         <div className={styles.div57}>{`$ 0.00 `}</div>
-                        <div className={styles.walletBalanceChild} />
+                        <div className={styles.walletBalanceChild}/>
                       </div>
                       <div className={styles.staking}>
                         <div className={styles.walletBalanceContainer1}>
@@ -93,7 +94,7 @@ const Dashboard: NextPage = () => {
                         </div>
                         <div className={styles.div56}>$ 12,500.00</div>
                         <div className={styles.div57}>{`$ 0.00 `}</div>
-                        <div className={styles.walletBalanceChild} />
+                        <div className={styles.walletBalanceChild}/>
                         <div className={styles.div61}>12.50 %</div>
                       </div>
                       <div className={styles.staking}>
@@ -104,7 +105,7 @@ const Dashboard: NextPage = () => {
                         </div>
                         <div className={styles.div56}>$ 12,500.00</div>
                         <div className={styles.div57}>{`$ 0.00 `}</div>
-                        <div className={styles.walletBalanceChild} />
+                        <div className={styles.walletBalanceChild}/>
                         <div className={styles.div61}>12.50 %</div>
                       </div>
                       <div className={styles.staking}>
@@ -116,7 +117,7 @@ const Dashboard: NextPage = () => {
                         <div className={styles.div56}>$ 0.00</div>
                         <div className={styles.div57}>{`$ 0.00 `}</div>
                         <div className={styles.div61}>2.00 %</div>
-                        <div className={styles.walletBalanceChild} />
+                        <div className={styles.walletBalanceChild}/>
                       </div>
                       <div className={styles.staking}>
                         <div className={styles.walletBalanceContainer1}>
@@ -127,7 +128,7 @@ const Dashboard: NextPage = () => {
                         <div className={styles.div56}>$ 25,000.00</div>
                         <div className={styles.div61}>10.50 %</div>
                         <div className={styles.div57}>{`$ 0.00 `}</div>
-                        <div className={styles.walletBalanceChild} />
+                        <div className={styles.walletBalanceChild}/>
                       </div>
                       <div className={styles.staking}>
                         <div className={styles.div57}>{`$ 0.00 `}</div>
@@ -139,15 +140,15 @@ const Dashboard: NextPage = () => {
                 <div className={styles.pieChartPanel}>
                   <img
                     className={styles.donutIcon}
-                    alt=''
-                    src='/donut.svg'
+                    alt=""
+                    src="/donut.svg"
                   />
                   <div className={styles.hoverTips}>
-                    <div className={styles.hoverTipsChild} />
+                    <div className={styles.hoverTipsChild}/>
                     <div className={styles.div32}>
                       <div className={styles.legendinfo}>
                         <div className={styles.container}>
-                          <div className={styles.div33} />
+                          <div className={styles.div33}/>
                         </div>
                         <div className={styles.legend1}>Wallet Balance</div>
                       </div>
@@ -157,7 +158,7 @@ const Dashboard: NextPage = () => {
                       <div className={styles.div35}>
                         <div className={styles.legendinfo}>
                           <div className={styles.container}>
-                            <div className={styles.div36} />
+                            <div className={styles.div36}/>
                           </div>
                           <div className={styles.legend1}>{`Staking `}</div>
                         </div>
@@ -166,7 +167,7 @@ const Dashboard: NextPage = () => {
                       <div className={styles.div38}>
                         <div className={styles.legendinfo}>
                           <div className={styles.container}>
-                            <div className={styles.div36} />
+                            <div className={styles.div36}/>
                           </div>
                           <div className={styles.legend1}>{`Staking `}</div>
                         </div>
@@ -175,18 +176,18 @@ const Dashboard: NextPage = () => {
                       <div className={styles.div35}>
                         <div className={styles.legendinfo}>
                           <div className={styles.container}>
-                            <div className={styles.div42} />
+                            <div className={styles.div42}/>
                           </div>
                           <div
                             className={styles.legend1}
-                          >{`Lending                 `}</div>
+                          >{`Lending`}</div>
                         </div>
                         <div className={styles.div34}>10%</div>
                       </div>
                       <div className={styles.div32}>
                         <div className={styles.legendinfo}>
                           <div className={styles.container}>
-                            <div className={styles.div45} />
+                            <div className={styles.div45}/>
                           </div>
                           <div className={styles.legend1}>Trading</div>
                         </div>
@@ -195,7 +196,7 @@ const Dashboard: NextPage = () => {
                       <div className={styles.div32}>
                         <div className={styles.legendinfo}>
                           <div className={styles.container}>
-                            <div className={styles.div48} />
+                            <div className={styles.div48}/>
                           </div>
                           <div className={styles.legend1}>Liquidity</div>
                         </div>
@@ -204,7 +205,7 @@ const Dashboard: NextPage = () => {
                       <div className={styles.div32}>
                         <div className={styles.legendinfo}>
                           <div className={styles.container}>
-                            <div className={styles.div51} />
+                            <div className={styles.div51}/>
                           </div>
                           <div className={styles.legend1}>Farm</div>
                         </div>
@@ -213,7 +214,7 @@ const Dashboard: NextPage = () => {
                       <div className={styles.div32}>
                         <div className={styles.legendinfo}>
                           <div className={styles.container}>
-                            <div className={styles.div54} />
+                            <div className={styles.div54}/>
                           </div>
                           <div className={styles.legend1}>NFT</div>
                         </div>
@@ -228,12 +229,12 @@ const Dashboard: NextPage = () => {
                 walletBalance={walletBalance}
                 setWalletBalance={setWalletBalance}
               />
-              <GetStake />
-              <GetLend />
-              <GetTrade />
-              <GetLiquidity />
-              <GetFarm />
-              <GetNFT />
+              <GetStake/>
+              <GetLend/>
+              <GetTrade/>
+              <GetLiquidity/>
+              <GetFarm/>
+              <GetNFT/>
             </div>
           </div>
         </div>

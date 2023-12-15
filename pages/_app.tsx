@@ -60,10 +60,8 @@ export default function MyApp(props: any) {
     <React.Fragment>
       <Head>
         <title>DashboardFix</title>
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width"
-        />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
       </Head>
       <ThemeProvider theme={muiTheme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. TODO wallets={walletAdapters} */}

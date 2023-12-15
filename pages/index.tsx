@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from './index.module.css';
@@ -51,85 +51,120 @@ const Index: NextPage = () => {
   connection.getTransactionCount().then((res) => {
     setTransactionsCount(res);
   });
+
+  const [isMenuActive, setMenuActive] = useState(false);
+
+  const openMenu = () => {
+    setMenuActive(true);
+  };
+
+  const closeMenu = () => {
+    setMenuActive(false);
+  };
+
+  useEffect(() => {
+    if (isMenuActive) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  });
+
   return (
-    <div className={styles.index1}>
+    <div className={styles.main}>
       <div className={styles.header}>
         <img
-          className={styles.dexfiCopy1}
-          alt=''
-          src='/dexfi-copy-1@2x.png'
+          className={styles.mainLogo}
+          alt=""
+          src="/dexfi-copy-1@2x.png"
         />
-        <div className={styles.docParent}>
-          <a
-            className={styles.blog1}
-            href='https://dexifi-finances.gitbook.io/dexifi-blog/'
-          >
-            Blog
-          </a>
 
-          <a
-            className={styles.doc}
-            href='https://dexifi-finances.gitbook.io/dexifi-documentation/'
+        <div className={`${styles.menu} ${isMenuActive
+          ? styles.menuActive
+          : ''}`}>
+          <div className={styles.menuContent}
+               onClick={(event) => event.stopPropagation()}>
+        <button
+          className={`${styles.menuButton} ${isMenuActive ? styles.inactiveButton : styles.activeButton}`}
+          onClick={openMenu}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="16"
+            width="14"
+            viewBox="0 0 448 512"
           >
+            <path
+              fill="#ffffff"
+              d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
+            />
+          </svg>
+        </button>
+
+        <button
+          className={`${styles.menuButton} ${isMenuActive ? styles.activeButton : styles.inactiveButton}`}
+          onClick={closeMenu}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512">
+            <path fill="#ffffff"
+                  d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+        </button>
+
+        <div
+          className={`${styles.headerLinks} ${isMenuActive ? styles.activeMenu : ''
+          }`}>
+          <a href="https://dexifi-finances.gitbook.io/dexifi-blog/">Blog</a>
+          <a href="https://dexifi-finances.gitbook.io/dexifi-documentation/">
             Doc
           </a>
-
-          <Link
-            className={styles.lunchApp}
-            href='/dashboard'
-          >
-            Launch App
-          </Link>
+          <Link href="/dashboard">Launch App</Link>
+        </div>
+          </div>
         </div>
       </div>
 
-      <div className={styles.lamp} />
+      <div className={styles.lamp}/>
 
       <div>
         <img
           className={styles.mainCircle}
-          alt=''
-          src='/main-circle.png'
+          alt=""
+          src="/main-circle.png"
         />
         <img
           className={styles.circleMidIcon}
-          alt=''
-          src='/circle-mid.svg'
+          alt=""
+          src="/circle-mid.svg"
         />
         <img
           className={styles.circleBotIcon}
-          alt=''
-          src='/circle-bot.svg'
+          alt=""
+          src="/circle-bot.svg"
         />
         <img
           className={`${styles.blur1} ${styles.blur}`}
-          alt=''
-          src='/Lamp-Mid.png'
+          alt=""
+          src="/Lamp-Mid.png"
         />
         <img
           className={`${styles.blur2} ${styles.blur}`}
-          alt=''
-          src='/lamp-bot.png'
+          alt=""
+          src="/lamp-bot.png"
         />
         <img
           className={`${styles.blur3} ${styles.blur}`}
-          alt=''
-          src='/lamp-bot2.png'
+          alt=""
+          src="/lamp-bot2.png"
         />
         <div className={styles.mainContent}>
           <div className={`${styles.firstScreen}`}>
-            <div className={styles.firstScreenTitle}>
-              <p className={styles.newSensationOfFull}>
-                <b>
-                  <span
-                    className={styles.newSensation}
-                  >{`New Sensation `}</span>
-                  <span className={styles.ofFull}>{`of Full `}</span>
-                </b>
-              </p>
-              <p className={styles.firstScreenUndertitle}>DeFi Power</p>
-            </div>
-            <div className={styles.withDexifiYou}>
+            <section className={styles.firstScreenSection}>
+              <span className={styles.firstScreenTitle}>
+                New Sensation of Full
+              </span>
+              <p className={styles.firstScreenSubTitle}>DeFi Power</p>
+            </section>
+            <div className={styles.firstScreenDescription}>
               With Dexifi, you can enjoy fast and low-cost transactions, making
               it ideal for everyday use and global remittances.
             </div>
@@ -137,24 +172,22 @@ const Index: NextPage = () => {
               className={`${styles.firstScreenButton} ${styles.firstScreenReadDocs}`}
               onClick={onFrameButton4Click}
             >
-              <div className={styles.readDocs}>Read Docs</div>
+              <p className={styles.firstScreenButtonTitle}>Read Docs</p>
             </button>
 
             <img
               className={styles.image2Icon}
-              alt=''
-              src='/image-2@2x.png'
+              alt=""
+              src="/image-2@2x.png"
             />
 
-            <b className={styles.aModernApproach}>
+            <span className={styles.firstScreenTitle}>
               A Modern Approach To Earn More
-            </b>
-            <div className={styles.modernProblemsNeedContainer}>
-              <p className={styles.newSensationOfFull}>
+            </span>
+            <div className={styles.firstScreenDescriptionSecond}>
+              <p>
                 Modern Problems Need Modern Solutions, Invest in Dexifi and take
                 advantage of the innovative decentralized finance ecosystem.
-              </p>
-              <p className={styles.newSensationOfFull}>
                 Dexifi unlocks a world of decentralized applications, providing
                 users with diverse opportunities to explore and engage with the
                 decentralized finance ecosystem.
@@ -164,96 +197,99 @@ const Index: NextPage = () => {
               className={styles.firstScreenButton}
               onClick={onFrameButton6Click}
             >
-              <div className={styles.readDocs}>Read Blog</div>
+              <div className={styles.firstScreenButtonTitle}>Read Blog</div>
             </button>
 
             <img
               className={styles.firstScreenLaptop}
-              alt=''
-              src='/mockup.svg'
+              alt=""
+              src="/mockup.svg"
             />
             <img
               className={styles.firstScreenStartButton}
-              alt=''
-              src='/component-5.svg'
+              alt=""
+              src="/component-5.svg"
               onClick={onComponent5Click}
             />
           </div>
+
           <div className={`${styles.statistics}`}>
             <div className={`${styles.statisticsRow} ${styles.statisticsRow1}`}>
-              <div className={styles.dexifi}>
-                <div className={styles.statisticTitleContainer}>
+              <div className={styles.statisticsDexifiBlock}>
+                <div className={styles.statisticsDexifiTitleContainer}>
                   <div className={styles.nameTitleContainer}>
                     <div className={styles.rectangle15}></div>
-                    <div className={styles.walletUtility}>Dexifi</div>
+                    <h4>Dexifi</h4>
                   </div>
                   <img
                     className={styles.dexifiLogoIcon}
-                    alt=''
-                    src='/dexifi-logo@2x.png'
+                    alt=""
+                    src="/dexifi-logo@2x.png"
                   />
                 </div>
-                <div className={styles.statisticText}>
+                <p className={styles.statisticText}>
                   Enables users to access financial services without
                   intermediaries, and it operates on a transparent and secure
                   blockchain network. With zero platform fees and an open-source
                   code, Dexifi offers a user-friendly and accessible alternative
                   to traditional finance.
-                </div>
+                </p>
                 <div className={styles.statisticsInnerRow}>
-                  <div className={styles.platformFee}>platform fee</div>
-                  <div className={styles.div4}>0.00 %</div>
+                  <div className={styles.statisticsInnerRowTitle}>
+                    platform fee
+                  </div>
+                  <div className={styles.statisticsInnerRowPrice}>0.00 %</div>
                 </div>
               </div>
-              <div className={styles.solana}>
-                <div className={styles.statisticTitleContainer}>
+              <div className={styles.solanaBlock}>
+                <div className={styles.solanaTitleBlock}>
                   <div className={styles.nameTitleContainer}>
-                    <div className={styles.rectangle13} />
-                    <div className={styles.solana1}>Solana</div>
+                    <div className={styles.solanaBlockRectangle}/>
+                    <h4 className={styles.solanaTitle}>Solana</h4>
                   </div>
                   <img
-                    className={styles.solana1Icon}
-                    alt=''
-                    src='/solana-1@2x.png'
+                    className={styles.solanaIcon}
+                    alt=""
+                    src="/solana-1@2x.png"
                   />
                 </div>
-                <div className={styles.dontKeepYour}>
+                <p className={styles.solanaDescription}>
                   Don’t keep your users waiting. Solana has block times of 400
                   milliseconds — and as hardware gets faster, so will the
                   network.
-                </div>
-                <div className={styles.frame13}>
-                  <div className={styles.div}>
+                </p>
+                <div className={styles.solanaPriceBlock}>
+                  <div className={styles.solanaPrice}>
                     {Math.round(transactionsCount / 1_000_000_000)} B
                   </div>
-                  <div
-                    className={styles.totalProjectLunched}
-                  >{`total transaction `}</div>
+                  <p className={styles.totalProjectLunched}>
+                    total transaction
+                  </p>
                   <img
-                    className={styles.icon}
-                    alt=''
-                    src='/1.svg'
+                    className={styles.solanaDotIcon}
+                    alt=""
+                    src="/1.svg"
                   />
                 </div>
               </div>
             </div>
 
             <div className={`${styles.statisticsRow} ${styles.statisticsRow2}`}>
-              <div className={styles.walletutility}>
-                <div className={styles.statisticTitleContainer}>
+              <div className={styles.walletUtilityBlock}>
+                <div className={styles.walletUtilityBlockHeader}>
                   <div className={styles.nameTitleContainer}>
-                    <div className={styles.rectangle1} />
-                    <div className={styles.walletUtility}>Wallet Utility</div>
+                    <div className={styles.rectangle1}/>
+                    <h4>Wallet Utility</h4>
                   </div>
                   <div className={styles.rectangleParent}>
-                    <div className={styles.groupChild} />
-                    <div className={styles.groupItem} />
-                    <div className={styles.groupInner} />
-                    <div className={styles.ellipseDiv} />
+                    <div className={styles.groupChild}/>
+                    <div className={styles.groupItem}/>
+                    <div className={styles.groupInner}/>
+                    <div className={styles.ellipseDiv}/>
                   </div>
                 </div>
 
-                <div className={styles.dashboardPanelProvides}>
+                <p className={styles.walletUtilityDescription}>
                   Dashboard panel provides users with easy access to their
                   locker, live positions, and the overall state of the network.
                   This enables users to better manage their portfolios and
@@ -261,79 +297,84 @@ const Index: NextPage = () => {
                   bringing everything together in one place, the DeFi platform
                   offers a seamless user experience that makes it easy to
                   navigate and manage all aspects of the platform.
-                </div>
+                </p>
               </div>
-              <div className={styles.jup}>
+              <div className={styles.jupiterBlock}>
                 <div className={styles.statisticTitleContainer}>
                   <div className={styles.nameTitleContainer}>
-                    <div className={styles.rectangle2} />
-                    <div className={styles.jupiter}>Jupiter</div>
+                    <div className={styles.rectangle2}/>
+                    <h4 className={styles.jupiterTitle}>Jupiter</h4>
                   </div>
                   <img
-                    className={styles.jupiterLogo2Icon}
-                    alt=''
-                    src='/jupiterlogo-2.svg'
+                    className={styles.jupiterLogoIcon}
+                    alt=""
+                    src="/jupiterlogo-2.svg"
                   />
                 </div>
 
-                <div
-                  className={styles.theBestSwap}
-                >{`The best swap aggregator & infrastructure for Solana - powering best price, token selection and UX for all users and devs.`}</div>
+                <p className={styles.jupiterDescription}>
+                  The best swap aggregator & infrastructure for Solana -
+                  powering best price, token selection and UX for all users and
+                  devs.
+                </p>
 
-                <div className={styles.frame4}>
-                  <div className={styles.div}>24</div>
-                  <div className={styles.liveDexs}>LIVE DEXs</div>
+                <div className={styles.solanaPriceBlock}>
+                  <p className={styles.solanaPrice}>24</p>
+                  <p className={styles.totalProjectLunched}>LIVE DEXs</p>
                   <img
-                    className={styles.icon}
-                    alt=''
-                    src='/1.svg'
+                    className={styles.solanaDotIcon}
+                    alt=""
+                    src="/1.svg"
                   />
                 </div>
               </div>
             </div>
 
             <div className={`${styles.statisticsRow} ${styles.statisticsRow3}`}>
-              <div className={styles.magicedan}>
+              <div className={styles.magicedanBlock}>
                 <div className={styles.statisticTitleContainer}>
                   <div className={styles.nameTitleContainer}>
-                    <div className={styles.rectangle11} />
-                    <div className={styles.jupiter}>Magic Edan</div>
+                    <div className={styles.rectangle11}/>
+                    <h4 className={styles.magicedanTitle}>Magic Edan</h4>
                   </div>
                   <img
-                    className={styles.image1Icon}
-                    alt=''
-                    src='/image-11@2x.png'
+                    className={styles.magicedanIcon}
+                    alt=""
+                    src="/image-11@2x.png"
                   />
                 </div>
 
-                <div
-                  className={styles.theNftMarketplace}
-                >{`The NFT Marketplace Solana deserves, smooth as silk & fast as Solana.the biggest and most liquid NFT marketplace globally and home to the next generation of digital creators.`}</div>
+                <p className={styles.magicedanDescription}>
+                  The NFT Marketplace Solana deserves, smooth as silk & fast as
+                  Solana.the biggest and most liquid NFT marketplace globally
+                  and home to the next generation of digital creators.
+                </p>
 
-                <div className={styles.frame12}>
-                  <div className={styles.div}>168,897 SOL</div>
-                  <div className={styles.totalProjectLunched}>MARKET Value</div>
+                <div className={styles.solanaPriceBlock}>
+                  <p className={styles.solanaPrice}>168,897 SOL</p>
+                  <p className={styles.totalProjectLunched}>MARKET Value</p>
                   <img
-                    className={styles.icon}
-                    alt=''
-                    src='/3.svg'
+                    className={styles.solanaDotIcon}
+                    alt=""
+                    src="/3.svg"
                   />
                 </div>
               </div>
-              <div className={styles.ido}>
+
+              <div className={styles.idoBlock}>
                 <div className={styles.statisticTitleContainer}>
                   <div className={styles.nameTitleContainer}>
-                    <div className={styles.rectangle5} />
-                    <div className={styles.jupiter}>IDO</div>
+                    <div className={styles.rectangle5}/>
+                    <h4>IDO</h4>
                   </div>
                   <img
-                    className={styles.image3Copy1}
-                    alt=''
-                    src='/image-3-copy-1@2x.png'
+                    className={styles.idoBlockLogo}
+                    alt=""
+                    src="/image-3-copy-1@2x.png"
                   />
                 </div>
 
-                <div className={styles.dexifiPlatformIs}>
+                <p className={styles.idoDescription}>
                   Dexifi platform is dedicated to bringing the best ideas for
                   creating new blockchain services that empower decentralization
                   across the network. By leveraging the power of blockchain
@@ -343,36 +384,36 @@ const Index: NextPage = () => {
                   on innovation and user experience, Dexifi is driving the next
                   wave of blockchain-based services and creating a new sensation
                   in the world of finance.
-                </div>
-                <div className={styles.frame6}>
-                  <div className={styles.div}>3</div>
-                  <div
-                    className={styles.totalProjectLunched}
-                  >{`total Project Lunched `}</div>
+                </p>
+                <div className={styles.solanaPriceBlock}>
+                  <p className={styles.solanaPrice}>3</p>
+                  <p className={styles.totalProjectLunched}>
+                    TOTAL PROJECT LAUNCHED
+                  </p>
                   <img
-                    className={styles.icon}
-                    alt=''
-                    src='/11.svg'
+                    className={styles.solanaDotIcon}
+                    alt=""
+                    src="/11.svg"
                   />
                 </div>
               </div>
             </div>
 
             <div className={`${styles.statisticsRow} ${styles.statisticsRow4}`}>
-              <div className={styles.liquidity}>
+              <div className={styles.liquidityBlock}>
                 <div className={styles.statisticTitleContainer}>
                   <div className={styles.nameTitleContainer}>
-                    <div className={styles.rectangle9} />
-                    <div className={styles.jupiter}>Liquidity</div>
+                    <div className={styles.rectangle9}/>
+                    <h4>Liquidity</h4>
                   </div>
                   <img
                     className={styles.liquidityIcon}
-                    alt=''
-                    src='/806cc72fdc654a1da1b7cc4ce95da481-copy-1@2x.png'
+                    alt=""
+                    src="/806cc72fdc654a1da1b7cc4ce95da481-copy-1@2x.png"
                   />
                 </div>
 
-                <div className={styles.platformOffersUsers}>
+                <p className={styles.liquidityDescription}>
                   Platform offers users access to some of the largest AMM and
                   CLMM pools available, providing them with a wide range of
                   investment options to choose from. The platform is designed to
@@ -381,75 +422,69 @@ const Index: NextPage = () => {
                   range of options and a simple interface, Dexifi is the perfect
                   platform for anyone looking to explore the world of
                   decentralized finance.
-                </div>
-                <div className={styles.frame10}>
-                  <div className={styles.div3}>164,687,546.67 $</div>
-                  <div className={styles.totalProjectLunched}>
-                    total Liquidity accessble
-                  </div>
+                </p>
+                <div className={styles.solanaPriceBlock}>
+                  <p className={styles.solanaPrice}>164,687,546.67 $</p>
+                  <p className={styles.totalProjectLunched}>
+                    TOTAL LIQUIDITY ACCESSIBLE
+                  </p>
                   <img
-                    className={styles.icon}
-                    alt=''
-                    src='/21.svg'
+                    className={styles.solanaDotIcon}
+                    alt=""
+                    src="/21.svg"
                   />
                 </div>
               </div>
-              <div className={styles.trade}>
+
+              <div className={styles.tradeBlock}>
                 <div className={styles.statisticTitleContainer}>
                   <div className={styles.nameTitleContainer}>
-                    <div className={styles.rectangle6} />
-                    <div className={styles.jupiter}>Trade</div>
+                    <div className={styles.rectangle6}/>
+                    <h4>Trade</h4>
                   </div>
                   <img
-                    className={styles.tradeItem}
-                    alt=''
-                    src='/polygon-1.svg'
-                  />
-                  <div className={styles.tradeChild} />
-                  <div className={styles.tradeInner} />
-                  <img
-                    className={styles.polygonIcon}
-                    alt=''
-                    src='/polygon-2.svg'
+                    className={styles.tradeBlockImg}
+                    alt=""
+                    src="/polygon-logo.svg"
                   />
                 </div>
 
-                <div className={styles.dexifisTradingFeature}>
+                <p className={styles.tradePriceDescription}>
                   Dexifi's trading feature provides access to all Solana network
                   order books, with a user-friendly interface, and integrates
                   with Openbook for the best trading experience.
-                </div>
-                <div className={styles.frame8}>
-                  <div className={styles.div}>133,546</div>
-                  <div className={styles.totalProjectLunched}>Live Pools</div>
+                </p>
+                <div className={styles.solanaPriceBlock}>
+                  <p className={styles.solanaPrice}>133,546</p>
+                  <p className={styles.totalProjectLunched}>Live Pools</p>
                   <img
-                    className={styles.icon}
-                    alt=''
-                    src='/2.svg'
+                    className={styles.solanaDotIcon}
+                    alt=""
+                    src="/2.svg"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className={styles.footer}>
+          <footer className={styles.footer}>
             <div className={styles.footerContainer}>
               <img
-                className={styles.sitelogo1Icon}
-                alt=''
-                src='/sitelogo-1@2x.png'
+                className={styles.dexifiLogoIcon}
+                alt=""
+                src="/sitelogo-1@2x.png"
               />
               <div className={styles.dexifiInc}>© 2023 Dexifi, Inc.</div>
               <div className={styles.comesByThe}>{`Comes by The Rage `}</div>
-              <div className={styles.frameGroup}>
+              <div className={styles.footerLinks}>
                 <button
-                  className={styles.frame}
+                  className={styles.footerLink}
                   onClick={onFrame1Click}
                 >
                   <img
                     className={styles.vectorIcon}
-                    alt=''
-                    src='/vector13.svg'
+                    alt=""
+                    src="/vector13.svg"
                   />
                 </button>
                 <button
@@ -458,30 +493,30 @@ const Index: NextPage = () => {
                 >
                   <img
                     className={styles.vectorIcon1}
-                    alt=''
-                    src='/vector14.svg'
+                    alt=""
+                    src="/vector14.svg"
                   />
                 </button>
-                <button
+                <div
                   className={styles.groupWrapper}
                   onClick={onFrameButtonClick}
                 >
                   <button className={styles.group}>
                     <img
                       className={styles.clipPathGroup}
-                      alt=''
-                      src='/clip-path-group.svg'
+                      alt=""
+                      src="/clip-path-group.svg"
                     />
                   </button>
-                </button>
+                </div>
                 <button
                   className={styles.groupWrapper}
                   onClick={onFrameButton1Click}
                 >
                   <img
                     className={styles.clipPathGroup}
-                    alt=''
-                    src='/group.svg'
+                    alt=""
+                    src="/group.svg"
                   />
                 </button>
                 <button
@@ -490,8 +525,8 @@ const Index: NextPage = () => {
                 >
                   <img
                     className={styles.clipPathGroup}
-                    alt=''
-                    src='/group1.svg'
+                    alt=""
+                    src="/group1.svg"
                   />
                 </button>
                 <button
@@ -500,46 +535,46 @@ const Index: NextPage = () => {
                 >
                   <img
                     className={styles.clipPathGroup}
-                    alt=''
-                    src='/group-1.svg'
+                    alt=""
+                    src="/group-1.svg"
                   />
                 </button>
               </div>
             </div>
 
-            <nav className={styles.footerNav}>
+            <div className={styles.footerNav}>
               <a
                 className={styles.whitepaper}
-                href='/Dexifi Protocol Whitepaper.pdf'
+                href="/Dexifi Protocol Whitepaper.pdf"
               >
                 Whitepaper
               </a>
               <a
                 className={styles.blog}
-                href='https://dexifi-finances.gitbook.io/dexifi-blog/'
+                href="https://dexifi-finances.gitbook.io/dexifi-blog/"
               >
                 Blog
               </a>
               <a
                 className={styles.coinmarketcap}
-                href='https://coinmarketcap.com'
+                href="https://coinmarketcap.com"
               >
                 CoinMarketCap
               </a>
               <a
                 className={styles.coingecko}
-                href='https://coingecko.com'
+                href="https://coingecko.com"
               >
                 CoinGecko
               </a>
               <a
                 className={styles.documentation}
-                href='https://dexifi-finances.gitbook.io/dexifi-documentation/'
+                href="https://dexifi-finances.gitbook.io/dexifi-documentation/"
               >
                 Documentation
               </a>
-            </nav>
-          </div>
+            </div>
+          </footer>
         </div>
       </div>
     </div>
