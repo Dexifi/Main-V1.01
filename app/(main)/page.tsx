@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { Backgrounds, Footer, Header, StatisticItem } from "./(components)";
 import { connection } from "@/lib/get-connections";
+import Image from "next/image";
 
 type StatisticProps = {
   columns: {
@@ -241,7 +242,7 @@ const Main = () => {
                   />
 
                   <img
-                    className="hidden absolute md:flex w-[35%] lg:w-1/2 bottom-[45%] md:bottom-1/3 lg:bottom-[45%] xl:bottom-1/3 right-0 md:right-[4%] lg:-right-[14%]  max-w-full max-h-full aspect-video object-contain z-0"
+                    className="hidden absolute md:flex w-[35%] lg:w-1/2 bottom-[45%] md:bottom-1/3 lg:bottom-[45%] xl:bottom-[40%] right-0 md:right-[4%] lg:-right-[14%]  max-w-full max-h-full aspect-video object-contain z-0"
                     alt=""
                     src="/assets/images/mockup.png"
                   />
@@ -251,9 +252,11 @@ const Main = () => {
                     onClick={onComponent5Click}
                     className="overflow-hidden rounded-full w-40 h-40 aspect-square object-contain hover:bg-transparent -mt-16 z-50"
                   >
-                    <img
+                    <Image
                       className="w-40 aspect-square object-contain"
-                      alt=""
+                      alt="play_icon"
+                      width={160}
+                      height={160}
                       src="/assets/icons/play_icon.svg"
                     />
                   </Button>

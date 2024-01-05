@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   isMobile: boolean;
@@ -41,10 +42,12 @@ const Header = ({ isMobile = true }: Props) => {
   }, []);
   return (
     <div className="flex justify-between w-full items-center bg-[rgba(5, 1, 1, 0.03)] relative z-50 lg:h-16 xl:h-20 text-2xl px-5">
-      <img
+      <Image
         className="w-40 h-20 aspect-[10/5] object-contain"
         alt="dexifi-full_logo"
         src="/assets/images/dexfi-full_logo.png"
+        height={80}
+        width={160}
       />
 
       <div className={`menu gap-10 ${isMenuActive ? "menuActive" : ""}`}>
@@ -96,16 +99,20 @@ const Header = ({ isMobile = true }: Props) => {
             </button>
 
             <div
+              id="main_menu"
               className={cn(
-                "justify-center items-center gap-6 z-[51] fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex-col hidden",
+                "items-center gap-6 z-[51] fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex-col hidden",
                 isMenuActive && "flex"
               )}
             >
               {headerLinks.map((link, index) => (
                 <Link
                   className={cn(
-                    `text-md text-white hover:text-[#1e90ff] z-[52] transition-all`
+                    `text-md text-white hover:text-[#1e90ff] z-[52] transition-all relative main-header--menu`
                   )}
+                  style={{
+                    animationDuration: `${index * 0.6}s`,
+                  }}
                   key={`${link.text.toLocaleLowerCase()}-${index}`}
                   href={link.href}
                 >
@@ -121,7 +128,7 @@ const Header = ({ isMobile = true }: Props) => {
             {headerLinks.map((link, index) => (
               <Link
                 className={cn(
-                  `text-md text-white hover:text-[#1e90ff] transition-all `
+                  `text-md text-white hover:text-[#1e90ff] transition-all`
                 )}
                 key={`${link.text.toLocaleLowerCase()}-${index}`}
                 href={link.href}
