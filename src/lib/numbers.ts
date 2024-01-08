@@ -20,12 +20,12 @@ const formatedNumber = (x: number, fixed: number = 2, isMobile = false) => {
     });
 
   let value = item
-    ? (x / item.value).toFixed(3).replace(rx, "$1") + item.symbol
+    ? (x / item.value).toFixed(2).replace(rx, "$1") + item.symbol
     : "0";
 
   return isMobile
     ? value
-    : x
+    : parseFloat(x.toLocaleString())
         .toFixed(fixed)
         .toString()
         .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");

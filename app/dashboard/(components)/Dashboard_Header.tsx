@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { DefaultTab, NFT_Gallery, TransactionsTab } from "./(tabs)";
 import AccountsTab from "./(tabs)/AccountsTab";
 import { ChevronFirst } from "lucide-react";
+import { useState } from "react";
 
 type Props = {
   isMobile: boolean;
@@ -12,6 +13,7 @@ type Props = {
 const tabs = ["NFT Gallery", "Transactions", "Accounts"];
 
 const DashboardHeader = ({ isMobile }: Props) => {
+  const [page, setPage] = useState("");
   return (
     <div className="flex justify-between items-center w-full relative z-50">
       <Tabs className="w-full bg-transparent" defaultValue="default">
@@ -34,9 +36,18 @@ const DashboardHeader = ({ isMobile }: Props) => {
               <TabsTrigger
                 value={formatedString(tab.toLocaleLowerCase())}
                 key={index}
-                className={cn(
-                  "text-xs sm:text-sm md:text-lg text-center hyphens-none flex md:flex px-3 sm:px-5 py-2 w-max cursor-pointer font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all box-border data-[state=active]:bg-[#D9F8FF10] data-[state=active]:rounded-full"
-                )}
+                className="text-xs sm:text-sm md:text-lg text-center hyphens-none flex md:flex px-3 sm:px-5 py-2 w-max cursor-pointer font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all box-border data-[state=active]:bg-[#D9F8FF10]  rounded-full transition-none shadow-none border-none"
+                onClick={() => setPage(formatedString(tab.toLocaleLowerCase()))}
+                style={{
+                  border:
+                    formatedString(tab).toLocaleLowerCase() === page
+                      ? "1px solid #D9F8FF"
+                      : "",
+                  boxShadow:
+                    formatedString(tab).toLocaleLowerCase() === page
+                      ? "0 0 4px 1px #d9f8ff75"
+                      : "",
+                }}
               >
                 {tab}
               </TabsTrigger>

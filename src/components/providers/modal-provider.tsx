@@ -1,4 +1,5 @@
 import {
+  AddLiquidityModal,
   SettingsModal,
   TradeImportMarketModal,
   TradeMarketModal,
@@ -10,7 +11,7 @@ const ModalProvider = (props: Props) => {
   return (
     <>
       <TradeImportMarketModal />
-      {/* <TradeMarketModal /> */}
+      <AddLiquidityModal />
       <SettingsModal />
     </>
   );
