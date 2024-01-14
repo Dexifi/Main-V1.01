@@ -39,7 +39,7 @@ const Header = ({ isMobile = true }: Props) => {
     } else {
       document.body.style.overflow = "";
     }
-  }, [isMenuActive]);
+  }, []);
   return (
     <div className="flex justify-between w-full items-center bg-[rgba(5, 1, 1, 0.03)] relative z-50 lg:h-16 xl:h-20 text-2xl px-5">
       <Image
@@ -99,17 +99,20 @@ const Header = ({ isMobile = true }: Props) => {
             </button>
 
             <div
+              id="main_menu"
               className={cn(
-                "justify-center items-center gap-6 z-[51] fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex-col hidden",
+                "items-center gap-6 z-[51] fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex-col hidden",
                 isMenuActive && "flex"
               )}
             >
               {headerLinks.map((link, index) => (
                 <Link
                   className={cn(
-                    `text-md text-white hover:text-[#1e90ff] z-[52] transition-all relative animate-fade-in-left`
+                    `text-md text-white hover:text-[#1e90ff] z-[52] transition-all relative main-header--menu`
                   )}
-                  style={{ animationDuration: `${index * 0.3}s` }}
+                  style={{
+                    animationDuration: `${index * 0.6}s`,
+                  }}
                   key={`${link.text.toLocaleLowerCase()}-${index}`}
                   href={link.href}
                 >
@@ -125,7 +128,7 @@ const Header = ({ isMobile = true }: Props) => {
             {headerLinks.map((link, index) => (
               <Link
                 className={cn(
-                  `text-md text-white hover:text-[#1e90ff] transition-all `
+                  `text-md text-white hover:text-[#1e90ff] transition-all`
                 )}
                 key={`${link.text.toLocaleLowerCase()}-${index}`}
                 href={link.href}

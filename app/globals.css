@@ -185,3 +185,35 @@ input[type='number']::-webkit-outer-spin-button {
 #pie-chart path {
   stroke: none;
 }
+
+svg *:focus {
+  outline: none;
+}
+
+.main-header--menu {
+  animation: fade-in-left normal 4s;
+}
+
+.main-header--closemenu {
+  animation: fade-in-right normal 4s;
+}
+
+@keyframes fade-in-left {
+  from {
+    left: -100vw
+  }
+
+  to {
+    left: 0
+  }
+}
+
+@keyframes fade-in-right {
+  from {
+    left: 0
+  }
+
+  to {
+    left: 100vw
+  }
+}

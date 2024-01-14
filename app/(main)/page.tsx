@@ -231,7 +231,7 @@ const Main = () => {
             <Backgrounds />
             {/* HOME */}
             <div className="my-0 mx-auto relative pb-24 px-3 max-w-[90vw] md:max-w-[100vw] lg:max-w-[80vw] z-10 flex flex-col justify-between">
-              <div className="h-screen min-h-[1080px] justify-center mb-5 lg:mb-44 flex flex-col relative text-xl">
+              <div className="h-screen min-h-[1080px] justify-center mb-5 lg:mb-12 flex flex-col relative text-xl">
                 {/* BG-HOME */}
 
                 <div className="flex justify-center items-center absolute left-1/2 -translate-x-1/2 top-0 md:-mt-16 p-0 h-[1120px] w-[1202px]">

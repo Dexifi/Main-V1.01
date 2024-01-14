@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import formatedNumber from "@/lib/numbers";
+import { useNFTGalleryModal } from "@/lib/stores/dashboard";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -19,6 +20,7 @@ type NFTCollectionProps = {
 
 const Gallery = ({ isEXTRASMALL }: Props) => {
   const [gdata, setData] = useState<NFTCollectionProps[]>([]);
+  const { onNFTGalleryOpen } = useNFTGalleryModal();
 
   useEffect(() => {
     gdata.length === 0 &&
@@ -62,7 +64,7 @@ const Gallery = ({ isEXTRASMALL }: Props) => {
                   alt={`${nft.name}_${nft.collection}_image`}
                   width={isEXTRASMALL ? 220 : 320}
                   height={isEXTRASMALL ? 220 : 320}
-                  className="aspect-square object-contain"
+                  className="w-2/3 aspect-square object-contain"
                 />
               </div>
               <div className="flex items-center flex-col gap-5 w-full">
@@ -76,6 +78,7 @@ const Gallery = ({ isEXTRASMALL }: Props) => {
                 </div>
                 <Button
                   className="rounded-full min-w-[75%]"
+                  onClick={onNFTGalleryOpen}
                   style={{
                     boxShadow: "0px 0px 5px 0px rgba(217, 248, 255, 0.50)",
                     border: "1px solid rgba(217, 248, 255, 0.50)",

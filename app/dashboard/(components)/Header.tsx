@@ -67,7 +67,7 @@ const Header = ({ isMobile }: Props) => {
   ];
 
   return (
-    <div className="z-[100] sticky w-full px-8 top-0 left-0 min-h-[80px] bg-[#19232D] flex justify-between items-center text-center text-lg text-white font-['Helvetica']">
+    <div className="z-[100] sticky w-full px-8 top-0 left-0 min-h-[80px] bg-[#19232D90] flex justify-between items-center text-center text-lg text-white font-['Helvetica']">
       <Link href="/" className="w-14 md:w-20 aspect-square object-contain">
         <Image
           className="w-14 md:w-20 aspect-square object-contain"
@@ -82,9 +82,11 @@ const Header = ({ isMobile }: Props) => {
         <div className="flex flex-row flex-nowrap gap-x-4">
           {HeaderMenu.map((item, index) => (
             <Link
-              href={`/${
-                item !== "NFT" ? item.toLocaleLowerCase() : "nft.dexifi.io"
-              }`}
+              href={
+                item !== "NFT"
+                  ? `/${item.toLocaleLowerCase()}`
+                  : "https://nft.dexifi.io"
+              }
               className="hover:text-[#d9f8ff] transition-all cursor-pointer text-inherit text-sm md:text-lg"
               style={{
                 borderBottom: `${

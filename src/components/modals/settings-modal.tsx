@@ -1,8 +1,4 @@
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useSettingsModal } from "@/lib/stores/settings.store";
 import { X } from "lucide-react";
@@ -30,8 +26,8 @@ const SettingsModal = (props: Props) => {
     rpc_title: "RPC Tiriton",
   };
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent
         className="bg-[#0d111b] max-w-sm z-[110]"
         style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
       >
@@ -132,8 +128,8 @@ const SettingsModal = (props: Props) => {
             </div>
           </div>
         </div>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 };
 

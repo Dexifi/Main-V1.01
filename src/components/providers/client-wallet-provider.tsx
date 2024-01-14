@@ -1,5 +1,5 @@
 import type { WalletProviderProps } from "@solana/wallet-adapter-react";
-import { WalletProvider } from "@solana/wallet-adapter-react";
+import { WalletContext, WalletProvider } from "@solana/wallet-adapter-react";
 
 import { NETWORK } from "@/lib/endpoints";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
@@ -9,6 +9,7 @@ import {
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import { useMemo } from "react";
+import ModalProvider from "./modal-provider";
 
 export function ClientWalletProvider(
   props: Omit<WalletProviderProps, "wallets">
@@ -21,6 +22,7 @@ export function ClientWalletProvider(
   return (
     <WalletProvider wallets={wallets} {...props}>
       <WalletModalProvider {...props} />
+      <ModalProvider />
     </WalletProvider>
   );
 }

@@ -93,7 +93,7 @@ const Trading = ({ isEXTRASMALL }: Props) => {
       {/*  */}
 
       <div className="flex justify-between gap-6 relative flex-col md:flex-row bg-[#30425630] p-5 rounded-2xl">
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-6 md:gap-10">
           <div className="flex items-center gap-5 border-b border-solid border-muted h-12">
             {data.table.name}
 
@@ -107,7 +107,7 @@ const Trading = ({ isEXTRASMALL }: Props) => {
               />
             ) : null}
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-row md:flex-col gap-2">
             <div className="flex text-sm w-max text-left truncate">
               Balance:
             </div>
