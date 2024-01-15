@@ -10,6 +10,7 @@ import {
 import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { Cell, Pie, PieChart } from "recharts";
 import useConnection from "@/hooks/useConnection";
 import useWalletBalance from "@/hooks/useWalletBalance";
@@ -190,38 +191,39 @@ const Networth = ({ isEXTRASMALL }: Props) => {
         </Table>
       </div>
       <div
-        className={`min-w-max md:min-w-80 w-full md:w-max overflow-hidden flex ${
+        className={`min-w-max md:min-w-80 w-full md:w-max overflow-hidden items-center flex ${
           isEXTRASMALL ? "flex-col" : "flex-row"
         } md:flex-col ${
-          isEXTRASMALL ? "justify-center" : "justify-between"
-        } md:justify-normal gap-y-5 p-5 bg-[#0d111b] rounded-3xl`}
+          isEXTRASMALL ? "justify-center" : "justify-start"
+        } md:justify-normal gap-5 p-5 bg-[#0d111b] rounded-3xl`}
         id="pie-chart"
         style={{ boxShadow: "0 0 4px #88d6ff" }}
       >
-        <PieChart
-          width={isEXTRASMALL ? 160 : 200}
-          height={isEXTRASMALL ? 160 : 200}
-          style={{
-            margin: "0 auto",
-          }}
-        >
-          <Pie
-            data={data.table.rows}
-            innerRadius={60}
-            outerRadius={80}
-            paddingAngle={5}
-            dataKey="worth"
+          <PieChart
+            width={isEXTRASMALL ? 160 : 200}
+            height={isEXTRASMALL ? 160 : 200}
+            style={{
+              margin: "0 auto",
+              zIndex: 10,
+            }}
           >
-            {data.table.rows.map((_, index) => (
-              <Cell
-                key={`cell-${index}`}
-                className="outline-none"
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-        </PieChart>
-        <div className="flex flex-col gap-y-1">
+            <Pie
+              data={data.table.rows}
+              innerRadius={60}
+              outerRadius={80}
+              paddingAngle={5}
+              dataKey="worth"
+            >
+              {data.table.rows.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  className="outline-none"
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        <div className="flex flex-col gap-y-1 w-full">
           {data.table.rows.map((entry, index) => (
             <div
               key={`cell-${index}`}

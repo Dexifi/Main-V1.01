@@ -25,7 +25,7 @@ const formatedNumber = (x: number, fixed: number = 2, isMobile = false) => {
 
   return isMobile
     ? value
-    : parseFloat(x.toLocaleString())
+    : x
         .toFixed(fixed)
         .toString()
         .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");

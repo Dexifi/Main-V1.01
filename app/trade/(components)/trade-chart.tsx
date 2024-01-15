@@ -308,7 +308,7 @@ const Orders = ({ data, isEXTRASMALL }: HeaderProps) => {
 
   return (
     <div
-      className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5 flex-1"
+      className="bg-[#0d111b] min-h-56 w-full md:w-1/2 rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5"
       style={{ boxShadow: "0 0 4px #88d6ff" }}
     >
       <Tabs className="w-full" defaultValue="all">
@@ -446,7 +446,7 @@ const Balance = ({ data, isEXTRASMALL }: HeaderProps) => {
 
   return (
     <div
-      className="h-max w-full rounded-xl p-5 gap-4 flex flex-col sm:flex-1"
+      className="h-max w-full md:w-1/2  rounded-xl p-5 gap-4 flex flex-col"
       style={{
         boxShadow: "0 0 4px #88d6ff",
       }}
@@ -541,7 +541,7 @@ const Sidebar = ({
   const handlePlaceOrder = async () => {};
   return (
     <div
-      className="h-max w-full rounded-xl p-5 gap-4 flex flex-col"
+      className="h-max w-full lg:w-1/2 xl:w-full 2xl:w-1/2 rounded-xl p-5 gap-4 flex flex-col"
       style={{
         boxShadow: "0 0 4px #88d6ff",
       }}
@@ -706,14 +706,14 @@ const OrderBook = ({ data, isEXTRASMALL, bids, asks }: OrderBookProps) => {
 
   return (
     <div
-      className="h-max w-full rounded-xl p-5 gap-4 flex flex-col flex-1"
+      className="h-max w-full lg:w-1/2 xl:w-full 2xl:w-1/2 rounded-xl p-5 gap-4 flex flex-col"
       style={{
         boxShadow: "0 0 4px #88d6ff",
       }}
     >
       <Tabs defaultValue="buy" className="w-full">
         <TabsList className="w-full">
-          <div className="flex gap-3 sm:gap-5 justify-between w-full items-center flex-wrap">
+          <div className="flex gap-5 sm:gap-5 justify-between w-full items-center flex-wrap">
             <h3 className="text-sm sm:text-lg md:text-2xl text-[#D9F8FF]">
               Order Book
             </h3>
@@ -1034,12 +1034,12 @@ const TradeChart = ({ isEXTRASMALL }: Props) => {
         <div className="flex flex-col gap-2 md:gap-4 w-full">
           <Header data={selectedMarket} isEXTRASMALL={isEXTRASMALL} />
           <Chart data={ChartDATA} isEXTRASMALL={isEXTRASMALL} />
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-col md:flex-row w-full gap-4">
             <Orders data={orders} isEXTRASMALL={isEXTRASMALL} />
             <Balance data={orders} isEXTRASMALL={isEXTRASMALL} />
           </div>
         </div>
-        <div className="flex flex-col md:flex-row lg:flex-col w-full lg:w-1/5 max-w-none lg:max-w-md gap-4 lg:min-w-max">
+        <div className="flex flex-wrap md:flex-nowrap xl:flex-wrap 2xl:flex-nowrap w-full gap-4">
           <Sidebar
             data={selectedMarket}
             isEXTRASMALL={isEXTRASMALL}

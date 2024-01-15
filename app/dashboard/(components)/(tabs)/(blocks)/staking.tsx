@@ -189,7 +189,7 @@ const Staking = ({ isEXTRASMALL }: Props) => {
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2 uppercase">
                       <Button
                         size="sm"
-                        className="hover:bg-[#7c7c8d80] max-h-8 text-[14px]"
+                        className="hover:bg-[#7c7c8d80] max-h-8 text-[14px] rounded-full"
                         onClick={() => console.log("Hey there!")}
                         style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
                       >

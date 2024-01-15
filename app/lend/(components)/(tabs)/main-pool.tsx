@@ -104,27 +104,29 @@ const MainPool = ({
   };
 
   useEffect(() => {
-    data.length === 0
-      ? setTimeout(() => {
-          setData([
-            {
-              id: "123456789",
-              name: "Ustur CSS Tier 1 (CSSLU1)",
-              mint: "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58",
-              collection: "Star Atlas",
-              balance: 1,
-              nft_supply: 136,
-              value: 4812.99,
-              price: 4812.99,
-              supply: 0,
-              borrow: 0,
-              borrowValue: 0,
-              supplyAPR: 0,
-              borrowAPR: 0,
-            },
-          ]);
-        }, 5000)
-      : setData(markets);
+    if (markets.length > 0) {
+      data.length === 0
+        ? setData(markets)
+        : setTimeout(() => {
+            setData([
+              {
+                id: "123456789",
+                name: "Ustur CSS Tier 1 (CSSLU1)",
+                mint: "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58",
+                collection: "Star Atlas",
+                balance: 1,
+                nft_supply: 136,
+                value: 4812.99,
+                price: 4812.99,
+                supply: 0,
+                borrow: 0,
+                borrowValue: 0,
+                supplyAPR: 0,
+                borrowAPR: 0,
+              },
+            ]);
+          }, 5000);
+    }
   }, [data]);
 
   useEffect(() => {
@@ -260,13 +262,13 @@ const MainPool = ({
                               </span>
                               <span className="text-sm text-[#7c7c8d]">
                                 $
-                                {formatedNumber(
-                                  row.stats?.assetPriceUSD
-                                    ? row.stats?.assetPriceUSD
-                                    : 105,
-                                  5,
-                                  isEXTRASMALL
-                                )}
+                                {!!row.stats
+                                  ? formatedNumber(
+                                      row.stats.assetPriceUSD,
+                                      5,
+                                      isEXTRASMALL
+                                    )
+                                  : 105.50115}
                               </span>
                             </div>
                             {row.config?.liquidityToken.logo ? (
@@ -311,7 +313,7 @@ const MainPool = ({
                                   $
                                   {row.supply
                                     ? formatedNumber(row.supply, 1, true)
-                                    : 0}
+                                    : formatedNumber(0, 1, true)}
                                 </span>
                                 <span className="text-xs sm:text-sm text-[#7c7c8d]">
                                   {row?.stats?.symbol} -
@@ -320,7 +322,7 @@ const MainPool = ({
                                   $
                                   {row.value
                                     ? formatedNumber(row.value, 1, true)
-                                    : 0}
+                                    : formatedNumber(0, 1, true)}
                                 </span>
                               </div>
                             </div>
@@ -349,18 +351,12 @@ const MainPool = ({
                         {/* TOTAL */}
                         <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
                           <div className="flex flex-col">
-                            <span>
-                              {row.supplyAPR
-                                ? formatedNumber(row.supplyAPR, 2, isEXTRASMALL)
-                                : 0}
-                              %
-                            </span>
-                            <span>
-                              {row.borrowAPR
-                                ? formatedNumber(row.borrowAPR, 2, isEXTRASMALL)
-                                : 0}
-                              %
-                            </span>
+                            {row.supplyAPR && (
+                              <span>
+                                {formatedNumber(12, 2, isEXTRASMALL)}%
+                              </span>
+                            )}
+                            <span>{formatedNumber(5, 2, isEXTRASMALL)}%</span>
                           </div>
                         </TableCell>
 

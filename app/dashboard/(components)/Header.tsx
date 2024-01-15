@@ -75,9 +75,11 @@ const Header = ({ isMobile }: Props) => {
         <div className="flex flex-row flex-nowrap gap-x-4">
           {HeaderMenu.map((item, index) => (
             <Link
-              href={`/${
-                item !== "NFT" ? item.toLocaleLowerCase() : "nft.dexifi.io"
-              }`}
+              href={
+                item !== "NFT"
+                  ? `/${item.toLocaleLowerCase()}`
+                  : "https://nft.dexifi.io"
+              }
               className="hover:text-[#d9f8ff] transition-all cursor-pointer text-inherit text-sm md:text-lg"
               style={{
                 borderBottom: `${

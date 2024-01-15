@@ -154,7 +154,14 @@ const NFT = ({ isEXTRASMALL }: Props) => {
                       ${formatedNumber(row.price, 2, isEXTRASMALL)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      <Button onClick={() => {}}>Details</Button>
+                      <Button
+                        size="sm"
+                        className="hover:bg-[#7c7c8d80] max-h-8 text-[14px] rounded-full"
+                        onClick={() => console.log("Hey there!")}
+                        style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
+                      >
+                        Details
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

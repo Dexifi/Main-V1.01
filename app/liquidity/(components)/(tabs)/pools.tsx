@@ -10,7 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import formatedNumber from "@/lib/numbers";
-import { useAddLiquidityModal } from "@/lib/stores/liquidity.store";
+import {
+  useAddLiquidityModal,
+  useRemoveLiquidityModal,
+} from "@/lib/stores/liquidity.store";
 import formatedString from "@/lib/string";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -57,6 +60,7 @@ const PoolsTab = ({ data }: Props) => {
   };
 
   const { onAddLiquidityOpen } = useAddLiquidityModal();
+  const { onRemoveLiquidityOpen } = useRemoveLiquidityModal();
   useEffect(() => {
     gdata.length <= 0 &&
       setTimeout(() => {
@@ -87,7 +91,7 @@ const PoolsTab = ({ data }: Props) => {
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
       <div
-        className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl px-5 lg:px-10 py-5 max-w-full"
+        className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#19232d] rounded-3xl px-5 lg:px-10 py-5 max-w-full"
         style={{ boxShadow: "0 0 4px #88d6ff" }}
       >
         <div className="flex flex-col w-full py-4 gap-4">
@@ -118,7 +122,7 @@ const PoolsTab = ({ data }: Props) => {
                   {d_data.protocol_filter.map((item, index) => (
                     <Button
                       key={`${item}-${index}--protocol-filter`}
-                      className={`flex items-center gap-3 sm:gap-4 z-50 bg-transparent rounded-full text-xs sm:text-sm`}
+                      className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
                       style={{
                         boxShadow:
                           formatedString(item).toLocaleLowerCase() === protocolF
@@ -141,7 +145,7 @@ const PoolsTab = ({ data }: Props) => {
                   {d_data.time_filter.map((item, index) => (
                     <Button
                       key={`${item}-${index}--protocol-filter`}
-                      className={`flex items-center gap-3 sm:gap-4 z-50 bg-transparent rounded-full text-xs sm:text-sm`}
+                      className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
                       style={{
                         boxShadow:
                           formatedString(item).toLocaleLowerCase() === timeF
@@ -164,7 +168,7 @@ const PoolsTab = ({ data }: Props) => {
                   {d_data.tvl_filter.map((item, index) => (
                     <Button
                       key={`${item}-${index}--protocol-filter`}
-                      className={`flex items-center gap-3 sm:gap-4 z-50 bg-transparent rounded-full text-xs sm:text-sm`}
+                      className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
                       style={{
                         boxShadow:
                           formatedString(item).toLocaleLowerCase() === tvlF
@@ -189,7 +193,7 @@ const PoolsTab = ({ data }: Props) => {
                   {d_data.token_filter.map((item, index) => (
                     <Button
                       key={`${item.name}-${index}--token-filter`}
-                      className={`flex items-center gap-3 sm:gap-4 bg-transparent rounded-full`}
+                      className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
                       style={{
                         boxShadow:
                           formatedString(item.name).toLocaleLowerCase() ===
@@ -230,140 +234,148 @@ const PoolsTab = ({ data }: Props) => {
             </div>
           </div>
         </div>
-        <Table className="w-full flex-1 mt-2 overflow-scroll">
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              {d_data.headers.map((header, index) => (
-                <>
-                  <TableHead
+        <div
+          className="w-full bg-[#142030] p-4 rounded-2xl px-5 min-h-[50dvh]"
+          style={{
+            boxShadow: "0 0 5px 1px #d9f8ff",
+          }}
+        >
+          <Table className="w-full flex-1 mt-2 overflow-scroll">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                {d_data.headers.map((header, index) => (
+                  <>
+                    <TableHead
+                      key={`${formatedString(
+                        header.toLocaleLowerCase()
+                      )}_${index}`}
+                      className="text-sm md:text-md truncate max-w-[110px] pl-0"
+                      align="left"
+                    >
+                      {header}
+                    </TableHead>
+                  </>
+                ))}
+              </TableRow>
+            </TableHeader>
+            {gdata.length > 0 ? (
+              <TableBody>
+                {gdata.slice(0, 60).map((row: any, index) => (
+                  <TableRow
+                    className="hover:bg-transparent border-[#7c7c8d]"
                     key={`${formatedString(
-                      header.toLocaleLowerCase()
+                      row.address.toLocaleLowerCase()
                     )}_${index}`}
-                    className="text-sm md:text-md truncate max-w-[110px] pl-0"
-                    align="left"
                   >
-                    {header}
-                  </TableHead>
-                </>
-              ))}
-            </TableRow>
-          </TableHeader>
-          {gdata.length > 0 ? (
-            <TableBody>
-              {gdata.slice(0, 60).map((row: any, index) => (
-                <TableRow
-                  className="hover:bg-transparent border-[#7c7c8d]"
-                  key={`${formatedString(
-                    row.address.toLocaleLowerCase()
-                  )}_${index}`}
-                >
-                  <TableCell className="font-medium text-left py-2 pl-0">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-sm text-[#d9f8ff]">
-                        {row.symbol}
-                      </span>
-                      <div className="flex items-center mt-2 w-max gap-4">
-                        {row.pool_logos.map((icon: any, id: number) => (
-                          <Image
-                            src={icon}
-                            alt={`${row.symbol}_logo-icon`}
-                            className="aspect-square object-contain w-9 h-9"
-                            width={36}
-                            height={36}
-                            key={id}
-                          />
-                        ))}
+                    <TableCell className="font-medium text-left py-2 pl-0">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm text-[#d9f8ff]">
+                          {row.symbol}
+                        </span>
+                        <div className="flex items-center mt-2 w-max gap-4">
+                          {row.pool_logos.map((icon: any, id: number) => (
+                            <Image
+                              src={icon}
+                              alt={`${row.symbol}_logo-icon`}
+                              className="aspect-square object-contain w-9 h-9"
+                              width={36}
+                              height={36}
+                              key={id}
+                            />
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-sm">{row.protocol}</span>
-                      <div className="min-h-[36px] flex items-end">
-                        <span className="text-xl">{row.protocol_sub}</span>
+                    </TableCell>
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm">{row.protocol}</span>
+                        <div className="min-h-[36px] flex items-end">
+                          <span className="text-xl">{row.protocol_sub}</span>
+                        </div>
                       </div>
-                    </div>
+                    </TableCell>
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm">
+                          ${formatedNumber(row.protocol_tvl, 2, true)}
+                        </span>
+                        <Button
+                          size="sm"
+                          className="max-w-[150px] text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
+                          onClick={onAddLiquidityOpen}
+                          style={{
+                            boxShadow: "0 0 4px #88d6ff",
+                          }}
+                        >
+                          Add Liquidity
+                        </Button>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm">
+                          ${formatedNumber(row.pool_liq, 2, true)}
+                        </span>
+                        <span className="text-sm">
+                          Value: ${formatedNumber(row.value, 2, true)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm">
+                          ${formatedNumber(row.volume, 2, true)}
+                        </span>
+                        <span className="text-sm">
+                          LP Tokens: {formatedNumber(row.lp_tokens, 2, true)} LP
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm">
+                          ${formatedNumber(row.fee, 2, false)}
+                        </span>
+                        <span className="text-sm">
+                          Your share: {formatedNumber(row.your_share, 2, false)}
+                          %{" <"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm">
+                          {formatedNumber(row.apr, 2, true)}%
+                        </span>
+                        <Button
+                          size="sm"
+                          className="max-w-[150px] text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
+                          style={{
+                            boxShadow: "0 0 4px #88d6ff",
+                          }}
+                          onClick={onRemoveLiquidityOpen}
+                        >
+                          Remove Liquidity
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            ) : (
+              <TableRow className="hover:bg-transparent border-[#7c7c8d]">
+                {d_data.headers.map((header, index) => (
+                  <TableCell
+                    className="font-medium text-left text-[#7c7c8d] py-2 pl-0"
+                    key={`${header}_skeleton_${index}`}
+                  >
+                    <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
                   </TableCell>
-                  <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-sm">
-                        ${formatedNumber(row.protocol_tvl, 2, true)}
-                      </span>
-                      <Button
-                        size="sm"
-                        className="max-w-[150px] text-xs rounded-full"
-                        onClick={onAddLiquidityOpen}
-                        style={{
-                          boxShadow: "0 0 4px #88d6ff",
-                        }}
-                      >
-                        Add Liquidity
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-sm">
-                        ${formatedNumber(row.pool_liq, 2, true)}
-                      </span>
-                      <span className="text-sm">
-                        Value: ${formatedNumber(row.value, 2, true)}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-sm">
-                        ${formatedNumber(row.volume, 2, true)}
-                      </span>
-                      <span className="text-sm">
-                        LP Tokens: {formatedNumber(row.lp_tokens, 2, true)} LP
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-sm">
-                        ${formatedNumber(row.fee, 2, false)}
-                      </span>
-                      <span className="text-sm">
-                        Your share: {formatedNumber(row.your_share, 2, false)}%
-                        {" <"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-sm">
-                        {formatedNumber(row.apr, 2, true)}%
-                      </span>
-                      <Button
-                        size="sm"
-                        className="max-w-[150px] text-xs rounded-full"
-                        style={{
-                          boxShadow: "0 0 4px #88d6ff",
-                        }}
-                      >
-                        Remove Liquidity
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          ) : (
-            <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-              {d_data.headers.map((header, index) => (
-                <TableCell
-                  className="font-medium text-left text-[#7c7c8d] py-2 pl-0"
-                  key={`${header}_skeleton_${index}`}
-                >
-                  <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                </TableCell>
-              ))}
-            </TableRow>
-          )}
-        </Table>
+                ))}
+              </TableRow>
+            )}
+          </Table>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,18 @@
 import {
   AddLiquidityModal,
+  RemoveLiquidityModal,
   SettingsModal,
   TradeImportMarketModal,
-  TradeMarketModal,
+  CreatePositionModal,
+  ClaimAllPendingModal,
+  ManageModal,
+  RemoveAllInModal,
+  RemoveAllOutModal,
+  RemoveFarmModal,
+  ClaimPendingModal,
+  NFTGalleryDetailsModal,
+  NFTGalleryBurnModal,
+  NFTGallerySendModal,
 } from "@/components/modals";
 
 type Props = {};
@@ -12,7 +22,18 @@ const ModalProvider = (props: Props) => {
     <>
       <TradeImportMarketModal />
       <AddLiquidityModal />
+      <RemoveLiquidityModal />
       <SettingsModal />
+      <CreatePositionModal />
+      <ClaimAllPendingModal />
+      <ManageModal />
+      <RemoveAllInModal />
+      <RemoveAllOutModal />
+      <RemoveFarmModal />
+      <ClaimPendingModal />
+      <NFTGalleryDetailsModal />
+      <NFTGalleryBurnModal />
+      <NFTGallerySendModal />
     </>
   );
 };
