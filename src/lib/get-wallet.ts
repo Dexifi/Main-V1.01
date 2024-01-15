@@ -12,6 +12,7 @@ export const getPrice = async (symbol: string) => {
 export const findToken = async (mintOrSymbol: string) => {
   const tokens = await new TokenListProvider().resolve();
   const tokenList = tokens.filterByChainId(101).getList();
+
   let tokenInfo =
     tokenList.find((t) => t.address === mintOrSymbol) ||
     tokenList.find((t) => t.symbol === mintOrSymbol);

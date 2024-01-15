@@ -11,78 +11,95 @@ import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import { cn } from "@/lib/utils";
 import { Cell, Pie, PieChart } from "recharts";
+import useConnection from "@/hooks/useConnection";
+import useWalletBalance from "@/hooks/useWalletBalance";
+import useLend from "@/hooks/useLend";
+import { PublicKey } from "@solana/web3.js";
+import { useEffect } from "react";
 
 type Props = {
   isEXTRASMALL: boolean;
 };
-
-const data = {
-  title: "Net Worth",
-  price: 100000,
-  table: {
-    header: ["Value", "Pending Value", "Value/NetWorth %"],
-    rows: [
-      {
-        title: "Wallet Balance",
-        color: "text-[#fa01d2]",
-        background: "bg-[#fa01d2]",
-        value: 25000,
-        pending: 0,
-        worth: 25,
-      },
-      {
-        title: "Staking",
-        color: "text-[#00b127]",
-        background: "bg-[#00b127]",
-        value: 12500,
-        pending: 150,
-        worth: 12.5,
-      },
-      {
-        title: "Lending",
-        color: "text-[#00ffec]",
-        background: "bg-[#00ffec]",
-        value: 12500,
-        pending: 0,
-        worth: 12.5,
-      },
-      {
-        title: "Trading",
-        color: "text-[#c95901]",
-        background: "bg-[#c95901]",
-        value: 12500,
-        pending: 0,
-        worth: 12.5,
-      },
-      {
-        title: "Liquidity",
-        color: "text-[#efd301]",
-        background: "bg-[#efd301]",
-        value: 12500,
-        pending: 0,
-        worth: 12.5,
-      },
-      {
-        title: "Farm",
-        color: "text-[#ba0000]",
-        background: "bg-[#ba0000]",
-        value: 0,
-        pending: 0,
-        worth: 2,
-      },
-      {
-        title: "NFT",
-        color: "text-[#7000ff]",
-        background: "bg-[#7000ff]",
-        value: 25000,
-        pending: 0,
-        worth: 10.5,
-      },
-    ],
-  },
-};
-
 const Networth = ({ isEXTRASMALL }: Props) => {
+  const { connection } = useConnection();
+  // const { publicKey, connect } = useWallet();
+  const publicKey = new PublicKey(
+    "BXUTgx4HZ2aqXALvvSXr5NeNhVABw6VmhjXhQWuGmK6d"
+  );
+  const { tokens, walletBalance } = useWalletBalance(connection, publicKey);
+  // const { stakes } = useStaking(connection, publicKey);
+  const { getLends } = useLend(connection, publicKey);
+
+  useEffect(() => {
+    getLends();
+  }, []);
+
+  const data = {
+    title: "Net Worth",
+    price: 100000,
+    table: {
+      header: ["Value", "Pending Value", "Value/NetWorth %"],
+      rows: [
+        {
+          title: "Wallet Balance",
+          color: "text-[#fa01d2]",
+          background: "bg-[#fa01d2]",
+          value: walletBalance,
+          pending: 0,
+          worth: walletBalance,
+        },
+        {
+          title: "Staking",
+          color: "text-[#00b127]",
+          background: "bg-[#00b127]",
+          value: 12500,
+          pending: 150,
+          worth: 12.5,
+        },
+        {
+          title: "Lending",
+          color: "text-[#00ffec]",
+          background: "bg-[#00ffec]",
+          value: 12500,
+          pending: 0,
+          worth: 12.5,
+        },
+        {
+          title: "Trading",
+          color: "text-[#c95901]",
+          background: "bg-[#c95901]",
+          value: 12500,
+          pending: 0,
+          worth: 12.5,
+        },
+        {
+          title: "Liquidity",
+          color: "text-[#efd301]",
+          background: "bg-[#efd301]",
+          value: 12500,
+          pending: 0,
+          worth: 12.5,
+        },
+        {
+          title: "Farm",
+          color: "text-[#ba0000]",
+          background: "bg-[#ba0000]",
+          value: 0,
+          pending: 0,
+          worth: 2,
+        },
+        {
+          title: "NFT",
+          color: "text-[#7000ff]",
+          background: "bg-[#7000ff]",
+          value: 25000,
+          pending: 0,
+          worth: 10.5,
+        },
+      ],
+    },
+  };
+
   const COLORS = [
     "#fa01d2",
     "#00b127",
@@ -92,6 +109,7 @@ const Networth = ({ isEXTRASMALL }: Props) => {
     "#ba0000",
     "#7000ff",
   ];
+
   return (
     <div className="w-full flex flex-wrap justify-between gap-5">
       <div

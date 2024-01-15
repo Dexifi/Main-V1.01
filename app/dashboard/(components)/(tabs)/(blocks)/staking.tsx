@@ -37,22 +37,22 @@ const Staking = ({ isEXTRASMALL }: Props) => {
     if (publicKey === null) {
       return;
     }
-    const data = await connection.getParsedProgramAccounts(
-      new PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"),
-      {
-        filters: [
-          { dataSize: 88 },
-          {
-            memcmp: {
-              offset: 40,
-              bytes: publicKey.toString(),
-            },
-          },
-        ],
-      }
-    );
-
-    setData(data);
+    // const data = await connection.getParsedProgramAccounts(
+    //   new PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"),
+    //   {
+    //     filters: [
+    //       { dataSize: 88 },
+    //       {
+    //         memcmp: {
+    //           offset: 40,
+    //           bytes: publicKey.toString(),
+    //         },
+    //       },
+    //     ],
+    //   }
+    // );
+    //
+    // setData(data);
   };
 
   useEffect(() => {

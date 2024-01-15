@@ -10,11 +10,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useSettingsModal } from "@/lib/stores/settings.store";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import {
+  useWalletModal,
+  WalletMultiButton,
+} from "@solana/wallet-adapter-react-ui";
 import { Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { styled } from "@mui/system";
 
 type Props = {
   isMobile: boolean;
@@ -22,7 +26,7 @@ type Props = {
 type ActionProps = {
   image?: React.ReactNode;
   title?: string;
-  click: () => void;
+  click?: () => void;
 };
 
 const Header = ({ isMobile }: Props) => {
@@ -50,17 +54,6 @@ const Header = ({ isMobile }: Props) => {
           onOpen();
         } else {
           onOpen();
-        }
-      },
-    },
-    {
-      title: "Select Wallet",
-      click: () => {
-        if (menu) {
-          setMenu(false);
-          setVisible(true);
-        } else {
-          setVisible(true);
         }
       },
     },
@@ -176,24 +169,33 @@ const Header = ({ isMobile }: Props) => {
       {!isMobile ? (
         <div className="flex justify-between items-center gap-x-6">
           {actions.map((action, index) => (
-            <Button
-              key={index}
-              onClick={action.click}
-              size={action.image ? "icon" : "default"}
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border"
-              style={{
-                border: "1px solid #D9F8FF",
-                boxShadow: "0 0 4px 1px rgba(217, 248, 255, 0.25)",
-              }}
-            >
-              {action.image ? (
-                action.image
-              ) : (
-                <p className="text-lg leading-[.7] block text-center h-max translate-y-1">
-                  {action.title}
-                </p>
-              )}
-            </Button>
+            <>
+              <Button
+                key={index}
+                onClick={action.click}
+                size={action.image ? "icon" : "default"}
+                className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border"
+                style={{
+                  border: "1px solid #D9F8FF",
+                  boxShadow: "0 0 4px 1px rgba(217, 248, 255, 0.25)",
+                }}
+              >
+                {action.image ? (
+                  action.image
+                ) : (
+                  <p className="text-lg leading-[.7] block text-center h-max translate-y-1">
+                    {action.title}
+                  </p>
+                )}
+              </Button>
+              <div
+                className={
+                  "w-[200px] [&>div>button]:bg-transparent [&>div>button]:!border-solid [&>div>button]:!border [&>div>button]:!rounded-3xl  [&>div>button]:border-[#D9F8FF]"
+                }
+              >
+                <WalletMultiButton />
+              </div>
+            </>
           ))}
         </div>
       ) : (

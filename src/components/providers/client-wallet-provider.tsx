@@ -1,5 +1,5 @@
 import type { WalletProviderProps } from "@solana/wallet-adapter-react";
-import { WalletContext, WalletProvider } from "@solana/wallet-adapter-react";
+import { WalletProvider } from "@solana/wallet-adapter-react";
 
 import { NETWORK } from "@/lib/endpoints";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
@@ -15,7 +15,7 @@ export function ClientWalletProvider(
   props: Omit<WalletProviderProps, "wallets">
 ): JSX.Element {
   const wallets = useMemo(
-    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
+    () => [new SolflareWalletAdapter(), new PhantomWalletAdapter()],
     [NETWORK]
   );
 

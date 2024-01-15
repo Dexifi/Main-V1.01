@@ -12,6 +12,7 @@ import {
 } from "@solana/wallet-adapter-wallets";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 
 const WalletProvider = dynamic(
   () => import("@/components/providers/client-wallet-provider"),
@@ -38,7 +39,9 @@ const DashboardProvider = ({ children }: Props) => {
   );
   return (
     <ConnectionProvider endpoint={NETWORK}>
-      <WalletProvider autoConnect>{children}</WalletProvider>
+      <WalletProvider autoConnect>
+        <WalletModalProvider>{children}</WalletModalProvider>
+      </WalletProvider>
     </ConnectionProvider>
   );
 };

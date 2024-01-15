@@ -1,15 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 import { useMediaQuery } from "usehooks-ts";
 import { Backgrounds, Footer, Header, StatisticItem } from "./(components)";
-import { connection } from "@/lib/get-connections";
 import Image from "next/image";
+import useConnection from "@/hooks/useConnection";
+import useMagicEden from "@/hooks/useMagicEden";
 
 type StatisticProps = {
   columns: {
@@ -34,12 +33,13 @@ type StatisticProps = {
 
 const Main = () => {
   const router = useRouter();
-
+  const { connection } = useConnection();
   const onComponent5Click = useCallback(() => {
     router.push("/dashboard");
   }, [router]);
   const isMobile = useMediaQuery("(max-width: 990px)");
-
+  const { total } = useMagicEden();
+  // console.log(total);
   const [transactionsCount, setTransactionsCount] = useState(0);
   const [isClient, setIsClient] = useState<boolean>(false);
 
@@ -51,15 +51,17 @@ const Main = () => {
     window.open("https://dexifi-finances.gitbook.io/dexifi-documentation/");
   }, []);
 
-  connection
-    .getTransactionCount()
-    .then((res: number) => {
-      setTransactionsCount(res);
-    })
-    .catch((error: any) => {
-      setTransactionsCount(123442859844);
-      console.log(error);
-    });
+  useEffect(() => {
+    connection
+      .getTransactionCount()
+      .then((res: number) => {
+        setTransactionsCount(res);
+      })
+      .catch((error: any) => {
+        setTransactionsCount(123442859844);
+        console.log(error);
+      });
+  }, []);
 
   useEffect(() => {
     setIsClient(true);
@@ -149,7 +151,7 @@ const Main = () => {
             title: "MARKET Value",
             position: "start",
             className: "flex flex-col",
-            value: `168,897 SOL`,
+            value: `${Math.round(total).toLocaleString("en")} SOL`,
             valueCN: "pl-2 leading-7",
           },
         },
