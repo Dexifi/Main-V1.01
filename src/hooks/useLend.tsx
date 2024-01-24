@@ -1,40 +1,60 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
-
-import { obligationsAtom } from "@/stores/obligations";
-import { useAtom } from "jotai";
-import BigNumber from "bignumber.js";
-import { setPublicKeyAtom } from "@/stores/wallet";
+import {
+  ObligationStats,
+  SolendMarket,
+  SolendObligation,
+} from "@solendprotocol/solend-sdk/index";
 
 const useLend = (connection: Connection, publicKey: PublicKey | null) => {
   const [loading, setLoading] = useState(true);
-  const [obligations] = useAtom(obligationsAtom);
-  const [p, setPkey] = useAtom(setPublicKeyAtom);
+  const [markets, setMarkets] = useState<SolendMarket>();
+  const [userObligationState, setUserObligationState] =
+    useState<ObligationStats>();
 
-  console.log("obligations", obligations);
-
-  const getSolendLends = useCallback(async () => {
+  const getMarkets = useCallback(async () => {
     if (!publicKey) return;
+    const reserves = [];
+    //  Initial Solend Markets
+    const m = await SolendMarket.initialize(connection, "production");
 
-    const yourSupply = obligations.reduce(
-      (acc, o) => o.totalSupplyValue.plus(acc),
-      new BigNumber(0)
-    );
-    console.log("yourSupply", yourSupply.toString());
-  }, [obligations, publicKey]);
+    //  get User Data in Solend Wallets
+    const walletObligations = await m.fetchObligationByWallet(publicKey);
+
+    // // Fine user Reserve in Solend Markets
+    // const userReserves = walletObligations?.deposits.map((deposit) =>
+    //   m.reserves.find(
+    //     (reserve) => reserve.stats?.mintAddress === deposit.mintAddress
+    //   )
+    // );
+
+    // Set User Obligation State: deposit, borrow, positions and etc
+    setUserObligationState(walletObligations?.obligationStats);
+
+    // setMarkets
+    setMarkets(m);
+
+    setLoading(false);
+  }, [connection, publicKey]);
+
+  useEffect(() => {
+    if (publicKey && connection) {
+      getMarkets();
+    }
+  }, [connection, getMarkets, publicKey]);
 
   const getLends = useCallback(async () => {
     if (!publicKey) return;
     let lend = 0;
-    await getSolendLends();
-    const transactions = await connection.getSignaturesForAddress(publicKey, {
-      limit: 1000,
-    });
+    // await getSolendLends();
+    // const transactions = await connection.getSignaturesForAddress(publicKey, {
+    //   limit: 1000,
+    // });
 
     return lend;
-  }, [connection, getSolendLends, publicKey]);
+  }, [publicKey]);
 
-  return { getLends, loading };
+  return { getLends, loading, userObligationState };
 };
 
 export default useLend;

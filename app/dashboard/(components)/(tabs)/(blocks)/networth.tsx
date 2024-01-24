@@ -10,34 +10,38 @@ import {
 import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import { Cell, Pie, PieChart } from "recharts";
 import useConnection from "@/hooks/useConnection";
 import useWalletBalance from "@/hooks/useWalletBalance";
 import useLend from "@/hooks/useLend";
-import { PublicKey } from "@solana/web3.js";
-import { useEffect } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useMemo } from "react";
+import useTrade from "@/hooks/useTrade";
+import useLiquidity from "@/hooks/useLiquidity";
 
 type Props = {
   isEXTRASMALL: boolean;
 };
 const Networth = ({ isEXTRASMALL }: Props) => {
   const { connection } = useConnection();
-  // const { publicKey, connect } = useWallet();
-  const publicKey = new PublicKey(
-    "BXUTgx4HZ2aqXALvvSXr5NeNhVABw6VmhjXhQWuGmK6d"
-  );
+  const { publicKey } = useWallet();
   const { tokens, walletBalance } = useWalletBalance(connection, publicKey);
   // const { stakes } = useStaking(connection, publicKey);
-  const { getLends } = useLend(connection, publicKey);
-
-  useEffect(() => {
-    getLends();
-  }, []);
+  const { userObligationState } = useLend(connection, publicKey);
+  const { ownerOpenOrders, totalPrices: totalTrade } = useTrade(
+    connection,
+    publicKey
+  );
+  const {} = useLiquidity(connection, publicKey);
+  const netWorth = useMemo(
+    () =>
+      walletBalance + (userObligationState?.userTotalDeposit ?? 0) + totalTrade,
+    [walletBalance, userObligationState?.userTotalDeposit, totalTrade]
+  );
 
   const data = {
     title: "Net Worth",
-    price: 100000,
+    price: netWorth,
     table: {
       header: ["Value", "Pending Value", "Value/NetWorth %"],
       rows: [
@@ -47,7 +51,7 @@ const Networth = ({ isEXTRASMALL }: Props) => {
           background: "bg-[#fa01d2]",
           value: walletBalance,
           pending: 0,
-          worth: walletBalance,
+          worth: (walletBalance / netWorth) * 100,
         },
         {
           title: "Staking",
@@ -61,17 +65,18 @@ const Networth = ({ isEXTRASMALL }: Props) => {
           title: "Lending",
           color: "text-[#00ffec]",
           background: "bg-[#00ffec]",
-          value: 12500,
+          value: userObligationState?.userTotalDeposit.toFixed(2),
           pending: 0,
-          worth: 12.5,
+          worth:
+            ((userObligationState?.userTotalDeposit ?? 0) / netWorth) * 100,
         },
         {
           title: "Trading",
           color: "text-[#c95901]",
           background: "bg-[#c95901]",
-          value: 12500,
+          value: totalTrade,
           pending: 0,
-          worth: 12.5,
+          worth: (totalTrade / netWorth) * 100,
         },
         {
           title: "Liquidity",
@@ -150,13 +155,13 @@ const Networth = ({ isEXTRASMALL }: Props) => {
                   <span className={cn("ml-1", row.color)}>*</span>
                 </TableCell>
                 <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                  ${formatedNumber(row.value)}
+                  ${formatedNumber(Number(row.value))}
                 </TableCell>
                 <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                   ${formatedNumber(row.pending)}
                 </TableCell>
                 <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                  {formatedNumber(row.worth)}%
+                  {formatedNumber(Number(row.worth))}%
                 </TableCell>
               </TableRow>
             ))}
@@ -177,12 +182,15 @@ const Networth = ({ isEXTRASMALL }: Props) => {
               </TableCell>
               <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                 {formatedNumber(
-                  data.table.rows
-                    .map((row) => row.worth)
-                    .reduce(
-                      (accumulator, currentValue) => accumulator + currentValue,
-                      0
-                    )
+                  Number(
+                    data.table.rows
+                      .map((row) => row.worth)
+                      .reduce(
+                        (accumulator, currentValue) =>
+                          accumulator + currentValue,
+                        0
+                      )
+                  )
                 )}
                 %
               </TableCell>
@@ -199,30 +207,30 @@ const Networth = ({ isEXTRASMALL }: Props) => {
         id="pie-chart"
         style={{ boxShadow: "0 0 4px #88d6ff" }}
       >
-          <PieChart
-            width={isEXTRASMALL ? 160 : 200}
-            height={isEXTRASMALL ? 160 : 200}
-            style={{
-              margin: "0 auto",
-              zIndex: 10,
-            }}
+        <PieChart
+          width={isEXTRASMALL ? 160 : 200}
+          height={isEXTRASMALL ? 160 : 200}
+          style={{
+            margin: "0 auto",
+            zIndex: 10,
+          }}
+        >
+          <Pie
+            data={data.table.rows}
+            innerRadius={60}
+            outerRadius={80}
+            paddingAngle={5}
+            dataKey="worth"
           >
-            <Pie
-              data={data.table.rows}
-              innerRadius={60}
-              outerRadius={80}
-              paddingAngle={5}
-              dataKey="worth"
-            >
-              {data.table.rows.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  className="outline-none"
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-          </PieChart>
+            {data.table.rows.map((_, index) => (
+              <Cell
+                key={`cell-${index}`}
+                className="outline-none"
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+        </PieChart>
         <div className="flex flex-col gap-y-1 w-full">
           {data.table.rows.map((entry, index) => (
             <div

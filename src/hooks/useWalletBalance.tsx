@@ -31,6 +31,7 @@ const useWalletBalance = (
 
   const getTokens = useCallback(async () => {
     if (!publicKey || !connection || !loading) return;
+    setLoading(false);
     const localTokens = [];
     const walletTokens = await connection.getParsedProgramAccounts(
       TOKEN_PROGRAM_ID,
@@ -63,7 +64,6 @@ const useWalletBalance = (
         logoURI: tokenDetails?.logoURI,
         address: tokenDetails?.address,
       });
-      setLoading(false);
     }
     // get SOL Balance
     const solBalance = await connection.getBalance(publicKey);

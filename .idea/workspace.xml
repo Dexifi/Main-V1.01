@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="fix start issues">
+      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/configuration/ammPools.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/useLiquidity.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/useTrade.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/fetchAmmInfo.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/formatClmmConfig.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/formatClmmKeys.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/networth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/networth.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lend/(components)/(modals)/supply-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/lend/(components)/(modals)/supply-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useLend.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useLend.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useWalletBalance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useWalletBalance.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/get-wallet.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/get-wallet.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/numbers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/numbers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/metadata.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/modal.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/obligations.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/pools.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/pools.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/shared.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/wallet.ts" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="adaptive/v2" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feat/#1" />
+                    <option name="lastUsedInstant" value="1705314364" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="adaptive/v2" />
+                    <option name="lastUsedInstant" value="1705312096" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1704869907" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2akk2TRgUKfwV2oI1MWTTIjWUMW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/#1&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Codes/Dexify_v2/src&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;,
+      &quot;Markdown&quot;
+    ]
+  }
+}</component>
+  <component name="ReactBuddySettings">
+    <option name="extensionsIgnore" value="true" />
+  </component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\src" />
+      <recent name="D:\Codes\Dexify_v2\src\hooks" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="" />
+      <created>1704869757015</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1704869757015</updated>
+      <workItem from="1704869758327" duration="818000" />
+      <workItem from="1704871495403" duration="6813000" />
+      <workItem from="1704881020818" duration="7346000" />
+      <workItem from="1704892410375" duration="4374000" />
+      <workItem from="1704899989961" duration="2608000" />
+      <workItem from="1704963048544" duration="15519000" />
+      <workItem from="1705131613791" duration="6145000" />
+      <workItem from="1705166229055" duration="4269000" />
+      <workItem from="1705222112159" duration="14645000" />
+      <workItem from="1705310777923" duration="10395000" />
+      <workItem from="1705499902393" duration="1812000" />
+      <workItem from="1705583038115" duration="11155000" />
+      <workItem from="1705598697396" duration="3234000" />
+      <workItem from="1705740652840" duration="19815000" />
+      <workItem from="1705775671117" duration="708000" />
+      <workItem from="1705821220501" duration="16719000" />
+      <workItem from="1705914069354" duration="16997000" />
+      <workItem from="1705939798033" duration="837000" />
+      <workItem from="1705992158477" duration="9842000" />
+      <workItem from="1706019117691" duration="2794000" />
+      <workItem from="1706027658988" duration="2492000" />
+      <workItem from="1706083132932" duration="620000" />
+    </task>
+    <task id="LOCAL-00001" summary="network connections">
+      <option name="closed" value="true" />
+      <created>1705310813036</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1705310813036</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fix start issues">
+      <option name="closed" value="true" />
+      <created>1705312072844</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705312072844</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="network connections" />
+    <MESSAGE value="fix start issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix start issues" />
+  </component>
+</project>

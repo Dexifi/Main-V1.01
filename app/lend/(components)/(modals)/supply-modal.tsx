@@ -77,7 +77,7 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
 
   const { toast } = useToast();
   if (isLoading && publicKey) {
-    if (reserve.config.liquidityToken.symbol === "SOL")
+    if (reserve?.config?.liquidityToken?.symbol === "SOL")
       connection.getBalance(publicKey).then((res: any) => {
         setTokenBalance(res / LAMPORTS_PER_SOL);
         setIsLoading(false);

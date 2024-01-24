@@ -6,7 +6,7 @@ import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export const getPrice = async (symbol: string) => {
   let price = await axios.get(`https://price.jup.ag/v4/price?ids=${symbol}`);
-  return price.data.data[symbol].price;
+  return price?.data?.data[symbol]?.price;
 };
 
 export const findToken = async (mintOrSymbol: string) => {

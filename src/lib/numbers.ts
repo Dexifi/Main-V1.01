@@ -1,6 +1,10 @@
 "use client";
 
+import { isString } from "lodash";
+
 const formatedNumber = (x: number, fixed: number = 2, isMobile = false) => {
+  if (isNaN(x) || isString(x)) return "0";
+
   const lookup = [
     { value: 1, symbol: "" },
     { value: 1e3, symbol: "k" },
@@ -10,7 +14,6 @@ const formatedNumber = (x: number, fixed: number = 2, isMobile = false) => {
     { value: 1e15, symbol: "P" },
     { value: 1e18, symbol: "E" },
   ];
-
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
   let item = lookup
     .slice()
@@ -26,9 +29,9 @@ const formatedNumber = (x: number, fixed: number = 2, isMobile = false) => {
   return isMobile
     ? value
     : x
-        .toFixed(fixed)
-        .toString()
-        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        ?.toFixed(fixed)
+        ?.toString()
+        ?.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
 
 export default formatedNumber;
