@@ -18,6 +18,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useMemo } from "react";
 import useTrade from "@/hooks/useTrade";
 import useLiquidity from "@/hooks/useLiquidity";
+import useFarm from "@/hooks/useFarm";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -32,7 +33,8 @@ const Networth = ({ isEXTRASMALL }: Props) => {
     connection,
     publicKey
   );
-  const {} = useLiquidity(connection, publicKey);
+  const { clmmTotal, ammTotal } = useLiquidity(connection, publicKey);
+  const {} = useFarm(connection, publicKey);
   const netWorth = useMemo(
     () =>
       walletBalance + (userObligationState?.userTotalDeposit ?? 0) + totalTrade,
@@ -82,9 +84,9 @@ const Networth = ({ isEXTRASMALL }: Props) => {
           title: "Liquidity",
           color: "text-[#efd301]",
           background: "bg-[#efd301]",
-          value: 12500,
+          value: ammTotal + clmmTotal,
           pending: 0,
-          worth: 12.5,
+          worth: ((ammTotal + clmmTotal) / netWorth) * 100,
         },
         {
           title: "Farm",

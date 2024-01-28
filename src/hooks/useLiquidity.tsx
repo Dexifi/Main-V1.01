@@ -21,7 +21,8 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
   const [tokenAccount, setTokenAccount] = useState<TokenAccount[]>([]);
   const [ammPools] = useAtom(raydiumAmmPoolsDefault);
   const [depositList, setDepositList] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [ammTotal, setAmmTotal] = useState(0);
+  const [clmmTotal, setClmmTotal] = useState(0);
 
   const calculateTotal = useCallback(async (list: DepositsList) => {
     let t = 0;
@@ -33,10 +34,10 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
       //   calculate total
       t = t + item.userBaseShare * basePrice + item.userQuoteShare * quotePrice;
     }
-    setTotal(t);
+    setAmmTotal(t);
   }, []);
 
-  const getClmmAccounts = useCallback(
+  const getClmm = useCallback(
     async (tokenAccounts: TokenAccount[], ownerKey: PublicKey) => {
       const clmmKeys = await formatClmmKeys(
         connection,
@@ -56,20 +57,71 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
         },
       });
       const clmmList = [];
+      // filter clmm accounts on position account
       for (const [key, value] of Object.entries(infos)) {
         if (value.positionAccount) {
           clmmList.push({ value, key });
         }
       }
-      console.log(clmmList);
+
+      for (const p of clmmList) {
+        let clmmPoolDetails: ClmmPoolDetailsType = {
+          tokenAPrice: 0,
+          tokenBPrice: 0,
+          positions: [],
+        };
+        // get Pool Info
+        // console.log("currentPrice", p.value.state.currentPrice.toNumber());
+        // console.log("mintA", p.value.state.mintA);
+        // console.log("mintB", p.value.state.mintB);
+        const tokenAPrice = await getPrice(p.value.state.mintA.mint.toString());
+        const tokenBPrice = await getPrice(p.value.state.mintB.mint.toString());
+
+        clmmPoolDetails = { ...clmmPoolDetails, tokenAPrice, tokenBPrice };
+
+        p.value.positionAccount?.forEach((position) => {
+          // handle position amount
+          // console.log("tokenFeeAmountA", position.tokenFeeAmountA.toNumber());
+          // console.log("tokenFeeAmountB", position.tokenFeeAmountB.toNumber());
+          const tokenAmountA =
+            position.amountA.toNumber() / 10 ** p.value.state.mintA.decimals;
+          const tokenAmountB =
+            position.amountB.toNumber() / 10 ** p.value.state.mintB.decimals;
+          clmmPoolDetails = {
+            ...clmmPoolDetails,
+            positions: [
+              ...clmmPoolDetails.positions,
+              {
+                tokenAmountA,
+                tokenAmountB,
+              },
+            ],
+          };
+          const totalPrice =
+            tokenAmountA * tokenAPrice + tokenAmountB * tokenBPrice;
+          setClmmTotal(totalPrice);
+
+          // console.log("liquidity", position.liquidity.toNumber());
+
+          // handle Reward of position
+          // position.rewardInfos.forEach((reward) => {
+          //   console.log("pandingReward", reward.pendingReward.toNumber());
+          //   console.log("rewardAmountOwed", reward.rewardAmountOwed.toNumber());
+          //   console.log(
+          //     "growthInsideLastX64",
+          //     reward.growthInsideLastX64.toNumber()
+          //   );
+          // });
+        });
+      }
     },
     [connection]
   );
 
-  const getAccounts = async (connection: Connection, ownerKey: PublicKey) => {
+  const getAmm = async (connection: Connection, ownerKey: PublicKey) => {
     setLoading(true);
     const tokenAccounts = await getWalletTokenAccount(connection, ownerKey);
-    getClmmAccounts(tokenAccounts, ownerKey);
+    getClmm(tokenAccounts, ownerKey);
 
     for (const tokenAccount of tokenAccounts) {
       const p = ammPools.find(
@@ -170,11 +222,18 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
     if (connection && owner && load) {
       load = false;
 
-      getAccounts(connection, owner);
+      getAmm(connection, owner);
     }
   }, [connection, owner]);
 
-  return { userPools, total, ammPools, depositList, tokenAccount };
+  return {
+    userPools,
+    ammTotal,
+    clmmTotal,
+    ammPools,
+    depositList,
+    tokenAccount,
+  };
 };
 
 export default useLiquidity;
@@ -213,3 +272,12 @@ type Deposit = {
 };
 
 type DepositsList = Deposit[];
+
+type ClmmPoolDetailsType = {
+  tokenAPrice?: number;
+  tokenBPrice?: number;
+  positions: {
+    tokenAmountA: number;
+    tokenAmountB: number;
+  }[];
+};
