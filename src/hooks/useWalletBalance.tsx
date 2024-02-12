@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { connection } from "@/lib/get-connections";
-import { getBalance } from "@drift-labs/sdk";
-import { findToken, getPrice } from "@/lib/get-wallet";
+import { findToken } from "@/lib/get-wallet";
+import { Token } from "@/types/token";
+import { getPrice } from "@/data/price";
+
 const useWalletBalance = (
   connection: Connection,
   publicKey: PublicKey | null
 ) => {
-  const [tokens, setTokens] = useState<any[]>([]);
+  const [tokens, setTokens] = useState<Token[]>([]);
   const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +33,7 @@ const useWalletBalance = (
   const getTokens = useCallback(async () => {
     if (!publicKey || !connection || !loading) return;
     setLoading(false);
-    const localTokens = [];
+    const localTokens: Token[] = [];
     const walletTokens = await connection.getParsedProgramAccounts(
       TOKEN_PROGRAM_ID,
       {
@@ -55,23 +56,27 @@ const useWalletBalance = (
       const key = token.account.data.parsed.info.mint as string;
       const tokenDetails = await findToken(key);
       if (!tokenDetails?.name) continue;
+      const price = await getPrice(tokenDetails.symbol);
       // @ts-ignore
       const amount = token.account.data.parsed.info.tokenAmount.uiAmount;
       localTokens.push({
-        symbol: tokenDetails?.symbol,
-        name: tokenDetails?.name,
+        ...tokenDetails,
         amount: amount,
-        logoURI: tokenDetails?.logoURI,
-        address: tokenDetails?.address,
+        price: price,
       });
     }
     // get SOL Balance
+    const solPrice = await getPrice("SOL");
     const solBalance = await connection.getBalance(publicKey);
     localTokens.push({
       symbol: "SOL",
       name: "Solana",
       amount: solBalance / LAMPORTS_PER_SOL,
       logoURI: "/solana-copy-2@2x.png",
+      tags: ["native"],
+      decimals: 9,
+      address: "11111111111111111111111111111111",
+      price: solPrice,
     });
     setTokens(localTokens);
   }, [connection, loading, publicKey]);

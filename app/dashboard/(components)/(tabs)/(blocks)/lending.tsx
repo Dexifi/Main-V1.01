@@ -12,6 +12,8 @@ import formatedString from "@/lib/string";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import useLend from "@/hooks/useLend";
+import { connection } from "@/lib/get-connections";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -33,7 +35,10 @@ const Lending = ({ isEXTRASMALL }: Props) => {
   const [gdata, setData] = useState<DataProps[]>([]);
   const { publicKey } = useWallet();
   const [lendValue, setLendValue] = useState(12500);
-
+  const { states, deposits, userObligationState } = useLend(
+    connection,
+    publicKey
+  );
   useEffect(() => {
     gdata.length === 0 &&
       setTimeout(() => {
@@ -69,6 +74,7 @@ const Lending = ({ isEXTRASMALL }: Props) => {
     },
   };
 
+  if (states.length === 0) return <></>;
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5"
@@ -79,7 +85,9 @@ const Lending = ({ isEXTRASMALL }: Props) => {
           <h3>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
-        <span>${formatedNumber(lendValue)}</span>
+        <span>
+          ${formatedNumber(userObligationState?.userTotalDeposit ?? 0)}
+        </span>
       </div>
       {/*  */}
 
@@ -99,7 +107,7 @@ const Lending = ({ isEXTRASMALL }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {gdata.length <= 0 ? (
+            {states.length <= 0 ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   {data.table.header.map((header, index) => (
@@ -114,20 +122,18 @@ const Lending = ({ isEXTRASMALL }: Props) => {
               </>
             ) : (
               <>
-                {gdata.map((row, index) => (
+                {states.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
-                    key={`${formatedString(
-                      row.token.toLocaleLowerCase()
-                    )}_${index}`}
+                    key={`${formatedString(row.symbol)}_${index}`}
                   >
                     <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase">
                       <div className="flex gap-5 items-center justify-between w-full">
-                        {row.token}
+                        {row.symbol}
                         {!isEXTRASMALL ? (
                           <Image
-                            src={row.icon}
-                            alt={`${row.token}_logo-icon`}
+                            src={row.token?.logoURI ?? ""}
+                            alt={`${row.symbol}_logo-icon`}
                             width={24}
                             height={24}
                           />
@@ -136,11 +142,12 @@ const Lending = ({ isEXTRASMALL }: Props) => {
                     </TableCell>
                     <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase">
                       <div className="flex gap-5 items-center justify-between w-full">
-                        {row.protocol}
+                        {/*TODO check if we have other protocols*/}
+                        {"Solend"}
                         {!isEXTRASMALL ? (
                           <Image
-                            src={row.protocol_icon}
-                            alt={`${row.protocol}_logo-icon`}
+                            src={"https://dev.solend.fi/img/logo.png"}
+                            alt={`solend_logo-icon`}
                             width={24}
                             height={24}
                           />
@@ -148,13 +155,19 @@ const Lending = ({ isEXTRASMALL }: Props) => {
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {row.pool}
+                      {"standard"}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.pool_tvl, 2, true)}
+                      $
+                      {formatedNumber(
+                        Number(row.totalLiquidityWads.toString()) /
+                          10 ** (row.token?.decimals ?? 0),
+                        2,
+                        true
+                      )}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.supplied_apr)}
+                      {formatedNumber(row.supplyInterestAPY)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                       {formatedNumber(row.borrowed_apr)}

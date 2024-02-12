@@ -16,23 +16,18 @@ import {
 type Props = {};
 
 const DefaultTab = (props: Props) => {
-  const [walletBalance, setWalletBalance] = useState<number>(340);
   const isEXTRASMALL = useMediaQuery("(max-width: 420px)");
 
   return (
     <div className="flex flex-col w-full h-max min-h-screen items-center gap-5">
-      <Networth isEXTRASMALL={isEXTRASMALL} />
-      <WalletBalance
-        isEXTRASMALL={isEXTRASMALL}
-        walletBalance={walletBalance}
-        setWalletBalance={setWalletBalance}
-      />
-      <Staking isEXTRASMALL={isEXTRASMALL} />
-      <Lending isEXTRASMALL={isEXTRASMALL} />
+      {/*<Networth isEXTRASMALL={isEXTRASMALL} />*/}
+      {/*<WalletBalance isEXTRASMALL={isEXTRASMALL} />*/}
+      {/*<Staking isEXTRASMALL={isEXTRASMALL} />*/}
+      {/*<Lending isEXTRASMALL={isEXTRASMALL} />*/}
       <Trading isEXTRASMALL={isEXTRASMALL} />
-      <Liquidity isEXTRASMALL={isEXTRASMALL} />
-      <Farm isEXTRASMALL={isEXTRASMALL} />
-      <NFT isEXTRASMALL={isEXTRASMALL} />
+      {/*<Liquidity isEXTRASMALL={isEXTRASMALL} />*/}
+      {/*<Farm isEXTRASMALL={isEXTRASMALL} />*/}
+      {/*<NFT isEXTRASMALL={isEXTRASMALL} />*/}
     </div>
   );
 };

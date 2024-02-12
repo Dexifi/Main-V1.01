@@ -1,6 +1,8 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import {
   Clmm,
+  ClmmPoolInfo,
+  ClmmPoolPersonalPosition,
   MAINNET_PROGRAM_ID,
   SPL_ACCOUNT_LAYOUT,
   TOKEN_PROGRAM_ID,
@@ -10,10 +12,23 @@ import { useCallback, useEffect, useState } from "react";
 import { ApiPoolInfoItem } from "@raydium-io/raydium-sdk/src/baseInfo/interface";
 import { useAtom } from "jotai";
 import { raydiumAmmPoolsDefault } from "@/stores/pools";
-import { findToken, getPrice } from "@/lib/get-wallet";
+import { findToken } from "@/lib/get-wallet";
 import { fetchAmmInfo } from "@/lib/fetchAmmInfo";
 import { TokenInfo } from "@solana/spl-token-registry";
 import { formatClmmKeys } from "@/lib/formatClmmKeys";
+import { getPrice } from "@/data/price";
+
+export type ClmmListType = {
+  key: string;
+  tokenA?: TokenInfo;
+  tokenB?: TokenInfo;
+  tokenAPrice?: number;
+  tokenBPrice?: number;
+  value: {
+    state: ClmmPoolInfo;
+    positionAccount?: ClmmPoolPersonalPosition[] | undefined;
+  };
+};
 
 const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
   const [loading, setLoading] = useState(true);
@@ -23,6 +38,7 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
   const [depositList, setDepositList] = useState([]);
   const [ammTotal, setAmmTotal] = useState(0);
   const [clmmTotal, setClmmTotal] = useState(0);
+  const [userClmmDetails, setUserClmmDetails] = useState<ClmmListType[]>([]);
 
   const calculateTotal = useCallback(async (list: DepositsList) => {
     let t = 0;
@@ -39,12 +55,10 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
 
   const getClmm = useCallback(
     async (tokenAccounts: TokenAccount[], ownerKey: PublicKey) => {
+      let clmmLocal: ClmmListType[] = [];
       const clmmKeys = await formatClmmKeys(
         connection,
         MAINNET_PROGRAM_ID.CLMM.toString()
-      );
-      const nftAccounts = tokenAccounts.filter(
-        (t) => t.accountInfo.amount.toNumber() === 1
       );
 
       const infos = await Clmm.fetchMultiplePoolInfos({
@@ -56,14 +70,17 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
           tokenAccounts: tokenAccounts,
         },
       });
-      const clmmList = [];
+
+      const clmmList: ClmmListType[] = [];
       // filter clmm accounts on position account
       for (const [key, value] of Object.entries(infos)) {
         if (value.positionAccount) {
-          clmmList.push({ value, key });
+          const tokenA = await findToken(value.state.mintA.mint.toString());
+          const tokenB = await findToken(value.state.mintB.mint.toString());
+
+          clmmList.push({ value, key, tokenA, tokenB });
         }
       }
-
       for (const p of clmmList) {
         let clmmPoolDetails: ClmmPoolDetailsType = {
           tokenAPrice: 0,
@@ -79,6 +96,7 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
 
         clmmPoolDetails = { ...clmmPoolDetails, tokenAPrice, tokenBPrice };
 
+        clmmLocal.push({ ...p, tokenAPrice, tokenBPrice });
         p.value.positionAccount?.forEach((position) => {
           // handle position amount
           // console.log("tokenFeeAmountA", position.tokenFeeAmountA.toNumber());
@@ -101,17 +119,7 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
             tokenAmountA * tokenAPrice + tokenAmountB * tokenBPrice;
           setClmmTotal(totalPrice);
 
-          // console.log("liquidity", position.liquidity.toNumber());
-
-          // handle Reward of position
-          // position.rewardInfos.forEach((reward) => {
-          //   console.log("pandingReward", reward.pendingReward.toNumber());
-          //   console.log("rewardAmountOwed", reward.rewardAmountOwed.toNumber());
-          //   console.log(
-          //     "growthInsideLastX64",
-          //     reward.growthInsideLastX64.toNumber()
-          //   );
-          // });
+          setUserClmmDetails(clmmLocal);
         });
       }
     },
@@ -217,11 +225,11 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
     }
   }, [userPools, owner, getOpenOrders]);
 
+  // AMM Liquidity load
   useEffect(() => {
     let load = true;
     if (connection && owner && load) {
       load = false;
-
       getAmm(connection, owner);
     }
   }, [connection, owner]);
@@ -233,6 +241,7 @@ const useLiquidity = (connection: Connection, owner: PublicKey | null) => {
     ammPools,
     depositList,
     tokenAccount,
+    userClmmDetails,
   };
 };
 
@@ -244,7 +253,7 @@ export async function getWalletTokenAccount(
   connection: Connection,
   wallet: PublicKey
 ): Promise<TokenAccount[]> {
-  const walletTokenAccount = await connection.getTokenAccountsByOwner(wallet, {
+  const walletTokenAccount = await connection?.getTokenAccountsByOwner(wallet, {
     programId: TOKEN_PROGRAM_ID,
   });
   return walletTokenAccount.value.map((i) => ({

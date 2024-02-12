@@ -6,6 +6,7 @@ export const fetchAmmInfo = async (
   connection: Connection,
   pool: ApiPoolInfoItem
 ) => {
+  if (!pool || !connection) return;
   return await Liquidity.fetchInfo({
     connection,
     poolKeys: {

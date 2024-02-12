@@ -1,16 +1,27 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { Market, OpenOrders, TOKEN_MINTS } from "@openbook-dex/openbook";
-import { TokenInfo, TokenListProvider } from "@solana/spl-token-registry";
-import { findToken, getPrice } from "@/lib/get-wallet";
+import {
+  decodeInstruction,
+  Market,
+  OpenOrders,
+  Orderbook,
+} from "@openbook-dex/openbook";
+import { TokenInfo } from "@solana/spl-token-registry";
+import { findToken } from "@/lib/get-wallet";
+import { getPrice } from "@/data/price";
 
 export type ownerOpenOrders = {
   fee: number;
   mint?: TokenInfo;
   market: Market;
+  baseToken?: TokenInfo;
+  quoteToken?: TokenInfo;
+  side: "buy" | "sell";
+  protocol: string;
+  protocolIcon: string;
+  isDone: boolean;
   order: OpenOrders;
 };
-
 // openbook-dex program address
 const ProgramID = new PublicKey("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX");
 
@@ -37,22 +48,35 @@ const useTrade = (connection: Connection, owner: PublicKey | null) => {
     if (!owner || !connection || !loading) return;
 
     const orders = await OpenOrders.findForOwner(connection, owner, ProgramID);
-
+    console.log(orders);
+    // console.log(orders);
     const data: ownerOpenOrders[] = [];
     for (const order of orders) {
       const market = await Market.load(connection, order.market, {}, ProgramID);
-      const mint = await findToken(market.decoded.baseMint.toString());
+      const ob = new Orderbook(market, order.accountFlags, {});
+      console.log(ob.items(false).)
+      const baseToken = await findToken(market.decoded.baseMint.toString());
+      const quoteToken = await findToken(market.decoded.quoteMint.toString());
       data.push({
-        mint,
+        protocol: "OpenBook",
+        protocolIcon: "/assets/openBook.svg",
+        mint: baseToken,
         market,
+        baseToken,
+        quoteToken,
         order,
-        fee: (order.baseTokenTotal.toNumber() /
-          // @ts-ignore
-          10 ** market._baseSplTokenDecimals) as number,
+        side: order.baseTokenTotal.toNumber() > 0 ? "buy" : "sell",
+        isDone:
+          order.baseTokenFree.toNumber() === order.baseTokenTotal.toNumber() &&
+          order.quoteTokenFree.toNumber() === order.quoteTokenTotal.toNumber(),
+        fee:
+          order.baseTokenTotal.toNumber() / 10 ** (baseToken?.decimals ?? 0) +
+          order.quoteTokenTotal.toNumber() / 10 ** (quoteToken?.decimals ?? 0),
       });
     }
     setOwnerOpenOrders(data);
     calculateTotal(data);
+    // console.log(data, t);
   }, [owner, connection, loading, calculateTotal]);
 
   useEffect(() => {

@@ -9,8 +9,8 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import { getPrice } from "@/lib/get-wallet";
 import { Skeleton } from "../ui/skeleton";
+import { getPrice } from "@/data/price";
 
 type Props = {
   tokens: any;

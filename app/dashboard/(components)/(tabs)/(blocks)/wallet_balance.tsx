@@ -1,12 +1,9 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
+import { memo, useState } from "react";
 
 import { connection } from "@/lib/get-connections";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { TokenInfo, TokenListProvider } from "@solana/spl-token-registry";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import axios from "axios";
+import { PublicKey } from "@solana/web3.js";
 
 import formatedNumber from "@/lib/numbers";
 import { getAllDomains, performReverseLookup } from "@bonfida/spl-name-service";
@@ -32,54 +29,16 @@ import { Button } from "@/components/ui/button";
 import formatedString from "@/lib/string";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import useWalletBalance from "@/hooks/useWalletBalance";
+import { useDomainsForOwner } from "@bonfida/sns-react";
 
 type Props = {
-  walletBalance: number;
-  setWalletBalance: (walletBalance: number) => void;
   isEXTRASMALL: boolean;
 };
 
-const getPrice = async (symbol: string) => {
-  let price = await axios.get(`https://price.jup.ag/v4/price?ids=${symbol}`);
-  return price.data.data[symbol].price;
-};
-
-const findToken = async (mintOrSymbol: string) => {
-  const tokens = await new TokenListProvider().resolve();
-  const tokenList = tokens.filterByChainId(101).getList();
-  let tokenInfo =
-    tokenList.find((t) => t.address === mintOrSymbol) ||
-    tokenList.find((t) => t.symbol === mintOrSymbol);
-  return tokenInfo;
-};
-
-const getTokenBalanceFromWallet = async (owner: PublicKey) => {
-  const walletTokens = await connection.getParsedProgramAccounts(
-    TOKEN_PROGRAM_ID,
-    {
-      filters: [
-        {
-          dataSize: 165, // number of bytes
-        },
-        {
-          memcmp: {
-            offset: 32, // number of bytes
-            bytes: owner.toString(),
-          },
-        },
-      ],
-    }
-  );
-  return walletTokens;
-};
-
-const WalletBalance = ({
-  walletBalance,
-  setWalletBalance,
-  isEXTRASMALL,
-}: Props) => {
-  const [tokensList, setTokensList] = useState<TokenInfo[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+// eslint-disable-next-line react/display-name
+const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [address, setAddress] = useState<string>("");
   const [isTransferDOpen, setIsTransferDOpen] = useState({
     open: false,
@@ -88,83 +47,15 @@ const WalletBalance = ({
 
   const { publicKey } = useWallet();
 
-  async function getSolDomainsFromPublicKey(wallet: string): Promise<string[]> {
-    const ownerWallet = new PublicKey(wallet);
-    const allDomainKeys = await getAllDomains(connection, ownerWallet);
-    const allDomainNames = await Promise.all(
-      allDomainKeys.map((key) => {
-        return performReverseLookup(connection, key);
-      })
-    );
+  const { tokens, walletBalance } = useWalletBalance(connection, publicKey);
+  const domains = useDomainsForOwner(
+    connection,
+    "3tEicmNcV2UHvC85ndbv6y3fFtcuYpEVuiQLC1Cc2wjV"
+  );
 
-    return allDomainNames;
-  }
-
-  const fetchData = async () => {
-    try {
-      let mint: { mint: string; uiAmount: number }[] = [];
-      if (publicKey === null) {
-        return;
-      }
-      const balanceAccounts = await getTokenBalanceFromWallet(publicKey);
-      for (const i of balanceAccounts) {
-        if (i.account.data.parsed.info.tokenAmount.uiAmount > 0)
-          mint.push({
-            mint: i.account.data.parsed.info.mint,
-            uiAmount: i.account.data.parsed.info.tokenAmount.uiAmount,
-          });
-      }
-
-      let updatedTokensList: any[] = [];
-
-      for (let m of mint) {
-        const tokenInfo = await findToken(m.mint);
-        if (tokenInfo) {
-          updatedTokensList.push({
-            symbol: tokenInfo.symbol,
-            name: tokenInfo.name,
-            decimals: tokenInfo.decimals,
-            uiAmount: m.uiAmount,
-            mint: m.mint,
-            logoURI: tokenInfo.logoURI,
-          });
-        }
-      }
-      updatedTokensList = updatedTokensList.filter(
-        (t) => !t.symbol.includes("-")
-      );
-      const balance = await connection.getBalance(publicKey);
-      updatedTokensList.push({
-        symbol: "SOL",
-        name: "Solana",
-        decimals: 9,
-        uiAmount: balance / LAMPORTS_PER_SOL,
-        logoURI: "/solana-copy-2@2x.png",
-      });
-      try {
-        for (let t of updatedTokensList) {
-          t.price = await getPrice(t.symbol);
-          t.value = t.uiAmount * t.price;
-        }
-      } catch (err) {
-        console.log(err);
-      }
-      setTokensList(updatedTokensList);
-      let sum = updatedTokensList.reduce((acc, t) => acc + t.value, 0);
-      setWalletBalance(+sum.toFixed(2));
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    setIsLoading(true);
-
-    if (publicKey) {
-      fetchData();
-    }
-  }, [publicKey]);
+  const cToken = tokens
+    .filter((token) => token.amount > 0)
+    .sort((a, b) => b.price - a.price);
 
   const sendSOLANAToken = (domain: string) => {
     setIsTransferDOpen({ open: true, domain: domain });
@@ -193,7 +84,6 @@ const WalletBalance = ({
           ${walletBalance ? formatedNumber(walletBalance) : formatedNumber(0)}
         </span>
       </div>
-      {/*  */}
 
       <div className="flex justify-between gap-6 relative flex-col md:flex-row">
         <Table className="w-4/5 sm:w-full flex-1">
@@ -226,7 +116,7 @@ const WalletBalance = ({
               </>
             ) : (
               <>
-                {tokensList.map((row: any, index) => (
+                {cToken.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d] "
                     key={`${formatedString(
@@ -237,17 +127,19 @@ const WalletBalance = ({
                       {row.symbol}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.uiAmount)}
+                      {formatedNumber(row.amount)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.value)}
+                      ${formatedNumber(row.price * row.amount)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.price, 5)}
+                      ${formatedNumber(row.price, 5)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                       {walletBalance
-                        ? formatedNumber((row.value / walletBalance) * 100)
+                        ? formatedNumber(
+                            ((row.price * row.amount) / walletBalance) * 100
+                          )
                         : formatedNumber(0)}
                     </TableCell>
                   </TableRow>
@@ -262,13 +154,13 @@ const WalletBalance = ({
               Domains
             </h6>
           </div>
-          <div className="flex flex-col gap-3">
-            {data.domains.map((domain, index) => (
+          <div className="flex flex-col gap-3 h-44 overflow-auto">
+            {domains?.result?.map(({ domain }, index) => (
               <div
                 key={`${domain}_${index}`}
                 className="flex flex-nowrap justify-between items-center gap-x-6 border-b border-[#30425670] border-solid last:border-none pb-3 last:pb-0"
               >
-                <h6 className="text-sm font-medium">{domain}</h6>
+                <h6 className="text-sm font-medium">{domain}.sol</h6>
                 <Button
                   className=""
                   size="sm"
@@ -348,6 +240,6 @@ const WalletBalance = ({
       </AlertDialog>
     </div>
   );
-};
+});
 
 export default WalletBalance;

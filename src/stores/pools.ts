@@ -25,4 +25,7 @@ export const raydiumAmmPoolsDefault = atomWithStorage<ApiPoolInfoItem[]>(
   amm_pools
 );
 
-export const farmPoolsDefault = atomWithStorage<ApiFarmInfo>("farm-pools", {});
+export const farmPoolsDefault = atomWithStorage<ApiFarmInfo | undefined>(
+  "farm-pools",
+  undefined
+);

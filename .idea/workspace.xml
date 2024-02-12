@@ -4,13 +4,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/hooks/useFarm.tsx" afterDir="false" />
+    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="Dashboard new-worth implement">
+      <change afterPath="$PROJECT_DIR$/src/data/axios.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/pairs.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/pools.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/price.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/useNFT.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/calculateClmmApr.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/checkPositionStatus.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/Fills.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/token.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/farm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/farm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/lending.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/lending.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/liquidity.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/liquidity.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/networth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/networth.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/staking.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/staking.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/trading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/trading.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/wallet_balance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/wallet_balance.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/DefaultTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/DefaultTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/farm/(components)/farm-body.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/farm/(components)/farm-body.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/ido/(components)/ido-body.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/ido/(components)/ido-body.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/liquidity/(components)/liquidity-body.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/liquidity/(components)/liquidity-body.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/swap-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/swap-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useConnection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useConnection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useFarm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useFarm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useLend.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useLend.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/useLiquidity.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useLiquidity.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useMagicEden.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useMagicEden.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useStaking.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useStaking.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useTrade.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useTrade.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useWalletBalance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useWalletBalance.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/fetchAmmInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/fetchAmmInfo.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib/get-wallet.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/get-wallet.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/stores/pools.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/pools.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,6 +142,7 @@
       <recent name="D:\Codes\Dexify_v2\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\src\data" />
       <recent name="D:\Codes\Dexify_v2\src" />
       <recent name="D:\Codes\Dexify_v2\src\hooks" />
     </key>
@@ -165,6 +198,19 @@
       <workItem from="1706375195298" duration="1778000" />
       <workItem from="1706377044749" duration="10000" />
       <workItem from="1706377441292" duration="47000" />
+      <workItem from="1706427202870" duration="228000" />
+      <workItem from="1706519127646" duration="16172000" />
+      <workItem from="1706612513132" duration="3628000" />
+      <workItem from="1706628479213" duration="412000" />
+      <workItem from="1706691942360" duration="25494000" />
+      <workItem from="1706951795742" duration="18288000" />
+      <workItem from="1706981948819" duration="10344000" />
+      <workItem from="1707049443002" duration="719000" />
+      <workItem from="1707123877479" duration="9229000" />
+      <workItem from="1707155903269" duration="12326000" />
+      <workItem from="1707299041323" duration="8712000" />
+      <workItem from="1707378399873" duration="3957000" />
+      <workItem from="1707725172282" duration="25477000" />
     </task>
     <task id="LOCAL-00001" summary="network connections">
       <option name="closed" value="true" />
@@ -190,7 +236,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706084213617</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Dashboard new-worth implement">
+      <option name="closed" value="true" />
+      <created>1706427416544</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1706427416544</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

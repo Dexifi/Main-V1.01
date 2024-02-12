@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { useWallet } from "@solana/wallet-adapter-react";
-import axios from "axios";
+import { axios } from "@/data/axios";
 import { useEffect, useState } from "react";
 import { DefaultTab } from "./(tabs)";
 // import {
