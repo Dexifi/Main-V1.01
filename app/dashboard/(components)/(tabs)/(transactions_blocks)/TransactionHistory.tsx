@@ -17,6 +17,7 @@ import { ChevronFirst, ChevronLast } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { connection } from "@/lib/get-connections";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -39,6 +40,27 @@ type DataProps = {
 const TransactionHistory = ({ isEXTRASMALL }: Props) => {
   const [gdata, setData] = useState<DataProps[]>([]);
   const [rowsMax, setRowsMax] = useState<number>(50);
+  const { publicKey } = useWallet();
+  const getHistory = async () => {
+    if (publicKey) {
+      const signatures: any[] = await connection.getSignaturesForAddress(
+        publicKey
+      );
+      const sig: string[] = signatures.map((sig) => sig.signature);
+      try {
+        const tx = await connection.getParsedTransactions(sig, {
+          maxSupportedTransactionVersion: 1,
+        });
+        console.log(tx);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getHistory();
+  }, []);
 
   useEffect(() => {
     gdata.length === 0 &&

@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import {
   Farm,
   Lending,
   Liquidity,
-  NFT,
   Networth,
+  NFT,
   Staking,
   Trading,
   WalletBalance,
@@ -20,14 +19,14 @@ const DefaultTab = (props: Props) => {
 
   return (
     <div className="flex flex-col w-full h-max min-h-screen items-center gap-5">
-      {/*<Networth isEXTRASMALL={isEXTRASMALL} />*/}
-      {/*<WalletBalance isEXTRASMALL={isEXTRASMALL} />*/}
-      {/*<Staking isEXTRASMALL={isEXTRASMALL} />*/}
-      {/*<Lending isEXTRASMALL={isEXTRASMALL} />*/}
+      <Networth isEXTRASMALL={isEXTRASMALL} />
+      <WalletBalance isEXTRASMALL={isEXTRASMALL} />
+      <Staking isEXTRASMALL={isEXTRASMALL} />
+      <Lending isEXTRASMALL={isEXTRASMALL} />
       <Trading isEXTRASMALL={isEXTRASMALL} />
-      {/*<Liquidity isEXTRASMALL={isEXTRASMALL} />*/}
-      {/*<Farm isEXTRASMALL={isEXTRASMALL} />*/}
-      {/*<NFT isEXTRASMALL={isEXTRASMALL} />*/}
+      <Liquidity isEXTRASMALL={isEXTRASMALL} />
+      <Farm isEXTRASMALL={isEXTRASMALL} />
+      <NFT isEXTRASMALL={isEXTRASMALL} />
     </div>
   );
 };

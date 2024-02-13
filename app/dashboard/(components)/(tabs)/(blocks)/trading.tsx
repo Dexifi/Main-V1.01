@@ -11,63 +11,30 @@ import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import useTrade from "@/hooks/useTrade";
+import { useMemo, useState } from "react";
+import useTrade, { ownerOpenOrders } from "@/hooks/useTrade";
 import { connection } from "@/lib/get-connections";
+import { Order } from "@openbook-dex/openbook/lib/market";
 
 type Props = {
   isEXTRASMALL: boolean;
 };
 
-type DataProps = {
-  type: string;
-  market: string;
-  market_icons: string[];
-  state: "Long" | "Short";
-  shoulder: number;
-  size: number;
-  size_currency: "SOL";
-  size_dollars: number;
-  entry: number;
-  index: number;
-  p_and_l: number;
-  p_and_l_procent: number;
-  p_and_l_state: "positive" | "negative";
-  liq_price: number;
-};
-
 const Trading = ({ isEXTRASMALL }: Props) => {
-  const [gdata, setData] = useState<DataProps[]>([]);
   const { publicKey } = useWallet();
-  const [lendValue, setLendValue] = useState(12500);
   const { ownerOpenOrders: tradingData } = useTrade(connection, publicKey);
-  useEffect(() => {
-    gdata.length === 0 &&
-      setTimeout(() => {
-        setData([
-          {
-            type: "Position",
-            market: "SOL-PERP",
-            market_icons: [
-              "/assets/images/raydiumraycoin-1@2x.png",
-              "/assets/images/raydiumraycoin-1@2x.png",
-            ],
-            state: "Long",
-            shoulder: 2.2,
-            size: 0.9,
-            size_currency: "SOL",
-            size_dollars: 20.45,
-            entry: 22.653,
-            index: 22.753,
-            p_and_l: 0.08,
-            p_and_l_procent: 0.01,
-            p_and_l_state: "positive",
-            liq_price: 10.81,
-          },
-        ]);
-      }, 5000);
-  }, [gdata.length]);
 
+  // TODO Settled orders design and logic
+
+  const gdata = useMemo(() => {
+    const d: Array<Order & ownerOpenOrders> = [];
+    tradingData.map((openOrder) => {
+      openOrder.orders.map((order) => {
+        d.push({ ...order, ...openOrder });
+      });
+    });
+    return d;
+  }, [tradingData]);
   const data = {
     title: "Trading",
     color: "text-[#C95901]",
@@ -80,6 +47,12 @@ const Trading = ({ isEXTRASMALL }: Props) => {
     },
   };
 
+  const total = useMemo(() => {
+    let n = 0;
+    gdata.map((e) => (n = n + e.size * e.price));
+    return n;
+  }, [gdata]);
+
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5 gap-5 flex flex-col"
@@ -90,9 +63,8 @@ const Trading = ({ isEXTRASMALL }: Props) => {
           <h3>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
-        <span>${formatedNumber(lendValue)}</span>
+        <span>${formatedNumber(total)}</span>
       </div>
-      {/*  */}
 
       <div className="flex justify-between gap-6 relative flex-col md:flex-row bg-[#30425630] p-5 rounded-2xl">
         <div className="flex flex-col gap-6 md:gap-10">
@@ -113,8 +85,7 @@ const Trading = ({ isEXTRASMALL }: Props) => {
               Balance:
             </div>
             <div className="flex text-sm w-max text-left truncate">
-              ${formatedNumber(data.table.balance, 2, isEXTRASMALL)}{" "}
-              {data.table.currency}
+              $ {formatedNumber(total, 2, isEXTRASMALL)}
             </div>
           </div>
         </div>
@@ -148,18 +119,18 @@ const Trading = ({ isEXTRASMALL }: Props) => {
               </>
             ) : (
               <>
-                {tradingData.map((row, index) => (
+                {gdata.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
                     key={`${formatedString(
                       row.baseToken?.symbol + "-" + row.quoteToken?.symbol
-                    )}_${index}`}
+                    )}_${index + row.price}`}
                   >
                     <TableCell
-                      className="font-medium text-left text-[#7c7c8d] py-3 align-top"
+                      className="font-medium bold   text-left text-[#7c7c8d] py-3 align-top"
                       width={180}
                     >
-                      {row.side}
+                      {row.side.toUpperCase()}
                     </TableCell>
                     <TableCell
                       className="font-medium text-left text-sm md:text-md truncate align-top"
@@ -199,13 +170,15 @@ const Trading = ({ isEXTRASMALL }: Props) => {
                       align="left"
                     >
                       <div className="flex flex-col gap-3 justify-between w-full">
-                        <h6>
-                          {formatedNumber(row.fee, 2)}
-                          {/*{row.size_currency}*/}
-                        </h6>
-                        <h6>
-                          {/*${formatedNumber(row.size_dollars, 2, isEXTRASMALL)}*/}
-                        </h6>
+                        <h6>{formatedNumber(row.size, 2)}</h6>
+                      </div>
+                    </TableCell>
+                    <TableCell
+                      className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] align-top"
+                      align="left"
+                    >
+                      <div className="flex flex-row gap-3  w-full">
+                        <h6>${formatedNumber(row.price, 2, isEXTRASMALL)}</h6>
                       </div>
                     </TableCell>
                     <TableCell
@@ -213,35 +186,20 @@ const Trading = ({ isEXTRASMALL }: Props) => {
                       align="left"
                     >
                       <div className="flex flex-col gap-3 justify-between w-full">
-                        {/*<h6>${formatedNumber(row.entry, 2, isEXTRASMALL)}</h6>*/}
-                        {/*<h6>${formatedNumber(row.index, 2, isEXTRASMALL)}</h6>*/}
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] align-top"
-                      align="left"
-                    >
-                      <div className="flex flex-col gap-3 justify-between w-full">
                         <h6>
-                          P&L:
-                          <span
-                          // className={`text-sm ml-3 bg-[#141414] p-2 rounded-sm ${
-                          //   row.state.toLocaleLowerCase() === "long"
-                          //     ? "text-[#00b127]"
-                          //     : "text-[#F2893B]"
-                          // } `}
-                          >
-                            {/*${formatedNumber(row.p_and_l, 2)} (*/}
+                          value{" "}
+                          <span>
+                            ${formatedNumber(row.price * row.size, 2)}
                             {/*{row.p_and_l_state === "negative" ? "-" : "+"}*/}
                             {/*{row.p_and_l_procent})*/}
                           </span>
                         </h6>
-                        <h6>
-                          Liq Price:
-                          <span className="text-sm ml-3">
-                            {/*%{formatedNumber(row.liq_price, 2)}*/}
-                          </span>
-                        </h6>
+                        {/*<h6>*/}
+                        {/*  Liq Price:*/}
+                        {/*  <span className="text-sm ml-3">*/}
+                        {/*    /!*%{formatedNumber(row.liq_price, 2)}*!/*/}
+                        {/*  </span>*/}
+                        {/*</h6>*/}
                       </div>
                     </TableCell>
                   </TableRow>
