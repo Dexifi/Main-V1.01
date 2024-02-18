@@ -6,11 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="Dashboard api implement">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/trading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/trading.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(transactions_blocks)/TransactionHistory.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(transactions_blocks)/TransactionHistory.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/DefaultTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/DefaultTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/TransactionsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/TransactionsTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useTrade.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useTrade.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/get-connections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/get-connections.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +72,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "feat/#3",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/Codes/CBM/public",
+    "last_opened_file_path": "D:/Codes/Dexify_v2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -184,7 +184,13 @@
       <workItem from="1707815811778" duration="3372000" />
       <workItem from="1707819949282" duration="1076000" />
       <workItem from="1707822557754" duration="5033000" />
-      <workItem from="1707827824589" duration="6833000" />
+      <workItem from="1707827824589" duration="7403000" />
+      <workItem from="1707903582441" duration="11000" />
+      <workItem from="1707908551852" duration="2050000" />
+      <workItem from="1708157557270" duration="4150000" />
+      <workItem from="1708163044384" duration="11924000" />
+      <workItem from="1708241805118" duration="3000" />
+      <workItem from="1708255653903" duration="6154000" />
     </task>
     <task id="LOCAL-00001" summary="network connections">
       <option name="closed" value="true" />
@@ -218,7 +224,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706427416544</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Dashboard api implement">
+      <option name="closed" value="true" />
+      <created>1707835830870</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707835830870</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

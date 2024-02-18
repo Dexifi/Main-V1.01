@@ -14,6 +14,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "dev.solend.fi",
       },
+      {
+        protocol: "https",
+        hostname: "solana.com",
+      },
     ],
   },
   webpack: (config, { isServer }) => {
