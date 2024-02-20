@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import {
   Farm,
   Lending,
   Liquidity,
-  NFT,
   Networth,
+  NFT,
   Staking,
   Trading,
   WalletBalance,
@@ -16,17 +15,12 @@ import {
 type Props = {};
 
 const DefaultTab = (props: Props) => {
-  const [walletBalance, setWalletBalance] = useState<number>(340);
   const isEXTRASMALL = useMediaQuery("(max-width: 420px)");
 
   return (
     <div className="flex flex-col w-full h-max min-h-screen items-center gap-5">
       <Networth isEXTRASMALL={isEXTRASMALL} />
-      <WalletBalance
-        isEXTRASMALL={isEXTRASMALL}
-        walletBalance={walletBalance}
-        setWalletBalance={setWalletBalance}
-      />
+      <WalletBalance isEXTRASMALL={isEXTRASMALL} />
       <Staking isEXTRASMALL={isEXTRASMALL} />
       <Lending isEXTRASMALL={isEXTRASMALL} />
       <Trading isEXTRASMALL={isEXTRASMALL} />

@@ -17,9 +17,15 @@ import amm_pools from "@/configuration/ammPools.json";
 
 import { atomWithStorage, createJSONStorage } from "jotai/utils";
 import { ApiPoolInfoItem } from "@raydium-io/raydium-sdk/src/baseInfo/interface";
+import { ApiFarmInfo } from "@raydium-io/raydium-sdk";
 
 export const raydiumAmmPoolsDefault = atomWithStorage<ApiPoolInfoItem[]>(
   "raydium-amm-pools",
   // @ts-ignore - only version not exist on type so its ok for now
   amm_pools
+);
+
+export const farmPoolsDefault = atomWithStorage<ApiFarmInfo | undefined>(
+  "farm-pools",
+  undefined
 );

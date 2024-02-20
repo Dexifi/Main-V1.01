@@ -8,13 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { connection } from "@/lib/get-connections";
 import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import useStaking from "@/hooks/useStaking";
+import { connection } from "@/lib/get-connections";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -33,31 +35,9 @@ type DataProps = {
 const Staking = ({ isEXTRASMALL }: Props) => {
   const [gdata, setData] = useState<DataProps[]>([]);
   const { publicKey } = useWallet();
-  const fetchData = async () => {
-    if (publicKey === null) {
-      return;
-    }
-    // const data = await connection.getParsedProgramAccounts(
-    //   new PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"),
-    //   {
-    //     filters: [
-    //       { dataSize: 88 },
-    //       {
-    //         memcmp: {
-    //           offset: 40,
-    //           bytes: publicKey.toString(),
-    //         },
-    //       },
-    //     ],
-    //   }
-    // );
-    //
-    // setData(data);
-  };
-
+  const { push } = useRouter();
+  const { userDeposit, totalDeposit } = useStaking(connection, publicKey);
   useEffect(() => {
-    fetchData();
-
     gdata.length === 0 &&
       setTimeout(() => {
         setData([
@@ -97,7 +77,7 @@ const Staking = ({ isEXTRASMALL }: Props) => {
       ],
     },
   };
-
+  if (!totalDeposit) return <></>;
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5"
@@ -108,7 +88,7 @@ const Staking = ({ isEXTRASMALL }: Props) => {
           <h3>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
-        <span>${formatedNumber(12500)}</span>
+        <span>${formatedNumber(totalDeposit)}</span>
       </div>
       {/*  */}
 
@@ -148,53 +128,58 @@ const Staking = ({ isEXTRASMALL }: Props) => {
               </>
             ) : (
               <>
-                {gdata.map((row, index) => (
+                {userDeposit.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
                     key={`${formatedString(
-                      row.name.toLocaleLowerCase()
+                      row.token!.name.toLocaleLowerCase()
                     )}_${index}`}
                   >
                     <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase flex justify-between gap-x-5 items-center">
-                      {row.name}
+                      {row.token?.name}
                       {!isEXTRASMALL ? (
                         <Image
-                          src={row.icon}
-                          alt={`${row.name}_logo-icon`}
+                          src={row.token?.logoURI ?? ""}
+                          alt={`${row.token?.name}_logo-icon`}
                           width={24}
                           height={24}
                         />
                       ) : null}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.amount, 2, isEXTRASMALL)}
+                      {formatedNumber(row.stakeAmount, 2, isEXTRASMALL)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.value, 2, isEXTRASMALL)}
+                      $
+                      {formatedNumber(
+                        row.stakeAmount * row.lpPrice,
+                        2,
+                        isEXTRASMALL
+                      )}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                       {formatedNumber(row.apy, 2, isEXTRASMALL)}%
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      $
-                      {formatedNumber(row.pending_revard, isEXTRASMALL ? 2 : 4)}
-                    </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 uppercase">
-                      polis{" "}
+                      {row.lpToken}{" "}
                       {formatedNumber(
-                        row.pending_revardD,
-                        isEXTRASMALL ? 2 : 4
+                        row.pendingReward * row.lpPrice,
+                        isEXTRASMALL ? 2 : 6
                       )}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2 uppercase">
-                      <Button
-                        size="sm"
-                        className="hover:bg-[#7c7c8d80] max-h-8 text-[14px] rounded-full"
-                        onClick={() => console.log("Hey there!")}
-                        style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
-                      >
-                        Claim Pending
-                      </Button>
+                      ${formatedNumber(row.pendingReward, isEXTRASMALL ? 2 : 4)}
+                    </TableCell>
+                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 uppercase">
+                      <Link href={"/stake"} prefetch>
+                        <Button
+                          size="sm"
+                          className="hover:bg-[#7c7c8d80] max-h-8 text-[14px] rounded-full"
+                          style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
+                        >
+                          Claim Pending
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}

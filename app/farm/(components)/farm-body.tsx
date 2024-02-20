@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { useWallet } from "@solana/wallet-adapter-react";
-import axios from "axios";
+import { axios } from "@/data/axios";
 import { useEffect, useState } from "react";
 import { MyFarmsTab, PoolsTab } from "./(tabs)";
 import { Header } from "./farm-header";
@@ -47,7 +47,6 @@ const FarmBody = ({ isEXTRASMALL }: Props) => {
         (i: any) => i.address == item.whirlpoolAddress
       );
       liqudityFarmData.user = item;
-      console.log(liqudityFarmData);
     });
     orcaList.pools.sort((a: any, b: any) =>
       a.user === b.user ? 0 : a.user ? -1 : 1

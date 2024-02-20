@@ -18,25 +18,56 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useMemo } from "react";
 import useTrade from "@/hooks/useTrade";
 import useLiquidity from "@/hooks/useLiquidity";
+import useStaking from "@/hooks/useStaking";
+import useNFT from "@/hooks/useNFT";
+import useFarm from "@/hooks/useFarm";
 
 type Props = {
   isEXTRASMALL: boolean;
 };
 const Networth = ({ isEXTRASMALL }: Props) => {
   const { connection } = useConnection();
+
   const { publicKey } = useWallet();
+
   const { tokens, walletBalance } = useWalletBalance(connection, publicKey);
-  // const { stakes } = useStaking(connection, publicKey);
+
   const { userObligationState } = useLend(connection, publicKey);
+
   const { ownerOpenOrders, totalPrices: totalTrade } = useTrade(
     connection,
     publicKey
   );
-  const {} = useLiquidity(connection, publicKey);
+
+  const { clmmTotal, ammTotal } = useLiquidity(connection, publicKey);
+
+  const { totalDeposit: stakeDeposit, totalPendingReward: stakePending } =
+    useStaking(connection, publicKey);
+
+  const { pendingReward: farmPending, deposit: farmDeposit } = useFarm(
+    connection,
+    publicKey
+  );
   const netWorth = useMemo(
     () =>
-      walletBalance + (userObligationState?.userTotalDeposit ?? 0) + totalTrade,
-    [walletBalance, userObligationState?.userTotalDeposit, totalTrade]
+      walletBalance +
+      (userObligationState?.userTotalDeposit ?? 0) +
+      totalTrade +
+      clmmTotal +
+      ammTotal +
+      stakeDeposit +
+      farmDeposit +
+      stakePending +
+      farmPending,
+    [
+      walletBalance,
+      userObligationState?.userTotalDeposit,
+      totalTrade,
+      clmmTotal,
+      ammTotal,
+      stakeDeposit,
+      farmDeposit,
+    ]
   );
 
   const data = {
@@ -57,9 +88,9 @@ const Networth = ({ isEXTRASMALL }: Props) => {
           title: "Staking",
           color: "text-[#00b127]",
           background: "bg-[#00b127]",
-          value: 12500,
-          pending: 150,
-          worth: 12.5,
+          value: stakeDeposit,
+          pending: stakePending,
+          worth: ((stakeDeposit + stakePending) / netWorth) * 100,
         },
         {
           title: "Lending",
@@ -82,25 +113,25 @@ const Networth = ({ isEXTRASMALL }: Props) => {
           title: "Liquidity",
           color: "text-[#efd301]",
           background: "bg-[#efd301]",
-          value: 12500,
+          value: ammTotal + clmmTotal,
           pending: 0,
-          worth: 12.5,
+          worth: ((ammTotal + clmmTotal) / netWorth) * 100,
         },
         {
           title: "Farm",
           color: "text-[#ba0000]",
           background: "bg-[#ba0000]",
-          value: 0,
-          pending: 0,
-          worth: 2,
+          value: farmDeposit,
+          pending: farmPending,
+          worth: ((farmDeposit + farmPending) / netWorth) * 100,
         },
         {
           title: "NFT",
           color: "text-[#7000ff]",
           background: "bg-[#7000ff]",
-          value: 25000,
+          value: 0,
           pending: 0,
-          worth: 10.5,
+          worth: 0,
         },
       ],
     },

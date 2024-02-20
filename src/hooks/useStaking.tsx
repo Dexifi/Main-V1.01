@@ -1,80 +1,111 @@
 import { useCallback, useEffect, useState } from "react";
-import { Connection, PublicKey, StakeProgram } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import {
+  ApiFarmInfo,
+  ENDPOINT,
   Farm,
   RAYDIUM_MAINNET,
-  ENDPOINT,
-  ApiFarmInfo,
 } from "@raydium-io/raydium-sdk";
+import { findToken } from "@/lib/get-wallet";
 import axios from "axios";
-const STAKE_PROGRAM_PK = new PublicKey(
-  "EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"
-);
+import { getPrice } from "@/data/price";
+import { fetchFarmPools } from "@/data/pools";
+import { TokenInfo } from "@solana/spl-token-registry";
+import BN from "bn.js";
+
 const WALLET_OFFSET = 44;
 const DATA_SIZE = 200;
 
+export type UserStake = {
+  lpToken: string;
+  stakeAmount: number;
+  pendingReward: number;
+  lpPrice: number;
+  apy: number;
+  token?: TokenInfo;
+};
 const useStaking = (connection: Connection, owner: PublicKey | null) => {
-  const [stakes, setStakes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [totalDeposit, setTotalDeposit] = useState(0);
+  const [totalPendingReward, setTotalPendingReward] = useState(0);
+  const [userDeposit, setUserDeposit] = useState<UserStake[]>([]);
+  // fetch pools
+  const getFarms = useCallback(async () => {
+    if (!owner) return;
 
-  const getStakingAccounts = useCallback(async () => {
-    if (!owner || !loading) return;
+    const farmPools = await fetchFarmPools();
 
-    const pools = await axios.get<ApiFarmInfo>(
-      ENDPOINT + RAYDIUM_MAINNET.farmInfo
-    );
-    const q = await connection.getProgramAccounts(STAKE_PROGRAM_PK, {
-      dataSlice: { offset: 0, length: 0 },
-      filters: [
-        {
-          dataSize: 165,
-        },
-        {
-          memcmp: {
-            offset: 12,
-            bytes: owner.toBase58(),
-          },
-        },
-      ],
+    const stakeInfo = farmPools.stake[0];
+    const lpPrice = await getPrice(stakeInfo.symbol);
+    const lpToken = await findToken(stakeInfo.symbol);
+    const farmInfoWithKeys = {
+      ...stakeInfo,
+      id: new PublicKey(stakeInfo.id),
+      programId: new PublicKey(stakeInfo.programId),
+      baseMint: new PublicKey(stakeInfo.lpMint),
+      quoteMint: new PublicKey(stakeInfo.lpMint),
+      lpMint: new PublicKey(stakeInfo.lpMint),
+      authority: new PublicKey(stakeInfo.authority),
+      lpVault: new PublicKey(stakeInfo.lpVault),
+      rewardInfos: stakeInfo.rewardInfos.map((r) => ({
+        ...r,
+        rewardMint: new PublicKey(r.rewardMint),
+        rewardVault: new PublicKey(r.rewardVault),
+      })),
+    };
+
+    const parsedStakeFarmInfo = await Farm.fetchMultipleInfoAndUpdate({
+      chainTime: 0,
+      connection,
+      pools: [farmInfoWithKeys],
+      owner,
+      config: { commitment: "confirmed" },
     });
-    console.log(q);
+    for (const [key, value] of Object.entries(parsedStakeFarmInfo)) {
+      // @ts-ignore
 
-    // try {
-    //   Farm.getAssociatedLedgerAccount({
-    //     programId: STAKE_PROGRAM_PK,
-    //     owner,
-    //     version: 3,
-    //     poolId:pools.data.stake[0].programId,
-    //   });
-    //
-    //   await connection
-    //     .getParsedProgramAccounts(STAKE_PROGRAM_PK, {
-    //       filters: [
-    //         {
-    //           dataSize: DATA_SIZE,
-    //           memcmp: {
-    //             offset: WALLET_OFFSET,
-    //             bytes: owner.toBase58(), // your pubkey, encoded as a base-58 string
-    //           },
-    //         },
-    //       ],
-    //     })
-    //     .then((res) => {
-    //       console.log("getStakingAccounts", res);
-    //     });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    setLoading(false);
-  }, [PublicKey, connection, loading]);
+      setUserDeposit((e) => [
+        ...e,
+        {
+          lpToken: stakeInfo.symbol,
+          stakeAmount:
+            (value.ledger?.deposited.toNumber() ?? 0) /
+              10 ** (lpToken?.decimals ?? 6) ?? 0,
+          pendingReward:
+            // @ts-ignore
+            value.wrapped?.pendingRewards[0].toNumber() /
+              10 ** (lpToken?.decimals ?? 6) ?? 0,
+          lpPrice: lpPrice,
+          apy: 0,
+          token: lpToken,
+        },
+      ]);
+      setTotalDeposit(
+        ((value.ledger?.deposited.toNumber() ?? 0) /
+          10 ** (lpToken?.decimals ?? 6)) *
+          lpPrice ?? 0
+      );
+      setTotalPendingReward(
+        // @ts-ignore
+        (value.ledger?.[""].toNumber() ?? 0) / 10 ** (lpToken?.decimals ?? 6) ??
+          0
+      );
+    }
+  }, [connection, owner]);
 
   useEffect(() => {
-    if (connection && PublicKey && loading) {
-      getStakingAccounts();
+    let load = true;
+    if (load) {
+      load = false;
+      getFarms();
     }
-  }, [connection, PublicKey]);
+    return () => {
+      setTotalDeposit(0);
+      setUserDeposit([]);
+      setTotalPendingReward(0);
+    };
+  }, [getFarms]);
 
-  return { stakes };
+  return { totalDeposit, totalPendingReward, userDeposit };
 };
 
 export default useStaking;

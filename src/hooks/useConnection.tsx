@@ -1,5 +1,4 @@
 import * as SolanaWeb3 from "@solana/web3.js";
-import { SOLANA_MAIN } from "@/lib/endpoints";
 import { useAtom } from "jotai";
 import { connectionAtom } from "@/stores/settings";
 

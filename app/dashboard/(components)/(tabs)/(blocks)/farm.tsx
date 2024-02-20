@@ -11,76 +11,34 @@ import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useFarm from "@/hooks/useFarm";
+import { connection } from "@/lib/get-connections";
 
 type Props = {
   isEXTRASMALL: boolean;
 };
 
-type DataProps = {
-  pool: string;
-  pool_icons: string[];
-  protocol: string;
-  protocol_icon: string;
-  lp: number;
-  value: number;
-  apr: number;
-  reward: {
-    currency: string;
-    icon: string;
-  };
-  pending_reward: number;
-  pending_rewardD: number;
+const data = {
+  title: "Farm",
+  color: "text-[#ba0000]",
+  table: {
+    header: [
+      "Pool",
+      "Protocol",
+      "LP",
+      "Value",
+      "APR",
+      "Reward",
+      "Pending Reward",
+      "Pending Reward $",
+    ],
+  },
 };
 
 const Farm = ({ isEXTRASMALL }: Props) => {
-  const [gdata, setData] = useState<DataProps[]>([]);
   const { publicKey } = useWallet();
-  const [FarmValue, setFarmValue] = useState(12500);
-
-  useEffect(() => {
-    gdata.length === 0 &&
-      setTimeout(() => {
-        setData([
-          {
-            pool: "SOL-USDC",
-            pool_icons: [
-              "/assets/images/raydiumraycoin-1@2x.png",
-              "/assets/images/raydiumraycoin-1@2x.png",
-            ],
-            protocol: "Raydium",
-            protocol_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            lp: 0.7655,
-            value: 103.65,
-            apr: 10.62,
-            reward: {
-              currency: "Ray",
-              icon: "/assets/images/raydiumraycoin-1@2x.png",
-            },
-            pending_reward: 1.31,
-            pending_rewardD: 0.9,
-          },
-        ]);
-      }, 5000);
-  }, [gdata.length]);
-
-  const data = {
-    title: "Farm",
-    color: "text-[#ba0000]",
-    table: {
-      header: [
-        "Pool",
-        "Protocol",
-        "LP",
-        "Value",
-        "APR",
-        "Reward",
-        "Pending Reward",
-        "Pending Reward $",
-      ],
-    },
-  };
-
+  const { userDepositedFarm, deposit } = useFarm(connection, publicKey);
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5"
@@ -91,7 +49,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
           <h3>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
-        <span>${formatedNumber(FarmValue)}</span>
+        <span>${formatedNumber(deposit)}</span>
       </div>
       {/*  */}
 
@@ -111,7 +69,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {gdata.length <= 0 ? (
+            {userDepositedFarm.length <= 0 ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   {data.table.header.map((header, index) => (
@@ -126,19 +84,19 @@ const Farm = ({ isEXTRASMALL }: Props) => {
               </>
             ) : (
               <>
-                {gdata.map((row, index) => (
+                {userDepositedFarm.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
                     key={`${formatedString(
-                      row.pool.toLocaleLowerCase()
+                      row.poolName.toLocaleLowerCase()
                     )}_${index}`}
                   >
                     <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d]">
                       <div className="flex gap-5 items-center justify-between w-full max-w-36">
-                        {row.pool}
+                        {row.poolName}
                         {!isEXTRASMALL ? (
                           <div className="max-w-9 flex justify-between items-center">
-                            {row.pool_icons.map((icon, id) => (
+                            {row.poolIcon.map((icon, id) => (
                               <Image
                                 key={`${icon}_logo-icon_${id}`}
                                 src={icon}
@@ -156,7 +114,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
                         {row.protocol}
                         {!isEXTRASMALL ? (
                           <Image
-                            src={row.protocol_icon}
+                            src={row.protocolIcon}
                             alt={`${row.protocol}_logo-icon`}
                             width={24}
                             height={24}
@@ -165,7 +123,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.lp, 4, isEXTRASMALL)}
+                      {formatedNumber(row.lpAmount, 4, isEXTRASMALL)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                       ${formatedNumber(row.value)}
@@ -174,23 +132,28 @@ const Farm = ({ isEXTRASMALL }: Props) => {
                       {formatedNumber(row.apr, 2, isEXTRASMALL)}%
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      <div className="flex gap-5 items-center justify-between w-full">
-                        {row.reward.currency}
-                        {!isEXTRASMALL ? (
-                          <Image
-                            src={row.reward.icon}
-                            alt={`${row.reward.currency}_logo-icon`}
-                            width={24}
-                            height={24}
-                          />
-                        ) : null}
-                      </div>
+                      {row.rewards.map((reward, id) => (
+                        <div
+                          key={id}
+                          className="flex gap-5 items-center justify-between w-full"
+                        >
+                          {reward.currency}
+                          {!isEXTRASMALL ? (
+                            <Image
+                              src={reward.icon}
+                              alt={`${reward.currency}_logo-icon`}
+                              width={24}
+                              height={24}
+                            />
+                          ) : null}
+                        </div>
+                      ))}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.pending_reward, 2, isEXTRASMALL)}
+                      {formatedNumber(row.rewardAmount, 6, isEXTRASMALL)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.pending_rewardD, 2, isEXTRASMALL)}
+                      ${formatedNumber(row.pendingReward, 2, isEXTRASMALL)}
                     </TableCell>
                   </TableRow>
                 ))}

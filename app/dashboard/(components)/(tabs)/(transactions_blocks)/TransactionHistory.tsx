@@ -16,7 +16,12 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import moment from "moment";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { connection } from "@/lib/get-connections";
+import { ParsedTransactionWithMeta } from "@solana/web3.js";
+import { difference } from "lodash";
+import { findToken } from "@/lib/get-wallet";
+import { TokenInfo } from "@solana/spl-token-registry";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -25,89 +30,129 @@ type Props = {
 type DataProps = {
   date: string;
   txid: string;
-  platform: string;
-  platform_icon: string;
-  type: string;
-  outgoing: number;
-  outgoing_icon: string;
-  outgoing_currency: string;
-  incoming: number;
-  incoming_icon: string;
-  incoming_currency: string;
+  platform?: string;
+  platform_icon?: string;
+  type?: string;
+  outgoing?: number;
+  outgoing_icon?: string;
+  outgoing_currency?: string;
+  incoming?: number;
+  incoming_icon?: string;
+  incoming_currency?: string;
+};
+
+type TokenProps = {
+  tokenData?: TokenInfo;
+  isIncoming: boolean;
+  changedAmount: number;
 };
 
 const TransactionHistory = ({ isEXTRASMALL }: Props) => {
-  const [gdata, setData] = useState<DataProps[]>([]);
+  const [data, setData] = useState<DataProps[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
   const [rowsMax, setRowsMax] = useState<number>(50);
+  const { publicKey } = useWallet();
+
+  const availablePages = useMemo(
+    () => Math.ceil(data.length / rowsMax),
+    [data.length, rowsMax]
+  );
+  const getHistory = useCallback(async () => {
+    if (!publicKey) return;
+    const signatures: any[] = await connection.getSignaturesForAddress(
+      publicKey
+    );
+
+    const sig: string[] = signatures.map((sig) => sig.signature);
+    const localData: DataProps[] = [];
+    const transactions: ParsedTransactionWithMeta[] =
+      await connection.getParsedTransactions(sig, {
+        maxSupportedTransactionVersion: 0,
+      });
+    console.log("transactions", transactions);
+    for (const transaction of transactions) {
+      const date = moment(transaction.blockTime! * 1000).format("YYYY-MM-DD");
+      const description = transaction.meta?.logMessages
+        ?.find((log) => log.includes("Program log:"))
+        ?.split(" ")
+        .slice(-1)[0];
+      if (
+        transaction.meta?.preTokenBalances &&
+        transaction.meta?.postTokenBalances &&
+        difference(
+          transaction.meta?.preTokenBalances,
+          transaction.meta?.postTokenBalances
+        ).length > 0
+      ) {
+        const incomeTokens: TokenProps[] = [];
+        const outGoingTokens: TokenProps[] = [];
+        for (const token in transaction.meta?.preTokenBalances) {
+          const preToken = transaction.meta?.preTokenBalances[token];
+          const postToken = transaction.meta?.postTokenBalances[token];
+          if (preToken && postToken) {
+            if (
+              transaction.meta?.preTokenBalances[token].uiTokenAmount.amount !==
+              transaction.meta?.postTokenBalances[token].uiTokenAmount.amount
+            ) {
+              const tokenData = await findToken(
+                transaction.meta?.preTokenBalances[token].mint
+              );
+              const isIncoming =
+                transaction.meta?.preTokenBalances[token].uiTokenAmount.amount <
+                transaction.meta?.postTokenBalances[token].uiTokenAmount.amount;
+              const changedAmount = Math.abs(
+                (preToken.uiTokenAmount?.uiAmount ?? 0) -
+                  (postToken?.uiTokenAmount?.uiAmount ?? 0)
+              );
+              if (isIncoming) {
+                incomeTokens.push({ tokenData, isIncoming, changedAmount });
+              } else {
+                outGoingTokens.push({
+                  tokenData,
+                  isIncoming,
+                  changedAmount,
+                });
+              }
+            }
+          }
+        }
+        localData.push({
+          date,
+          txid: transaction.transaction.signatures[0] ?? "",
+          platform: "Solana",
+          platform_icon: "https://solana.com/favicon.ico",
+          type: description ?? "",
+          outgoing: outGoingTokens.reduce(
+            (acc, token) => acc + token.changedAmount,
+            0
+          ),
+          outgoing_icon: outGoingTokens[0]?.tokenData?.logoURI,
+          outgoing_currency: outGoingTokens[0]?.tokenData?.symbol,
+          incoming: incomeTokens.reduce(
+            (acc, token) => acc + token.changedAmount,
+            0
+          ),
+          incoming_icon: incomeTokens[0]?.tokenData?.logoURI,
+          incoming_currency: incomeTokens[0]?.tokenData?.symbol,
+        });
+      } else {
+        localData.push({
+          date,
+          txid: transaction.transaction.signatures[0] ?? "",
+          platform: "Solana",
+          platform_icon: "https://solana.com/favicon.ico",
+          type: description ?? "",
+        });
+      }
+      setData(localData);
+    }
+  }, [publicKey]);
 
   useEffect(() => {
-    gdata.length === 0 &&
-      setTimeout(() => {
-        setData([
-          {
-            date: moment().format("MMM DD, h:mm a"),
-            txid: "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58",
-            platform: "Solana",
-            platform_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            type: "Unknown",
-            outgoing: 3.006,
-            outgoing_currency: "USDC",
-            outgoing_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            incoming: 1.156,
-            incoming_currency: "SOL",
-            incoming_icon: "/assets/images/raydiumraycoin-1@2x.png",
-          },
-          {
-            date: moment().format("MMM DD, h:mm a"),
-            txid: "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58",
-            platform: "Solana",
-            platform_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            type: "Unknown",
-            outgoing: 3.006,
-            outgoing_currency: "USDC",
-            outgoing_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            incoming: 1.156,
-            incoming_currency: "SOL",
-            incoming_icon: "/assets/images/raydiumraycoin-1@2x.png",
-          },
-          {
-            date: moment().format("MMM DD, h:mm a"),
-            txid: "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58",
-            platform: "Solana",
-            platform_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            type: "Unknown",
-            outgoing: 3.006,
-            outgoing_currency: "USDC",
-            outgoing_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            incoming: 1.156,
-            incoming_currency: "SOL",
-            incoming_icon: "/assets/images/raydiumraycoin-1@2x.png",
-          },
-        ]);
-      }, 5000);
-  }, [gdata.length]);
-
-  const data = {
-    title: "Transaction History",
-    table: {
-      header: ["N", "Date", "TXID", "Platform", "Type", "Outgoing", "Incoming"],
-    },
-    actions: {
-      rows: [50, 100],
-      arrows: [
-        <ChevronFirst
-          className="w-4 h-4 sm:w-6 sm:h-6 aspect-square object-contain"
-          key="chevron-first"
-        />,
-        <ChevronLast
-          className="w-4 h-4 sm:w-6 sm:h-6 aspect-square object-contain"
-          key="chevron-last"
-        />,
-      ],
-      tabs: ["Recive", "All", "Swap", "Deposit", "Withdraw", "Repay", "Send"],
-    },
-  };
-
+    if (data.length === 0) {
+      getHistory();
+    }
+  }, [data.length, getHistory]);
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5"
@@ -119,12 +164,12 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
             <div className="flex flex-col gap-4 sm:gap-5 w-full">
               <div className="flex justify-between flex-wrap gap-3">
                 <h3 className="text-lg md:text-2xl text-[#D9F8FF]">
-                  {data.title}
+                  {hdata.title}
                 </h3>
                 <div className="flex gap-2 sm:gap-5 justify-end">
                   <div className="flex justify-between">
                     <div className="text-lg md:text-2xl truncate flex items-center  gap-2 sm:gap-5 text-[#D9F8FF] overflow-auto">
-                      {data.actions.rows.map((rows, index) => (
+                      {hdata.actions.rows.map((rows, index) => (
                         <Button
                           onClick={() => setRowsMax(rows)}
                           size="sm"
@@ -147,13 +192,25 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
                     </div>
                   </div>
                   <div className="text-lg md:text-2xl truncate flex items-center gap-2 sm:gap-5  text-[#D9F8FF] overflow-auto">
-                    {data.actions.arrows.map((arrows, index) => (
+                    {hdata.actions.arrows.map((arrows, index) => (
                       <Button
-                        onClick={() => {}}
+                        onClick={() => {
+                          if (index === 0) {
+                            setCurrentPage((e) =>
+                              e === 0 ? 0 : availablePages - 1
+                            );
+                          } else {
+                            setCurrentPage((e) =>
+                              availablePages === e ? availablePages : e + 1
+                            );
+                          }
+                        }}
                         key={index}
                         className={`rounded-full hover:bg-[#D9F8FF10] transition-all w-10 h-10 aspect-square`}
                         size="icon"
                       >
+                        {index}
+
                         {arrows}
                       </Button>
                     ))}
@@ -162,7 +219,7 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
               </div>
 
               <div className="flex gap-3 sm:gap-5 justify-center sm:justify-end flex-wrap">
-                {data.actions.tabs.map((tab, index) => (
+                {hdata.actions.tabs.map((tab, index) => (
                   <TabsTrigger
                     value={formatedString(tab).toLocaleLowerCase()}
                     key={`${formatedString(tab)}_${index}`}
@@ -175,7 +232,7 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
             </div>
           </div>
         </TabsList>
-        {data.actions.tabs.map((tab, index) => (
+        {hdata.actions.tabs.map((tab, index) => (
           <TabsContent
             value={formatedString(tab).toLocaleLowerCase()}
             key={`${formatedString(tab)}_${index}`}
@@ -184,7 +241,7 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
               <Table className="w-4/5 sm:w-full flex-1">
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    {data.table.header.map((header, index) => (
+                    {hdata.table.header.map((header, index) => (
                       <TableHead
                         key={`${formatedString(
                           header.toLocaleLowerCase()
@@ -198,10 +255,10 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {gdata.length <= 0 ? (
+                  {data.length <= 0 ? (
                     <>
                       <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-                        {data.table.header.map((header, index) => (
+                        {hdata.table.header.map((header, index) => (
                           <TableCell
                             className="font-medium text-left text-[#7c7c8d] py-2"
                             key={`${header}_skeleton_${index}`}
@@ -213,99 +270,114 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
                     </>
                   ) : (
                     <>
-                      {gdata.slice(0, rowsMax).map((row, index) => (
-                        <TableRow
-                          className="hover:bg-transparent border-[#7c7c8d]"
-                          key={`${formatedString(
-                            row.txid.toLocaleLowerCase()
-                          )}_${index}`}
-                        >
-                          <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d]">
-                            {index + 1}
-                          </TableCell>
-                          <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                            {row.date}
-                          </TableCell>
+                      {data
+                        ?.sort(
+                          (a, b) =>
+                            new Date(b.date).getTime() -
+                            new Date(a.date).getTime()
+                        )
 
-                          <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-white">
-                            <div
-                              className="flex gap-5 items-center justify-between w-full cursor-pointer truncate max-w-36"
-                              onClick={() => {
-                                navigator.clipboard.writeText(row.txid);
-                                toast({
-                                  title: "Added to clipboard",
-                                });
-                              }}
-                            >
-                              {removeMiddleString(row.txid)}
-                            </div>
-                          </TableCell>
+                        .map((row, index) => (
+                          <TableRow
+                            className="hover:bg-transparent border-[#7c7c8d]"
+                            key={`${formatedString(
+                              row.txid.toLocaleLowerCase()
+                            )}_${index}`}
+                          >
+                            <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d]">
+                              {index + 1}
+                            </TableCell>
+                            <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                              {row.date}
+                            </TableCell>
 
-                          <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                            <div className="flex justify-between items-center max-w-36 gap-5">
-                              {row.platform}
-                              {!isEXTRASMALL ? (
-                                <Image
-                                  src={row.platform_icon}
-                                  alt={`${row.platform}_logo-icon`}
-                                  width={24}
-                                  height={24}
-                                />
-                              ) : null}
-                            </div>
-                          </TableCell>
-
-                          <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                            {row.type}
-                          </TableCell>
-                          <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                            <div className="flex justify-start items-center gap-5">
-                              <div className="flex justify-start gap-2">
-                                <span>
-                                  -
-                                  {formatedNumber(
-                                    row.outgoing,
-                                    3,
-                                    isEXTRASMALL
-                                  )}
-                                </span>
-                                <span>{row.outgoing_currency}</span>
+                            <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-white">
+                              <div
+                                className="flex gap-5 items-center justify-between w-full cursor-pointer truncate max-w-36"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(row.txid);
+                                  toast({
+                                    title: "Added to clipboard",
+                                  });
+                                }}
+                              >
+                                {removeMiddleString(row.txid)}
                               </div>
-                              {!isEXTRASMALL ? (
-                                <Image
-                                  src={row.outgoing_icon}
-                                  alt={`outgoing_logo-icon`}
-                                  width={24}
-                                  height={24}
-                                />
-                              ) : null}
-                            </div>
-                          </TableCell>
-                          <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                            <div className="flex justify-start items-center gap-5">
-                              <div className="flex justify-start gap-2">
-                                <span>
-                                  +
-                                  {formatedNumber(
-                                    row.incoming,
-                                    3,
-                                    isEXTRASMALL
-                                  )}
-                                </span>
-                                <span>{row.incoming_currency}</span>
+                            </TableCell>
+
+                            <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                              <div className="flex justify-between items-center max-w-36 gap-5">
+                                {row.platform}
+                                {!isEXTRASMALL ? (
+                                  <Image
+                                    src={row.platform_icon ?? ""}
+                                    alt={`${row.platform}_logo-icon`}
+                                    width={24}
+                                    height={24}
+                                  />
+                                ) : null}
                               </div>
-                              {!isEXTRASMALL ? (
-                                <Image
-                                  src={row.incoming_icon}
-                                  alt={`incoming_icon-icon`}
-                                  width={24}
-                                  height={24}
-                                />
-                              ) : null}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                              {row.type}
+                            </TableCell>
+                            {row?.outgoing ? (
+                              <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                                <div className="flex justify-start items-center gap-5">
+                                  <div className="flex justify-start gap-2">
+                                    <span>
+                                      -
+                                      {formatedNumber(
+                                        row?.outgoing ?? 0,
+                                        3,
+                                        isEXTRASMALL
+                                      )}
+                                    </span>
+                                    <span>{row.outgoing_currency}</span>
+                                  </div>
+                                  {!isEXTRASMALL ? (
+                                    <Image
+                                      src={row.outgoing_icon ?? ""}
+                                      alt={`outgoing_logo-icon`}
+                                      width={24}
+                                      height={24}
+                                    />
+                                  ) : null}
+                                </div>
+                              </TableCell>
+                            ) : (
+                              <TableCell />
+                            )}
+                            {row.incoming ? (
+                              <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                                <div className="flex justify-start items-center gap-5">
+                                  <div className="flex justify-start gap-2">
+                                    <span>
+                                      +
+                                      {formatedNumber(
+                                        row.incoming ?? 0,
+                                        3,
+                                        isEXTRASMALL
+                                      )}
+                                    </span>
+                                    <span>{row.incoming_currency}</span>
+                                  </div>
+                                  {!isEXTRASMALL ? (
+                                    <Image
+                                      src={row.incoming_icon ?? ""}
+                                      alt={`incoming_icon-icon`}
+                                      width={24}
+                                      height={24}
+                                    />
+                                  ) : null}
+                                </div>
+                              </TableCell>
+                            ) : (
+                              <TableCell />
+                            )}
+                          </TableRow>
+                        ))}
                     </>
                   )}
                 </TableBody>
@@ -319,3 +391,24 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
 };
 
 export default TransactionHistory;
+
+const hdata = {
+  title: "Transaction History",
+  table: {
+    header: ["N", "Date", "TXID", "Platform", "Type", "Outgoing", "Incoming"],
+  },
+  actions: {
+    rows: [50, 100],
+    arrows: [
+      <ChevronFirst
+        className="w-4 h-4 sm:w-6 sm:h-6 aspect-square object-contain"
+        key="chevron-first"
+      />,
+      <ChevronLast
+        className="w-4 h-4 sm:w-6 sm:h-6 aspect-square object-contain"
+        key="chevron-last"
+      />,
+    ],
+    tabs: ["Recive", "All", "Swap", "Deposit", "Withdraw", "Repay", "Send"],
+  },
+};
