@@ -3,21 +3,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { connection } from "@/lib/get-connections";
-import { getPrice, getTokenBalanceFromWallet } from "@/lib/get-wallet";
 import formatedNumber from "@/lib/numbers";
-import { useSwapModal } from "@/lib/stores/swap.store";
 import { removeMiddleString } from "@/lib/string";
-import { Jupiter, TOKEN_LIST_URL, getPlatformFeeAccounts } from "@jup-ag/core";
+import { TOKEN_LIST_URL } from "@jup-ag/core";
 import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  LAMPORTS_PER_SOL,
-  PublicKey,
-  sendAndConfirmRawTransaction,
-} from "@solana/web3.js";
 import { ChevronsDown, ChevronsUpDown } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useLayoutEffect, useState } from "react";
+import {
+  sendAndConfirmTransaction,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import { useAtom } from "jotai";
+import { tokenAtom, TokenType } from "@/stores/tokens";
+import useWalletBalance from "@/hooks/useWalletBalance";
+import { swapAtom, swapModalAtom } from "@/stores/swap";
+import { createJupiterApiClient } from "@jup-ag/api";
+import { getPrice } from "@/data/price";
+import { CircularProgress, Skeleton } from "@mui/material";
+import { debounce } from "lodash";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -40,36 +44,42 @@ type SwapInfoProps = {
 
 type SwapBlockProps = {
   title: string;
-  onUpdate: (e: any) => void;
-  onModal: () => void;
-  value: number;
   isEXTRASMALL: boolean;
-  balance: string;
-  data: {
-    address: string;
-    chainId: number;
-    decimals: number;
-    balance?: number;
-    extensions: {
-      coingeckoId: string;
-    };
-    logoURI: string;
-    name: string;
-    price: number;
-    symbol: string;
-    tags: string[];
-  };
+  balance: number;
+  amount: number;
+  loading?: boolean;
+  onAmountUpdate: (value: number) => void;
+  token?: Partial<TokenType>;
+  disabled?: boolean;
+  onShowModal: () => void;
 };
 
 const SwapBlock = ({
   title,
-  onUpdate,
-  onModal,
-  balance,
-  value,
-  data,
   isEXTRASMALL,
+  token,
+  balance,
+  onAmountUpdate,
+  amount,
+  loading,
+  onShowModal,
+  disabled,
 }: SwapBlockProps) => {
+  const handleChangeAmount = useCallback(
+    (e: number) => {
+      onAmountUpdate(e);
+    },
+    [onAmountUpdate]
+  );
+  const localAmount = useRef(amount);
+  useEffect(() => {
+    if (amount !== localAmount.current) {
+      const t = amount;
+      localAmount.current = amount;
+      handleChangeAmount(amount);
+    }
+  }, [amount, handleChangeAmount]);
+  if (!token) return <></>;
   return (
     <>
       <div className="flex justify-between items-center w-full">
@@ -77,39 +87,53 @@ const SwapBlock = ({
           {title}
         </h6>
         <div className="text-sm flex gap-2 items-center">
-          Balance: {formatedNumber(+balance, 2, isEXTRASMALL)}
-          <span>{data.symbol}</span>
+          Balance: {formatedNumber(+balance, 6, isEXTRASMALL)}
+          <span>{token?.symbol}</span>
         </div>
       </div>
       <div className="flex justify-between items-center w-full gap-4 p-3 md:p-5 bg-[#0d111b40] rounded-lg">
         <Button
           className="rounded-full flex gap-3 md:gap-6 justify-between items-center flex-1 md:min-w-[170px]"
-          onClick={onModal}
+          onClick={onShowModal}
           style={{
             boxShadow: "0 0 5px rgba(217, 248, 255, 0.25)",
           }}
         >
-          <Image
-            src={data.logoURI ? data.logoURI : "/assets/images/solana-1@2x.png"}
+          <img
+            src={
+              token.logoURI ? token.logoURI : "/assets/images/solana-1@2x.png"
+            }
             alt="solana_icons"
             width={24}
             height={24}
             className="max-h-5 aspect-square object-contain"
           />
-          <div className="text-sm">{data.symbol}</div>
+          <div className="text-sm">{token.symbol}</div>
           <ChevronsDown className="w-5 h-5 min-w-[1.25rem] aspect-square object-contain text-[#d9f8ff50] hidden md:flex" />
         </Button>
-        <Input
-          type="number"
-          placeholder="0.00"
-          required
-          className="h-9 bg-[#0d111b] max-w-[80px] md:max-w-[140px] rounded-lg"
-          value={value}
-          min={0.01}
-          max={4000}
-          color="#ff0"
-          onChange={onUpdate}
-        />
+        {loading ? (
+          <Skeleton
+            sx={{
+              width: { md: 140, xs: 80 },
+              transform: "scale(1)",
+              height: "36px !important",
+              background: "--primary-gradient",
+              border: "1px solid",
+            }}
+          />
+        ) : (
+          <Input
+            disabled={disabled}
+            type="number"
+            required
+            className="h-9 bg-[#0d111b] max-w-[80px] md:max-w-[140px] rounded-lg"
+            value={amount}
+            color="#ff0"
+            onChange={(e) => {
+              handleChangeAmount(Number(e.target.value));
+            }}
+          />
+        )}
       </div>
     </>
   );
@@ -189,7 +213,7 @@ const SwapTitle = () => (
     <h3 className="text-sm sm:text-lg md:text-xl xl:text-4xl uppercase relative font-['Syne'] text-[#d9f8ff] py-5">
       Swap with the best route
     </h3>
-    <Image
+    <img
       src="/assets/images/swap_icon.png"
       alt="swap icon \ arrows"
       width={64}
@@ -198,131 +222,108 @@ const SwapTitle = () => (
     />
   </div>
 );
+
+const jupiterQuoteApi = createJupiterApiClient();
+
 const IndexSwap = ({ isEXTRASMALL }: Props) => {
-  const [tokenList, setTokenList] = useState<any>([]);
-  const [firstToken, setFirstToken] = useState<any>(null);
-  const [secondToken, setSecondToken] = useState<any>(null);
-  const [fetched, setFetched] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [secondAmount, setSecondAmount] = useState(0);
-
-  const { publicKey, wallet } = useWallet();
-  useEffect(() => {
-    if (!fetched) {
-      (async () => {
-        const tokens = await (
-          await fetch(TOKEN_LIST_URL["mainnet-beta"])
-        ).json();
-        setTokenList(tokens);
-        const solana = tokens.find((t: any) => t.symbol === "SOL");
-        solana.price = await getPrice("SOL");
-        setFirstToken(solana);
-        const USDC = tokens.find((t: any) => t.symbol === "USDC");
-        USDC.price = await getPrice("USDC");
-        setSecondToken(USDC);
-        setFetched(true);
-      })();
-    }
-  }, []);
-  const fetchTokensWithWallet = async () => {
-    const tokens = tokenList;
-    if (publicKey === null) {
-      return false;
-    }
-    const walletTokens = await getTokenBalanceFromWallet(publicKey);
-    walletTokens.map((item: any) => {
-      tokens.forEach(async (token: any) => {
-        if (
-          "parsed" in item.account.data &&
-          item.account.data.parsed.info.mint === token.address
-        ) {
-          token.balance = item.account.data.parsed.info.tokenAmount.uiAmount;
-          token.price = await getPrice(token.symbol);
-        }
-      });
-    });
-    const solanaToken = tokens.find((token: any) => token.symbol === "SOL");
-    solanaToken.balance =
-      (await connection.getBalance(publicKey)) / LAMPORTS_PER_SOL;
-    setTokenList(tokens);
-  };
-
-  useEffect(() => {
-    if (publicKey && fetched) fetchTokensWithWallet();
-  }, [publicKey, fetched]);
+  const [, setTokenList] = useAtom(tokenAtom);
+  const [swapData, setSwapData] = useAtom(swapAtom);
+  const { publicKey, wallet, signTransaction, sendTransaction } = useWallet();
+  const { tokens: userWalletTokens, refetch } = useWalletBalance(
+    connection,
+    publicKey
+  );
+  const [, updateModal] = useAtom(swapModalAtom);
 
   const { toast } = useToast();
-  const makeSwap = async () => {
-    try {
-      const platformFeeAndAccounts = {
-        feeBps: 50,
-        feeAccounts: await getPlatformFeeAccounts(
-          connection,
-          new PublicKey("BUX7s2ef2htTGb2KKoPHWkmzxPj4nTWMWRgs5CSbQxf9") // The platform fee account owner
-        ),
-      };
-      //  Load Jupiter
-      const jupiter = await Jupiter.load({
-        connection,
-        cluster: "mainnet-beta",
-        // @ts-ignore
-        user: publicKey, // or public key
-        platformFeeAndAccounts,
-      });
-      const routes = await jupiter.computeRoutes({
-        inputMint: new PublicKey(firstToken.address),
-        outputMint: new PublicKey(secondToken.address),
-        // @ts-ignore
-        amount: JSBI.BigInt(parseInt(amount * 10 ** firstToken.decimals)), // 1000000 => 1 USDC if inputToken.address is USDC mint.
-        slippageBps: 1, // 1 bps = 0.01%.
-        // forceFetch (optional) => to force fetching routes and not use the cache.
-        // intermediateTokens => if provided will only find routes that use the intermediate tokens.
-        // feeBps => the extra fee in BPS you want to charge on top of this swap.
-        // onlyDirectRoutes =>  Only show single hop routes.
-        // swapMode => "ExactIn" | "ExactOut" Defaults to "ExactIn"  "ExactOut" is to support use cases like payments when you want an exact output amount.
-        // enforceSingleTx =>  Only show routes where only one single transaction is used to perform the Jupiter swap.
-      });
-      const { swapTransaction, addressLookupTableAccounts } =
-        await jupiter.exchange({
-          routeInfo: routes.routesInfos[0],
+
+  const handleRouters = useCallback(
+    async (e: number) => {
+      if (
+        !swapData ||
+        !swapData.firstToken?.address ||
+        !swapData.firstToken.decimals ||
+        !swapData.secondToken?.decimals ||
+        !swapData.secondToken ||
+        !swapData.secondToken?.address
+      )
+        return;
+      try {
+        console.log(swapData);
+        setIsFetching(true);
+        const quoteResponse = await jupiterQuoteApi.quoteGet({
+          inputMint: swapData.firstToken.address,
+          outputMint: swapData.secondToken.address,
+          amount: Number((e * 10 ** swapData.firstToken.decimals).toFixed(0)),
         });
-      // @ts-ignore
-      var message = TransactionMessage.decompile(Transaction.message, {
-        addressLookupTableAccounts: addressLookupTableAccounts,
+        setSwapData((e) => ({
+          ...e,
+          quoteResponse,
+          secondAmount:
+            Number(quoteResponse.outAmount) /
+            10 ** (swapData?.secondToken?.decimals ?? 0),
+        }));
+        setIsFetching(false);
+      } catch (error) {
+        console.error(error);
+        setIsFetching(false);
+      }
+    },
+    [setSwapData, swapData]
+  );
+  const debouncedHandleRouters = useCallback(debounce(handleRouters, 500), [
+    handleRouters,
+  ]);
+
+  const makeSwap = async () => {
+    if (
+      !swapData ||
+      !swapData.firstToken ||
+      !swapData.secondToken ||
+      !signTransaction ||
+      !publicKey ||
+      !swapData.firstToken.address ||
+      !swapData.secondToken.address ||
+      !swapData.quoteResponse
+    )
+      return;
+
+    // TODO add routers and data
+    try {
+      const { swapTransaction } = await jupiterQuoteApi.swapPost({
+        swapRequest: {
+          quoteResponse: swapData.quoteResponse,
+          userPublicKey: publicKey.toBase58(),
+        },
+      });
+      const swapTransactionBuf = Buffer.from(swapTransaction, "base64");
+      const transaction = VersionedTransaction.deserialize(swapTransactionBuf);
+      const d = await signTransaction(transaction);
+      const rawTransaction = d.serialize();
+      const txid = await connection.sendRawTransaction(rawTransaction, {
+        maxRetries: 2,
+        skipPreflight: true,
       });
 
-      // decompile transaction message and add transfer instruction
-      // @ts-ignore
-      message = TransactionMessage.decompile(swapTransaction.message, {
-        addressLookupTableAccounts: addressLookupTableAccounts,
+      // await connection.confirmTransaction(txid);
+      toast({
+        title: "Transaction sent",
+        description: `https://solscan.io/tx/${txid}`,
+        color: "green",
       });
-
-      // create your instruction and add it to message.instructions
-      // @ts-ignore
-      const instruction = message.instructions.push(instruction); // add your own instruction here
-
-      // compile the message and update the swapTransaction
-      // @ts-ignore
-      swapTransaction.message = message.compileToV0Message(
-        addressLookupTableAccounts
-      );
-      // @ts-ignore
-      swapTransaction.sign([wallet.payer]);
-      // Execute the transaction
-      const rawTransaction = swapTransaction.serialize();
-      const txid = await sendAndConfirmRawTransaction(
-        connection,
+      await refetch();
+      updateSwapBalance();
+    } catch (e: unknown) {
+      toast({
+        title: "Error while swapping:",
         // @ts-ignore
-        rawTransaction,
-        {
-          skipPreflight: true,
-          commitment: "confirmed",
-          maxRetries: 2,
-        }
-      );
-      console.log(`https://solscan.io/tx/${txid}`);
-    } catch (error) {
-      console.log({ error });
+        description: e.message,
+        color: "red",
+        variant: "destructive",
+      });
     }
   };
 
@@ -330,51 +331,145 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
     setAmount(e.target.value);
   };
 
-  useEffect(() => {
-    firstToken && amount && setSecondAmount(amount * firstToken.price);
-  }, [amount, firstToken, secondToken]);
+  const calculatePrice = useCallback(async () => {
+    if (
+      swapData.firstToken &&
+      swapData.secondToken &&
+      swapData.firstToken.address &&
+      swapData.secondToken.address
+    ) {
+      const firstP = (await getPrice(swapData.firstToken.address)) ?? 0;
+      const secondP = (await getPrice(swapData.secondToken.address)) ?? 0;
+      setSwapData((e) => ({
+        ...e,
+        firstToken: {
+          ...e.firstToken,
+          price: firstP,
+        },
+        secondToken: {
+          ...e.secondToken,
+          price: secondP,
+        },
+      }));
+    }
+  }, [setSwapData, swapData.firstToken, swapData.secondToken]);
 
-  useEffect(() => {
-    firstToken && secondAmount && setAmount(secondAmount / firstToken.price);
-  }, [secondAmount, firstToken, secondToken]);
-
-  const { onOpen } = useSwapModal();
-
-  const [data, setData] = useState({
-    paying: {
-      you: 0,
-      recive: 0,
+  const handleOpenModal = useCallback(
+    (value: "first" | "second") => {
+      updateModal({
+        open: true,
+        type: value,
+      });
     },
-    information: [
-      {
-        title: "Price Impact",
-        value: 0.1,
-        sign: "less",
-      },
-      {
-        title: "Minimum Received",
-        value: 0.190275191,
-        currency: "SOL",
-      },
-      {
-        title: "Transaction Fee",
-        value: 0.000005,
-        currency: "SOL",
-      },
-      {
-        title: "Deposit",
-        value: 0.00203928,
-        currency: "SOL",
-        text: "for 1 ATA account",
-      },
-    ],
-  });
+    [updateModal]
+  );
+  // update the user balance
+  const updateSwapBalance = useCallback(() => {
+    const isFirstExist = userWalletTokens.findIndex(
+      (e) => e.address === swapData.firstToken?.address
+    );
+    const isSecondExist = userWalletTokens.findIndex(
+      (e) => e.address === swapData.secondToken?.address
+    );
+    if (isFirstExist > -1) {
+      setSwapData((e) => ({
+        ...e,
+        firstUserBalance: userWalletTokens[isFirstExist].amount,
+      }));
+    } else {
+      setSwapData((e) => ({
+        ...e,
+        firstUserBalance: 0,
+      }));
+    }
+    if (isSecondExist > -1) {
+      setSwapData((e) => ({
+        ...e,
+        secondUserBalance: userWalletTokens[isSecondExist].amount,
+      }));
+    } else {
+      setSwapData((e) => ({
+        ...e,
+        secondUserBalance: 0,
+      }));
+    }
+  }, [setSwapData, swapData, userWalletTokens]);
+
+  const prevFirstToken = useRef(swapData.firstToken?.address);
+  const prevSecondToken = useRef(swapData.secondToken?.address);
+  useEffect(() => {
+    // Check if firstToken or secondToken has changed
+    if (
+      prevFirstToken.current !== swapData.firstToken?.address ||
+      prevSecondToken.current !== swapData.secondToken?.address
+    ) {
+      updateSwapBalance();
+      calculatePrice();
+      // Update the previous values
+      prevFirstToken.current = swapData.firstToken?.address;
+      prevSecondToken.current = swapData.secondToken?.address;
+    }
+  }, [
+    calculatePrice,
+    setSwapData,
+    swapData,
+    swapData.firstToken,
+    swapData.secondToken,
+    updateSwapBalance,
+    userWalletTokens,
+  ]);
+
+  useEffect(() => {
+    if (loading && userWalletTokens.length > 0) {
+      (async () => {
+        setLoading(false);
+        const tokens: TokenType[] = await (
+          await fetch(TOKEN_LIST_URL["mainnet-beta"])
+        ).json();
+        if (tokens) {
+          setTokenList(tokens);
+          const solana = tokens.find((t: any) => t.symbol === "SOL");
+          const USDC = tokens.find((t: any) => t.symbol === "USDC");
+
+          if (solana && USDC) {
+            setSwapData((e) => ({
+              firstToken: solana,
+              secondToken: USDC,
+              firstUserBalance: 0,
+              secondUserBalance: 0,
+              secondAmount: 0,
+              firstAmount: 0,
+            }));
+            updateSwapBalance();
+          }
+        }
+      })();
+    }
+  }, [
+    loading,
+    setSwapData,
+    setTokenList,
+    swapData,
+    updateSwapBalance,
+    userWalletTokens.length,
+  ]);
+
+  useEffect(() => {
+    const updateWalletInterval = setInterval(async () => {
+      refetch();
+      updateSwapBalance();
+    }, 50000);
+
+    return () => {
+      clearInterval(updateWalletInterval);
+    };
+  }, [refetch]);
+
   return (
     <>
-      {firstToken && secondToken ? (
-        <div className="z-50 static p-5 flex flex-col gap-5 items-center">
+      {swapData.firstToken && swapData.secondToken ? (
+        <div className="z-50 static p-5 flex flex-col gap-5 items-center justify-center">
           <SwapTitle />
-
           <div
             className={`${
               isEXTRASMALL ? "max-w-[300px]" : "max-w-xs"
@@ -388,83 +483,74 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
             {/* background */}
             <SwapBlock
               title="You’re Paying"
-              data={firstToken}
               isEXTRASMALL={isEXTRASMALL}
-              value={data.paying.you}
-              balance={"0"}
-              onModal={() => {
-                console.log("click!");
-                onOpen();
+              token={swapData.firstToken}
+              onShowModal={() => handleOpenModal("first")}
+              amount={swapData.firstAmount}
+              balance={swapData.firstUserBalance}
+              onAmountUpdate={(e) => {
+                setSwapData((b) => ({
+                  ...b,
+                  firstAmount: e,
+                }));
+                debouncedHandleRouters(e);
               }}
-              onUpdate={(e) =>
-                setData({
-                  ...data,
-                  paying: {
-                    ...data.paying,
-                    you:
-                      +e.target.value.slice(0, 4) > 4000
-                        ? 4000
-                        : +e.target.value.slice(0, 4),
-                  },
-                })
-              }
             />
 
             <SwapActions
               onToggle={() => {
-                setSecondToken(firstToken);
-                setFirstToken(secondToken);
+                setSwapData((e) => ({
+                  ...e,
+                  firstToken: e.secondToken,
+                  secondToken: e.firstToken,
+                }));
+                updateSwapBalance();
               }}
               onRate={(value: number) =>
-                setAmount(
-                  firstToken.balance
-                    ? +formatedNumber(
-                        firstToken.balance * value,
-                        2,
-                        isEXTRASMALL
-                      )
-                    : +formatedNumber(0 * value, 2, isEXTRASMALL)
-                )
+                setSwapData((b) => ({
+                  ...b,
+                  firstAmount: b.firstUserBalance
+                    ? b.firstUserBalance * value
+                    : 0,
+                }))
               }
             />
 
             <SwapBlock
               title="To Receive"
-              balance={"0"}
-              data={secondToken}
-              onModal={() => {
-                console.log("click! SECOND");
-                onOpen();
-              }}
-              value={data.paying.recive}
               isEXTRASMALL={isEXTRASMALL}
-              onUpdate={(e) => {
-                setData({
-                  ...data,
-                  paying: {
-                    ...data.paying,
-                    recive:
-                      +e.target.value.slice(0, 4) > 4000
-                        ? 4000
-                        : +e.target.value.slice(0, 4),
-                  },
-                });
+              token={swapData.secondToken}
+              onShowModal={() => handleOpenModal("second")}
+              amount={swapData.secondAmount}
+              balance={swapData.secondUserBalance}
+              disabled
+              loading={isFetching}
+              onAmountUpdate={(e) => {
+                setSwapData((b) => ({
+                  ...b,
+                  secondAmount: e,
+                }));
               }}
             />
 
             <div className="flex flex-col gap-2">
               <div className="text-[#757788] text-xs flex gap-2 w-full items-center relative">
-                <Image
+                <img
                   src="/assets/icons/main/green_dot.svg"
                   alt="green dot / main"
                   width={4}
                   height={4}
                 />
-                <p>{firstToken.symbol}</p>
+                <p>{swapData.firstToken.symbol}</p>
                 <p>&asymp;</p>
                 <p>
-                  {formatedNumber(firstToken.price, 4, isEXTRASMALL)}{" "}
-                  {firstToken.symbol}
+                  {formatedNumber(
+                    (swapData.firstToken.price ?? 0) /
+                      (swapData.secondToken.price ?? 0),
+                    4,
+                    isEXTRASMALL
+                  )}{" "}
+                  {swapData.secondToken.symbol}
                 </p>
               </div>
             </div>
@@ -472,11 +558,16 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
             <div className="flex flex-col gap-2">
               <div className="text-[#757788] text-xs flex gap-2 w-full items-center relative">
                 <div className="w-1 h-1" />
-                <p>{secondToken.symbol}</p>
+                <p>{swapData.secondToken.symbol}</p>
                 <p>&asymp;</p>
                 <p>
-                  {formatedNumber(secondToken.price, 4, isEXTRASMALL)}{" "}
-                  {secondToken.symbol}
+                  {formatedNumber(
+                    (swapData.secondToken.price ?? 0) /
+                      (swapData.firstToken.price ?? 0),
+                    4,
+                    isEXTRASMALL
+                  )}{" "}
+                  {swapData.firstToken.symbol}
                 </p>
               </div>
             </div>
@@ -486,79 +577,121 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
 
             <div className="flex justify-between items-center gap-4">
               <div
-                key={`${firstToken.address}_address-info`}
+                key={`${swapData.firstToken.address}_address-info`}
                 className="w-full md:w-1/2 flex gap-4 items-center"
               >
-                <Image
-                  src={firstToken.logoURI}
-                  alt={`${firstToken.symbol}-logo / main`}
+                <img
+                  src={swapData.firstToken.logoURI}
+                  alt={`${swapData.firstToken.symbol}-logo / main`}
                   width={24}
                   height={24}
                   className="aspect-square w-6 h-6 object-contain"
                 />
                 <div className="flex flex-col truncate gap-1">
                   <span className="text-xs md:text-sm">
-                    {firstToken.symbol} $
-                    {formatedNumber(firstToken.price, 4, isEXTRASMALL)}
+                    {swapData.firstToken.symbol} $
+                    {formatedNumber(
+                      swapData.firstToken.price ?? 0,
+                      4,
+                      isEXTRASMALL
+                    )}
                   </span>
                   <span
                     className="text-xs md:text-sm cursor-pointer border-b border-solid border-[#d9f8ff60] w-max"
                     onClick={() => {
-                      navigator.clipboard.writeText(firstToken.address);
+                      navigator.clipboard.writeText(
+                        swapData.firstToken?.address ?? ""
+                      );
                       toast({
                         title: "Added to clipboard",
                       });
                     }}
                   >
-                    {removeMiddleString(firstToken.address)}
+                    {removeMiddleString(swapData.firstToken.address ?? "")}
                   </span>
                 </div>
               </div>
               <div
-                key={`${secondToken.address}_address-info`}
+                key={`${swapData.secondToken.address}_address-info`}
                 className="w-full md:w-1/2 flex gap-4 items-center"
               >
-                <Image
-                  src={secondToken.logoURI}
-                  alt={`${secondToken.symbol}-logo / main`}
+                <img
+                  src={swapData.secondToken.logoURI}
+                  alt={`${swapData.secondToken.symbol}-logo / main`}
                   width={24}
                   height={24}
                   className="aspect-square w-6 h-6 object-contain"
                 />
                 <div className="flex flex-col truncate gap-1">
                   <span className="text-xs md:text-sm">
-                    {secondToken.symbol} $
-                    {formatedNumber(secondToken.price, 4, isEXTRASMALL)}
+                    {swapData.secondToken.symbol} $
+                    {formatedNumber(
+                      swapData.secondToken.price ?? 0,
+                      4,
+                      isEXTRASMALL
+                    )}
                   </span>
                   <span
                     className="text-xs md:text-sm cursor-pointer border-b border-solid border-[#d9f8ff60] w-max"
                     onClick={() => {
-                      navigator.clipboard.writeText(secondToken.address);
+                      navigator.clipboard.writeText(
+                        swapData.secondToken?.address ?? ""
+                      );
                       toast({
                         title: "Added to clipboard",
                       });
                     }}
                   >
-                    {removeMiddleString(secondToken.address)}
+                    {removeMiddleString(swapData.secondToken.address ?? "")}
                   </span>
                 </div>
               </div>
             </div>
 
             <Button onClick={makeSwap} disabled={!publicKey}>
-              Swap
+              {loading || isFetching ? "Loading..." : "Swap"}
             </Button>
           </div>
         </div>
-      ) : null}
-      <SwapModal
-        tokens={tokenList}
-        setToken={setSecondToken}
-        firstToken={firstToken}
-        secondToken={secondToken}
-      />
+      ) : (
+        <CircularProgress
+          sx={{
+            position: "absolute",
+            color: "#fff",
+            top: "50%",
+            left: "50%",
+          }}
+        />
+      )}
+      <SwapModal />
     </>
   );
 };
 
 export default IndexSwap;
+
+const data = {
+  information: [
+    {
+      title: "Price Impact",
+      value: 0.1,
+      sign: "less",
+    },
+    {
+      title: "Minimum Received",
+      value: 0.190275191,
+      currency: "SOL",
+    },
+    {
+      title: "Transaction Fee",
+      value: 0.000005,
+      currency: "SOL",
+    },
+    {
+      title: "Deposit",
+      value: 0.00203928,
+      currency: "SOL",
+      text: "for 1 ATA account",
+    },
+  ],
+};

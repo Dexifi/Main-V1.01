@@ -5,6 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
 import { Header } from "../dashboard/(components)";
 import { SwapBody, SwapFooter } from "./(components)";
+import { JupiterProvider } from "@jup-ag/react-hook";
+import { connection } from "@/lib/get-connections";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 type Props = {};
 

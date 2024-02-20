@@ -75,7 +75,7 @@ const useWalletBalance = (
       logoURI: "/solana-copy-2@2x.png",
       tags: ["native"],
       decimals: 9,
-      address: "11111111111111111111111111111111",
+      address: "So11111111111111111111111111111111111111112",
       price: solPrice,
     });
     setTokens(localTokens);
@@ -87,10 +87,15 @@ const useWalletBalance = (
     }
   }, [getTokens, loading, publicKey, tokens.length]);
 
+  const refetch = async () => {
+    await getTokens();
+  };
+
   return {
     tokens,
     loading,
     walletBalance,
+    refetch,
   };
 };
 export default useWalletBalance;
