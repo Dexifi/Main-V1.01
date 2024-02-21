@@ -318,11 +318,15 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
         maxRetries: 2,
         skipPreflight: true,
       });
+      console.log("confirm start:", txid);
+      const confirmation = await connection.confirmTransaction(txid);
+      console.log("confirm ends:", confirmation);
 
       // await connection.confirmTransaction(txid);
       toast({
         title: "Transaction sent",
-        description: `https://solscan.io/tx/${txid}`,
+        description: "Transaction has been sent to the network",
+        link: `https://solscan.io/tx/${txid}`,
         color: "green",
       });
       await refetch();
