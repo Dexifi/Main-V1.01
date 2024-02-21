@@ -701,10 +701,4 @@ let swapInformation: SwapInfoProps["data"] = [
     value: 0.000005,
     currency: "SOL",
   },
-  {
-    title: "Deposit",
-    value: 0,
-    currency: "SOL",
-    text: "for 1 ATA account",
-  },
 ];
