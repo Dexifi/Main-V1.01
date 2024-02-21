@@ -36,7 +36,7 @@ type SwapInfoProps = {
     sign?: "less" | "mass";
     title: string;
     value: number;
-    currency: string;
+    currency?: string;
     text?: string;
   }[];
   isEXTRASMALL: boolean;
@@ -266,10 +266,22 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
             Number(quoteResponse.outAmount) /
             10 ** (swapData?.secondToken?.decimals ?? 0),
         }));
+        swapInformation[0].value = Math.ceil(
+          Number(quoteResponse.priceImpactPct)
+        );
+        swapInformation[1].value = Number(
+          Number(quoteResponse.outAmount) -
+            quoteResponse.slippageBps * Number(quoteResponse.outAmount)
+        );
         setIsFetching(false);
       } catch (error) {
         console.error(error);
         setIsFetching(false);
+        setSwapData((e) => ({
+          ...e,
+          quoteResponse: undefined,
+          secondAmount: 0,
+        }));
       }
     },
     [setSwapData, swapData]
@@ -291,7 +303,6 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
     )
       return;
 
-    // TODO add routers and data
     try {
       const { swapTransaction } = await jupiterQuoteApi.swapPost({
         swapRequest: {
@@ -405,6 +416,7 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
     ) {
       updateSwapBalance();
       calculatePrice();
+      swapData.firstAmount && handleRouters(swapData.firstAmount);
       // Update the previous values
       prevFirstToken.current = swapData.firstToken?.address;
       prevSecondToken.current = swapData.secondToken?.address;
@@ -572,8 +584,7 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
               </div>
             </div>
 
-            {/* @ts-ignore */}
-            <SwapInfo data={data.information} isEXTRASMALL={isEXTRASMALL} />
+            <SwapInfo data={swapInformation} isEXTRASMALL={isEXTRASMALL} />
 
             <div className="flex justify-between items-center gap-4">
               <div
@@ -670,28 +681,26 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
 
 export default IndexSwap;
 
-const data = {
-  information: [
-    {
-      title: "Price Impact",
-      value: 0.1,
-      sign: "less",
-    },
-    {
-      title: "Minimum Received",
-      value: 0.190275191,
-      currency: "SOL",
-    },
-    {
-      title: "Transaction Fee",
-      value: 0.000005,
-      currency: "SOL",
-    },
-    {
-      title: "Deposit",
-      value: 0.00203928,
-      currency: "SOL",
-      text: "for 1 ATA account",
-    },
-  ],
-};
+let swapInformation: SwapInfoProps["data"] = [
+  {
+    title: "Price Impact",
+    value: 0,
+    sign: "less",
+  },
+  {
+    title: "Minimum Received",
+    value: 0,
+    currency: "SOL",
+  },
+  {
+    title: "Transaction Fee",
+    value: 0.000005,
+    currency: "SOL",
+  },
+  {
+    title: "Deposit",
+    value: 0,
+    currency: "SOL",
+    text: "for 1 ATA account",
+  },
+];
