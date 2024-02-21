@@ -541,7 +541,7 @@ const Sidebar = ({
   const handlePlaceOrder = async () => {};
   return (
     <div
-      className="h-max w-full lg:w-1/2 xl:w-full 2xl:w-1/2 rounded-xl p-5 gap-4 flex flex-col"
+      className="h-max w-full rounded-xl p-5 gap-4 flex flex-col"
       style={{
         boxShadow: "0 0 4px #88d6ff",
       }}
@@ -706,7 +706,7 @@ const OrderBook = ({ data, isEXTRASMALL, bids, asks }: OrderBookProps) => {
 
   return (
     <div
-      className="h-max w-full lg:w-1/2 xl:w-full 2xl:w-1/2 rounded-xl p-5 gap-4 flex flex-col"
+      className="h-max w-full rounded-xl p-5 gap-4 flex flex-col"
       style={{
         boxShadow: "0 0 4px #88d6ff",
       }}
@@ -1039,7 +1039,7 @@ const TradeChart = ({ isEXTRASMALL }: Props) => {
             <Balance data={orders} isEXTRASMALL={isEXTRASMALL} />
           </div>
         </div>
-        <div className="flex flex-wrap md:flex-nowrap xl:flex-wrap 2xl:flex-nowrap w-full gap-4">
+        <div className="flex flex-col w-full gap-4">
           <Sidebar
             data={selectedMarket}
             isEXTRASMALL={isEXTRASMALL}

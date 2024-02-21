@@ -7,55 +7,71 @@ import { Input } from "@/components/ui/input";
 import { useSwapModal } from "@/lib/stores/swap.store";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { Skeleton } from "../ui/skeleton";
 import { getPrice } from "@/data/price";
+import { useAtom } from "jotai";
+import { tokenAtom, TokenType } from "@/stores/tokens";
+import { mainTokens } from "@/configuration/tokens";
+import { swapAtom, swapModalAtom } from "@/stores/swap";
 
-type Props = {
-  tokens: any;
-  setToken: any;
-  firstToken: any;
-  secondToken: any;
-};
-
-const filterData = (data: any, searchValue: string) =>
+const filterData = (data: TokenType[], searchValue: string) =>
   data.filter(
-    (token: any) =>
-      token.symbol.concat(token.body).includes(searchValue) ||
-      token.address.concat(token.body).includes(searchValue)
+    (token: TokenType) =>
+      token.symbol
+        .toLocaleLowerCase()
+        .includes(searchValue.toLocaleLowerCase()) ||
+      token.address
+        .toLocaleLowerCase()
+        .includes(searchValue.toLocaleLowerCase())
   );
 
-const SwapModal = ({ tokens, setToken, firstToken, secondToken }: Props) => {
+const SwapModal = () => {
   const [search, setSearch] = useState("");
-  const { isOpen, onClose } = useSwapModal();
+  const [tokenList] = useAtom(tokenAtom);
+  const [swapData, setSwapData] = useAtom(swapAtom);
+  const [{ open, type }, setModal] = useAtom(swapModalAtom);
 
-  tokens &&
-    tokens.sort((a: any, b: any) => {
-      if (a.balance != null && b.balance != null) {
-        return b.balance - a.balance;
-      } else if (a.balance != null && b.balance == null) {
-        return -1;
-      } else if (a.balance == null && b.balance != null) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-  const setDefaultTokens = async (tokenSymbol: string) => {
-    const thisToken = tokens.find((item: any) => item.symbol === tokenSymbol);
-    if (
-      firstToken.symbol !== thisToken.symbol &&
-      secondToken.symbol !== thisToken.symbol
-    )
-      setToken(thisToken);
-  };
+  tokenList.length > 0
+    ? tokenList.sort((a: any, b: any) => {
+        if (a.balance != null && b.balance != null) {
+          return b.balance - a.balance;
+        } else if (a.balance != null && b.balance == null) {
+          return -1;
+        } else if (a.balance == null && b.balance != null) {
+          return 1;
+        } else {
+          return 0;
+        }
+      })
+    : [];
+
   const swap_modal = {
     title: "Token List",
-    tokens: ["USDT", "USDC", "DRACO"],
+    tokens: mainTokens,
   };
+
+  const handleSelect = useCallback(
+    (token: TokenType) => {
+      if (type === "first") {
+        if (token.address === swapData.secondToken?.address) return;
+        setSwapData((e) => ({ ...e, firstToken: token }));
+      } else {
+        if (token.address === swapData.firstToken?.address) return;
+        setSwapData((e) => ({ ...e, secondToken: token }));
+      }
+      setModal({ open: false });
+    },
+    [setModal, setSwapData, type]
+  );
+
+  const onClose = useCallback(() => {
+    setModal({ open: false });
+  }, [setModal]);
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] max-w-xs md:max-w-lg z-[110] rounded-2xl p-4 sm:p-5"
         style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
@@ -83,18 +99,18 @@ const SwapModal = ({ tokens, setToken, firstToken, secondToken }: Props) => {
             className="bg-slate-900 outline-none text-[#d9f8ff]"
           />
           <div className="flex gap-4 flex-wrap">
-            {swap_modal.tokens.slice(0, 6).map((token: any) => (
+            {swap_modal.tokens?.slice(0, 6).map((token) => (
               <Button
-                key={`${token}-default`}
+                key={`${token.address}-default`}
                 size={"lg"}
                 className="flex gap-3 tokens-center px-4 rounded-full hover:bg-[#d9f8ff20] transition-all"
-                onClick={() => setDefaultTokens("USDC")}
+                onClick={() => handleSelect(token)}
                 style={{
                   boxShadow: "0 0 5px rgba(217, 248, 255, 0.25)",
                 }}
               >
                 {token.logoURI ? (
-                  <Image
+                  <img
                     src={token.logoURI}
                     alt={`${token.symbol} / icon`}
                     width={24}
@@ -114,29 +130,19 @@ const SwapModal = ({ tokens, setToken, firstToken, secondToken }: Props) => {
           <div className="w-full h-[1px] bg-[#727382] rounded-full" />
           {/*  */}
         </div>
-        {tokens && (
+        {tokenList && (
           <div className="flex flex-col w-full max-h-96 overflow-y-scroll ">
             <div className="grid md:grid-cols-2 gap-4 w-full pr-4">
-              {filterData(tokens, search)
+              {filterData(tokenList, search)
                 .slice(0, 90)
-                .map((token: any) => (
+                .map((token) => (
                   <Button
                     key={token.address}
                     className="flex justify-start w-full gap-4"
-                    onClick={() => {
-                      if (
-                        token.symbol !== firstToken.symbol &&
-                        token.symbol !== secondToken.symbol
-                      )
-                        (async () => {
-                          token.price = await getPrice(token.symbol);
-                          await setToken(token);
-                          onClose();
-                        })();
-                    }}
+                    onClick={() => handleSelect(token)}
                   >
                     {token.logoURI ? (
-                      <Image
+                      <img
                         src={token.logoURI}
                         alt={`${token.symbol} / icon`}
                         width={24}

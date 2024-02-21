@@ -18,6 +18,18 @@ const nextConfig = {
         protocol: "https",
         hostname: "solana.com",
       },
+      {
+        protocol: "https",
+        hostname: "static.jup.ag",
+      },
+      {
+        protocol: "https",
+        hostname: "dev.solend.fi",
+      },
+      {
+        protocol: "https",
+        hostname: "solana.com",
+      },
     ],
   },
   webpack: (config, { isServer }) => {
