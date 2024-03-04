@@ -30,6 +30,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "solana.com",
       },
+      {
+        protocol: "https",
+        hostname: "arweave.net",
+      },
     ],
   },
   webpack: (config, { isServer }) => {

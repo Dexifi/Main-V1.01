@@ -20,7 +20,6 @@ import {
 
 type Props = {
   markets?: any;
-  setSelectedMarket: (item: any) => void;
 };
 
 const filterData = (data: any, searchValue: string) =>
@@ -28,11 +27,12 @@ const filterData = (data: any, searchValue: string) =>
     token.name.concat(token.body).includes(searchValue)
   );
 
-const TradeMarketModal = ({ markets, setSelectedMarket }: Props) => {
+const TradeMarketModal = ({ markets }: Props) => {
   const isSmall = useMediaQuery("(max-width: 720px)");
   const isEXTRASMALL = useMediaQuery("(max-width: 420px)");
   const { isMarketOpen, onMarketClose } = useTradeModal();
   const [search, setSearch] = useState("");
+  const { setMarketID } = useTradeModal();
 
   const swap_modal = {
     title: "Markets List",
@@ -71,7 +71,7 @@ const TradeMarketModal = ({ markets, setSelectedMarket }: Props) => {
                 <Button
                   key={index}
                   onClick={async () => {
-                    await setSelectedMarket(item);
+                    setMarketID(item.address);
                     onMarketClose();
                   }}
                   className={`flex justify-between py-4 md:py-7 rounded-xl flex-col sm:flex-row h-max gap-4 items-start sm:items-center`}
