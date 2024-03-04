@@ -4,8 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="swap api implement">
+    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="trade implement">
+      <change afterPath="$PROJECT_DIR$/app/trade/(components)/Balance.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/trade/(components)/Chart.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/trade/(components)/Header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/trade/(components)/Order.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/trade/(components)/OrderBook.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/trade/(components)/Sidebar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Trade/Provider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Trade/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Trade/initial.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Trade/market.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Trade/send.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Trade/store.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Trade/userAccounts.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Trade/utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types/market.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/trade/(components)/trade-chart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/trade-chart.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/trade-import-market-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/trade-import-market-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/trade-market-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/trade-market-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useWalletBalance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useWalletBalance.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/get-connections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/get-connections.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/get-wallet.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/get-wallet.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/stores/trade.store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/stores/trade.store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,33 +88,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feat/#6",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/Codes/tqk/app",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "npm.dev.executor": "Run",
-    "prettierjs.PrettierConfiguration.Package": "D:\\Codes\\Dexify_v2\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "D:\\Codes\\Dexify_v2\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/#8&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Codes/serum-dex-ui&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JSON",
-      "Markdown"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;,
+      &quot;Markdown&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactBuddySettings">
     <option name="extensionsIgnore" value="true" />
   </component>
@@ -190,6 +217,17 @@
       <workItem from="1708410612651" duration="49000" />
       <workItem from="1708410682516" duration="649000" />
       <workItem from="1708424934533" duration="25837000" />
+      <workItem from="1708595336616" duration="11000" />
+      <workItem from="1708595354570" duration="65000" />
+      <workItem from="1708935102920" duration="34419000" />
+      <workItem from="1709117242268" duration="8000" />
+      <workItem from="1709126404112" duration="8603000" />
+      <workItem from="1709202945921" duration="9819000" />
+      <workItem from="1709278789375" duration="6307000" />
+      <workItem from="1709373097935" duration="18475000" />
+      <workItem from="1709459747770" duration="16998000" />
+      <workItem from="1709488205264" duration="5778000" />
+      <workItem from="1709544327845" duration="1072000" />
     </task>
     <task id="LOCAL-00001" summary="network connections">
       <option name="closed" value="true" />
@@ -279,6 +317,7 @@
     <MESSAGE value="Dashboard api implement" />
     <MESSAGE value="transactions api implement" />
     <MESSAGE value="swap api implement" />
-    <option name="LAST_COMMIT_MESSAGE" value="swap api implement" />
+    <MESSAGE value="trade implement" />
+    <option name="LAST_COMMIT_MESSAGE" value="trade implement" />
   </component>
 </project>

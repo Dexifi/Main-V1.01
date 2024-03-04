@@ -7,17 +7,27 @@ import { useTradeModal } from "@/lib/stores/trade.store";
 import { X } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 type Props = {};
 const TradeImportMarketModal = (props: Props) => {
   const isEXTRASMALL = useMediaQuery("(max-width: 720px)");
-  const { isImportMarketOpen, onImportMarketClose } = useTradeModal();
+  const {
+    isImportMarketOpen,
+    onImportMarketClose,
+    marketID: mi,
+    setMarketID: setMI,
+  } = useTradeModal();
   const [marketID, setMarketID] = useState<string>("");
 
   const swap_modal = {
     title: "Import markets List",
   };
+  const handleAdd = useCallback(() => {
+    if (!marketID) return;
+    setMI(marketID);
+    onImportMarketClose();
+  }, [marketID, onImportMarketClose, setMI]);
 
   return (
     <Dialog open={isImportMarketOpen} onOpenChange={onImportMarketClose}>
@@ -63,8 +73,9 @@ const TradeImportMarketModal = (props: Props) => {
         </div>
 
         <Button
+          disabled={!marketID}
           className="rounded-full hover:bg-[#d9f8ff20] transition-all"
-          onClick={onImportMarketClose}
+          onClick={handleAdd}
         >
           Add Market
         </Button>
