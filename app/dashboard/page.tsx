@@ -28,8 +28,7 @@ const Dashboard = () => {
               <DashboardHeader />
               <div
                 className="w-full
-               text-sm
-               md:text-lg text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"
+               text-sm md:text-lg text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"
               >
                 <DefaultTab />
               </div>

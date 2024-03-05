@@ -182,19 +182,28 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
       >
         <AlertDialogContent
           className="border-none bg-[#0d111b] rounded-3xl h-max"
+          onPointerDown={(event) => {
+            setIsTransferDOpen({ open: false, domain: "" });
+          }}
           style={{
             boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
+            padding: 40,
+            borderRadius: 24,
           }}
         >
           <AlertDialogHeader>
             <AlertDialogTitle
               className="flex justify-between items-center gap-5 p-5 text-[#d9f8ff] bg-[#0d111b55] px-5 rounded-full h-12"
-              style={{ boxShadow: "0 0 5px #d9f8ff" }}
+              style={{
+                boxShadow: "0 0 5px #d9f8ff",
+                padding: "0px 16px 0px 38px",
+              }}
             >
               <h6>Send</h6>
               <span>Domain</span>
               <Button
                 size="icon"
+                className={"bg-[#0d111b55] rounded-[50%]"}
                 onClick={() => {
                   setIsTransferDOpen({ open: false, domain: "" });
                   setAddress("");
@@ -206,7 +215,7 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
           </AlertDialogHeader>
 
           <div
-            className="bg-[#0d111b55] px-5 rounded-full h-12 flex items-center w-max"
+            className="bg-[#0d111b55] px-5 rounded-full h-12 flex items-center w-max my-4 "
             style={{ boxShadow: "0 0 5px #d9f8ff" }}
           >
             <h6 className="text-lg text-[#d9f8ff]">{isTransferDOpen.domain}</h6>
@@ -220,10 +229,10 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
               Fill Address for Transfer
             </h6>
 
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-[#d9f8ff70]">Address</span>
+            <div className={"flex flex-row items-center"}>
+              <span className="text-sm text-white mr-4 ">Address</span>
               <Input
-                className="bg-[#141414] text-white rounded-lg"
+                className="bg-[#141414] text-white rounded-3xl w-full "
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
@@ -231,7 +240,7 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
           </div>
 
           <AlertDialogAction
-            className="text-lg md:text-xl rounded-full py-3 h-max"
+            className="text-lg md:text-xl rounded-full py-3 h-max mt-6"
             style={{ boxShadow: "0 0 5px 1px #d9f8ff" }}
           >
             Send
