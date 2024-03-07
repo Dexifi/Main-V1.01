@@ -4,29 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="trade implement">
-      <change afterPath="$PROJECT_DIR$/src/applications/Trade/config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/applications/Trade/markets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/applications/Trade/types.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/trade/(components)/Balance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/Balance.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/trade/(components)/Order.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/Order.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/trade/(components)/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/Sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/trade/(components)/trade-chart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/trade-chart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Trade/Provider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Trade/Provider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Trade/initial.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Trade/initial.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Trade/send.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Trade/send.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Trade/store.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Trade/store.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/modals/trade-import-market-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/trade-import-market-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/modals/trade-market-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/trade-market-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/get-connections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/get-connections.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/stores/trade.store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/stores/trade.store.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stores/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/config.ts" afterDir="false" />
-    </list>
+    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="trade apis" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -223,7 +201,7 @@
       <workItem from="1709544327845" duration="19408000" />
       <workItem from="1709628406792" duration="1610000" />
       <workItem from="1709631221308" duration="45098000" />
-      <workItem from="1709793779178" duration="742000" />
+      <workItem from="1709793779178" duration="1166000" />
     </task>
     <task id="LOCAL-00001" summary="network connections">
       <option name="closed" value="true" />
@@ -297,7 +275,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709546106074</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="trade apis">
+      <option name="closed" value="true" />
+      <created>1709795973654</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1709795973654</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,6 +308,7 @@
     <MESSAGE value="transactions api implement" />
     <MESSAGE value="swap api implement" />
     <MESSAGE value="trade implement" />
-    <option name="LAST_COMMIT_MESSAGE" value="trade implement" />
+    <MESSAGE value="trade apis" />
+    <option name="LAST_COMMIT_MESSAGE" value="trade apis" />
   </component>
 </project>
