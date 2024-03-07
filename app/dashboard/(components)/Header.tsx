@@ -171,7 +171,7 @@ const Header = ({ isMobile }: Props) => {
       {!isMobile ? (
         <div className="flex justify-between items-center gap-x-6">
           {actions.map((action, index) => (
-            <>
+            <div key={index} className={"flex items-center"}>
               <Button
                 key={index}
                 onClick={action.click}
@@ -197,7 +197,7 @@ const Header = ({ isMobile }: Props) => {
               >
                 <WalletMultiButton />
               </div>
-            </>
+            </div>
           ))}
         </div>
       ) : (

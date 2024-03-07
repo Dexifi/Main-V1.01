@@ -17,7 +17,7 @@
     "@jup-ag/api": "^6.0.11",
     "@jup-ag/core": "^4.0.0-beta.21",
     "@jup-ag/react-hook": "^6.0.0",
-    "@mehranml/openbook": "^0.0.8",
+    "@mehranml/openbook": "^0.0.9",
     "@metaplex-foundation/js": "^0.18.3",
     "@metaplex-foundation/mpl-auction-house": "^2.5.1",
     "@mui/material": "^5.2.5",

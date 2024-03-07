@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import formatedString from "@/lib/string";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,48 +14,92 @@ import { Skeleton } from "@/components/ui/skeleton";
 import formatedNumber from "@/lib/numbers";
 import { Order } from "@openbook-dex/openbook/lib/market";
 import { TradeState } from "@/applications/Trade/store";
+import { getWalletOrders } from "@/applications/Trade/initial";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { ownerOpenOrders } from "@/applications/Trade/types";
+import { Market, OpenOrders } from "@mehranml/openbook";
+import { cancelOrder } from "@/applications/Trade/send";
+import { connection } from "@/lib/get-connections";
+import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
+import { toast } from "@/components/ui/use-toast";
 
 type OrderProps = {
   isEXTRASMALL: boolean;
-  data: Order[];
+  data: ownerOpenOrders[];
   selectedMarket?: TradeState["marketDetails"];
-  onCancelOrder: (order: Order) => void;
+};
+type OrderType = {
+  marketName: string;
+  protocol: string;
+  isDone: boolean;
+  openOrder: OpenOrders;
+  order: Order;
+  market: Market;
 };
 
 type DataType = {
   tabs: string[];
   header: string[];
-  body: Order[];
 };
-const Orders = ({
-  data,
-  selectedMarket,
-  onCancelOrder,
-  isEXTRASMALL,
-}: OrderProps) => {
+const Orders = ({ data, selectedMarket, isEXTRASMALL }: OrderProps) => {
+  const { publicKey, wallet } = useWallet();
+  const [currentTab, setCurrentTab] = useState("all");
   const [gdata, setData] = useState<DataType>({
     tabs: ["All", "Buy", "Sell"],
     header: ["Market", "Side", "Size", "Price"],
-    body: [],
   });
-
-  useEffect(() => {
-    gdata.body.length === 0 &&
-      setTimeout(() => {
-        setData({
-          ...gdata,
-          body: data,
+  const ordersData = data
+    .filter((e) => e.orders.length > 0)
+    .map((e) => {
+      const list: OrderType[] = [];
+      e.orders.forEach((order) => {
+        list.push({
+          marketName: e.marketName,
+          protocol: e.protocol,
+          isDone: e.isDone,
+          openOrder: e.openOrder,
+          market: e.market,
+          order,
         });
-      }, 5000);
-  }, [gdata, data]);
+      });
+      return list;
+    })
+    .flat();
 
+  const handleOnCancel = useCallback(
+    async (order: OrderType) => {
+      if (!publicKey) return;
+
+      try {
+        const res = await cancelOrder({
+          order: order.order,
+          market: order.market,
+          wallet: wallet?.adapter as BaseSignerWalletAdapter<string>,
+          connection,
+        });
+        toast({
+          title: "Success",
+          description: res,
+        });
+      } catch (e: any) {
+        console.log(e);
+        toast({
+          title: "Error",
+          description: e.message,
+        });
+      }
+      await getWalletOrders(publicKey);
+    },
+    [publicKey, wallet?.adapter]
+  );
+  console.log(ordersData);
   return (
     <div
-      className="bg-[#0d111b] min-h-56 w-full md:w-1/2 rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5"
+      className="bg-[#0d111b] min-h-56 w-full md:w-1/2 rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5 flex overflow"
       style={{ boxShadow: "0 0 4px #88d6ff" }}
     >
-      <Tabs className="w-full" defaultValue="all">
-        <TabsList className="w-full h-max">
+      <div className="w-full flex-1" defaultValue="all">
+        <div className="w-full  h-max">
           <div className="flex gap-3 sm:gap-5 justify-between w-full items-center flex-wrap">
             <h3 className="text-sm sm:text-lg md:text-2xl text-[#D9F8FF]">
               Orders
@@ -65,22 +109,25 @@ const Orders = ({
                 isEXTRASMALL ? "justify-between" : "justify-end"
               } items-center w-max`}
             >
-              <div className="w-max flex">
+              <div className="w-max flex  gap-2">
                 {gdata.tabs.map((tab, index) => (
-                  <TabsTrigger
-                    value={formatedString(tab).toLocaleLowerCase()}
+                  <button
+                    onClick={() => setCurrentTab(tab.toLocaleLowerCase())}
                     key={`${formatedString(tab)}_${index}`}
-                    className="data-[state=active]:bg-[#D9F8FF10] data-[state=active]:rounded-full text-xs sm:text-sm"
+                    className={`text-xs font-medium sm:text-sm px-4 py-1 rounded-full hover:bg-[#D9F8FF20] text-[#D9F8FF] hover:text-[#D9F8FF] transition-all  ${
+                      currentTab === tab.toLocaleLowerCase()
+                        ? "bg-[#b9b5b5] text-[#0d111b]"
+                        : "bg-[#D9F8FF10]"
+                    } `}
                   >
                     {tab}
-                  </TabsTrigger>
+                  </button>
                 ))}
               </div>
-              <Button>Cancel All</Button>
+              {/*<Button>Cancel All</Button>*/}
             </div>
           </div>
-        </TabsList>
-
+        </div>
         <Table className="w-4/5 sm:w-full flex-1 mt-2">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -99,56 +146,61 @@ const Orders = ({
               />
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {gdata.body.length <= 0 ? (
-              <>
-                <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-                  {gdata.header.map((header, index) => (
-                    <TableCell
-                      className="font-medium text-left text-[#7c7c8d] py-2"
-                      key={`${header}_skeleton_${index}`}
-                    >
-                      <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                    </TableCell>
-                  ))}
-                  <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                    <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                  </TableCell>
-                </TableRow>
-              </>
+          <TableBody className="pb-3">
+            {ordersData.length <= 0 ? (
+              <TableRow className="hover:bg-transparent border-[#7c7c8d] relative h-1 flex-1 w-1">
+                <div className="font-medium text-left text-[#7c7c8d] py-2 absolute left-0 right-0 mx-auto top-0  ">
+                  <p className={"text-center py-2"}>No Orders</p>
+                </div>
+              </TableRow>
             ) : (
               <>
-                {gdata.body.map((row, index) => (
-                  <TableRow
-                    className="hover:bg-transparent border-[#7c7c8d]"
-                    key={index}
-                  >
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] max-w-1">
-                      {selectedMarket?.name}
-                    </TableCell>
+                {ordersData
+                  .filter((e) =>
+                    currentTab.toLocaleLowerCase() === "all"
+                      ? true
+                      : e.order.side.toLocaleLowerCase() ===
+                        currentTab.toLocaleLowerCase()
+                  )
+                  .map((row, index) => (
+                    <TableRow
+                      className="hover:bg-transparent border-[#7c7c8d]"
+                      key={index}
+                    >
+                      <TableCell className="font-medium w-max  text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                        {row?.marketName}
+                      </TableCell>
 
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                      {row.side}
-                    </TableCell>
+                      <TableCell
+                        className={`font-bold text-left text-sm md:text-md truncate ${
+                          row.order.side === "buy"
+                            ? "text-[#88e8ad]"
+                            : "text-[#c95901]"
+                        } `}
+                      >
+                        {row.order.side}
+                      </TableCell>
 
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                      {formatedNumber(row.size, 2, isEXTRASMALL)}
-                    </TableCell>
+                      <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                        {formatedNumber(row.order.size, 5, isEXTRASMALL)}
+                      </TableCell>
 
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                      {formatedNumber(row.price, 2, isEXTRASMALL)}
-                    </TableCell>
+                      <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                        {formatedNumber(row.order.price, 2, isEXTRASMALL)}
+                      </TableCell>
 
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                      <Button onClick={() => onCancelOrder(row)}>Cancel</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
+                        <Button onClick={() => handleOnCancel(row)}>
+                          Cancel
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </>
             )}
           </TableBody>
         </Table>
-      </Tabs>
+      </div>
     </div>
   );
 };
