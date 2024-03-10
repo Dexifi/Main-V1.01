@@ -173,7 +173,7 @@ const MainPool = ({
         className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl px-5 lg:px-10 py-5 max-w-full"
         style={{ boxShadow: "0 0 4px #88d6ff" }}
       >
-        <Table className="w-full flex-1 mt-2 overflow-scroll">
+        <Table className="w-full mt-2 overflow-scroll">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               {headers.map((header, index) => (
@@ -428,8 +428,12 @@ const MainPool = ({
         </Table>
       </div>
       <div
-        className="flex justify-center items-center gap-5 flex-1 bg-[#0d111b] rounded-3xl p-5 h-max flex-wrap sticky top-24"
-        style={{ boxShadow: "0 0 4px #88d6ff" }}
+        className="flex justify-center items-center gap-5 bg-[#0d111b] rounded-3xl p-10 h-max flex-wrap sticky top-24 flex-col"
+        style={{
+          boxShadow: "0 0 4px #88d6ff",
+          background:
+            "radial-gradient(50% 50% at 50% 50%, rgba(119, 186, 234, 0.2), transparent ), radial-gradient( 50% 50% at 50% 50%, rgba(251, 0, 196, 0) 3.49%, rgba(119, 186, 234, 0) 7.6%, rgba(253, 0, 197, 0) 10.46%, rgba(119, 186, 234, 0) 14.46%, rgba(255, 0, 199, 0) 18.56%, rgba(3, 0, 3, 0) 19.53%, transparent 79.82%, rgba(246, 0, 192, 0) 81.08%, rgba(119, 186, 234, 0) 84.04%, rgba(247, 0, 193, 0) 86.61%, rgba(119, 186, 234, 0) 91.01%, rgba(249, 0, 194, 0) 95.16%, rgba(119, 186, 234, 0) 98.6% )",
+        }}
       >
         <div className="flex justify-between w-full max-w-xs">
           {d_data.colbs.colors.map((colb) => (
@@ -480,6 +484,28 @@ const MainPool = ({
                   </TableCell>
                 </TableRow>
               ))}
+            </TableBody>
+          </Table>
+          <p className={"text-sky-100 my-2"}>
+            Assets <span className={"text-cyan-400"}>Supplied</span>
+          </p>
+          <hr />
+          <Table>
+            <TableBody>
+              {/* Put item here haj mihruuuuun */}
+              <TableRow>
+                <div className={"flex flex-row justify-between mt-1"}>
+                  <div>
+                    <p className={"text-sky-100"}>SOL</p>
+                    <p className="text-sky-100">Icon</p>
+                  </div>
+                  <p className={"text-gray-500"}>% 0.30</p>
+                  <div>
+                    <p className={"text-gray-500"}> 153.658</p>
+                    <p className={"text-gray-500"}>$3,641,23</p>
+                  </div>
+                </div>
+              </TableRow>
             </TableBody>
           </Table>
         </div>

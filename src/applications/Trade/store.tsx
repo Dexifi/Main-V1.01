@@ -1,16 +1,15 @@
 import { create } from "zustand";
 import { Market } from "@mehranml/openbook";
 import { Fill } from "@/types/Fills";
-import { MARKETS } from "@openbook-dex/openbook";
-import { placeOrder } from "@/applications/Trade/send";
-import { Orderbook } from "@mehranml/openbook/lib/market";
-import BN from "bn.js";
-import { TokenInfo } from "@solana/spl-token-registry";
 
+import { placeOrder } from "./send";
+import { TokenInfo } from "@solana/spl-token-registry";
+import { MarketsListType, ownerOpenOrders } from "./types";
+import MARKETS from "./markets.json";
 export type TradeState = {
   bids: { price: number; size: number; side: "buy" | "sell" }[];
   asks: { price: number; size: number; side: "buy" | "sell" }[];
-  orders: any[];
+  orders: ownerOpenOrders[];
   fills: Fill[];
   tokens: { address: string; mintAddress: string; tokenBalance: number }[];
   market: Market | null;
@@ -29,7 +28,7 @@ export type TradeState = {
     tab: string;
     userChanged: boolean;
   };
-  marketList: typeof MARKETS;
+  marketList: MarketsListType;
   availableSide: Array<"buy" | "sell">;
 
   fetchLoading: boolean;
@@ -39,6 +38,8 @@ export type TradeState = {
   placeOrder: typeof placeOrder;
 
   setFetchLoading: (fetchLoading: boolean) => void;
+  setPlaceOrderLoading: (placeOrderLoading: boolean) => void;
+  setCancelOrderLoading: (cancelOrderLoading: boolean) => void;
   setMarket: (market: Market) => void;
   setOrders: (orders: any) => void;
   setFills: (fills: Fill[]) => void;
@@ -87,6 +88,10 @@ export const useTrade = create<TradeState>((set) => ({
   placeOrder: placeOrder,
 
   setFetchLoading: (fetchLoading: boolean) => set({ fetchLoading }),
+  setPlaceOrderLoading: (placeOrderLoading: boolean) =>
+    set({ placeOrderLoading }),
+  setCancelOrderLoading: (cancelOrderLoading: boolean) =>
+    set({ cancelOrderLoading }),
   setMarket: (market: Market) => set({ market }),
   setOrders: (orders: any) => set({ orders }),
   setFills: (fills: Fill[]) => set({ fills }),
