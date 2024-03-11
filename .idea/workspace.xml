@@ -4,30 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="feat: add nft modal">
-      <change afterPath="$PROJECT_DIR$/src/applications/Trade/config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/applications/Trade/markets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/applications/Trade/types.d.ts" afterDir="false" />
+    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="fix: main pool ui">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lend/(components)/(tabs)/main-pool.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/lend/(components)/(tabs)/main-pool.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lend/(components)/lend-body.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/lend/(components)/lend-body.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lend/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/lend/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/trade/(components)/Balance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/Balance.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/trade/(components)/Order.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/Order.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/trade/(components)/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/Sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/trade/(components)/trade-chart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/trade/(components)/trade-chart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Trade/Provider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Trade/Provider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Trade/initial.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Trade/initial.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Trade/send.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Trade/send.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Trade/store.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Trade/store.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/modals/trade-import-market-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/trade-import-market-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/modals/trade-market-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/trade-market-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/get-connections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/get-connections.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stores/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +29,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feat/#13" />
+                    <option name="lastUsedInstant" value="1710088993" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
                     <option name="lastUsedInstant" value="1710062755" />
@@ -82,33 +64,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/Proshits/Dexifi/Main-V1.01",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "npm.dev.executor": "Run",
-    "prettierjs.PrettierConfiguration.Package": "D:\\Proshits\\Dexifi\\Main-V1.01\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "D:\\Proshits\\Dexifi\\Main-V1.01\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/#13&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Proshits/Dexifi/Main-V1.01&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\Proshits\\Dexifi\\Main-V1.01\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Proshits\\Dexifi\\Main-V1.01\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JSON",
-      "Markdown"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;,
+      &quot;Markdown&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactBuddySettings">
     <option name="extensionsIgnore" value="true" />
   </component>
@@ -232,6 +214,8 @@
       <workItem from="1709988996559" duration="8000" />
       <workItem from="1709990595202" duration="9266000" />
       <workItem from="1710056134826" duration="5709000" />
+      <workItem from="1710139743390" duration="387000" />
+      <workItem from="1710140180510" duration="8925000" />
     </task>
     <task id="LOCAL-00001" summary="network connections">
       <option name="closed" value="true" />
@@ -329,7 +313,31 @@
       <option name="project" value="LOCAL" />
       <updated>1710062644434</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fix: pool status card">
+      <option name="closed" value="true" />
+      <created>1710089003339</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1710089003339</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fix: main pool ui">
+      <option name="closed" value="true" />
+      <created>1710147014351</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1710147014351</updated>
+    </task>
+    <task id="LOCAL-00015" summary="fix: main pool ui">
+      <option name="closed" value="true" />
+      <created>1710149459998</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1710149459998</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -360,6 +368,8 @@
     <MESSAGE value="feat: add main tab" />
     <MESSAGE value="fix: some ui issue" />
     <MESSAGE value="feat: add nft modal" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add nft modal" />
+    <MESSAGE value="fix: pool status card" />
+    <MESSAGE value="fix: main pool ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: main pool ui" />
   </component>
 </project>
