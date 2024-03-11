@@ -170,8 +170,12 @@ const MainPool = ({
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
       <div
-        className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl px-5 lg:px-10 py-5 max-w-full"
-        style={{ boxShadow: "0 0 4px #88d6ff" }}
+        className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl lg:px-5 py-5"
+        style={{
+          boxShadow: "0 0 4px #88d6ff",
+          background:
+            "radial-gradient(50% 50% at 50% 50%, rgba(119, 186, 234, 0.2), transparent ), radial-gradient( 50% 50% at 50% 50%, rgba(251, 0, 196, 0) 3.49%, rgba(119, 186, 234, 0) 7.6%, rgba(253, 0, 197, 0) 10.46%, rgba(119, 186, 234, 0) 14.46%, rgba(255, 0, 199, 0) 18.56%, rgba(3, 0, 3, 0) 19.53%, transparent 79.82%, rgba(246, 0, 192, 0) 81.08%, rgba(119, 186, 234, 0) 84.04%, rgba(247, 0, 193, 0) 86.61%, rgba(119, 186, 234, 0) 91.01%, rgba(249, 0, 194, 0) 95.16%, rgba(119, 186, 234, 0) 98.6% )",
+        }}
       >
         <Table className="w-full mt-2 overflow-scroll">
           <TableHeader>
@@ -209,8 +213,9 @@ const MainPool = ({
               ))}
             </TableRow>
           </TableHeader>
+
           <TableBody>
-            {data.length <= 0 ? (
+            {fakeData.length <= 0 ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   {headers.map((header, index) => (
@@ -243,7 +248,7 @@ const MainPool = ({
               </>
             ) : (
               <>
-                {data.map((row: DataItemProps, index: number) => (
+                {fakeData.map((row: DataItemProps, index: number) => (
                   <>
                     {row && (
                       <TableRow
@@ -254,9 +259,9 @@ const MainPool = ({
                             : "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58".toLocaleLowerCase()
                         )}_${index}`}
                       >
-                        <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
-                          <div className="flex flex-nowrap gap-4 items-center">
-                            <div className="flex flex-col gap-2 min-w-[120px]">
+                        <TableCell className="font-medium text-left text-[#7c7c8d] py-4">
+                          <div className="flex flex-nowrap gap-3 items-center">
+                            <div className="flex flex-col gap-6 min-w-[120px]">
                               <span className="text-[#d9f8ff]">
                                 {row?.stats?.symbol}
                               </span>
@@ -286,7 +291,7 @@ const MainPool = ({
                         </TableCell>
                         {/* ASSET */}
                         <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max min-w-[170px]">
-                          <div className="flex flex-nowrap gap-2 flex-col">
+                          <div className="flex flex-nowrap gap-6 flex-col">
                             <div className="flex flex-row gap-2">
                               <span className="text-[#d9f8ff]">Open LTV:</span>
                               <span className="text-sm text-[#7c7c8d]">
@@ -303,7 +308,7 @@ const MainPool = ({
                         </TableCell>
                         {/* LTV */}
                         <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max min-w-[290px]">
-                          <div className="flex flex-nowrap gap-2 flex-col">
+                          <div className="flex flex-nowrap gap-6 flex-col">
                             <div className="flex flex-row gap-2">
                               <span className="text-[#d9f8ff] text-xs sm:text-sm">
                                 Supply:
@@ -350,7 +355,7 @@ const MainPool = ({
                         </TableCell>
                         {/* TOTAL */}
                         <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
-                          <div className="flex flex-col">
+                          <div className="flex flex-col gap-6">
                             {row.supplyAPR && (
                               <span>
                                 {formatedNumber(12, 2, isEXTRASMALL)}%
@@ -364,7 +369,8 @@ const MainPool = ({
                           <div className="flex flex-col gap-3">
                             <div className="flex gap-2 items-center flex-nowrap">
                               <Button
-                                className="min-w-[100px] truncate"
+                                style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
+                                className="min-w-[100px] truncate rounded-3xl h-8"
                                 size="sm"
                                 onClick={() => {
                                   setSelectedLend(row);
@@ -379,7 +385,8 @@ const MainPool = ({
                                 Supply
                               </Button>
                               <Button
-                                className="min-w-[100px] truncate"
+                                style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
+                                className="min-w-[100px] truncate rounded-3xl h-8"
                                 size="sm"
                                 onClick={() => {
                                   setSelectedLend(row);
@@ -396,8 +403,9 @@ const MainPool = ({
                             </div>
                             <div className="flex gap-2 items-center flex-nowrap">
                               <Button
+                                style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
                                 size="sm"
-                                className="min-w-[100px] truncate"
+                                className="min-w-[100px] truncate rounded-3xl h-8"
                                 onClick={() => {
                                   setSelectedLend(row);
                                   onRepayOpen();
@@ -406,8 +414,9 @@ const MainPool = ({
                                 Repay
                               </Button>
                               <Button
+                                style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
                                 size="sm"
-                                className="min-w-[100px] truncate"
+                                className="min-w-[100px] truncate rounded-3xl h-8"
                                 onClick={() => {
                                   setSelectedLend(row);
                                   onWithdrawOpen();
@@ -428,7 +437,7 @@ const MainPool = ({
         </Table>
       </div>
       <div
-        className="flex justify-center items-center gap-5 bg-[#0d111b] rounded-3xl p-10 h-max flex-wrap sticky top-24 flex-col"
+        className="flex justify-center items-center gap-5 bg-[#0d111b] rounded-3xl p-6 h-max flex-wrap sticky top-24 flex-col"
         style={{
           boxShadow: "0 0 4px #88d6ff",
           background:
@@ -659,3 +668,56 @@ const MainPool = ({
 };
 
 export default MainPool;
+
+const fakeData = [
+  {
+    balance: 100,
+    collection: "Mock Collection",
+    id: "mock-id-123",
+    mint: "mock-mint-123",
+    name: "Mock Name",
+    nft_supply: 50,
+    price: 200,
+    value: 5000,
+    stats: {
+      symbol: "MOCK",
+      assetPriceUSD: 300,
+      loanToValueRatio: 0.5,
+    },
+    config: {
+      liquidityToken: {
+        logo: "https://fakeimg.pl/340x340",
+      },
+    },
+    supply: 1000,
+    borrow: 500,
+    borrowValue: 1500,
+    supplyAPR: 0.05,
+    borrowAPR: 0.1,
+  },
+  {
+    balance: 100,
+    collection: "Mock Collection",
+    id: "mock-id-123",
+    mint: "mock-mint-123",
+    name: "Mock Name",
+    nft_supply: 50,
+    price: 200,
+    value: 5000,
+    stats: {
+      symbol: "MOCK",
+      assetPriceUSD: 300,
+      loanToValueRatio: 0.5,
+    },
+    config: {
+      liquidityToken: {
+        logo: "https://fakeimg.pl/340x340",
+      },
+    },
+    supply: 1000,
+    borrow: 500,
+    borrowValue: 1500,
+    supplyAPR: 0.05,
+    borrowAPR: 0.1,
+  },
+];
