@@ -517,6 +517,28 @@ const MainPool = ({
               </TableRow>
             </TableBody>
           </Table>
+          <p className={"text-sky-100 my-2 mt-6"}>
+            Assets <span className={"text-cyan-400"}>Borrowed</span>
+          </p>
+          <hr />
+          <Table>
+            <TableBody>
+              {/* Put item here haj mihruuuuun */}
+              <TableRow>
+                <div className={"flex flex-row justify-between mt-1"}>
+                  <div>
+                    <p className={"text-sky-100"}>SOL</p>
+                    <p className="text-sky-100">Icon</p>
+                  </div>
+                  <p className={"text-gray-500"}>% 0.30</p>
+                  <div>
+                    <p className={"text-gray-500"}> 153.658</p>
+                    <p className={"text-gray-500"}>$3,641,23</p>
+                  </div>
+                </div>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {user && deposits?.length > 0 ? (
