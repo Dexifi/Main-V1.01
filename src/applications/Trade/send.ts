@@ -2,7 +2,6 @@ import { getDecimalCount, sleep } from "./utils";
 import { getSelectedTokenAccountForMint } from "./market";
 import {
   Account,
-  AccountInfo,
   Commitment,
   Connection,
   PublicKey,
@@ -13,8 +12,11 @@ import {
   TransactionSignature,
 } from "@solana/web3.js";
 import {
-  Token,
   ASSOCIATED_TOKEN_PROGRAM_ID,
+  //   @ts-ignore
+  createAssociatedTokenAccountInstruction,
+  //   @ts-ignore
+  getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import BN from "bn.js";
@@ -29,11 +31,13 @@ import { SelectedTokenAccounts, TokenAccount } from "./types";
 import { Order } from "@project-serum/serum/lib/market";
 import { Buffer } from "buffer";
 import assert from "assert";
-import { struct } from "superstruct";
 import {
   BaseSignerWalletAdapter,
   WalletAdapter,
 } from "@solana/wallet-adapter-base";
+import { toast } from "@/components/ui/use-toast";
+import { TOKEN_MINTS } from "@openbook-dex/openbook";
+import { connection } from "@/lib/get-connections";
 
 export async function createTokenAccountTransaction({
   connection,
@@ -48,7 +52,7 @@ export async function createTokenAccountTransaction({
   newAccountPubkey: PublicKey;
 }> {
   assert(wallet.publicKey, "Expected `publicKey` to be non-null");
-  const ata = await Token.getAssociatedTokenAddress(
+  const ata = await getAssociatedTokenAddress(
     ASSOCIATED_TOKEN_PROGRAM_ID,
     TOKEN_PROGRAM_ID,
     mintPublicKey,
@@ -56,7 +60,7 @@ export async function createTokenAccountTransaction({
   );
   const transaction = new Transaction();
   transaction.add(
-    Token.createAssociatedTokenAccountInstruction(
+    createAssociatedTokenAccountInstruction(
       ASSOCIATED_TOKEN_PROGRAM_ID,
       TOKEN_PROGRAM_ID,
       mintPublicKey,
@@ -71,27 +75,27 @@ export async function createTokenAccountTransaction({
   };
 }
 
-export async function settleFunds({
+export const settleFunds = async ({
   market,
-  openOrders,
-  connection,
   wallet,
-  baseCurrencyAccount,
+  connection,
+  openOrders,
+  sendNotification,
+  usdcRef,
+  usdtRef,
   quoteCurrencyAccount,
-  sendNotification = true,
-  usdcRef = undefined,
-  usdtRef = undefined,
+  baseCurrencyAccount,
 }: {
   market: Market;
   openOrders: OpenOrders;
   connection: Connection;
   wallet: BaseSignerWalletAdapter;
-  baseCurrencyAccount: TokenAccount;
-  quoteCurrencyAccount: TokenAccount;
+  baseCurrencyAccount: string;
+  quoteCurrencyAccount: string;
   sendNotification?: boolean;
   usdcRef?: PublicKey;
   usdtRef?: PublicKey;
-}): Promise<string | undefined> {
+}): Promise<string | undefined> => {
   if (
     !market ||
     !wallet ||
@@ -101,14 +105,18 @@ export async function settleFunds({
   ) {
     if (sendNotification) {
       console.log("Not connected");
+      toast({
+        description: "Not connected",
+        variant: "destructive",
+      });
       // notify({ message: "Not connected" });
     }
     return;
   }
 
   let createAccountTransaction: Transaction | undefined;
-  let baseCurrencyAccountPubkey = baseCurrencyAccount?.pubkey;
-  let quoteCurrencyAccountPubkey = quoteCurrencyAccount?.pubkey;
+  let baseCurrencyAccountPubkey = new PublicKey(baseCurrencyAccount);
+  let quoteCurrencyAccountPubkey = new PublicKey(quoteCurrencyAccount);
 
   if (!baseCurrencyAccountPubkey) {
     const result = await createTokenAccountTransaction({
@@ -161,10 +169,13 @@ export async function settleFunds({
     signers: settleFundsSigners,
     wallet,
     connection,
+    timeout: 50000,
+    sentMessage: "Settling funds...",
+    successMessage: "Funds settled",
     sendingMessage: "Settling funds...",
     sendNotification,
   });
-}
+};
 
 export async function settleAllFunds({
   connection,
@@ -196,7 +207,7 @@ export async function settleAllFunds({
       }
     });
 
-  const getOpenOrdersAccountsForProgramId = async (programId) => {
+  const getOpenOrdersAccountsForProgramId = async (programId: PublicKey) => {
     assert(wallet.publicKey, "Expected `publicKey` to be non-null");
     const openOrdersAccounts = await OpenOrders.findForOwner(
       connection,
@@ -326,6 +337,10 @@ export async function cancelOrders({
   return await sendTransaction({
     transaction,
     wallet,
+    sendNotification: true,
+    successMessage: "Orders cancelled",
+    sentMessage: "Cancelling orders...",
+    timeout: 50000,
     connection,
     sendingMessage: "Sending cancel...",
   });
@@ -354,6 +369,7 @@ export async function placeOrder({
   quoteCurrencyAccount: PublicKey | undefined;
   feeDiscountPubkey: PublicKey | undefined;
 }) {
+  console.log(price);
   let formattedMinOrderSize =
     market?.minOrderSize?.toFixed(getDecimalCount(market.minOrderSize)) ||
     market?.minOrderSize;
@@ -364,49 +380,71 @@ export async function placeOrder({
     Math.abs((num / step) % 1) < 1e-5 ||
     Math.abs(((num / step) % 1) - 1) < 1e-5;
   if (isNaN(price)) {
+    toast({
+      description: "Invalid price",
+    });
     console.log("Invalid price");
-    // notify({ message: "Invalid price", type: "error" });
+    toast({
+      description: "Invalid price",
+      variant: "destructive",
+    });
     return;
   }
   if (isNaN(size)) {
     console.log("Invalid size");
-    // notify({ message: "Invalid size", type: "error" });
+    toast({
+      description: "Invalid size",
+      variant: "destructive",
+    });
     return;
   }
   if (!wallet || !wallet.publicKey) {
     console.log("Connect wallet");
-    // notify({ message: "Connect wallet", type: "error" });
+    toast({
+      description: "connect wallet",
+      variant: "destructive",
+    });
     return;
   }
   if (!market) {
     console.log("Invalid market");
-    // notify({ message: "Invalid  market", type: "error" });
+    toast({
+      description: "Invalid market",
+      variant: "destructive",
+    });
     return;
   }
   if (!isIncrement(size, market.minOrderSize)) {
+    toast({
+      description: `Size must be an increment of ${formattedMinOrderSize}`,
+    });
     console.log(`Size must be an increment of ${formattedMinOrderSize}`);
-    // notify({
-    //   message: `Size must be an increment of ${formattedMinOrderSize}`,
-    //   type: "error",
-    // });
+
     return;
   }
   if (size < market.minOrderSize) {
     console.log("Size too small");
-    // notify({ message: "Size too small", type: "error" });
+    toast({
+      description: "Size too small",
+      variant: "destructive",
+    });
     return;
   }
   if (!isIncrement(price, market.tickSize)) {
+    toast({
+      description: `Price must be an increment of ${formattedTickSize}`,
+      variant: "destructive",
+    });
     console.log(`Price must be an increment of ${formattedTickSize}`);
-    // notify({
-    //   message: `Price must be an increment of ${formattedTickSize}`,
-    //   type: "error",
-    // });
+
     return;
   }
   if (price < market.tickSize) {
+    toast({
+      description: "Price under tick size",
+      variant: "destructive",
+    });
     console.log("Price under tick size");
-    // notify({ message: "Price under tick size", type: "error" });
     return;
   }
   const owner = wallet.publicKey;
@@ -437,11 +475,11 @@ export async function placeOrder({
   const payer = side === "sell" ? baseCurrencyAccount : quoteCurrencyAccount;
   if (!payer) {
     console.log("Need an SPL token account for cost currency");
+    toast({
+      description: "Need an SPL token account for cost currency",
+      variant: "destructive",
+    });
 
-    // notify({
-    //   message: "Need an SPL token account for cost currency",
-    //   type: "error",
-    // });
     return;
   }
   console.log("payer", payer.toBase58());
@@ -478,6 +516,10 @@ export async function placeOrder({
     connection,
     signers,
     sendingMessage: "Sending order...",
+    successMessage: "Order confirmed",
+    sentMessage: "Order sent",
+    timeout: 50000,
+    sendNotification: true,
   });
 }
 //  end Order
@@ -691,7 +733,7 @@ export async function signTransaction({
 }) {
   assert(wallet.publicKey, "Expected `publicKey` to be non-null");
   transaction.recentBlockhash = (
-    await connection.getRecentBlockhash("max")
+    await connection.getLatestBlockhash("confirmed")
   ).blockhash;
   transaction.setSigners(wallet.publicKey, ...signers.map((s) => s.publicKey));
   if (signers.length > 0) {
@@ -748,79 +790,102 @@ export async function sendSignedTransaction({
   const startTime = getUnixTs();
   if (sendNotification) {
     console.log("Sending transaction", signedTransaction);
-    // notify({ message: sendingMessage });
+    toast({
+      description: sendingMessage,
+    });
   }
   const txid: TransactionSignature = await connection.sendRawTransaction(
     rawTransaction,
     {
+      maxRetries: 2,
       skipPreflight: true,
     }
   );
   if (sendNotification) {
     console.log("Sent transaction", txid);
-    // notify({ message: sentMessage, type: "success", txid });
+    toast({
+      description: sentMessage,
+    });
   }
+  console.log("confirm start:", txid);
+  const confirmation = await connection.confirmTransaction(txid);
+  console.log("confirm ends:", confirmation);
 
-  console.log("Started awaiting confirmation for", txid);
+  // await connection.confirmTransaction(txid);
+  toast({
+    title: "Transaction sent",
+    description: "Transaction has been sent to the network",
+    link: `https://solscan.io/tx/${txid}`,
+    color: "green",
+  });
 
-  let done = false;
-  (async () => {
-    while (!done && getUnixTs() - startTime < timeout) {
-      connection.sendRawTransaction(rawTransaction, {
-        skipPreflight: true,
-      });
-      await sleep(300);
-    }
-  })();
-  try {
-    await awaitTransactionSignatureConfirmation(txid, timeout, connection);
-  } catch (err) {
-    if (err.timeout) {
-      throw new Error("Timed out awaiting confirmation on transaction");
-    }
-    let simulateResult: SimulatedTransactionResponse | null = null;
-    try {
-      simulateResult = (
-        await simulateTransaction(connection, signedTransaction, "single")
-      ).value;
-    } catch (e) {}
-    if (simulateResult && simulateResult.err) {
-      if (simulateResult.logs) {
-        for (let i = simulateResult.logs.length - 1; i >= 0; --i) {
-          const line = simulateResult.logs[i];
-          if (line.startsWith("Program log: ")) {
-            throw new Error(
-              "Transaction failed: " + line.slice("Program log: ".length)
-            );
-          }
-        }
-      }
-      let parsedError;
-      if (
-        typeof simulateResult.err == "object" &&
-        "InstructionError" in simulateResult.err
-      ) {
-        const parsedErrorInfo = parseInstructionErrorResponse(
-          signedTransaction,
-          simulateResult.err["InstructionError"]
-        );
-        parsedError = parsedErrorInfo.error;
-      } else {
-        parsedError = JSON.stringify(simulateResult.err);
-      }
-      throw new Error(parsedError);
-    }
-    throw new Error("Transaction failed");
-  } finally {
-    done = true;
-  }
-  if (sendNotification) {
-    console.log("Latency", txid, getUnixTs() - startTime);
-    // notify({ message: successMessage, type: "success", txid });
-  }
-
-  console.log("Latency", txid, getUnixTs() - startTime);
   return txid;
+
+  //
+  // let done = false;
+  // // await (async () => {
+  // //   while (!done && getUnixTs() - startTime < timeout) {
+  // //     await connection.sendRawTransaction(rawTransaction, {
+  // //       skipPreflight: true,
+  // //     });
+  // //     await sleep(2000);
+  // //   }
+  // // })();
+  // try {
+  //   const res = await connection.confirmTransaction(txid, "max");
+  //   // await awaitTransactionSignatureConfirmation(txid, timeout, connection);
+  //   toast({
+  //     description: res.value.err ? "Transaction failed" : successMessage,
+  //   });
+  // } catch (err: any) {
+  //   if (err.timeout) {
+  //     throw new Error("Timed out awaiting confirmation on transaction");
+  //   }
+  //   let simulateResult: SimulatedTransactionResponse | null = null;
+  //   try {
+  //     simulateResult = (
+  //       await simulateTransaction(connection, signedTransaction, "single")
+  //     ).value;
+  //   } catch (e) {}
+  //   if (simulateResult && simulateResult.err) {
+  //     if (simulateResult.logs) {
+  //       for (let i = simulateResult.logs.length - 1; i >= 0; --i) {
+  //         const line = simulateResult.logs[i];
+  //         if (line.startsWith("Program log: ")) {
+  //           throw new Error(
+  //             "Transaction failed: " + line.slice("Program log: ".length)
+  //           );
+  //         }
+  //       }
+  //     }
+  //     let parsedError;
+  //     if (
+  //       typeof simulateResult.err == "object" &&
+  //       "InstructionError" in simulateResult.err
+  //     ) {
+  //       const parsedErrorInfo = parseInstructionErrorResponse(
+  //         signedTransaction,
+  //         simulateResult.err["InstructionError"]
+  //       );
+  //       parsedError = parsedErrorInfo.error;
+  //     } else {
+  //       parsedError = JSON.stringify(simulateResult.err);
+  //     }
+  //     throw new Error(parsedError);
+  //   }
+  //   throw new Error("Transaction failed");
+  // } finally {
+  //   done = true;
+  // }
+  // if (sendNotification) {
+  //   console.log("Latency", txid, getUnixTs() - startTime);
+  //   toast({
+  //     description: successMessage,
+  //   });
+  // }
+  //
+  // console.log("Latency", txid, getUnixTs() - startTime);
+  // return txid;
 }
 
 async function awaitTransactionSignatureConfirmation(
@@ -860,7 +925,7 @@ async function awaitTransactionSignatureConfirmation(
       }
       while (!done) {
         // eslint-disable-next-line no-loop-func
-        (async () => {
+        await (async () => {
           try {
             const signatureStatuses = await connection.getSignatureStatuses([
               txid,
@@ -887,7 +952,7 @@ async function awaitTransactionSignatureConfirmation(
             }
           }
         })();
-        await sleep(300);
+        await sleep(2000);
       }
     })();
   });
@@ -904,40 +969,6 @@ function mergeTransactions(transactions: (Transaction | undefined)[]) {
     });
   return transaction;
 }
-
-function jsonRpcResult(resultDescription: any) {
-  const jsonRpcVersion = struct.literal("2.0");
-  return struct.union([
-    struct({
-      jsonrpc: jsonRpcVersion,
-      id: "string",
-      error: "any",
-    }),
-    struct({
-      jsonrpc: jsonRpcVersion,
-      id: "string",
-      error: "null?",
-      result: resultDescription,
-    }),
-  ]);
-}
-
-function jsonRpcResultAndContext(resultDescription: any) {
-  return jsonRpcResult({
-    context: struct({
-      slot: "number",
-    }),
-    value: resultDescription,
-  });
-}
-
-const AccountInfoResult = struct({
-  executable: "boolean",
-  owner: "string",
-  lamports: "number",
-  data: "any",
-  rentEpoch: "number?",
-});
 
 /** Copy of Connection.simulateTransaction that takes a commitment parameter. */
 async function simulateTransaction(
