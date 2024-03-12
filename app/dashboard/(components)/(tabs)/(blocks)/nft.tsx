@@ -19,8 +19,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ChevronFirst, X } from "lucide-react";
+import { CheckIcon, ChevronFirst, X } from "lucide-react";
 import Image from "next/image";
+import * as Checkbox from "@radix-ui/react-checkbox";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -46,6 +47,8 @@ const NFT = ({ isEXTRASMALL }: Props) => {
   const [detailModal, setDetailModal] = useState(false);
 
   const [burnModal, setBurnModal] = useState(false);
+
+  const [sendModal, setSendModal] = useState(false);
 
   useEffect(() => {
     gdata.length === 0 &&
@@ -186,7 +189,7 @@ const NFT = ({ isEXTRASMALL }: Props) => {
         onOpenChange={() => setDetailModal(!detailModal)}
       >
         <AlertDialogContent
-          className="border-none bg-[#0d111b] rounded-3xl h-max md:px-14"
+          className="border-none bg-[#0d111b] rounded-3xl md:px-8"
           onPointerDown={(event) => setDetailModal(false)}
           style={{
             boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
@@ -258,7 +261,10 @@ const NFT = ({ isEXTRASMALL }: Props) => {
                 "text-[#d9f8ff] bg-[#0d111b55] px-5 rounded-full w-full"
               }
               style={{ boxShadow: "0 0 5px #d9f8ff" }}
-              onClick={() => console.log("Send")}
+              onClick={() => {
+                setSendModal(true);
+                setDetailModal(false);
+              }}
             >
               Send
             </Button>
@@ -278,14 +284,14 @@ const NFT = ({ isEXTRASMALL }: Props) => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/*  ===================================================================== */}
+      {/*  =================================== Burn Modal ================================== */}
 
       <AlertDialog
         open={burnModal}
         onOpenChange={() => setBurnModal(!burnModal)}
       >
         <AlertDialogContent
-          className="border-none bg-[#0d111b] rounded-3xl h-max md:px-14"
+          className="border-none bg-[#0d111b] rounded-3xl h-max md:px-8"
           onPointerDown={(event) => setBurnModal(false)}
           style={{
             boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
@@ -294,7 +300,7 @@ const NFT = ({ isEXTRASMALL }: Props) => {
         >
           <AlertDialogHeader>
             <AlertDialogTitle
-              className="flex justify-between items-center gap-5 p-5 text-[#d9f8ff] bg-[#0d111b55] px-5 rounded-full h-12"
+              className="flex justify-between items-center gap-5 p-5 text-[#d9f8ff] bg-[#0d111b55] rounded-full h-12"
               style={{
                 boxShadow: "0 0 5px #d9f8ff",
               }}
@@ -320,22 +326,188 @@ const NFT = ({ isEXTRASMALL }: Props) => {
             </div>
           </AlertDialogHeader>
           <div
-            className="text-gray-500 bg-[#0d111b55] rounded-[25px] p-3"
+            className="text-gray-500 bg-[#0d111b55] rounded-[25px] p-4"
             style={{
               boxShadow: "0 0 5px #d9f8ff",
             }}
           >
-            <p>
+            <p className={"text-sm font-semibold"}>
               This action will permanently destroy and remove these tokens from
               your wallet.
             </p>
-
-            <div>
-              <div>
-                <p>323</p>
+            <div className={"flex flex-row mt-4 font-medium"}>
+              <div
+                className={"flex flex-row w-full justify-between font-semibold"}
+              >
+                <p className={"text-gray-500 text-sm"}>Token</p>
+                <p className={"text-gray-500 text-sm"}>
+                  Ustur CSS Tier 1 (CSSLU1)
+                </p>
               </div>
             </div>
+            <div
+              className={
+                "flex flex-row w-full justify-between mt-1 font-semibold"
+              }
+            >
+              <p className={"text-gray-500 text-sm"}>Rebate</p>
+              <div className={"flex flex-row gap-1"}>
+                <p className={"text-green-300 text-sm "}>+0.0020392</p>
+                <p className={"text-green-300 text-sm"}>SOL</p>
+              </div>
+            </div>
+            <div
+              className={
+                "flex flex-row w-full justify-between mt-1 font-semibold"
+              }
+            >
+              <p className={"text-gray-500 text-sm"}>Network Fee</p>
+              <div className={"flex flex-row gap-1"}>
+                <p className={"text-gray-500 text-sm"}>0.000005</p>
+                <p className={"text-gray-500 text-sm"}>SOL</p>
+              </div>
+            </div>
+            <div
+              className={
+                "bg-red-700 bg-opacity-25 mt-4 rounded-lg shadow relative"
+              }
+            >
+              {/*<p>I understand this cannot be undone</p>*/}
+              <form>
+                <div className="flex items-center p-3">
+                  <Checkbox.Root
+                    className=" hover:bg-red-600 flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-red-600 "
+                    id="c1"
+                  >
+                    <Checkbox.Indicator className="text-sm">
+                      <CheckIcon style={{ color: "white" }} size={18} />
+                    </Checkbox.Indicator>
+                  </Checkbox.Root>
+                  <label className="text-sm ml-3 font-medium" htmlFor="c1">
+                    I understand this cannot be undone
+                  </label>
+                </div>
+              </form>
+            </div>
           </div>
+          <Button
+            className={
+              "text-[#d9f8ff] bg-[#0d111b55] px-5 rounded-full w-full mt-2"
+            }
+            style={{ boxShadow: "0 0 5px #d9f8ff" }}
+          >
+            Send
+          </Button>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/*  ========================================= Send nft modal ============================================= */}
+      <AlertDialog
+        open={sendModal}
+        onOpenChange={() => setSendModal(!sendModal)}
+      >
+        <AlertDialogContent
+          className="border-none bg-[#0d111b] rounded-3xl h-max md:px-8"
+          onPointerDown={(event) => setSendModal(false)}
+          style={{
+            boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
+            borderRadius: 24,
+          }}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle
+              className="flex justify-between items-center gap-5 p-5 text-[#d9f8ff] bg-[#0d111b55] rounded-full h-12"
+              style={{
+                boxShadow: "0 0 5px #d9f8ff",
+              }}
+            >
+              <p className="text-sm text-white">Send</p>
+              <p className="text-sm">Ustur CSS Tier 1 (CSSLU1)</p>
+              <Button
+                size="icon"
+                className={"bg-[#0d111b55] rounded-[50%]"}
+                onClick={() => setSendModal(false)}
+              >
+                <X className="w-6 h-6 aspect-square object-contain" />
+              </Button>
+            </AlertDialogTitle>
+            <div className={"flex-row justify-self-center mx-auto"}>
+              <Image
+                alt="NFT Image"
+                className="w-[300px] h-[190px] relative my-12"
+                src="https://fakeimg.pl/340x340"
+                width={340}
+                height={340}
+              />
+            </div>
+          </AlertDialogHeader>
+          <div
+            className="text-gray-500 bg-[#0d111b55] rounded-[25px] p-4"
+            style={{
+              boxShadow: "0 0 5px #d9f8ff",
+            }}
+          >
+            <p className={"text-sm font-medium"}>
+              Fill Address and Amount for Transfer
+            </p>
+
+            <div
+              className={
+                "flex flex-row items-center w-full justify-between gap-5 mt-3"
+              }
+            >
+              <label
+                className="text-gray-500 text-sm font-medium"
+                htmlFor="address"
+              >
+                Address
+              </label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                className="w-full bg-[#0d111b55] text-[#d9f8ff] rounded-3xl px-3 py-2 mt-1 border border-sky-100 border-opacity-50 "
+                placeholder="Enter Address"
+              />
+            </div>
+            <div
+              className={
+                "flex flex-row w-full justify-between items-center mt-2"
+              }
+            >
+              <label
+                className="text-gray-500 text-sm font-medium"
+                htmlFor="address"
+              >
+                Amount
+              </label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                className="w-2/5 bg-[#0d111b55] text-[#d9f8ff] rounded-3xl py-2 mt-1 border border-sky-100 border-opacity-50 text-center "
+                placeholder="Amount"
+              />
+            </div>
+            <div className={"flex flex-row w-full justify-end mt-3"}>
+              <Button
+                style={{ boxShadow: "0 0 5px #d9f8ff" }}
+                className={
+                  "bg-slate-800 rounded-3xl shadow px-6 h-8 text-white font-bold"
+                }
+              >
+                Max
+              </Button>
+            </div>
+          </div>
+          <Button
+            className={
+              "text-[#d9f8ff] bg-[#0d111b55] px-5 rounded-full w-full mt-2"
+            }
+            style={{ boxShadow: "0 0 5px #d9f8ff" }}
+          >
+            Send
+          </Button>
         </AlertDialogContent>
       </AlertDialog>
     </div>
