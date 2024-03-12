@@ -372,7 +372,6 @@ const NFT = ({ isEXTRASMALL }: Props) => {
                 "bg-red-700 bg-opacity-25 mt-4 rounded-lg shadow relative"
               }
             >
-              {/*<p>I understand this cannot be undone</p>*/}
               <form>
                 <div className="flex items-center p-3">
                   <Checkbox.Root
