@@ -18,6 +18,7 @@ import {
 import formatedString from "@/lib/string";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useLend } from "@/applications/Lend/store";
 
 type DataItemProps = {
   balance: number;
@@ -38,20 +39,13 @@ type DataItemProps = {
 };
 
 type Props = {
-  markets: DataItemProps[];
   headers: string[];
   isEXTRASMALL: boolean;
   setSelectedLend: any;
   user: any;
 };
 
-const MainPool = ({
-  markets,
-  headers,
-  isEXTRASMALL,
-  user,
-  setSelectedLend,
-}: Props) => {
+const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
   const [data, setData] = useState<DataItemProps[]>([]);
   const [deposits, setDeposits] = useState<any>([]);
   const [borrows, setBorrows] = useState<any>([]);
@@ -60,6 +54,8 @@ const MainPool = ({
   const { onWithdrawOpen } = useWithdrawModal();
   const { onBorrowOpen } = useBorrowModal();
   const { onRepayOpen } = useRepayModal();
+
+  const market = useLend((state) => state.mainMarket);
 
   const d_data = {
     colbs: {
@@ -102,70 +98,6 @@ const MainPool = ({
       ],
     },
   };
-
-  useEffect(() => {
-    if (markets.length > 0) {
-      data.length === 0
-        ? setData(markets)
-        : setTimeout(() => {
-            setData([
-              {
-                id: "123456789",
-                name: "Ustur CSS Tier 1 (CSSLU1)",
-                mint: "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58",
-                collection: "Star Atlas",
-                balance: 1,
-                nft_supply: 136,
-                value: 4812.99,
-                price: 4812.99,
-                supply: 0,
-                borrow: 0,
-                borrowValue: 0,
-                supplyAPR: 0,
-                borrowAPR: 0,
-              },
-            ]);
-          }, 5000);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (!!user) {
-      user?.deposits?.length === 0
-        ? setTimeout(() => {
-            setDeposits([
-              {
-                id: "123456789",
-                symbol: "SOL",
-                logo: "/assets/icons/solana-1@2x.png",
-                percent: 0.3,
-                supply: 153657,
-                value: 3641.23,
-              },
-            ]);
-          }, 5000)
-        : setDeposits(user.deposits);
-    }
-  }, [deposits]);
-
-  useEffect(() => {
-    if (!!user) {
-      user?.borrows?.length === 0
-        ? setTimeout(() => {
-            setBorrows([
-              {
-                id: "123456789",
-                symbol: "SOL",
-                logo: "/assets/icons/solana-1@2x.png",
-                percent: 0.3,
-                supply: 153657,
-                value: 3641.23,
-              },
-            ]);
-          }, 5000)
-        : setBorrows(user.borrows);
-    }
-  }, [borrows]);
 
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
@@ -210,7 +142,7 @@ const MainPool = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.length <= 0 ? (
+            {!market?.reserves ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   {headers.map((header, index) => (
@@ -243,15 +175,13 @@ const MainPool = ({
               </>
             ) : (
               <>
-                {data.map((row: DataItemProps, index: number) => (
+                {market?.reserves?.map((row, index) => (
                   <>
                     {row && (
                       <TableRow
                         className="hover:bg-transparent border-[#7c7c8d] h-max"
                         key={`${formatedString(
-                          row.mint
-                            ? row.mint.toLocaleLowerCase()
-                            : "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58".toLocaleLowerCase()
+                          row.config.liquidityToken.mint
                         )}_${index}`}
                       >
                         <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
@@ -272,7 +202,7 @@ const MainPool = ({
                               </span>
                             </div>
                             {row.config?.liquidityToken.logo ? (
-                              <Image
+                              <img
                                 src={row.config.liquidityToken.logo}
                                 alt={`${row?.stats?.symbol}-logo / lend`}
                                 width={24}
@@ -302,63 +232,63 @@ const MainPool = ({
                           </div>
                         </TableCell>
                         {/* LTV */}
-                        <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max min-w-[290px]">
-                          <div className="flex flex-nowrap gap-2 flex-col">
-                            <div className="flex flex-row gap-2">
-                              <span className="text-[#d9f8ff] text-xs sm:text-sm">
-                                Supply:
-                              </span>
-                              <div className="flex gap-2 items-center flex-wrap">
-                                <span className="text-xs sm:text-sm text-[#7c7c8d]">
-                                  $
-                                  {row.supply
-                                    ? formatedNumber(row.supply, 1, true)
-                                    : formatedNumber(0, 1, true)}
-                                </span>
-                                <span className="text-xs sm:text-sm text-[#7c7c8d]">
-                                  {row?.stats?.symbol} -
-                                </span>
-                                <span className="text-xs sm:text-sm text-[#7c7c8d]">
-                                  $
-                                  {row.value
-                                    ? formatedNumber(row.value, 1, true)
-                                    : formatedNumber(0, 1, true)}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex flex-row gap-2">
-                              <span className="text-[#d9f8ff]">Borrow:</span>
-                              <div className="flex gap-2 items-center flex-wrap">
-                                <span className="text-sm text-[#7c7c8d]">
-                                  $
-                                  {row.borrow
-                                    ? formatedNumber(row.borrow, 1, true)
-                                    : 0}
-                                </span>
-                                <span className="text-sm text-[#7c7c8d]">
-                                  {row?.stats?.symbol} -
-                                </span>
-                                <span className="text-sm text-[#7c7c8d]">
-                                  $
-                                  {row.borrowValue
-                                    ? formatedNumber(row.borrowValue, 2, true)
-                                    : 0}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </TableCell>
-                        {/* TOTAL */}
-                        <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
-                          <div className="flex flex-col">
-                            {row.supplyAPR && (
-                              <span>
-                                {formatedNumber(12, 2, isEXTRASMALL)}%
-                              </span>
-                            )}
-                            <span>{formatedNumber(5, 2, isEXTRASMALL)}%</span>
-                          </div>
-                        </TableCell>
+                        {/*<TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max min-w-[290px]">*/}
+                        {/*  <div className="flex flex-nowrap gap-2 flex-col">*/}
+                        {/*    <div className="flex flex-row gap-2">*/}
+                        {/*      <span className="text-[#d9f8ff] text-xs sm:text-sm">*/}
+                        {/*        Supply:*/}
+                        {/*      </span>*/}
+                        {/*      <div className="flex gap-2 items-center flex-wrap">*/}
+                        {/*        <span className="text-xs sm:text-sm text-[#7c7c8d]">*/}
+                        {/*          $*/}
+                        {/*          {row.supply*/}
+                        {/*            ? formatedNumber(row.supply, 1, true)*/}
+                        {/*            : formatedNumber(0, 1, true)}*/}
+                        {/*        </span>*/}
+                        {/*        <span className="text-xs sm:text-sm text-[#7c7c8d]">*/}
+                        {/*          {row?.stats?.symbol} -*/}
+                        {/*        </span>*/}
+                        {/*        <span className="text-xs sm:text-sm text-[#7c7c8d]">*/}
+                        {/*          $*/}
+                        {/*          {row.value*/}
+                        {/*            ? formatedNumber(row.value, 1, true)*/}
+                        {/*            : formatedNumber(0, 1, true)}*/}
+                        {/*        </span>*/}
+                        {/*      </div>*/}
+                        {/*    </div>*/}
+                        {/*    <div className="flex flex-row gap-2">*/}
+                        {/*      <span className="text-[#d9f8ff]">Borrow:</span>*/}
+                        {/*      <div className="flex gap-2 items-center flex-wrap">*/}
+                        {/*        <span className="text-sm text-[#7c7c8d]">*/}
+                        {/*          $*/}
+                        {/*          {row.borrow*/}
+                        {/*            ? formatedNumber(row.borrow, 1, true)*/}
+                        {/*            : 0}*/}
+                        {/*        </span>*/}
+                        {/*        <span className="text-sm text-[#7c7c8d]">*/}
+                        {/*          {row?.stats?.symbol} -*/}
+                        {/*        </span>*/}
+                        {/*        <span className="text-sm text-[#7c7c8d]">*/}
+                        {/*          $*/}
+                        {/*          {row.borrowValue*/}
+                        {/*            ? formatedNumber(row.borrowValue, 2, true)*/}
+                        {/*            : 0}*/}
+                        {/*        </span>*/}
+                        {/*      </div>*/}
+                        {/*    </div>*/}
+                        {/*  </div>*/}
+                        {/*</TableCell>*/}
+                        {/*/!* TOTAL *!/*/}
+                        {/*<TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">*/}
+                        {/*  <div className="flex flex-col">*/}
+                        {/*    {row.supplyAPR && (*/}
+                        {/*      <span>*/}
+                        {/*        {formatedNumber(12, 2, isEXTRASMALL)}%*/}
+                        {/*      </span>*/}
+                        {/*    )}*/}
+                        {/*    <span>{formatedNumber(5, 2, isEXTRASMALL)}%</span>*/}
+                        {/*  </div>*/}
+                        {/*</TableCell>*/}
 
                         <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
                           <div className="flex flex-col gap-3">
@@ -521,7 +451,7 @@ const MainPool = ({
                     <div className="flex flex-col">
                       <span>{row.info.stats.symbol}</span>
                       {row.info.config.liquidityToken.logo ? (
-                        <Image
+                        <img
                           src={row.info.config.liquidityToken.logo}
                           alt={`${row?.info?.stats?.symbol}-logo / lend`}
                           width={24}
