@@ -18,7 +18,6 @@ import {
 import formatedString from "@/lib/string";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useLend } from "@/applications/Lend/store";
 
 type DataItemProps = {
   balance: number;
@@ -39,13 +38,20 @@ type DataItemProps = {
 };
 
 type Props = {
+  markets: DataItemProps[];
   headers: string[];
   isEXTRASMALL: boolean;
   setSelectedLend: any;
   user: any;
 };
 
-const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
+const MainPool = ({
+  markets,
+  headers,
+  isEXTRASMALL,
+  user,
+  setSelectedLend,
+}: Props) => {
   const [data, setData] = useState<DataItemProps[]>([]);
   const [deposits, setDeposits] = useState<any>([]);
   const [borrows, setBorrows] = useState<any>([]);
@@ -54,8 +60,6 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
   const { onWithdrawOpen } = useWithdrawModal();
   const { onBorrowOpen } = useBorrowModal();
   const { onRepayOpen } = useRepayModal();
-
-  const market = useLend((state) => state.mainMarket);
 
   const d_data = {
     colbs: {
@@ -99,13 +103,81 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
     },
   };
 
+  useEffect(() => {
+    if (markets.length > 0) {
+      data.length === 0
+        ? setData(markets)
+        : setTimeout(() => {
+            setData([
+              {
+                id: "123456789",
+                name: "Ustur CSS Tier 1 (CSSLU1)",
+                mint: "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58",
+                collection: "Star Atlas",
+                balance: 1,
+                nft_supply: 136,
+                value: 4812.99,
+                price: 4812.99,
+                supply: 0,
+                borrow: 0,
+                borrowValue: 0,
+                supplyAPR: 0,
+                borrowAPR: 0,
+              },
+            ]);
+          }, 5000);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!!user) {
+      user?.deposits?.length === 0
+        ? setTimeout(() => {
+            setDeposits([
+              {
+                id: "123456789",
+                symbol: "SOL",
+                logo: "/assets/icons/solana-1@2x.png",
+                percent: 0.3,
+                supply: 153657,
+                value: 3641.23,
+              },
+            ]);
+          }, 5000)
+        : setDeposits(user.deposits);
+    }
+  }, [deposits]);
+
+  useEffect(() => {
+    if (!!user) {
+      user?.borrows?.length === 0
+        ? setTimeout(() => {
+            setBorrows([
+              {
+                id: "123456789",
+                symbol: "SOL",
+                logo: "/assets/icons/solana-1@2x.png",
+                percent: 0.3,
+                supply: 153657,
+                value: 3641.23,
+              },
+            ]);
+          }, 5000)
+        : setBorrows(user.borrows);
+    }
+  }, [borrows]);
+
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
       <div
-        className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl px-5 lg:px-10 py-5 max-w-full"
-        style={{ boxShadow: "0 0 4px #88d6ff" }}
+        className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl lg:px-5 py-5"
+        style={{
+          boxShadow: "0 0 4px #88d6ff",
+          background:
+            "radial-gradient(50% 50% at 50% 50%, rgba(119, 186, 234, 0.2), transparent ), radial-gradient( 50% 50% at 50% 50%, rgba(251, 0, 196, 0) 3.49%, rgba(119, 186, 234, 0) 7.6%, rgba(253, 0, 197, 0) 10.46%, rgba(119, 186, 234, 0) 14.46%, rgba(255, 0, 199, 0) 18.56%, rgba(3, 0, 3, 0) 19.53%, transparent 79.82%, rgba(246, 0, 192, 0) 81.08%, rgba(119, 186, 234, 0) 84.04%, rgba(247, 0, 193, 0) 86.61%, rgba(119, 186, 234, 0) 91.01%, rgba(249, 0, 194, 0) 95.16%, rgba(119, 186, 234, 0) 98.6% )",
+        }}
       >
-        <Table className="w-full flex-1 mt-2 overflow-scroll">
+        <Table className="w-full mt-2 overflow-scroll">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               {headers.map((header, index) => (
@@ -141,8 +213,9 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
               ))}
             </TableRow>
           </TableHeader>
+
           <TableBody>
-            {!market?.reserves ? (
+            {fakeData.length <= 0 ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   {headers.map((header, index) => (
@@ -175,18 +248,20 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
               </>
             ) : (
               <>
-                {market?.reserves?.map((row, index) => (
+                {fakeData.map((row: DataItemProps, index: number) => (
                   <>
                     {row && (
                       <TableRow
                         className="hover:bg-transparent border-[#7c7c8d] h-max"
                         key={`${formatedString(
-                          row.config.liquidityToken.mint
+                          row.mint
+                            ? row.mint.toLocaleLowerCase()
+                            : "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58".toLocaleLowerCase()
                         )}_${index}`}
                       >
-                        <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
-                          <div className="flex flex-nowrap gap-4 items-center">
-                            <div className="flex flex-col gap-2 min-w-[120px]">
+                        <TableCell className="font-medium text-left text-[#7c7c8d] py-4">
+                          <div className="flex flex-nowrap gap-3 items-center">
+                            <div className="flex flex-col gap-6 min-w-[120px]">
                               <span className="text-[#d9f8ff]">
                                 {row?.stats?.symbol}
                               </span>
@@ -202,7 +277,7 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
                               </span>
                             </div>
                             {row.config?.liquidityToken.logo ? (
-                              <img
+                              <Image
                                 src={row.config.liquidityToken.logo}
                                 alt={`${row?.stats?.symbol}-logo / lend`}
                                 width={24}
@@ -216,7 +291,7 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
                         </TableCell>
                         {/* ASSET */}
                         <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max min-w-[170px]">
-                          <div className="flex flex-nowrap gap-2 flex-col">
+                          <div className="flex flex-nowrap gap-6 flex-col">
                             <div className="flex flex-row gap-2">
                               <span className="text-[#d9f8ff]">Open LTV:</span>
                               <span className="text-sm text-[#7c7c8d]">
@@ -232,69 +307,70 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
                           </div>
                         </TableCell>
                         {/* LTV */}
-                        {/*<TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max min-w-[290px]">*/}
-                        {/*  <div className="flex flex-nowrap gap-2 flex-col">*/}
-                        {/*    <div className="flex flex-row gap-2">*/}
-                        {/*      <span className="text-[#d9f8ff] text-xs sm:text-sm">*/}
-                        {/*        Supply:*/}
-                        {/*      </span>*/}
-                        {/*      <div className="flex gap-2 items-center flex-wrap">*/}
-                        {/*        <span className="text-xs sm:text-sm text-[#7c7c8d]">*/}
-                        {/*          $*/}
-                        {/*          {row.supply*/}
-                        {/*            ? formatedNumber(row.supply, 1, true)*/}
-                        {/*            : formatedNumber(0, 1, true)}*/}
-                        {/*        </span>*/}
-                        {/*        <span className="text-xs sm:text-sm text-[#7c7c8d]">*/}
-                        {/*          {row?.stats?.symbol} -*/}
-                        {/*        </span>*/}
-                        {/*        <span className="text-xs sm:text-sm text-[#7c7c8d]">*/}
-                        {/*          $*/}
-                        {/*          {row.value*/}
-                        {/*            ? formatedNumber(row.value, 1, true)*/}
-                        {/*            : formatedNumber(0, 1, true)}*/}
-                        {/*        </span>*/}
-                        {/*      </div>*/}
-                        {/*    </div>*/}
-                        {/*    <div className="flex flex-row gap-2">*/}
-                        {/*      <span className="text-[#d9f8ff]">Borrow:</span>*/}
-                        {/*      <div className="flex gap-2 items-center flex-wrap">*/}
-                        {/*        <span className="text-sm text-[#7c7c8d]">*/}
-                        {/*          $*/}
-                        {/*          {row.borrow*/}
-                        {/*            ? formatedNumber(row.borrow, 1, true)*/}
-                        {/*            : 0}*/}
-                        {/*        </span>*/}
-                        {/*        <span className="text-sm text-[#7c7c8d]">*/}
-                        {/*          {row?.stats?.symbol} -*/}
-                        {/*        </span>*/}
-                        {/*        <span className="text-sm text-[#7c7c8d]">*/}
-                        {/*          $*/}
-                        {/*          {row.borrowValue*/}
-                        {/*            ? formatedNumber(row.borrowValue, 2, true)*/}
-                        {/*            : 0}*/}
-                        {/*        </span>*/}
-                        {/*      </div>*/}
-                        {/*    </div>*/}
-                        {/*  </div>*/}
-                        {/*</TableCell>*/}
-                        {/*/!* TOTAL *!/*/}
-                        {/*<TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">*/}
-                        {/*  <div className="flex flex-col">*/}
-                        {/*    {row.supplyAPR && (*/}
-                        {/*      <span>*/}
-                        {/*        {formatedNumber(12, 2, isEXTRASMALL)}%*/}
-                        {/*      </span>*/}
-                        {/*    )}*/}
-                        {/*    <span>{formatedNumber(5, 2, isEXTRASMALL)}%</span>*/}
-                        {/*  </div>*/}
-                        {/*</TableCell>*/}
+                        <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max min-w-[290px]">
+                          <div className="flex flex-nowrap gap-6 flex-col">
+                            <div className="flex flex-row gap-2">
+                              <span className="text-[#d9f8ff] text-xs sm:text-sm">
+                                Supply:
+                              </span>
+                              <div className="flex gap-2 items-center flex-wrap">
+                                <span className="text-xs sm:text-sm text-[#7c7c8d]">
+                                  $
+                                  {row.supply
+                                    ? formatedNumber(row.supply, 1, true)
+                                    : formatedNumber(0, 1, true)}
+                                </span>
+                                <span className="text-xs sm:text-sm text-[#7c7c8d]">
+                                  {row?.stats?.symbol} -
+                                </span>
+                                <span className="text-xs sm:text-sm text-[#7c7c8d]">
+                                  $
+                                  {row.value
+                                    ? formatedNumber(row.value, 1, true)
+                                    : formatedNumber(0, 1, true)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex flex-row gap-2">
+                              <span className="text-[#d9f8ff]">Borrow:</span>
+                              <div className="flex gap-2 items-center flex-wrap">
+                                <span className="text-sm text-[#7c7c8d]">
+                                  $
+                                  {row.borrow
+                                    ? formatedNumber(row.borrow, 1, true)
+                                    : 0}
+                                </span>
+                                <span className="text-sm text-[#7c7c8d]">
+                                  {row?.stats?.symbol} -
+                                </span>
+                                <span className="text-sm text-[#7c7c8d]">
+                                  $
+                                  {row.borrowValue
+                                    ? formatedNumber(row.borrowValue, 2, true)
+                                    : 0}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        {/* TOTAL */}
+                        <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
+                          <div className="flex flex-col gap-6">
+                            {row.supplyAPR && (
+                              <span>
+                                {formatedNumber(12, 2, isEXTRASMALL)}%
+                              </span>
+                            )}
+                            <span>{formatedNumber(5, 2, isEXTRASMALL)}%</span>
+                          </div>
+                        </TableCell>
 
                         <TableCell className="font-medium text-left text-[#7c7c8d] py-4 w-max">
                           <div className="flex flex-col gap-3">
                             <div className="flex gap-2 items-center flex-nowrap">
                               <Button
-                                className="min-w-[100px] truncate"
+                                style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
+                                className="min-w-[100px] truncate rounded-3xl h-8"
                                 size="sm"
                                 onClick={() => {
                                   setSelectedLend(row);
@@ -309,7 +385,8 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
                                 Supply
                               </Button>
                               <Button
-                                className="min-w-[100px] truncate"
+                                style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
+                                className="min-w-[100px] truncate rounded-3xl h-8"
                                 size="sm"
                                 onClick={() => {
                                   setSelectedLend(row);
@@ -326,8 +403,9 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
                             </div>
                             <div className="flex gap-2 items-center flex-nowrap">
                               <Button
+                                style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
                                 size="sm"
-                                className="min-w-[100px] truncate"
+                                className="min-w-[100px] truncate rounded-3xl h-8"
                                 onClick={() => {
                                   setSelectedLend(row);
                                   onRepayOpen();
@@ -336,8 +414,9 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
                                 Repay
                               </Button>
                               <Button
+                                style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
                                 size="sm"
-                                className="min-w-[100px] truncate"
+                                className="min-w-[100px] truncate rounded-3xl h-8"
                                 onClick={() => {
                                   setSelectedLend(row);
                                   onWithdrawOpen();
@@ -358,8 +437,12 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
         </Table>
       </div>
       <div
-        className="flex justify-center items-center gap-5 flex-1 bg-[#0d111b] rounded-3xl p-5 h-max flex-wrap sticky top-24"
-        style={{ boxShadow: "0 0 4px #88d6ff" }}
+        className="flex justify-center items-center gap-5 bg-[#0d111b] rounded-3xl p-6 h-max flex-wrap sticky top-24 flex-col"
+        style={{
+          boxShadow: "0 0 4px #88d6ff",
+          background:
+            "radial-gradient(50% 50% at 50% 50%, rgba(119, 186, 234, 0.2), transparent ), radial-gradient( 50% 50% at 50% 50%, rgba(251, 0, 196, 0) 3.49%, rgba(119, 186, 234, 0) 7.6%, rgba(253, 0, 197, 0) 10.46%, rgba(119, 186, 234, 0) 14.46%, rgba(255, 0, 199, 0) 18.56%, rgba(3, 0, 3, 0) 19.53%, transparent 79.82%, rgba(246, 0, 192, 0) 81.08%, rgba(119, 186, 234, 0) 84.04%, rgba(247, 0, 193, 0) 86.61%, rgba(119, 186, 234, 0) 91.01%, rgba(249, 0, 194, 0) 95.16%, rgba(119, 186, 234, 0) 98.6% )",
+        }}
       >
         <div className="flex justify-between w-full max-w-xs">
           {d_data.colbs.colors.map((colb) => (
@@ -412,6 +495,50 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
               ))}
             </TableBody>
           </Table>
+          <p className={"text-sky-100 my-2"}>
+            Assets <span className={"text-cyan-400"}>Supplied</span>
+          </p>
+          <hr />
+          <Table>
+            <TableBody>
+              {/* Put item here haj mihruuuuun */}
+              <TableRow>
+                <div className={"flex flex-row justify-between mt-1"}>
+                  <div>
+                    <p className={"text-sky-100"}>SOL</p>
+                    <p className="text-sky-100">Icon</p>
+                  </div>
+                  <p className={"text-gray-500"}>% 0.30</p>
+                  <div>
+                    <p className={"text-gray-500"}> 153.658</p>
+                    <p className={"text-gray-500"}>$3,641,23</p>
+                  </div>
+                </div>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <p className={"text-sky-100 my-2 mt-6"}>
+            Assets <span className={"text-cyan-400"}>Borrowed</span>
+          </p>
+          <hr />
+          <Table>
+            <TableBody>
+              {/* Put item here haj mihruuuuun */}
+              <TableRow>
+                <div className={"flex flex-row justify-between mt-1"}>
+                  <div>
+                    <p className={"text-sky-100"}>SOL</p>
+                    <p className="text-sky-100">Icon</p>
+                  </div>
+                  <p className={"text-gray-500"}>% 0.30</p>
+                  <div>
+                    <p className={"text-gray-500"}> 153.658</p>
+                    <p className={"text-gray-500"}>$3,641,23</p>
+                  </div>
+                </div>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         {user && deposits?.length > 0 ? (
@@ -451,7 +578,7 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
                     <div className="flex flex-col">
                       <span>{row.info.stats.symbol}</span>
                       {row.info.config.liquidityToken.logo ? (
-                        <img
+                        <Image
                           src={row.info.config.liquidityToken.logo}
                           alt={`${row?.info?.stats?.symbol}-logo / lend`}
                           width={24}
@@ -563,3 +690,56 @@ const MainPool = ({ headers, isEXTRASMALL, user, setSelectedLend }: Props) => {
 };
 
 export default MainPool;
+
+const fakeData = [
+  {
+    balance: 100,
+    collection: "Mock Collection",
+    id: "mock-id-123",
+    mint: "mock-mint-123",
+    name: "Mock Name",
+    nft_supply: 50,
+    price: 200,
+    value: 5000,
+    stats: {
+      symbol: "MOCK",
+      assetPriceUSD: 300,
+      loanToValueRatio: 0.5,
+    },
+    config: {
+      liquidityToken: {
+        logo: "https://fakeimg.pl/340x340",
+      },
+    },
+    supply: 1000,
+    borrow: 500,
+    borrowValue: 1500,
+    supplyAPR: 0.05,
+    borrowAPR: 0.1,
+  },
+  {
+    balance: 100,
+    collection: "Mock Collection",
+    id: "mock-id-123",
+    mint: "mock-mint-123",
+    name: "Mock Name",
+    nft_supply: 50,
+    price: 200,
+    value: 5000,
+    stats: {
+      symbol: "MOCK",
+      assetPriceUSD: 300,
+      loanToValueRatio: 0.5,
+    },
+    config: {
+      liquidityToken: {
+        logo: "https://fakeimg.pl/340x340",
+      },
+    },
+    supply: 1000,
+    borrow: 500,
+    borrowValue: 1500,
+    supplyAPR: 0.05,
+    borrowAPR: 0.1,
+  },
+];

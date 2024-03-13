@@ -70,7 +70,7 @@ const LendBody = ({ isEXTRASMALL }: Props) => {
   const [page, setPage] = useState("main");
 
   return (
-    <div className="z-50 static py-5 flex flex-col gap-5 items-center w-full">
+    <div className="z-50 static py-5 flex flex-col gap-5 items-center">
       <Tabs className="w-full bg-transparent" defaultValue={page}>
         <TabsList
           className={`flex justify-center items-center flex-wrap gap-4 h-max`}

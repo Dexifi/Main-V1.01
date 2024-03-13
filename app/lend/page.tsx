@@ -1,10 +1,10 @@
 "use client";
 
 import DashboardProvider from "@/components/providers/dashboard-provider";
-import { Toaster } from "@/components/ui/toaster";
-import { useIsClient, useMediaQuery } from "usehooks-ts";
-import { Header } from "../dashboard/(components)";
-import { LendBody } from "./(components)";
+import {Toaster} from "@/components/ui/toaster";
+import {useIsClient, useMediaQuery} from "usehooks-ts";
+import {Header} from "../dashboard/(components)";
+import {LendBody} from "./(components)";
 import LendingProvider from "@/applications/Lend/Provider";
 
 type Props = {};
@@ -19,11 +19,7 @@ const LendPage = (props: Props) => {
         <Toaster />
         <div className="bg-[#0d111b] relative min-h-screen w-full flex items-center flex-col">
           {isClient && <Header isMobile={isMobile} />}
-          <div
-            className={`container relative pt-4 min-h-screen flex flex-col w-full h-max items-center gap-5 ${
-              isMobile ? "overflow-x-hidden" : ""
-            }`}
-          >
+            <div className="container relative w-full max-w-full pt-4 overflow-x-hidden mb-12">
             <div
               className="absolute -top-96 left-[calc(50% - 866px)] w-[54rem] h-[32rem] lg:h-[64rem] overflow-hidden"
               style={{
