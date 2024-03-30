@@ -12,66 +12,79 @@ import formatedNumber from "@/lib/numbers";
 import { useRepayModal } from "@/lib/stores/lend.store";
 import formatedString from "@/lib/string";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
-import { SolendAction } from "@solendprotocol/solend-sdk";
-import { BN } from "bn.js";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import { LendState, useLend } from "@/applications/Lend/store";
+import { onRepay } from "@/applications/Lend/actions";
+import { useAtom } from "jotai";
+import { exploreAtom } from "@/stores/config";
 
 type Props = {
-  user: any;
-  pool: any;
-  reserve: any;
+  page: "main" | "turbo";
+  reserve: LendState["poolList"][0] | null;
 };
-
-const RepayModal = ({ user, pool, reserve }: Props) => {
+const RepayModal = ({ page, reserve }: Props) => {
   const { isOpen, onClose } = useRepayModal();
+  const mainMarket = useLend((state) => state.mainMarket);
+  const turboMarket = useLend((state) => state.turboMarket);
+  const mainObligations = useLend((state) => state.mainObligations);
+  const turboObligations = useLend((state) => state.turboObligations);
+  const [amount, setAmount] = useState(0);
+  const { sendTransaction, publicKey } = useWallet();
+  const reserves = useLend((state) => state.poolList);
+  const [exploer] = useAtom(exploreAtom);
 
+  const { toast } = useToast();
+
+  const obligation = useMemo(
+    () => (page === "main" ? mainObligations : turboObligations),
+    [mainObligations, page, turboObligations]
+  );
+  const pool = useMemo(
+    () => (page === "main" ? mainMarket : turboMarket),
+    [mainMarket, page, turboMarket]
+  );
+
+  const totalBorrow = useMemo(
+    () =>
+      (obligation?.borrows
+        .find(
+          (e) => e.mintAddress === reserve?.marketReserve?.stats?.mintAddress
+        )
+        ?.amount.toNumber() ?? 0) /
+      10 ** (reserve?.reserve?.decimals ?? 0),
+    [
+      obligation?.borrows,
+      reserve?.marketReserve?.stats?.mintAddress,
+      reserve?.reserve?.decimals,
+    ]
+  );
   const withdraw_modal = {
     title: "Replay",
 
     body: [
       {
         title: "Price",
-        value: reserve?.stats?.assetPriceUSD,
+        value: reserve?.marketReserve?.stats?.assetPriceUSD,
       },
       {
         title: "User Borrow Limit",
-        range: {
-          min: 3804,
-          max: 5317,
-          sign: "$",
-        },
+        value: obligation?.obligationStats.borrowLimit,
+        sign: "$",
       },
       {
         title: "Utilization",
-        range: {
-          min: 54.47,
-          max: 18.82,
-          sign: "%",
-        },
+        value: reserve?.marketReserve?.stats?.optimalUtilizationRate,
+        sign: "%",
       },
       {
-        title: "Borrow APR",
-        value: "Borrow APR",
+        title: "Supply APR",
+        sign: "%",
+        value: (reserve?.marketReserve?.totalSupplyAPY()?.totalAPY ?? 0) * 100,
       },
     ],
   };
-  const [amount, setAmount] = useState(0);
-  const { sendTransaction, wallet } = useWallet();
-  const [totalBorrow, setTotalBorrow] = useState(0);
-
-  const { toast } = useToast();
-
-  useEffect(() => {
-    if (user.obligationStats && !totalBorrow) {
-      setTotalBorrow(
-        (user.obligationStats.userTotalBorrow - 0.001) /
-          reserve.stats.assetPriceUSD
-      );
-    }
-  }, []);
 
   const handleRepay = async () => {
     if (Number(amount) <= 0)
@@ -79,22 +92,30 @@ const RepayModal = ({ user, pool, reserve }: Props) => {
         title: "Enter amount for repay!",
       });
 
-    const a = new BN(amount * 10 ** reserve.stats.decimals);
-    if (
-      wallet?.adapter.publicKey === null ||
-      wallet?.adapter.publicKey === undefined
-    ) {
+    if (!publicKey || !reserve?.reserve || !pool) {
       return;
     }
-    const solendAction = await SolendAction.buildRepayTxns(
-      connection,
-      a,
-      reserve.stats.symbol,
-      wallet.adapter.publicKey,
-      "production",
-      new PublicKey(pool.config.address)
-    );
-    (await solendAction).sendTransactions(sendTransaction);
+    try {
+      const tx = await onRepay({
+        amount: amount,
+        connection,
+        env: "production",
+        market: pool,
+        publicKey,
+        reserves,
+        reserve: reserve?.reserve,
+        sendTransaction,
+      });
+      toast({
+        title: "success",
+        description: "transaction sent",
+        link: `${exploer}tx/${tx}`,
+      });
+
+      onClose();
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message, variant: "destructive" });
+    }
   };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -114,15 +135,15 @@ const RepayModal = ({ user, pool, reserve }: Props) => {
             <div className="flex gap-4 items-center">
               {reserve ? (
                 <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  {reserve.stats.symbol}
+                  {reserve.marketReserve?.stats?.symbol}
                 </div>
               ) : (
                 <Skeleton className="w-24 h-6 bg-slate-600" />
               )}
               {reserve ? (
                 <Image
-                  alt={`${reserve.stats.symbol}-logo / lend`}
-                  src={reserve.config.liquidityToken.logo}
+                  alt={`${reserve.marketReserve?.stats?.symbol}-logo / lend`}
+                  src={reserve.marketReserve?.config?.liquidityToken.logo ?? ""}
                   width={24}
                   height={24}
                   className="w-6 h-6 aspect-square object-contain rounded-sm"
@@ -149,10 +170,8 @@ const RepayModal = ({ user, pool, reserve }: Props) => {
           {reserve ? (
             <span className="text-sm text-[#757788] flex gap-1 flex-nowrap">
               <span>Balance:</span>
-              <span>
-                {totalBorrow ? formatedNumber(totalBorrow, 1, true) : 0}
-              </span>
-              <span>{reserve.stats.symbol}</span>
+              <span>{totalBorrow}</span>
+              <span>{reserve.marketReserve?.stats?.symbol}</span>
             </span>
           ) : (
             <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -163,8 +182,8 @@ const RepayModal = ({ user, pool, reserve }: Props) => {
           <div className="flex gap-4 items-center w-1/2">
             {reserve ? (
               <Image
-                alt={`${reserve.stats.symbol}-logo / lend`}
-                src={reserve.config.liquidityToken.logo}
+                alt={`${reserve.marketReserve?.stats?.symbol}-logo / lend`}
+                src={reserve.marketReserve?.config?.liquidityToken.logo ?? ""}
                 width={24}
                 height={24}
                 className="w-6 h-6 aspect-square object-contain rounded-sm"
@@ -174,7 +193,7 @@ const RepayModal = ({ user, pool, reserve }: Props) => {
             )}
             {reserve ? (
               <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                {reserve.stats.symbol}
+                {reserve.marketReserve?.stats?.symbol}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -184,8 +203,8 @@ const RepayModal = ({ user, pool, reserve }: Props) => {
             value={amount}
             onChange={(e) => {
               const value = +e.target.value;
-              if (value > +reserve.user) setAmount(reserve.user);
-              else setAmount(value);
+              // if (value > +reserve.user) setAmount(reserve.user);
+              // else setAmount(value);
             }}
             type="number"
             placeholder="Amount"
@@ -194,14 +213,14 @@ const RepayModal = ({ user, pool, reserve }: Props) => {
           <div className="w-full flex justify-between items-center text-end">
             {reserve ? (
               <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                &asymp; ${formatedNumber(reserve.stats.assetPriceUSD, 3, false)}
+                &asymp; ${reserve.marketReserve?.stats?.assetPriceUSD ?? 0}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
             )}
             {reserve ? (
               <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                ${formatedNumber(amount * reserve.stats.assetPriceUSD, 2, true)}
+                ${reserve.marketReserve?.stats?.assetPriceUSD ?? 0}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />

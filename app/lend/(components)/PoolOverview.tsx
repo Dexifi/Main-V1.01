@@ -15,7 +15,7 @@ import Chart from "./Chart";
 
 type POverwievProps = {
   isEXTRASMALL: boolean;
-  page: string;
+  page: "main" | "turbo";
 };
 
 const headers = [
@@ -49,7 +49,7 @@ const PoolOverview = ({ isEXTRASMALL, page }: POverwievProps) => {
         style={{ boxShadow: "0 0 4px #88d6ff" }}
       >
         <div className="flex gap-x-5 text-[#D9F8FF] text-lg md:text-2xl">
-          <h3>{`${market?.config.name.toLocaleUpperCase()} Pool`}</h3>
+          <h3>{`${market?.config.name.toLocaleUpperCase() ?? "MAIN"} Pool`}</h3>
         </div>
 
         <div className="flex justify-center md:justify-between gap-12 relative flex-wrap md:flex-nowrap md:flex-row flex-1 w-full">
@@ -102,7 +102,7 @@ const PoolOverview = ({ isEXTRASMALL, page }: POverwievProps) => {
                         {details?.owner}
                       </TableCell>
                       <TableCell className="font-medium text-left text-[#7c7c8d] py-4">
-                        {market.config.name} Pool
+                        {market?.config?.name ?? "MAIN"} Pool
                       </TableCell>
                       <TableCell className="font-medium text-left text-[#7c7c8d] py-4">
                         ${details?.totalSupply}

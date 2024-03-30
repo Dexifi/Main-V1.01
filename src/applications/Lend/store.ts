@@ -1,11 +1,15 @@
 import { create } from "zustand";
-import onBorrow from "./borrow";
-import onSupply from "./supply";
-import { SolendMarket } from "@solendprotocol/solend-sdk/index";
+import { onBorrow, onSupply } from "./actions";
+import {
+  getReservesFromChain,
+  SolendMarket,
+  SolendObligation,
+  SolendReserve,
+} from "@solendprotocol/solend-sdk/index";
 import { MarketDetails } from "./types";
 import { devtools } from "zustand/middleware";
 
-type LendState = {
+export type LendState = {
   loadingMarket: boolean;
   setLoadingMarket: (loading: boolean) => void;
   turboMarket: SolendMarket | null;
@@ -16,14 +20,22 @@ type LendState = {
   turboMarketDetails: MarketDetails | null;
   setTurboMarketDetails: (details: MarketDetails) => void;
   setMainMarket: (currentPool: SolendMarket) => void;
-  poolList: any[];
-  setPoolList: (poolList: any[]) => void;
-  userBorrow: any[];
-  setUserBorrow: (userBorrow: any[]) => void;
-  userSupply: any[];
-  setUserSupply: (userSupply: any[]) => void;
+  poolList: Array<{
+    reserve?: Awaited<ReturnType<typeof getReservesFromChain>>[0];
+    marketReserve?: SolendReserve;
+  }>;
+  setPoolList: (
+    poolList: Array<{
+      reserve?: Awaited<ReturnType<typeof getReservesFromChain>>[0];
+      marketReserve?: SolendReserve;
+    }>
+  ) => void;
+  mainObligations: SolendObligation | null;
+  setMainObligations: (obligations: SolendObligation) => void;
+  turboObligations: SolendObligation | null;
+  setTurboObligations: (obligations: SolendObligation) => void;
   onBorrow: () => void;
-  onSupply: () => void;
+  onSupply: typeof onSupply;
 };
 
 export const useLend = create<LendState>()(
@@ -40,10 +52,11 @@ export const useLend = create<LendState>()(
     setTurboMarketDetails: (details) => set({ turboMarketDetails: details }),
     poolList: [],
     setPoolList: (poolList) => set({ poolList }),
-    userBorrow: [],
-    setUserBorrow: (userBorrow) => set({ userBorrow }),
-    userSupply: [],
-    setUserSupply: (userSupply) => set({ userSupply }),
+    mainObligations: null,
+    setMainObligations: (obligations) => set({ mainObligations: obligations }),
+    turboObligations: null,
+    setTurboObligations: (obligations) =>
+      set({ turboObligations: obligations }),
     onBorrow: onBorrow,
     onSupply: onSupply,
   }))

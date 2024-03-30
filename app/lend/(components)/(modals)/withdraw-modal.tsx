@@ -17,16 +17,42 @@ import { SolendAction } from "@solendprotocol/solend-sdk";
 import { BN } from "bn.js";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { LendState, useLend } from "@/applications/Lend/store";
+import { onWithdraw } from "@/applications/Lend/actions";
 
 type Props = {
-  user: any;
-  pool: any;
-  reserve: any;
+  reserve: LendState["poolList"][0] | null;
+  page: string;
 };
 
-const WithdrawModal = ({ user, pool, reserve }: Props) => {
+const WithdrawModal = ({ page, reserve }: Props) => {
   const { isOpen, onClose } = useWithdrawModal();
+  const mainMarket = useLend((state) => state.mainMarket);
+  const turboMarket = useLend((state) => state.turboMarket);
+  const mainObligations = useLend((state) => state.mainObligations);
+  const turboObligations = useLend((state) => state.turboObligations);
+  const market = useMemo(
+    () => (page === "main" ? mainMarket : turboMarket),
+    [mainMarket, page, turboMarket]
+  );
+
+  const obligation = useMemo(
+    () => (page === "main" ? mainObligations : turboObligations),
+    [mainObligations, page, turboObligations]
+  );
+
+  const targetBorrow = useMemo(
+    () =>
+      obligation?.deposits.find(
+        (e) => e.mintAddress === reserve?.marketReserve?.stats?.mintAddress
+      ),
+    [obligation?.borrows, reserve?.marketReserve?.stats?.mintAddress]
+  );
+
+  const tokenBalance =
+    (targetBorrow?.amount?.toNumber() ?? 0) /
+      10 ** (reserve?.marketReserve?.stats?.decimals ?? 0) ?? 0;
 
   const withdraw_modal = {
     title: "Withdraw",
@@ -34,43 +60,29 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
     body: [
       {
         title: "Price",
-        value: reserve?.stats?.assetPriceUSD,
+        value: reserve?.marketReserve?.stats?.assetPriceUSD,
       },
       {
         title: "User Borrow Limit",
-        range: {
-          min: 3804,
-          max: 5317,
-          sign: "$",
-        },
+        value: obligation?.obligationStats.borrowLimit,
+        sign: "$",
       },
       {
         title: "Utilization",
-        range: {
-          min: 54.47,
-          max: 18.82,
-          sign: "%",
-        },
+        value: reserve?.marketReserve?.stats?.optimalUtilizationRate,
+        sign: "%",
       },
       {
         title: "Borrow APR",
-        value: "Borrow APR",
+        sign: "%",
+        value: (reserve?.marketReserve?.totalBorrowAPY()?.totalAPY ?? 0) * 100,
       },
     ],
   };
 
   const { publicKey, sendTransaction, wallet } = useWallet();
-  const [tokenBalance, setTokenBalance] = useState(0);
   const [amount, setAmount] = useState(0);
-
   const { toast } = useToast();
-  useEffect(() => {
-    const token = user.deposits?.find(
-      (item: any) => item.mintAddress === reserve.config.liquidityToken.mint
-    );
-    if (token) setTokenBalance(token.info.user);
-    else setTokenBalance(0);
-  }, [publicKey]);
 
   const handleWithdraw = async () => {
     if (Number(amount) <= 0)
@@ -78,22 +90,21 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
         title: "Enter amount for withdraw!",
       });
 
-    const a = new BN(amount * 10 ** reserve.stats.decimals);
-    if (
-      wallet?.adapter.publicKey === null ||
-      wallet?.adapter.publicKey === undefined
-    ) {
+    if (!publicKey || !reserve?.reserve || !market) {
       return;
     }
-    const solendAction = await SolendAction.buildWithdrawTxns(
+    const na = amount.toString();
+    console.log(na, amount, reserve.marketReserve?.stats?.decimals);
+    await onWithdraw({
+      publicKey,
+      amount: na,
+      sendTransaction,
+      reserve: reserve.reserve,
+      reserves: useLend.getState().poolList,
+      env: "production",
+      market,
       connection,
-      a,
-      reserve.stats.symbol,
-      wallet.adapter.publicKey,
-      "production",
-      new PublicKey(pool.config.address)
-    );
-    (await solendAction).sendTransactions(sendTransaction);
+    });
   };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -113,15 +124,15 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
             <div className="flex gap-4 items-center">
               {reserve ? (
                 <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  {reserve.stats.symbol}
+                  {reserve.marketReserve?.stats?.symbol}
                 </div>
               ) : (
                 <Skeleton className="w-24 h-6 bg-slate-600" />
               )}
               {reserve ? (
                 <Image
-                  alt={`${reserve.stats.symbol}-logo / lend`}
-                  src={reserve.config.liquidityToken.logo}
+                  alt={`${reserve?.marketReserve?.stats?.symbol}-logo / lend`}
+                  src={reserve?.marketReserve?.config.liquidityToken.logo ?? ""}
                   width={24}
                   height={24}
                   className="w-6 h-6 aspect-square object-contain rounded-sm"
@@ -148,10 +159,8 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
           {reserve ? (
             <span className="text-sm text-[#757788] flex gap-1 flex-nowrap">
               <span>Balance:</span>
-              <span>
-                {tokenBalance ? formatedNumber(tokenBalance, 1, true) : 0}
-              </span>
-              <span>{reserve.stats.symbol}</span>
+              <span>{targetBorrow ? targetBorrow?.amount?.toNumber() : 0}</span>
+              <span>{reserve.marketReserve?.stats?.symbol}</span>
             </span>
           ) : (
             <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -162,8 +171,8 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
           <div className="flex gap-4 items-center w-1/2">
             {reserve ? (
               <Image
-                alt={`${reserve.stats.symbol}-logo / lend`}
-                src={reserve.config.liquidityToken.logo}
+                alt={`${reserve.marketReserve?.stats?.symbol}-logo / lend`}
+                src={reserve.marketReserve?.config?.liquidityToken.logo ?? ""}
                 width={24}
                 height={24}
                 className="w-6 h-6 aspect-square object-contain rounded-sm"
@@ -173,7 +182,7 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
             )}
             {reserve ? (
               <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                {reserve.stats.symbol}
+                {reserve.marketReserve?.stats?.symbol}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -183,7 +192,7 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
             value={amount}
             onChange={(e) => {
               const value = +e.target.value;
-              if (value > +reserve.user) setAmount(reserve.user);
+              if (value > tokenBalance) setAmount(tokenBalance);
               else setAmount(value);
             }}
             type="number"
@@ -193,14 +202,24 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
           <div className="w-full flex justify-between items-center text-end">
             {reserve ? (
               <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                &asymp; ${formatedNumber(reserve.stats.assetPriceUSD, 3, false)}
+                &asymp; $
+                {formatedNumber(
+                  reserve?.marketReserve?.stats?.assetPriceUSD ?? 0,
+                  3,
+                  false
+                )}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
             )}
             {reserve ? (
               <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                ${formatedNumber(amount * reserve.stats.assetPriceUSD, 2, true)}
+                $
+                {formatedNumber(
+                  amount * (reserve?.marketReserve?.stats?.assetPriceUSD ?? 0),
+                  2,
+                  true
+                )}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -241,18 +260,13 @@ const WithdrawModal = ({ user, pool, reserve }: Props) => {
                 <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
                   {row.value && (
                     <span>
-                      {typeof row.value === "number"
-                        ? `$${formatedNumber(row.value, 2, false)}`
-                        : "0"}
+                      {`${row.sign ?? "$"}${formatedNumber(
+                        row.value,
+                        2,
+                        false
+                      )}`}
                     </span>
                   )}
-                  {row.range
-                    ? `${formatedNumber(row.range.min, 2, true)}${
-                        row.range.sign
-                      } to ${formatedNumber(row.range.max, 2, true)}${
-                        row.range.sign
-                      }`
-                    : null}
                 </TableCell>
               </TableRow>
             ))}

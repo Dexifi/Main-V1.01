@@ -4,96 +4,96 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSwapModal } from "@/lib/stores/swap.store";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useMediaQuery } from "usehooks-ts";
-import { getPrice } from "@/lib/get-wallet";
+import { useEffect, useMemo, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBorrowModal } from "@/lib/stores/lend.store";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  GetProgramAccountsFilter,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-} from "@solana/web3.js";
-import { SolendAction } from "@solendprotocol/solend-sdk";
-import { connection } from "@/lib/get-connections";
-import { BN } from "bn.js";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useWallet } from "@solana/wallet-adapter-react";
 import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import { useToast } from "@/components/ui/use-toast";
+import { LendState, useLend } from "@/applications/Lend/store";
+import {
+  fetchObligationsByAddress,
+  formatObligation,
+} from "@solendprotocol/solend-sdk/index";
+import { connection } from "@/lib/get-connections";
+import { createPool, onBorrow } from "@/applications/Lend/actions";
+import { exploreAtom } from "@/stores/config";
+import { useAtom } from "jotai";
 
 type Props = {
-  user: any;
-  pool: any;
-  reserve: any;
+  page: "main" | "turbo";
+  reserve: LendState["poolList"][0] | null;
 };
 
-const BorrowModal = ({ user, pool, reserve }: Props) => {
+const BorrowModal = ({ page, reserve }: Props) => {
   const { isOpen, onClose } = useBorrowModal();
+  const mainMarket = useLend((state) => state.mainMarket);
+  const turboMarket = useLend((state) => state.turboMarket);
+  const mainObligations = useLend((state) => state.mainObligations);
+  const turboObligations = useLend((state) => state.turboObligations);
+  const reserves = useLend((state) => state.poolList);
+  const { publicKey, sendTransaction } = useWallet();
+  const [amount, setAmount] = useState(0);
+  const [userBorrowLimit, setUserBorrowLimit] = useState(0);
+  const [explorer] = useAtom(exploreAtom);
+  const { toast } = useToast();
 
+  const obligation = useMemo(
+    () => (page === "main" ? mainObligations : turboObligations),
+    [mainObligations, page, turboObligations]
+  );
+  const pool = useMemo(
+    () => (page === "main" ? mainMarket : turboMarket),
+    [mainMarket, page, turboMarket]
+  );
   const withdraw_modal = {
     title: "Borrow",
 
     body: [
       {
         title: "Price",
-        value: reserve?.stats?.assetPriceUSD,
+        value: reserve?.marketReserve?.stats?.assetPriceUSD,
       },
       {
         title: "User Borrow Limit",
-        range: {
-          min: 3804,
-          max: 5317,
-          sign: "$",
-        },
+        value: obligation?.obligationStats.borrowLimit,
+        sign: "$",
       },
       {
         title: "Utilization",
-        range: {
-          min: 54.47,
-          max: 18.82,
-          sign: "%",
-        },
+        value: reserve?.marketReserve?.stats?.optimalUtilizationRate,
+        sign: "%",
       },
       {
-        title: "Borrow APR",
-        value: "Borrow APR",
+        title: "Supply APR",
+        sign: "%",
+        value: (reserve?.marketReserve?.totalSupplyAPY()?.totalAPY ?? 0) * 100,
       },
     ],
   };
 
-  const { publicKey, sendTransaction } = useWallet();
-  const [amount, setAmount] = useState(0);
-  const [userBoorrowLimit, setUserBoorrowLimit] = useState(0);
+  const calculateNewBorrowLimit = async () => {
+    if (!obligation || !reserve) return;
+    const ff = await fetchObligationsByAddress(
+      [obligation!.obligationAddress.toString()],
+      connection
+    );
+    if (!pool) return;
+    const pol = await createPool(pool, reserves);
+    const t = formatObligation(ff[0], pol);
+    console.log("FF", t);
 
-  const { toast } = useToast();
+    const p = t.minPriceBorrowLimit ?? 0;
+    setUserBorrowLimit(p.toNumber());
+  };
 
   useEffect(() => {
-    setUserBoorrowLimit(
-      user.obligationStats
-        ? Number(
-            (
-              (user.obligationStats.borrowLimit -
-                user.obligationStats.userTotalBorrow -
-                0.01) /
-              reserve.stats.assetPriceUSD.toFixed(2)
-            ).toFixed(7)
-          )
-        : 0
-    );
-  }, []);
+    calculateNewBorrowLimit();
+  }, [calculateNewBorrowLimit]);
 
   const handleBorrow = async () => {
     if (Number(amount) <= 0)
@@ -101,20 +101,30 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
         title: "Enter amount for supply!",
       });
 
-    const a = new BN(Number(amount) * 10 ** reserve.stats.decimals);
-    if (publicKey === null) {
+    if (!publicKey || !reserve?.reserve || !pool) {
       return;
     }
-    const solendAction = await SolendAction.buildBorrowTxns(
-      connection,
-      a,
-      reserve.stats.symbol,
-      publicKey,
-      "production",
-      undefined,
-      new PublicKey(pool.config.address)
-    );
-    await solendAction.sendTransactions(sendTransaction);
+    try {
+      const tx = await onBorrow({
+        amount: amount.toString(),
+        connection,
+        env: "production",
+        market: pool,
+        publicKey,
+        reserves,
+        reserve: reserve?.reserve,
+        sendTransaction,
+      });
+      toast({
+        title: "success",
+        description: "transaction sent",
+        link: `${explorer}tx/${tx}`,
+      });
+
+      onClose();
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message, variant: "destructive" });
+    }
   };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -134,15 +144,15 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
             <div className="flex gap-4 items-center">
               {reserve ? (
                 <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  {reserve.stats.symbol}
+                  {reserve.marketReserve?.stats?.symbol}
                 </div>
               ) : (
                 <Skeleton className="w-24 h-6 bg-slate-600" />
               )}
               {reserve ? (
                 <Image
-                  alt={`${reserve.stats.symbol}-logo / lend`}
-                  src={reserve.config.liquidityToken.logo}
+                  alt={`${reserve.marketReserve?.stats?.symbol}-logo / lend`}
+                  src={reserve.marketReserve?.config.liquidityToken.logo ?? ""}
                   width={24}
                   height={24}
                   className="w-6 h-6 aspect-square object-contain rounded-sm"
@@ -170,11 +180,9 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
             <span className="text-sm text-[#757788] flex gap-1 flex-nowrap">
               <span>Balance:</span>
               <span>
-                {userBoorrowLimit
-                  ? formatedNumber(userBoorrowLimit, 1, true)
-                  : 0}
+                {userBorrowLimit ? formatedNumber(userBorrowLimit, 6) : 0}
               </span>
-              <span>{reserve.stats.symbol}</span>
+              <span>{reserve.marketReserve?.stats?.symbol}</span>
             </span>
           ) : (
             <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -185,8 +193,8 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
           <div className="flex gap-4 items-center w-1/2">
             {reserve ? (
               <Image
-                alt={`${reserve.stats.symbol}-logo / lend`}
-                src={reserve.config.liquidityToken.logo}
+                alt={`${reserve.marketReserve?.stats?.symbol}-logo / lend`}
+                src={reserve.marketReserve?.config.liquidityToken.logo ?? ""}
                 width={24}
                 height={24}
                 className="w-6 h-6 aspect-square object-contain rounded-sm"
@@ -196,7 +204,7 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
             )}
             {reserve ? (
               <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                {reserve.stats.symbol}
+                {reserve.marketReserve?.stats?.symbol}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -206,7 +214,7 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
             value={amount}
             onChange={(e) => {
               const value = +e.target.value;
-              if (value > +reserve.user) setAmount(reserve.user);
+              if (value > userBorrowLimit) setAmount(userBorrowLimit);
               else setAmount(value);
             }}
             type="number"
@@ -216,14 +224,24 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
           <div className="w-full flex justify-between items-center text-end">
             {reserve ? (
               <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                &asymp; ${formatedNumber(reserve.stats.assetPriceUSD, 3, false)}
+                &asymp; $
+                {formatedNumber(
+                  reserve.marketReserve?.stats?.assetPriceUSD ?? 0,
+                  3,
+                  false
+                )}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
             )}
             {reserve ? (
               <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                ${formatedNumber(amount * reserve.stats.assetPriceUSD, 2, true)}
+                $
+                {formatedNumber(
+                  amount * (reserve?.marketReserve?.stats?.assetPriceUSD ?? 0),
+                  2,
+                  true
+                )}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -233,7 +251,9 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
             <Button
               className="text-xs w-full md:w-1/2"
               size="sm"
-              onClick={() => setAmount(userBoorrowLimit / 2)}
+              onClick={() =>
+                setAmount(Number((userBorrowLimit / 2).toFixed(6)))
+              }
             >
               Half
             </Button>
@@ -241,7 +261,9 @@ const BorrowModal = ({ user, pool, reserve }: Props) => {
               className="text-xs w-full md:w-1/2"
               size="sm"
               onClick={() =>
-                setAmount(userBoorrowLimit > 0 ? userBoorrowLimit : 0)
+                setAmount(
+                  userBorrowLimit > 0 ? Number(userBorrowLimit.toFixed(6)) : 0
+                )
               }
             >
               Max
