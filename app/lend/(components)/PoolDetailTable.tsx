@@ -59,7 +59,6 @@ const PoolDetailTable = ({ page }: Props) => {
         price: (price * e.amount.toNumber()) / 10 ** (token?.decimals ?? 0),
       });
     }
-    console.log("d", d);
     d.length > 0 && setDeposits(d);
   }, [obligation?.borrows, obligation?.deposits]);
 
@@ -79,7 +78,6 @@ const PoolDetailTable = ({ page }: Props) => {
   useEffect(() => {
     page && setLoading(true);
   }, [page]);
-  console.log(deposits, borrows);
   return (
     <div
       className="flex justify-center items-center gap-5 bg-[#0d111b] rounded-3xl p-8 h-max flex-wrap sticky top-24  flex-col"
@@ -176,7 +174,7 @@ const PoolDetailTable = ({ page }: Props) => {
                 key={`${e.title}_${index}_${page}_deposits`}
                 className={"hover:bg-inherit "}
               >
-                <div
+                <TableCell
                   className={
                     "flex items-center flex-row justify-between mt-1 pb-2"
                   }
@@ -197,7 +195,7 @@ const PoolDetailTable = ({ page }: Props) => {
                       ${formatedNumber(e.price, 3)}
                     </p>
                   </div>
-                </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -213,7 +211,7 @@ const PoolDetailTable = ({ page }: Props) => {
                 key={`${e.title}_${index}_${page}_borrows`}
                 className={"hover:bg-inherit"}
               >
-                <div
+                <TableCell
                   className={"flex items-center flex-row justify-between mt-1"}
                 >
                   <div className={"flex flex-row items-center gap-2"}>
@@ -232,7 +230,7 @@ const PoolDetailTable = ({ page }: Props) => {
                       ${formatedNumber(e.price, 3)}
                     </p>
                   </div>
-                </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

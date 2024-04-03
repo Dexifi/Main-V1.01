@@ -18,6 +18,10 @@ import { useMemo, useState } from "react";
 import { LendState, useLend } from "@/applications/Lend/store";
 import useWalletBalance from "@/hooks/useWalletBalance";
 import { onSupply } from "@/applications/Lend/actions";
+import InitialLending from "@/applications/Lend/initial";
+import { useAtom } from "jotai";
+import { exploreAtom } from "@/stores/config";
+import { CircularProgress } from "@mui/material";
 
 type Props = {
   reserve: LendState["poolList"][0] | null;
@@ -39,7 +43,8 @@ const SupplyModal = ({ reserve, page }: Props) => {
   const { publicKey, sendTransaction } = useWallet();
   const { tokens } = useWalletBalance(connection, publicKey);
   const [amount, setAmount] = useState(0);
-
+  const [explorer] = useAtom(exploreAtom);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const { isOpen, onClose } = useSupplyModal();
@@ -83,6 +88,7 @@ const SupplyModal = ({ reserve, page }: Props) => {
   };
 
   const handleSupply = async () => {
+    setLoading(true);
     if (Number(amount) <= 0)
       return toast({
         title: "Enter amount for supply!",
@@ -93,16 +99,32 @@ const SupplyModal = ({ reserve, page }: Props) => {
     if (!publicKey || !sendTransaction || !reserve?.reserve || !pool) {
       return;
     }
-    await onSupply({
-      market: pool,
-      env: "production",
-      amount: amount.toString(),
-      reserve: reserve?.reserve,
-      publicKey,
-      reserves: useLend.getState().poolList,
-      connection,
-      sendTransaction: sendTransaction,
-    });
+    try {
+      const tx = await onSupply({
+        market: pool,
+        env: "production",
+        amount: amount.toString(),
+        reserve: reserve?.reserve,
+        publicKey,
+        reserves: useLend.getState().poolList,
+        connection,
+        sendTransaction: sendTransaction,
+      });
+      toast({
+        title: "success",
+        description: "transaction sent",
+        link: `${explorer}tx/${tx}`,
+      });
+      await InitialLending(connection, publicKey);
+    } catch (e: any) {
+      console.log(e);
+      toast({
+        title: "error",
+        description: e.message,
+        variant: "destructive",
+      });
+    }
+    setLoading(false);
   };
 
   return (
@@ -286,7 +308,9 @@ const SupplyModal = ({ reserve, page }: Props) => {
           </TableBody>
         </Table>
 
-        <Button onClick={handleSupply}>Supply</Button>
+        <Button disabled={loading} onClick={handleSupply}>
+          {loading ? <CircularProgress size={24} /> : "Supply"}
+        </Button>
       </DialogContent>
     </Dialog>
   );

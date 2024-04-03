@@ -12,14 +12,15 @@ import formatedNumber from "@/lib/numbers";
 import { useWithdrawModal } from "@/lib/stores/lend.store";
 import formatedString from "@/lib/string";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
-import { SolendAction } from "@solendprotocol/solend-sdk";
-import { BN } from "bn.js";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { LendState, useLend } from "@/applications/Lend/store";
 import { onWithdraw } from "@/applications/Lend/actions";
+import InitialLending from "@/applications/Lend/initial";
+import { useAtom } from "jotai";
+import { exploreAtom } from "@/stores/config";
+import { CircularProgress } from "@mui/material";
 
 type Props = {
   reserve: LendState["poolList"][0] | null;
@@ -28,10 +29,16 @@ type Props = {
 
 const WithdrawModal = ({ page, reserve }: Props) => {
   const { isOpen, onClose } = useWithdrawModal();
+  const [explorer] = useAtom(exploreAtom);
   const mainMarket = useLend((state) => state.mainMarket);
   const turboMarket = useLend((state) => state.turboMarket);
   const mainObligations = useLend((state) => state.mainObligations);
   const turboObligations = useLend((state) => state.turboObligations);
+  const { publicKey, sendTransaction, wallet } = useWallet();
+  const [amount, setAmount] = useState(0);
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
   const market = useMemo(
     () => (page === "main" ? mainMarket : turboMarket),
     [mainMarket, page, turboMarket]
@@ -47,7 +54,7 @@ const WithdrawModal = ({ page, reserve }: Props) => {
       obligation?.deposits.find(
         (e) => e.mintAddress === reserve?.marketReserve?.stats?.mintAddress
       ),
-    [obligation?.borrows, reserve?.marketReserve?.stats?.mintAddress]
+    [obligation?.deposits, reserve?.marketReserve?.stats?.mintAddress]
   );
 
   const tokenBalance =
@@ -80,11 +87,8 @@ const WithdrawModal = ({ page, reserve }: Props) => {
     ],
   };
 
-  const { publicKey, sendTransaction, wallet } = useWallet();
-  const [amount, setAmount] = useState(0);
-  const { toast } = useToast();
-
   const handleWithdraw = async () => {
+    setLoading(true);
     if (Number(amount) <= 0)
       return toast({
         title: "Enter amount for withdraw!",
@@ -94,17 +98,32 @@ const WithdrawModal = ({ page, reserve }: Props) => {
       return;
     }
     const na = amount.toString();
-    console.log(na, amount, reserve.marketReserve?.stats?.decimals);
-    await onWithdraw({
-      publicKey,
-      amount: na,
-      sendTransaction,
-      reserve: reserve.reserve,
-      reserves: useLend.getState().poolList,
-      env: "production",
-      market,
-      connection,
-    });
+    try {
+      const tx = await onWithdraw({
+        publicKey,
+        amount: na,
+        sendTransaction,
+        reserve: reserve.reserve,
+        reserves: useLend.getState().poolList,
+        env: "production",
+        market,
+        connection,
+      });
+      toast({
+        title: "success",
+        description: "transaction sent",
+        link: `${explorer}tx/${tx}`,
+      });
+      await InitialLending(connection, publicKey);
+    } catch (e: any) {
+      console.log(e);
+      toast({
+        title: "Error",
+        description: e.message,
+        variant: "destructive",
+      });
+    }
+    setLoading(false);
   };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -273,7 +292,9 @@ const WithdrawModal = ({ page, reserve }: Props) => {
           </TableBody>
         </Table>
 
-        <Button onClick={handleWithdraw}>Withdraw</Button>
+        <Button disabled={loading} onClick={handleWithdraw}>
+          {loading ? <CircularProgress size={24} /> : "Withdraw"}
+        </Button>
       </DialogContent>
     </Dialog>
   );

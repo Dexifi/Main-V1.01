@@ -34,7 +34,7 @@ export type LendState = {
   setMainObligations: (obligations: SolendObligation) => void;
   turboObligations: SolendObligation | null;
   setTurboObligations: (obligations: SolendObligation) => void;
-  onBorrow: () => void;
+  onBorrow: typeof onBorrow;
   onSupply: typeof onSupply;
 };
 

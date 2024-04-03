@@ -23,6 +23,8 @@ import { connection } from "@/lib/get-connections";
 import { createPool, onBorrow } from "@/applications/Lend/actions";
 import { exploreAtom } from "@/stores/config";
 import { useAtom } from "jotai";
+import InitialLending from "@/applications/Lend/initial";
+import { CircularProgress } from "@mui/material";
 
 type Props = {
   page: "main" | "turbo";
@@ -41,6 +43,7 @@ const BorrowModal = ({ page, reserve }: Props) => {
   const [userBorrowLimit, setUserBorrowLimit] = useState(0);
   const [explorer] = useAtom(exploreAtom);
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const obligation = useMemo(
     () => (page === "main" ? mainObligations : turboObligations),
@@ -85,7 +88,6 @@ const BorrowModal = ({ page, reserve }: Props) => {
     if (!pool) return;
     const pol = await createPool(pool, reserves);
     const t = formatObligation(ff[0], pol);
-    console.log("FF", t);
 
     const p = t.minPriceBorrowLimit ?? 0;
     setUserBorrowLimit(p.toNumber());
@@ -96,6 +98,7 @@ const BorrowModal = ({ page, reserve }: Props) => {
   }, [calculateNewBorrowLimit]);
 
   const handleBorrow = async () => {
+    setLoading(true);
     if (Number(amount) <= 0)
       return toast({
         title: "Enter amount for supply!",
@@ -120,11 +123,13 @@ const BorrowModal = ({ page, reserve }: Props) => {
         description: "transaction sent",
         link: `${explorer}tx/${tx}`,
       });
+      await InitialLending(connection, publicKey);
 
       onClose();
     } catch (e: any) {
       toast({ title: "Error", description: e.message, variant: "destructive" });
     }
+    setLoading(false);
   };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -288,25 +293,21 @@ const BorrowModal = ({ page, reserve }: Props) => {
                 <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
                   {row.value && (
                     <span>
-                      {typeof row.value === "number"
-                        ? `$${formatedNumber(row.value, 2, false)}`
-                        : "0"}
+                      {`${row.sign ?? "$"}${formatedNumber(
+                        row.value,
+                        2,
+                        false
+                      )}`}
                     </span>
                   )}
-                  {row.range
-                    ? `${formatedNumber(row.range.min, 2, true)}${
-                        row.range.sign
-                      } to ${formatedNumber(row.range.max, 2, true)}${
-                        row.range.sign
-                      }`
-                    : null}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-
-        <Button onClick={handleBorrow}>Borrow</Button>
+        <Button disabled={loading} onClick={handleBorrow}>
+          {loading ? <CircularProgress size={24} /> : "Borrow"}
+        </Button>
       </DialogContent>
     </Dialog>
   );

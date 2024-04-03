@@ -19,6 +19,8 @@ import { LendState, useLend } from "@/applications/Lend/store";
 import { onRepay } from "@/applications/Lend/actions";
 import { useAtom } from "jotai";
 import { exploreAtom } from "@/stores/config";
+import InitialLending from "@/applications/Lend/initial";
+import { CircularProgress } from "@mui/material";
 
 type Props = {
   page: "main" | "turbo";
@@ -34,6 +36,7 @@ const RepayModal = ({ page, reserve }: Props) => {
   const { sendTransaction, publicKey } = useWallet();
   const reserves = useLend((state) => state.poolList);
   const [exploer] = useAtom(exploreAtom);
+  const [loading, setLoading] = useState(false);
 
   const { toast } = useToast();
 
@@ -87,6 +90,8 @@ const RepayModal = ({ page, reserve }: Props) => {
   };
 
   const handleRepay = async () => {
+    setLoading(true);
+    if (loading) return;
     if (Number(amount) <= 0)
       return toast({
         title: "Enter amount for repay!",
@@ -111,11 +116,14 @@ const RepayModal = ({ page, reserve }: Props) => {
         description: "transaction sent",
         link: `${exploer}tx/${tx}`,
       });
+      await InitialLending(connection, publicKey);
 
       onClose();
     } catch (e: any) {
+      console.log(e);
       toast({ title: "Error", description: e.message, variant: "destructive" });
     }
+    setLoading(false);
   };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -203,8 +211,11 @@ const RepayModal = ({ page, reserve }: Props) => {
             value={amount}
             onChange={(e) => {
               const value = +e.target.value;
-              // if (value > +reserve.user) setAmount(reserve.user);
-              // else setAmount(value);
+              if (value > 0 && value <= totalBorrow) {
+                setAmount(value);
+              } else {
+                setAmount(totalBorrow);
+              }
             }}
             type="number"
             placeholder="Amount"
@@ -261,25 +272,21 @@ const RepayModal = ({ page, reserve }: Props) => {
                 <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
                   {row.value && (
                     <span>
-                      {typeof row.value === "number"
-                        ? `$${formatedNumber(row.value, 2, false)}`
-                        : "0"}
+                      {`${row.sign ?? "$"}${formatedNumber(
+                        row.value,
+                        2,
+                        false
+                      )}`}
                     </span>
                   )}
-                  {row.range
-                    ? `${formatedNumber(row.range.min, 2, true)}${
-                        row.range.sign
-                      } to ${formatedNumber(row.range.max, 2, true)}${
-                        row.range.sign
-                      }`
-                    : null}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-
-        <Button onClick={handleRepay}>Repay</Button>
+        <Button disabled={loading} onClick={handleRepay}>
+          {loading ? <CircularProgress size={24} /> : "Repay"}
+        </Button>
       </DialogContent>
     </Dialog>
   );
