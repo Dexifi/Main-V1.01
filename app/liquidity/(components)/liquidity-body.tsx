@@ -4,6 +4,7 @@ import { axios } from "@/data/axios";
 import { useEffect, useState } from "react";
 import { MyPositions, PoolsTab } from "./(tabs)";
 import { Header } from "./liquidity-header";
+import RemoveLiquidityModal from "../../../src/components/modals/remove-liquidity-modal";
 
 type Props = {
   isEXTRASMALL: boolean;
