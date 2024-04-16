@@ -18,6 +18,9 @@ import formatedString from "@/lib/string";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import AddLiquidityModal from "@/components/modals/add-liquidity-modal";
+import ManageLiquidityModal from "@/components/modals/manage-liquidity-modal";
+import ManageModal from "@/components/modals/manage-modal";
+import { CreatePositionModal } from "@/components/modals";
 
 type Props = {
   data: any;
@@ -91,7 +94,9 @@ const PoolsTab = ({ data }: Props) => {
 
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
-      <AddLiquidityModal />
+      {/*<ManageModal />*/}
+      {/*<AddLiquidityModal />*/}
+      <CreatePositionModal />
       <div
         className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#19232d] rounded-3xl px-5 lg:px-10 py-5 max-w-full"
         style={{ boxShadow: "0 0 4px #88d6ff" }}

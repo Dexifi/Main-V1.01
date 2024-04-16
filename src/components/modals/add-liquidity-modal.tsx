@@ -14,7 +14,7 @@ const AddLiquidityModal = (props: Props) => {
   const [amount, setAmount] = useState<number>(0);
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] z-[110] rounded-xl p-6"
         style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
