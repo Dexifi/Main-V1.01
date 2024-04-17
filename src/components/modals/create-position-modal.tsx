@@ -5,7 +5,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 import { useCreatePositionLiquidityModal } from "@/lib/stores/liquidity.store";
-import { Cell, Pie, PieChart } from "recharts";
+import { AreaChart, Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import AddIcon from "@mui/icons-material/Add";
@@ -340,7 +340,7 @@ const CreatePositionModal = (props: Props) => {
                 </div>
               </div>
             </div>
-            <div className={"bg-amber-400 w-full h-36"} />
+
             <div className={"flex flex-row justify-between text-xs gap-1"}>
               <button className={"border px-3 rounded-sm w-full"}>
                 <div className={"flex flex-row gap-0.5 justify-center"}>
