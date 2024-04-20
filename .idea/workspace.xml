@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="trade implement">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/nft.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/nft.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/index.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="adaptive/v2" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feat/#3" />
+                    <option name="lastUsedInstant" value="1706083842" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="adaptive/v2" />
+                    <option name="lastUsedInstant" value="1705312096" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1704869907" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2akk2TRgUKfwV2oI1MWTTIjWUMW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/#10&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Proshits/Tqk/app&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Proshits\\Dexifi\\Main-V1.01\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;,
+      &quot;Markdown&quot;
+    ]
+  }
+}</component>
+  <component name="ReactBuddySettings">
+    <option name="extensionsIgnore" value="true" />
+  </component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\src\data" />
+      <recent name="D:\Codes\Dexify_v2\src" />
+      <recent name="D:\Codes\Dexify_v2\src\hooks" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="" />
+      <created>1704869757015</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1704869757015</updated>
+      <workItem from="1704869758327" duration="818000" />
+      <workItem from="1704871495403" duration="6813000" />
+      <workItem from="1704881020818" duration="7346000" />
+      <workItem from="1704892410375" duration="4374000" />
+      <workItem from="1704899989961" duration="2608000" />
+      <workItem from="1704963048544" duration="15519000" />
+      <workItem from="1705131613791" duration="6145000" />
+      <workItem from="1705166229055" duration="4269000" />
+      <workItem from="1705222112159" duration="14645000" />
+      <workItem from="1705310777923" duration="10395000" />
+      <workItem from="1705499902393" duration="1812000" />
+      <workItem from="1705583038115" duration="11155000" />
+      <workItem from="1705598697396" duration="3234000" />
+      <workItem from="1705740652840" duration="19815000" />
+      <workItem from="1705775671117" duration="708000" />
+      <workItem from="1705821220501" duration="16719000" />
+      <workItem from="1705914069354" duration="16997000" />
+      <workItem from="1705939798033" duration="837000" />
+      <workItem from="1705992158477" duration="9842000" />
+      <workItem from="1706019117691" duration="2794000" />
+      <workItem from="1706027658988" duration="2492000" />
+      <workItem from="1706083132932" duration="2111000" />
+      <workItem from="1706103060346" duration="4513000" />
+      <workItem from="1706188328221" duration="3288000" />
+      <workItem from="1706257164055" duration="54000" />
+      <workItem from="1706367886272" duration="634000" />
+      <workItem from="1706371459927" duration="1380000" />
+      <workItem from="1706374113540" duration="137000" />
+      <workItem from="1706375195298" duration="1778000" />
+      <workItem from="1706377044749" duration="10000" />
+      <workItem from="1706377441292" duration="47000" />
+      <workItem from="1706427202870" duration="228000" />
+      <workItem from="1706519127646" duration="16172000" />
+      <workItem from="1706612513132" duration="3628000" />
+      <workItem from="1706628479213" duration="412000" />
+      <workItem from="1706691942360" duration="25494000" />
+      <workItem from="1706951795742" duration="18288000" />
+      <workItem from="1706981948819" duration="10344000" />
+      <workItem from="1707049443002" duration="719000" />
+      <workItem from="1707123877479" duration="9229000" />
+      <workItem from="1707155903269" duration="12326000" />
+      <workItem from="1707299041323" duration="8712000" />
+      <workItem from="1707378399873" duration="3957000" />
+      <workItem from="1707725172282" duration="25477000" />
+      <workItem from="1707763302139" duration="633000" />
+      <workItem from="1707804931795" duration="9000" />
+      <workItem from="1707815811778" duration="3372000" />
+      <workItem from="1707819949282" duration="1076000" />
+      <workItem from="1707822557754" duration="5033000" />
+      <workItem from="1707827824589" duration="7403000" />
+      <workItem from="1707903582441" duration="11000" />
+      <workItem from="1707908551852" duration="2050000" />
+      <workItem from="1708157557270" duration="4150000" />
+      <workItem from="1708163044384" duration="11924000" />
+      <workItem from="1708241805118" duration="3000" />
+      <workItem from="1708255653903" duration="24580000" />
+      <workItem from="1708345872750" duration="12204000" />
+      <workItem from="1708410612651" duration="49000" />
+      <workItem from="1708410682516" duration="649000" />
+      <workItem from="1708424934533" duration="25837000" />
+      <workItem from="1708595336616" duration="11000" />
+      <workItem from="1708595354570" duration="65000" />
+      <workItem from="1708935102920" duration="34419000" />
+      <workItem from="1709117242268" duration="8000" />
+      <workItem from="1709126404112" duration="8603000" />
+      <workItem from="1709202945921" duration="9819000" />
+      <workItem from="1709278789375" duration="6307000" />
+      <workItem from="1709373097935" duration="18475000" />
+      <workItem from="1709459747770" duration="16998000" />
+      <workItem from="1709488205264" duration="5778000" />
+      <workItem from="1709544327845" duration="1072000" />
+      <workItem from="1710184632763" duration="2000" />
+      <workItem from="1710233282089" duration="9487000" />
+    </task>
+    <task id="LOCAL-00001" summary="network connections">
+      <option name="closed" value="true" />
+      <created>1705310813036</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1705310813036</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fix start issues">
+      <option name="closed" value="true" />
+      <created>1705312072844</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705312072844</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Dashboard new-worth implement">
+      <option name="closed" value="true" />
+      <created>1706084213617</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1706084213617</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Dashboard new-worth implement">
+      <option name="closed" value="true" />
+      <created>1706427416544</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1706427416544</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Dashboard api implement">
+      <option name="closed" value="true" />
+      <created>1707835830870</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707835830870</updated>
+    </task>
+    <task id="LOCAL-00006" summary="transactions api implement">
+      <option name="closed" value="true" />
+      <created>1708263081606</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1708263081606</updated>
+    </task>
+    <task id="LOCAL-00007" summary="swap api implement">
+      <option name="closed" value="true" />
+      <created>1708519862951</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1708519862951</updated>
+    </task>
+    <task id="LOCAL-00008" summary="swap api implement">
+      <option name="closed" value="true" />
+      <created>1708522832233</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1708522832233</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="network connections" />
+    <MESSAGE value="fix start issues" />
+    <MESSAGE value="Dashboard new-worth implement" />
+    <MESSAGE value="Dashboard api implement" />
+    <MESSAGE value="transactions api implement" />
+    <MESSAGE value="swap api implement" />
+    <MESSAGE value="trade implement" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
+</project>
