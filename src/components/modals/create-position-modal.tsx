@@ -13,6 +13,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useCallback, useState } from "react";
 import SyncIcon from "@mui/icons-material/Sync";
+import Chart from "@/components/ui/Chart";
 
 type Props = {};
 const data = [
@@ -103,15 +104,11 @@ const CreatePositionModal = (props: Props) => {
           </div>
         </div>
         {/*  Columns Section */}
-        <div
-          className={
-            "bg-blue-600 rounded-sm flex flex-row justify-between gap-2"
-          }
-        >
+        <div className={"rounded-sm flex flex-row justify-between gap-2"}>
           {/*Left COl */}
           <div
             className={
-              "flex flex-col w-full h-full bg-white rounded-sm py-3 px-2 gap-3"
+              "flex flex-col w-full h-full rounded-sm py-3 px-2 gap-3 bg-[#0b1938]"
             }
           >
             {/*Header*/}
@@ -280,7 +277,7 @@ const CreatePositionModal = (props: Props) => {
           {/*Right COl*/}
           <div
             className={
-              "flex flex-col w-full h-full bg-white rounded-sm gap-3 p-3"
+              "flex flex-col w-full h-full bg-[#0b1938] rounded-sm gap-3 p-3"
             }
           >
             <div className={"flex flex-row justify-between"}>
@@ -340,7 +337,8 @@ const CreatePositionModal = (props: Props) => {
                 </div>
               </div>
             </div>
-
+            {/*Chart */}
+            <Chart />
             <div className={"flex flex-row justify-between text-xs gap-1"}>
               <button className={"border px-3 rounded-sm w-full"}>
                 <div className={"flex flex-row gap-0.5 justify-center"}>

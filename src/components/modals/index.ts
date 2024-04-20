@@ -14,7 +14,7 @@ import ClaimPendingModal from "./claim-pending-modal";
 import NFTGalleryDetailsModal from "./nft-gallery-details-modal";
 import NFTGallerySendModal from "./nft-gallery-send-modal";
 import NFTGalleryBurnModal from "./nft-gallery-burn-modal";
-import ManageLiquidityModal from "./manage-liquidity-modal";
+// import ManageLiquidityModal from "./manage-liquidity-modal";
 
 export {
   NFTGalleryBurnModal,
@@ -33,5 +33,5 @@ export {
   AddLiquidityModal,
   RemoveLiquidityModal,
   RemoveFarmModal,
-  ManageLiquidityModal,
+  // ManageLiquidityModal,
 };
