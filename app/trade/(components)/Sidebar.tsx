@@ -6,9 +6,16 @@ import { SelectedMarketType } from "@/types/market";
 import { Token } from "@/types/token";
 import { ChangeEvent, memo, useCallback, useMemo, useState } from "react";
 import { getPrice } from "@/data/price";
-import { TradeState } from "@/applications/Trade/store";
+import { TradeState, useTrade } from "@/applications/Trade/store";
 import { Market } from "@mehranml/openbook";
-
+import { placeOrder } from "@/applications/Trade";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
+import { connection } from "@/lib/get-connections";
+import string from "@/lib/string";
+import { PublicKey } from "@solana/web3.js";
+import { CircularProgress } from "@mui/material";
+import { toast } from "@/components/ui/use-toast";
 type SidebarProps = {
   isEXTRASMALL: boolean;
   form: {
@@ -20,9 +27,8 @@ type SidebarProps = {
   setForm: (form: any) => void;
   selectedMarket?: TradeState["marketDetails"];
   userBalance: Token[];
-  handlePlaceOrder: () => void;
   availableSide: Array<"buy" | "sell">;
-  market: Market;
+  market: Market | null;
 };
 const Sidebar = memo(
   ({
@@ -33,11 +39,16 @@ const Sidebar = memo(
     setForm,
     userBalance,
     market,
-    handlePlaceOrder,
   }: SidebarProps) => {
     const tabsDATA = ["Buy", "Sell"];
+    const { setPlaceOrderLoading, placeOrderLoading } = useTrade();
     const parts = [0.25, 0.5, 0.75, 1];
-    console.log(availableSide);
+    const { wallet } = useWallet();
+    const decimal = useMemo(
+      () => market?.tickSize.toString().split(".")[1]?.length,
+      [market?.tickSize]
+    );
+
     const tokenABalance = useMemo(
       () =>
         userBalance.find(
@@ -59,15 +70,17 @@ const Sidebar = memo(
         if (selectedMarket && tokenABalance && tokenBBalance) {
           const tokenAPrice = selectedMarket.tokenAPrice;
           const tokenBPrice = selectedMarket.tokenBPrice;
+          console.log(tokenAPrice, tokenBPrice);
           if (form.tab === "buy" && tokenAPrice && tokenBPrice) {
             setForm({
               ...form,
               userChanged: true,
-              amount: tokenBBalance.amount
+              amount: tokenBBalance.tokenBalance
                 ? Number(
                     formatedNumber(
-                      (tokenBBalance.amount * part * tokenBPrice) / tokenAPrice,
-                      6
+                      (tokenBBalance.tokenBalance * part * tokenBPrice) /
+                        tokenAPrice,
+                      decimal
                     )
                   )
                 : 0,
@@ -76,7 +89,14 @@ const Sidebar = memo(
             setForm({
               ...form,
               userChanged: true,
-              amount: tokenABalance?.amount ? tokenABalance.amount * part : 0,
+              amount: Number(
+                formatedNumber(
+                  tokenABalance?.tokenBalance
+                    ? tokenABalance.tokenBalance * part
+                    : 0,
+                  decimal
+                )
+              ),
             });
           }
         }
@@ -91,6 +111,51 @@ const Sidebar = memo(
       },
       [form, setForm]
     );
+
+    const handleLimitPriceChange = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        const value = +e.target.value;
+        setForm({ ...form, userChanged: true, limit_price: value });
+      },
+      [form, setForm]
+    );
+
+    const handleOrder = useCallback(async () => {
+      if (!wallet) {
+        return;
+      }
+      setPlaceOrderLoading(true);
+      try {
+        const result = await placeOrder({
+          side: form.tab as "buy" | "sell",
+          wallet: wallet.adapter as BaseSignerWalletAdapter<string>,
+          connection: connection,
+          orderType: "limit",
+          baseCurrencyAccount: new PublicKey(tokenABalance?.address),
+          feeDiscountPubkey: undefined,
+          quoteCurrencyAccount: new PublicKey(tokenBBalance?.address),
+          price: form.limit_price,
+          size: form.amount,
+          market,
+        });
+      } catch (e) {
+        console.log(e);
+        toast({
+          description: "Failed to place order",
+          variant: "destructive",
+        });
+      }
+      setPlaceOrderLoading(false);
+    }, [
+      wallet,
+      setPlaceOrderLoading,
+      tokenABalance,
+      tokenBBalance,
+      form.tab,
+      form.limit_price,
+      form.amount,
+      market,
+    ]);
 
     return (
       <div
@@ -154,34 +219,7 @@ const Sidebar = memo(
                       className={`bg-transparent text-white rounded-2xl border-[#d9f8ff50] ${
                         isEXTRASMALL ? "max-w-[120px]" : "max-w-[170px]"
                       }`}
-                      onChange={(e) => {
-                        const value = +e.target.value;
-                        if (value > 100000) {
-                          setForm({
-                            ...form,
-                            userChanged: true,
-                            limit_price: 100000,
-                          });
-                        } else if (value < 0) {
-                          setForm({
-                            ...form,
-                            userChanged: true,
-                            limit_price: 0,
-                          });
-                        } else if (Number.isNaN(value)) {
-                          setForm({
-                            ...form,
-                            userChanged: true,
-                            limit_price: 0,
-                          });
-                        } else {
-                          setForm({
-                            ...form,
-                            userChanged: true,
-                            limit_price: value,
-                          });
-                        }
-                      }}
+                      onChange={handleLimitPriceChange}
                       max={100000}
                       min={0}
                     />
@@ -204,6 +242,7 @@ const Sidebar = memo(
                       }`}
                       type={"number"}
                       onChange={updateAmount}
+                      step={market?.tickSize}
                       min={0}
                     />
                   </div>
@@ -255,8 +294,8 @@ const Sidebar = memo(
                     Balance:{" "}
                     {formatedNumber(
                       tab_item.toLocaleLowerCase() === "buy"
-                        ? tokenBBalance?.amount
-                        : tokenABalance?.amount,
+                        ? tokenBBalance?.tokenBalance
+                        : tokenABalance?.tokenBalance,
                       4,
                       isEXTRASMALL
                     )}
@@ -276,8 +315,14 @@ const Sidebar = memo(
                       ? "bg-[#0b9f44]"
                       : "bg-[#FF005C]"
                   }
-                  onClick={handlePlaceOrder}
-                >{`${tab_item} ${selectedMarket?.tokenA?.symbol}`}</Button>
+                  onClick={handleOrder}
+                >
+                  {placeOrderLoading ? (
+                    <CircularProgress sx={{ color: "#fff", p: 1 }} />
+                  ) : (
+                    `${tab_item} ${selectedMarket?.tokenA?.symbol}`
+                  )}
+                </Button>
               </div>
             </TabsContent>
           ))}

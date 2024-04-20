@@ -39,7 +39,6 @@ const Main = () => {
   }, [router]);
   const isMobile = useMediaQuery("(max-width: 990px)");
   const { total } = useMagicEden();
-  // console.log(total);
   const [transactionsCount, setTransactionsCount] = useState(0);
   const [isClient, setIsClient] = useState<boolean>(false);
 
