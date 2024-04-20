@@ -34,14 +34,8 @@ const CreatePositionModal = (props: Props) => {
 
   const handleSwitchButton = useCallback(() => {}, []);
 
-  const data_modal = {
-    title: "Create Position",
-    symbol: "SOL - USDC",
-    symbol_logo: "/assets/images/solana-1@2x.png",
-    balance: 14941,
-  };
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] w-full max-w-[760px]"
         style={{

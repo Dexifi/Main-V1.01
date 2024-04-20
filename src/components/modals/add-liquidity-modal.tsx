@@ -14,7 +14,7 @@ const AddLiquidityModal = (props: Props) => {
   const [amount, setAmount] = useState<number>(0);
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] z-[110] rounded-xl p-6"
         style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
@@ -38,7 +38,21 @@ const AddLiquidityModal = (props: Props) => {
             {/*Row One*/}
             <div className={"flex flex-row justify-between"}>
               <div className={"flex flex-row gap-2"}>
-                <p className={"text-white"}>icon</p>
+                <div className={"flex flex-row"}>
+                  <div
+                    className={
+                      "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                    }
+                  >
+                    <img
+                      alt={"icon"}
+                      className={"w-4 h-4 rounded-full"}
+                      src={
+                        "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                      }
+                    />
+                  </div>
+                </div>
                 <p className={"text-sky-700 font-bold"}>Sol</p>
               </div>
               <div className="flex flex-row gap-1">
@@ -49,7 +63,21 @@ const AddLiquidityModal = (props: Props) => {
             {/*Row Two*/}
             <div className={"flex flex-row justify-between"}>
               <div className={"flex flex-row gap-1"}>
-                <p className={"text-white"}>icon</p>
+                <div className={"flex flex-row"}>
+                  <div
+                    className={
+                      "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                    }
+                  >
+                    <img
+                      alt={"icon"}
+                      className={"w-4 h-4 rounded-full"}
+                      src={
+                        "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                      }
+                    />
+                  </div>
+                </div>
                 <p className={"text-sky-700 font-bold"}>Sol</p>
               </div>
               <div className={"flex flex-row gap-1"}>
@@ -143,7 +171,21 @@ const AddLiquidityModal = (props: Props) => {
                   "flex flex-row text-sky-500 font-semibold text-base items-center gap-2"
                 }
               >
-                <p>Icon</p>
+                <div className={"flex flex-row"}>
+                  <div
+                    className={
+                      "bg-[#abc4ff] h-7 w-7 flex flex-row justify-center items-center rounded-full"
+                    }
+                  >
+                    <img
+                      alt={"icon"}
+                      className={"w-6 h-6 rounded-full"}
+                      src={
+                        "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                      }
+                    />
+                  </div>
+                </div>
                 <p>SOL</p>
                 <div className="w-[1px] h-7 bg-white bg-opacity-40"></div>
                 {/* Right divider */}
@@ -190,7 +232,19 @@ const AddLiquidityModal = (props: Props) => {
                   "flex flex-row text-sky-500 font-semibold text-base items-center gap-2"
                 }
               >
-                <p>Icon</p>
+                <div
+                  className={
+                    "bg-[#abc4ff] h-7 w-7 flex flex-row justify-center items-center rounded-full"
+                  }
+                >
+                  <img
+                    alt={"icon"}
+                    className={"w-6 h-6 rounded-full"}
+                    src={
+                      "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                    }
+                  />
+                </div>
                 <p>SOL</p>
                 <div className="w-[1px] h-7 bg-white bg-opacity-40"></div>
                 {/* Right divider */}
@@ -221,15 +275,39 @@ const AddLiquidityModal = (props: Props) => {
           >
             <div className="flex flex-row justify-between text-white">
               <div className="flex flex-row gap-1">
-                <p>SOl</p>
-                <p>icon</p>
+                <p>SOL</p>
+                <div
+                  className={
+                    "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                  }
+                >
+                  <img
+                    alt={"icon"}
+                    className={"w-4 h-4 rounded-full"}
+                    src={
+                      "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                    }
+                  />
+                </div>
               </div>
               <p>0.05</p>
             </div>
             <div className="flex flex-row justify-between text-white">
               <div className="flex flex-row gap-1">
                 <p>RAY</p>
-                <p>icon</p>
+                <div
+                  className={
+                    "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                  }
+                >
+                  <img
+                    alt={"icon"}
+                    className={"w-4 h-4 rounded-full"}
+                    src={
+                      "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                    }
+                  />
+                </div>
               </div>
               <p>2.093429</p>
             </div>
