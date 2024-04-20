@@ -133,7 +133,7 @@ const CreatePositionModal = (props: Props) => {
             <div className={"flex flex-col gap-3"}>
               {" "}
               {/*for switch between header button SOL/USDC*/}
-              <div className={"p-3 border rounded-sm"}>
+              <div className={"p-3 border rounded-sm border-[#757788]"}>
                 <div
                   className={
                     "flex flex-row justify-between text-xs text-[rgba(171,196,255,.5)]"
@@ -189,7 +189,7 @@ const CreatePositionModal = (props: Props) => {
                 </div>
               </div>
               {/*  Second Box */}
-              <div className={"p-3 border rounded-sm"}>
+              <div className={"p-3 border rounded-sm border-[#757788]"}>
                 <div
                   className={
                     "flex flex-row justify-between text-xs text-[rgba(171,196,255,.5)]"
@@ -244,7 +244,11 @@ const CreatePositionModal = (props: Props) => {
                   <p>$2.3214</p>
                 </div>
               </div>
-              <div className={"p-3 border rounded-sm text-[#abc4ff]"}>
+              <div
+                className={
+                  "p-3 border rounded-sm text-[#abc4ff] border-[#757788]"
+                }
+              >
                 <div className={"flex flex-row justify-between"}>
                   <div className={"flex flex-row text-base items-center gap-1"}>
                     <p className={"text-white"}>SOL</p>
@@ -266,7 +270,7 @@ const CreatePositionModal = (props: Props) => {
                   </div>
                   <p>21</p>
                 </div>
-                <div className={"flex flex-row justify-between"}>
+                <div className={"flex flex-row justify-between "}>
                   <div className={"flex flex-row text-base items-center gap-1"}>
                     <p className={"text-white"}>USDC</p>
                     <div className={"flex flex-row"}>
@@ -376,31 +380,43 @@ const CreatePositionModal = (props: Props) => {
                 "flex flex-row justify-between text-xs gap-1 text-[rgba(171,196,255,.5)]"
               }
             >
-              <button className={"border px-3 rounded-sm w-full"}>
+              <button
+                className={"border px-3 rounded-sm w-full border-[#757788]"}
+              >
                 <div className={"flex flex-row gap-0.5 justify-center py-0.5"}>
                   <p>±</p>
                   <p>1%</p>
                 </div>
               </button>
-              <button className={"border px-3 rounded-sm w-full"}>
+              <button
+                className={"border px-3 rounded-sm w-full border-[#757788]"}
+              >
                 <div className={"flex flex-row gap-0.5 justify-center py-0.5"}>
                   <p>±</p>
                   <p>5%</p>
                 </div>
               </button>
-              <button className={"border px-3 rounded-sm w-full"}>
+              <button
+                className={"border px-3 rounded-sm w-full border-[#757788]"}
+              >
                 <div className={"flex flex-row gap-0.5 justify-center py-0.5"}>
                   <p>±</p>
                   <p>10%</p>
                 </div>
               </button>
-              <button className={"border px-3 rounded-sm w-full"}>
-                <div className={"flex flex-row gap-0.5 justify-center py-0.5"}>
+              <button
+                className={"border px-3 rounded-sm w-full border-[#757788]"}
+              >
+                <div className={"flex flex-row gap-0.5 justify-center"}>
                   <p>±</p>
                   <p>20%</p>
                 </div>
               </button>
-              <button className={"border px-3 rounded-sm w-full py-0.5"}>
+              <button
+                className={
+                  "border px-3 rounded-sm w-full py-0.5 border-[#757788]"
+                }
+              >
                 <div className={"flex flex-row gap-0.5 justify-center"}>
                   <p>±</p>
                   <p>50%</p>
@@ -411,7 +427,7 @@ const CreatePositionModal = (props: Props) => {
             <div className={"flex flex-row justify-between gap-2"}>
               <div
                 className={
-                  "w-full border rounded-sm p-1 pb-3 text-[rgba(171,196,255,.5)]"
+                  "w-full border rounded-sm p-1 pb-3 text-[rgba(171,196,255,.5)] border-[#757788]"
                 }
               >
                 <p className={"text-xs"}>Min Price</p>
@@ -425,7 +441,9 @@ const CreatePositionModal = (props: Props) => {
                   </button>
                 </div>
               </div>
-              <div className={"w-full border rounded-sm p-1 pb-3"}>
+              <div
+                className={"w-full border rounded-sm p-1 pb-3 border-[#757788]"}
+              >
                 <p className={"text-xs text-[rgba(171,196,255,.5)]"}>
                   Max Price
                 </p>
@@ -467,7 +485,7 @@ const CreatePositionModal = (props: Props) => {
                 {/* Tooltip */}
                 {tooltipVisible && (
                   <div
-                    className="absolute bg-[#0d111b] border p-3 z-10 mb-36 rounded-sm text-xs w-72 text-[#abc4ff]"
+                    className="absolute bg-[#0d111b] border p-3 z-10 mb-36 rounded-sm text-xs w-72 text-[#abc4ff] border-[#757788]"
                     onMouseEnter={() => setTooltipVisible(true)}
                     onMouseLeave={() => setTooltipVisible(false)}
                   >
@@ -517,7 +535,7 @@ const CreatePositionModal = (props: Props) => {
                   </button>
                 </div>
               </div>
-              <div className={"rounded-sm border p-2"}>
+              <div className={"rounded-sm border p-2 border-[#757788]"}>
                 <div className={"flex flex-row gap-2 items-center"}>
                   <PieChart width={60} height={60}>
                     <Pie

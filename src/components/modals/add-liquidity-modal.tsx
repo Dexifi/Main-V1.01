@@ -14,7 +14,7 @@ const AddLiquidityModal = (props: Props) => {
   const [amount, setAmount] = useState<number>(0);
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] z-[110] rounded-xl p-6"
         style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
@@ -30,7 +30,7 @@ const AddLiquidityModal = (props: Props) => {
           {/*First Box */}
           <div
             className={
-              "flex flex-col border mt-6 p-3 rounded-xl gap-1 border-sky-100 border-opacity-50"
+              "flex flex-col border mt-6 p-3 rounded-sm gap-1 border-[#757788]"
             }
           >
             {/*Box Header*/}
@@ -89,7 +89,7 @@ const AddLiquidityModal = (props: Props) => {
           {/*Second Box */}
           <div
             className={
-              "flex flex-col border mt-6 p-3 rounded-xl gap-3 border-sky-100 border-opacity-50"
+              "flex flex-col border mt-6 p-3 rounded-xl gap-3 border-[#757788]"
             }
           >
             {/*  Header */}
@@ -112,7 +112,7 @@ const AddLiquidityModal = (props: Props) => {
             <div className={"flex flex-row justify-between gap-4"}>
               <div
                 className={
-                  "flex flex-col border py-3 px-4 w-full items-center gap-3 rounded-xl border-sky-100 border-opacity-50"
+                  "flex flex-col border py-3 px-4 w-full items-center gap-3 rounded-sm border-[#757788]"
                 }
               >
                 <p className={"text-sky-500 font-semibold text-base"}>
@@ -131,7 +131,7 @@ const AddLiquidityModal = (props: Props) => {
               </div>
               <div
                 className={
-                  "flex flex-col border py-3 px-4 w-full items-center gap-3 rounded-xl border-sky-100 border-opacity-50"
+                  "flex flex-col border py-3 px-4 w-full items-center gap-3 rounded-sm border-[#757788]"
                 }
               >
                 <p className={"text-sky-500 font-semibold text-base"}>

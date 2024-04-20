@@ -29,7 +29,7 @@ const ManageModal = (props: Props) => {
     setOpen(!open); // toggle between true and false
   };
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] w-full max-w-[760px]"
         style={{
@@ -85,20 +85,25 @@ const ManageModal = (props: Props) => {
         </div>
         {/*  First Box */}
         <div
-          className={"bg-blue-600 rounded-sm p-3 flex flex-row justify-between"}
+          className={
+            "bg-[#0b1938] rounded-sm p-3 flex flex-row justify-between"
+          }
         >
+          {/*COL 1*/}
           <div className={"flex flex-col gap-4"}>
-            <p>Liquidity</p>
-            <p>$2.86</p>
+            <p className={"text-[#abc4ff]"}>Liquidity</p>
+            <p className={"text-white"}>$2.86</p>
           </div>
+          {/*COL 2*/}
           <div className={"flex flex-col gap-4"}>
-            <p>Leverage</p>
-            <p>10.36x</p>
+            <p className={"text-[#abc4ff]"}>Leverage</p>
+            <p className={"text-white"}>10.36x</p>
           </div>
-          <div className={"flex flex-col gap-2"}>
-            <p>Deposit Ratio</p>
+          {/*COL 3*/}
+          <div className={"flex flex-col gap-2 text-[rgba(171,196,255,.5)] "}>
+            <p className={"text-[#abc4ff]"}>Deposit Ratio</p>
             <div className={"flex flex-row gap-4"}>
-              <div className={"flex flex-col gap-1"}>
+              <div className={"flex flex-col gap-1 font-medium"}>
                 <div
                   className={"flex flex-row items-center justify-center gap-2"}
                 >
@@ -139,11 +144,11 @@ const ManageModal = (props: Props) => {
                 </div>
               </div>
               <div className={"flex flex-col gap-1"}>
-                <div className={"flex flex-row"}>
+                <div className={"flex flex-row text-white"}>
                   <p>$</p>
                   <p>1.98</p>
                 </div>
-                <div className={"flex flex-row"}>
+                <div className={"flex flex-row text-white"}>
                   <p>$</p>
                   <p>0.88</p>
                 </div>
@@ -163,88 +168,90 @@ const ManageModal = (props: Props) => {
             </div>
           </div>
           <div className={"flex flex-col gap-4"}>
-            <p>NFT</p>
+            <p className={"text-[#abc4ff]"}>NFT</p>
             <div className="flex flex-row justify-between gap-14">
-              <p>3213kkdhfds....fdsf</p>
+              <p className={"text-[rgba(171,196,255,.5)]"}>
+                3213kkdhfds....fdsf
+              </p>
               <div className={"flex flex-row justify-center gap-1"}>
-                <button>
+                <button className={"text-[rgba(171,196,255,.5)]"}>
                   <ContentCopyIcon fontSize={"inherit"} />
                 </button>
-                <button>
+                <button className={"text-[rgba(171,196,255,.5)]"}>
                   <IosShareIcon fontSize={"inherit"} />
                 </button>
               </div>
             </div>
           </div>
         </div>
-        <div
-          className={
-            "bg-blue-600 rounded-sm flex flex-row justify-between gap-2"
-          }
-        >
+        <div className={"rounded-sm flex flex-row justify-between gap-2"}>
           {/*Left COl */}
           <div
             className={
-              "flex flex-col w-full h-full bg-white rounded-sm gap-3 p-3"
+              "flex flex-col w-full h-full bg-[#0b1938] rounded-sm gap-3 p-3"
             }
           >
             <div className={"flex-1"}>
               <div className={"flex flex-col gap-3"}>
                 <div className={"flex flex-row items-center"}>
-                  <p>My Position</p>
-                  <div className="flex flex-row text-sm items-center bg-red-700 bg-opacity-50 rounded-sm px-1 ml-1 h-5">
+                  <p className={"text-[#abc4ff]"}>My Position</p>
+                  <div className="flex flex-row text-sm items-center bg-red-700 bg-opacity-50 rounded-sm px-1 ml-2 h-5 text-green-300">
                     <CheckCircleOutlineIcon style={{ width: 16 }} />
                     <p className={"text-[8px] ml-0.5"}>In Range</p>
                   </div>
                 </div>
-                <div className={"flex"}>
+                <div className={"flex text-white text-sm flex-row gap-1"}>
                   <p>45.34242</p>
                   <p>-</p>
                   <p>123.43256</p>
                 </div>
-                <div className="flex">
+                <div className="flex text-[#abc4ff] text-sm">
                   <p>RAY</p>
                   <p>per</p>
                   <p>SOL</p>
                 </div>
                 <div className="text-xs">
-                  <div className="flex flex-row gap-1">
-                    <p>-</p>
-                    <div>Current Price</div>
-                    <p>84.223456534</p>
+                  <div className="flex flex-row gap-1 items-center">
+                    <div className={"w-1.5 h-0.5 bg-amber-400 mr-1"} />
+                    <p class={"text-[rgba(171,196,255,.5)]"}>Current Price</p>
+                    <p className={"text-[#abc4ff]"}>84.223456534</p>
                     <p>per</p>
                     <p>SOL</p>
                   </div>
-                  <div className="flex flex-row gap-1">
-                    <p>-</p>
-                    <div>24H Price Range</div>
-                    <p>[84.565343425,35.243959932]</p>
+                  <div className="flex flex-row gap-1 items-center">
+                    <div className={"w-1.5 h-0.5 bg-amber-400 mr-1"} />
+                    <p className={"text-[rgba(171,196,255,.5)]"}>
+                      24H Price Range
+                    </p>
+                    <p className={"text-[#abc4ff]"}>
+                      [84.565343425,35.243959932]
+                    </p>
                   </div>
                 </div>
                 <div className={"bg-red-600 w-full h-32"}>.</div>
               </div>
             </div>
             <div className={"flex flex-row gap-1"}>
-              <div className="flex flex-row border px-1 rounded-sm justify-center items-center gap-1">
+              <div className="flex flex-row border px-2 rounded-sm justify-center items-center gap-1 border-[rgba(171,196,255,.5)]">
                 <div className={"bg-red-200 w-2 h-2 rounded-full"} />
-                <p className="text-xs">Pool liquidity</p>
+                <p className="text-xs text-[#abc4ff]">Pool liquidity</p>
               </div>
-              <div className="flex flex-row border px-1 rounded-sm justify-center items-center gap-1">
+              <div className="flex flex-row border px-2 rounded-sm justify-center items-center gap-1 border-[rgba(171,196,255,.5)]">
                 <div className={"bg-red-700 w-2 h-2 rounded-full"} />
-                <p className="text-xs">My Range</p>
+                <p className="text-xs text-[#abc4ff]">My Range</p>
               </div>
-              <div className="flex flex-row border px-1 rounded-sm justify-center items-center gap-1">
+              <div className="flex flex-row border px-2 rounded-sm justify-center items-center gap-1 border-[rgba(171,196,255,.5)]">
                 <div className={"bg-amber-400 w-2 h-2 rounded-full"} />
-                <p className="text-xs">Current Price</p>
+                <p className="text-xs text-[#abc4ff]">Current Price</p>
               </div>
             </div>
           </div>
           {/*Right COl*/}
-          <div className={"flex flex-col w-full rounded-sm gap-2"}>
-            <div className={"flex flex-col bg-amber-700 p-3 rounded-sm gap-3 "}>
-              <p>Pending Yield</p>
+          <div className={"flex flex-col w-full rounded-sm gap-2 "}>
+            <div className={"flex flex-col bg-[#0b1938] p-3 rounded-sm gap-3 "}>
+              <p className={"text-[#abc4ff]"}>Pending Yield</p>
               <div className={"flex flex-row items-center gap-4"}>
-                <div className={"flex flex-row"}>
+                <div className={"flex flex-row text-white"}>
                   <p>=$</p>
                   <p>0.68</p>
                 </div>
@@ -252,11 +259,11 @@ const ManageModal = (props: Props) => {
               </div>
               <div
                 className={
-                  "flex flex-row border rounded-sm p-2 justify-between border-opacity-50"
+                  "flex flex-row border rounded-sm p-2 justify-between border-[#757788]"
                 }
               >
                 <div className={"flex flex-col w-full gap-3"}>
-                  <p>Fees</p>
+                  <p className={"text-[#abc4ff]"}>Fees</p>
                   <div className={"flex flex-row text-xs gap-1 items-center"}>
                     <div className={"flex flex-row"}>
                       <div
@@ -273,23 +280,27 @@ const ManageModal = (props: Props) => {
                         />
                       </div>
                     </div>
-                    <p>SOL</p>
-                    <p>0.0432491331</p>
+                    <p className={"text-[rgba(171,196,255,.5)] font-medium"}>
+                      SOL
+                    </p>
+                    <p className={"text-white"}>0.0432491331</p>
                   </div>
                 </div>
                 <div className={"flex flex-col w-full gap-2.5"}>
-                  <p>Rewards</p>
-                  <p className={"text-xs"}>(No Rewards)</p>
+                  <p className={"text-[#abc4ff]"}>Rewards</p>
+                  <p className={"text-xs text-[rgba(171,196,255,.5)]"}>
+                    (No Rewards)
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className={"w-full bg-amber-400 rounded-sm"}>
+            <div className={"w-full rounded-sm"}>
               <div
-                className={"flex flex-col bg-amber-800 p-3 rounded-sm gap-3 "}
+                className={"flex flex-col bg-[#0b1938] p-3 rounded-sm gap-3 "}
               >
                 <div className={"flex flex-row justify-between items-center"}>
-                  <p>Estimated APR</p>
+                  <p className={"text-[#abc4ff]"}>Estimated APR</p>
 
                   <div
                     className="inline-flex rounded-md shadow-sm"
@@ -297,29 +308,29 @@ const ManageModal = (props: Props) => {
                   >
                     <button
                       type="button"
-                      className="px-2 py-1 text-xs text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                      className="px-2 py-1 text-xs text-[#abc4ff] border border-[#0d111b] bg-[#0d111b] rounded-s-lg focus:z-10 focus:ring-2"
                     >
                       24H
                     </button>
                     <button
                       type="button"
-                      className="px-2 py-1 text-sm text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                      className="px-2 py-1 text-xs text-[#abc4ff] border border-[#0d111b] bg-[#0d111b] border-t border-b focus:z-10 focus:ring-2"
                     >
                       7D
                     </button>
                     <button
                       type="button"
-                      className="px-2 py-1 text-sm text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                      className="px-2 py-1 text-xs text-[#abc4ff] border border-[#0d111b] bg-[#0d111b] rounded-e-lg focus:z-10 focus:ring-2"
                     >
                       30D
                     </button>
                   </div>
                 </div>
-                <div className={"flex flex-row"}>
+                <div className={"flex flex-row text-white"}>
                   <p>9.43</p>
                   <p>%</p>
                 </div>
-                <div className={"rounded-sm border p-2"}>
+                <div className={"rounded-sm border p-2 border-[#757788]"}>
                   <div className={"flex flex-row gap-2 items-center"}>
                     <PieChart width={64} height={64}>
                       <Pie
@@ -339,8 +350,10 @@ const ManageModal = (props: Props) => {
                       </Pie>
                     </PieChart>
                     <div className={"bg-amber-400 w-2 h-2 rounded-full"} />
-                    <p>Trade Fee</p>
-                    <p>9.34</p>
+                    <div className={"flex flex-row text-sm gap-1"}>
+                      <p className={"text-[#abc4ff]"}>Trade Fee</p>
+                      <p className={"text-white"}>9.34%</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -348,40 +361,42 @@ const ManageModal = (props: Props) => {
           </div>
         </div>
         {open && (
-          <div className={"bg-blue-600 rounded-sm p-3"}>
-            <p>Pool Overview</p>
+          <div className={"rounded-sm p-3 bg-[#0b1938] text-sm font-medium"}>
+            <p className={"text-[#abc4ff]"}>Pool Overview</p>
             <div className={"flex flex-row mt-4 justify-between"}>
               <div className={"w-full"}>
-                <p>Fee Rate</p>
-                <div className={"flex flex-row mt-2"}>
+                <p className={"text-[rgba(171,196,255,.5)]"}>Fee Rate</p>
+                <div className={"flex flex-row mt-2 text-white"}>
                   <p>0.05</p>
                   <p>%</p>
                 </div>
               </div>
               <div className={"w-full"}>
-                <p>Liquidity</p>
-                <div className={"flex flex-row mt-2"}>
+                <p className={"text-[rgba(171,196,255,.5)]"}>Liquidity</p>
+                <div className={"flex flex-row mt-2 text-white"}>
                   <p>$</p>
                   <p>425,321,21</p>
                 </div>
               </div>
               <div className={"w-full"}>
-                <p>24h Volume</p>
-                <div className={"flex flex-row mt-2"}>
+                <p className={"text-[rgba(171,196,255,.5)]"}>24h Volume</p>
+                <div className={"flex flex-row mt-2 text-white"}>
                   <p>$</p>
                   <p>425,321,21</p>
                 </div>
               </div>
               <div className={"w-full"}>
-                <p>24h Fee</p>
-                <div className={"flex flex-row mt-2"}>
+                <p className={"text-[rgba(171,196,255,.5)]"}>24h Fee</p>
+                <div className={"flex flex-row mt-2 text-white"}>
                   <p>$</p>
                   <p>425,32</p>
                 </div>
               </div>
               <div className={"w-full"}>
-                <p>Tick Spacing</p>
-                <div className={"flex flex-row mt-2"}>
+                <p className={"text-[rgba(171,196,255,.5)] font-medium"}>
+                  Tick Spacing
+                </p>
+                <div className={"flex flex-row mt-2 text-white"}>
                   <p>15</p>
                 </div>
               </div>
@@ -389,10 +404,10 @@ const ManageModal = (props: Props) => {
           </div>
         )}
 
-        <div className={"w-full h-0.5 bg-sky-500 bg-opacity-50"} />
-        <div className={"flex flex-row justify-center"}>
+        <div className={"w-full h-0.5 bg-[rgba(171,196,255,.5)] opacity-50"} />
+        <div className={"flex flex-row justify-center "}>
           <Button
-            className={"bg-transparent text-sky-700 font-bold"}
+            className={"bg-transparent text-[#abc4ff] font-bold"}
             onClick={toggleOpenClose}
           >
             Pool Overview {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
