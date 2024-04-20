@@ -27,9 +27,12 @@ const CreatePositionModal = (props: Props) => {
   const { isOpen, onClose } = useCreatePositionLiquidityModal();
   const [switchMethod, setSwitchMethod] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [switchPriceButton, setSwitchPriceButton] = useState();
   const handleSwitch = useCallback(() => {
     setSwitchMethod((prev) => !prev);
   }, []);
+
+  const handleSwitchButton = useCallback(() => {}, []);
 
   const data_modal = {
     title: "Create Position",
@@ -51,7 +54,7 @@ const CreatePositionModal = (props: Props) => {
             <div className={"flex flex-row]"}>
               <div
                 className={
-                  "bg-white h-8 w-8 flex flex-row justify-center items-center rounded-full"
+                  "bg-[#abc4ff] h-8 w-8 flex flex-row justify-center items-center rounded-full"
                 }
               >
                 <img
@@ -64,7 +67,7 @@ const CreatePositionModal = (props: Props) => {
               <div className={"flex flex-row]"}>
                 <div
                   className={
-                    "bg-white h-8 w-8 flex flex-row justify-center items-center rounded-full -ml-3"
+                    "bg-[#abc4ff] h-8 w-8 flex flex-row justify-center items-center rounded-full -ml-3"
                   }
                 >
                   <img
@@ -81,22 +84,33 @@ const CreatePositionModal = (props: Props) => {
               <p className={"px-0.5"}>/</p>
               <p>RAY</p>
             </div>
-            <div className="flex flex-row text-sm items-center bg-red-700 bg-opacity-50 rounded-sm px-2">
+            <div className="flex flex-row text-sm items-center bg-[#0b1938] bg-opacity-50 rounded-sm px-2 text-[#abc4ff]">
               <p className={"text-[8px]"}>Pool Fee</p>
               <p className={"text-[8px]"}>0.05%</p>
             </div>
           </div>
+          {/* Header Switch Button */}
           <div className={"flex flex-row items-center justify-between gap-2"}>
             <div
               className={
-                "bg-sky-500 h-7 flex flex-row justify-center items-center rounded-sm"
+                "bg-[#0b1938] h-7 flex flex-row justify-center items-center rounded-sm"
               }
             >
-              <div role="group">
-                <Button size={"sm"} className={"bg-amber-400 h-6 "}>
+              <div role="group" className={"bg-[#0b1938] flex flex-row py-0.5"}>
+                <Button
+                  size={"sm"}
+                  className={
+                    "bg-[#0b1938] h-6 text-xs focus:z-10 focus:ring-2 focus:bg-[#0b1938] mr-1"
+                  }
+                >
                   SOL Price
                 </Button>
-                <Button size={"sm"} className={"bg-sky-500  h-6"}>
+                <Button
+                  size={"sm"}
+                  className={
+                    "h-6 text-xs focus:z-10 focus:ring-2 focus:bg-[#0b1938]"
+                  }
+                >
                   USDC Price
                 </Button>
               </div>
@@ -112,7 +126,11 @@ const CreatePositionModal = (props: Props) => {
             }
           >
             {/*Header*/}
-            <div className={"flex flex-row justify-between"}>
+            <div
+              className={
+                "flex flex-row justify-between text-[#abc4ff] text-base"
+              }
+            >
               <p>Deposit Amount</p>
               <p>o</p>
             </div>
@@ -122,7 +140,11 @@ const CreatePositionModal = (props: Props) => {
               {" "}
               {/*for switch between header button SOL/USDC*/}
               <div className={"p-3 border rounded-sm"}>
-                <div className={"flex flex-row justify-between text-xs"}>
+                <div
+                  className={
+                    "flex flex-row justify-between text-xs text-[rgba(171,196,255,.5)]"
+                  }
+                >
                   <p>SO111..11112</p>
                   <div className={"flex flex-row"}>
                     <p>Balance:</p>
@@ -133,7 +155,7 @@ const CreatePositionModal = (props: Props) => {
                   <div className={"flex flex-row"}>
                     <div
                       className={
-                        "bg-red-700 h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                        "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
                       }
                     >
                       <img
@@ -145,30 +167,40 @@ const CreatePositionModal = (props: Props) => {
                       />
                     </div>
                   </div>
-                  <p className={"text-base"}>SOL</p>
+                  <p className={"text-base text-[#abc4ff]"}>SOL</p>
                   <div className="border-r border-[rgba(171,196,255,0.5)] self-stretch" />
                   <div
                     className={"flex flex-row justify-between gap-1 text-xs"}
                   >
-                    <button className={"bg-amber-700 px-1 rounded-sm"}>
+                    <button
+                      className={"bg-[#0d111b] text-[#abc4ff] px-1 rounded-sm "}
+                    >
                       Max
                     </button>
-                    <button className={"bg-amber-700 px-1 rounded-sm"}>
+                    <button
+                      className={"bg-[#0d111b] text-[#abc4ff] px-1 rounded-sm "}
+                    >
                       Half
                     </button>
                     <input
-                      className={"bg-amber-400 w-8/12 h-5"}
+                      className={"bg-[#0b1938] w-8/12 h-5"}
                       type={"number"}
                     />
                   </div>
                 </div>
-                <div className={"flex flex-row justify-end text-xs"}>
+                <div
+                  className={"flex flex-row justify-end text-xs text-[#abc4ff]"}
+                >
                   <p>$2.3214</p>
                 </div>
               </div>
               {/*  Second Box */}
               <div className={"p-3 border rounded-sm"}>
-                <div className={"flex flex-row justify-between text-xs"}>
+                <div
+                  className={
+                    "flex flex-row justify-between text-xs text-[rgba(171,196,255,.5)]"
+                  }
+                >
                   <p>SO111..11112</p>
                   <div className={"flex flex-row"}>
                     <p>Balance:</p>
@@ -179,7 +211,7 @@ const CreatePositionModal = (props: Props) => {
                   <div className={"flex flex-row"}>
                     <div
                       className={
-                        "bg-red-700 h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                        "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
                       }
                     >
                       <img
@@ -191,35 +223,41 @@ const CreatePositionModal = (props: Props) => {
                       />
                     </div>
                   </div>
-                  <p className={"text-base"}>USDC</p>
+                  <p className={"text-base text-[#abc4ff]"}>USDC</p>
                   <div className="border-r border-[rgba(171,196,255,0.5)] self-stretch" />
                   <div
                     className={"flex flex-row justify-between gap-1 text-xs"}
                   >
-                    <button className={"bg-amber-700 px-1 rounded-sm"}>
+                    <button
+                      className={"bg-[#0d111b] text-[#abc4ff] px-1 rounded-sm "}
+                    >
                       Max
                     </button>
-                    <button className={"bg-amber-700 px-1 rounded-sm"}>
+                    <button
+                      className={"bg-[#0d111b] text-[#abc4ff] px-1 rounded-sm "}
+                    >
                       Half
                     </button>
                     <input
-                      className={"bg-amber-400 w-8/12 h-5"}
+                      className={"bg-[#0b1938] w-8/12 h-5"}
                       type={"number"}
                     />
                   </div>
                 </div>
-                <div className={"flex flex-row justify-end text-xs"}>
+                <div
+                  className={"flex flex-row justify-end text-xs text-[#abc4ff]"}
+                >
                   <p>$2.3214</p>
                 </div>
               </div>
-              <div className={"p-3 border rounded-sm"}>
+              <div className={"p-3 border rounded-sm text-[#abc4ff]"}>
                 <div className={"flex flex-row justify-between"}>
                   <div className={"flex flex-row text-base items-center gap-1"}>
-                    <p>SOL</p>
+                    <p className={"text-white"}>SOL</p>
                     <div className={"flex flex-row"}>
                       <div
                         className={
-                          "bg-red-700 h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                          "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
                         }
                       >
                         <img
@@ -236,11 +274,11 @@ const CreatePositionModal = (props: Props) => {
                 </div>
                 <div className={"flex flex-row justify-between"}>
                   <div className={"flex flex-row text-base items-center gap-1"}>
-                    <p>USDC</p>
+                    <p className={"text-white"}>USDC</p>
                     <div className={"flex flex-row"}>
                       <div
                         className={
-                          "bg-red-700 h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                          "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
                         }
                       >
                         <img
@@ -255,18 +293,18 @@ const CreatePositionModal = (props: Props) => {
                   </div>
                   <p>2113.234523</p>
                 </div>
-                <div className={"flex flex-row justify-between mt-3"}>
+                <div className={"flex flex-row justify-between mt-3 text-sm"}>
                   <p>Total Deposit</p>
                   <p>$6,081.72</p>
                 </div>
               </div>
             </div>
-            <Button className={"bg-red-700 rounded-sm mt-10"}>
+            <Button className={"bg-[#0d111b] rounded-sm mt-10"}>
               Insufficient SOL balance
             </Button>
             <div
               className={
-                "flex flex-row items-center justify-center text-sm mt-3"
+                "flex flex-row items-center justify-center text-sm mt-3 text-amber-500"
               }
             >
               <p>SOL balance:</p>
@@ -281,15 +319,15 @@ const CreatePositionModal = (props: Props) => {
             }
           >
             <div className={"flex flex-row justify-between"}>
-              <p>Set Price Range</p>
+              <p className={"text-[#abc4ff]"}>Set Price Range</p>
               <div className={"flex flex-row gap-1"}>
                 <button
                   className={
-                    "flex flex-row bg-amber-400 rounded-full w-7 h-7 justify-center items-center"
+                    "flex flex-row rounded-full w-7 h-7 justify-center items-center bg-[#0d111b]"
                   }
                 >
                   <svg
-                    fill="#000000"
+                    fill="rgba(171,196,255,.5)"
                     width="16px"
                     height="16px"
                     viewBox="0 0 1024 1024"
@@ -301,14 +339,14 @@ const CreatePositionModal = (props: Props) => {
                 </button>
                 <button
                   className={
-                    "flex flex-row bg-amber-400 rounded-full w-7 h-7 justify-center items-center"
+                    "flex flex-row bg-[#0d111b] rounded-full w-7 h-7 justify-center items-center text-[rgba(171,196,255,.5)]"
                   }
                 >
                   <ZoomOutIcon sx={{ fontSize: 16 }} />
                 </button>
                 <button
                   className={
-                    "flex flex-row bg-amber-400 rounded-full w-7 h-7 justify-center items-center"
+                    "flex flex-row bg-[#0d111b] rounded-full w-7 h-7 justify-center items-center text-[rgba(171,196,255,.5)]"
                   }
                 >
                   <ZoomInIcon sx={{ fontSize: 16 }} />
@@ -316,20 +354,20 @@ const CreatePositionModal = (props: Props) => {
               </div>
             </div>
             <div>
-              <div className={"flex flex-row text-xs"}>
-                <p>-</p>
-                <p>Current Price</p>
-                <div className={"flex flex-row gap-0.5"}>
+              <div className={"flex flex-row text-xs items-center"}>
+                <div className={"w-1.5 h-0.5 bg-amber-400 mr-1"} />
+                <p className={"text-[rgba(171,196,255,.5)]"}>Current Price</p>
+                <div className={"flex flex-row gap-0.5 text-[#abc4ff] ml-2"}>
                   <p>56.234532234</p>
                   <p>USDC</p>
                   <p>per</p>
                   <p>SOL</p>
                 </div>
               </div>
-              <div className={"flex flex-row text-xs"}>
-                <p>-</p>
-                <p>Current Price</p>
-                <div className={"flex flex-row gap-0.5"}>
+              <div className={"flex flex-row text-xs items-center"}>
+                <div className={"w-1.5 h-0.5 bg-amber-400 mr-1"} />
+                <p className={"text-[rgba(171,196,255,.5)]"}>24H Price Range</p>
+                <div className={"flex flex-row gap-0.5 text-[#abc4ff] ml-2"}>
                   <p>56.234532234</p>
                   <p>USDC</p>
                   <p>per</p>
@@ -339,32 +377,36 @@ const CreatePositionModal = (props: Props) => {
             </div>
             {/*Chart */}
             <Chart />
-            <div className={"flex flex-row justify-between text-xs gap-1"}>
+            <div
+              className={
+                "flex flex-row justify-between text-xs gap-1 text-[rgba(171,196,255,.5)]"
+              }
+            >
               <button className={"border px-3 rounded-sm w-full"}>
-                <div className={"flex flex-row gap-0.5 justify-center"}>
+                <div className={"flex flex-row gap-0.5 justify-center py-0.5"}>
                   <p>±</p>
                   <p>1%</p>
                 </div>
               </button>
               <button className={"border px-3 rounded-sm w-full"}>
-                <div className={"flex flex-row gap-0.5 justify-center"}>
+                <div className={"flex flex-row gap-0.5 justify-center py-0.5"}>
                   <p>±</p>
                   <p>5%</p>
                 </div>
               </button>
               <button className={"border px-3 rounded-sm w-full"}>
-                <div className={"flex flex-row gap-0.5 justify-center"}>
+                <div className={"flex flex-row gap-0.5 justify-center py-0.5"}>
                   <p>±</p>
                   <p>10%</p>
                 </div>
               </button>
               <button className={"border px-3 rounded-sm w-full"}>
-                <div className={"flex flex-row gap-0.5 justify-center"}>
+                <div className={"flex flex-row gap-0.5 justify-center py-0.5"}>
                   <p>±</p>
                   <p>20%</p>
                 </div>
               </button>
-              <button className={"border px-3 rounded-sm w-full"}>
+              <button className={"border px-3 rounded-sm w-full py-0.5"}>
                 <div className={"flex flex-row gap-0.5 justify-center"}>
                   <p>±</p>
                   <p>50%</p>
@@ -373,26 +415,32 @@ const CreatePositionModal = (props: Props) => {
             </div>
             {/*  Columns Section */}
             <div className={"flex flex-row justify-between gap-2"}>
-              <div className={"w-full border rounded-sm p-1 pb-3"}>
+              <div
+                className={
+                  "w-full border rounded-sm p-1 pb-3 text-[rgba(171,196,255,.5)]"
+                }
+              >
                 <p className={"text-xs"}>Min Price</p>
                 <div className={"flex flex-row justify-between mt-1"}>
-                  <button>
+                  <button className={"text-[rgba(171,196,255,.5)]"}>
                     <RemoveIcon sx={{ fontSize: 12 }} />
                   </button>
-                  <input className={"w-full mx-1 px-0"} />
-                  <button>
+                  <input className={"w-full mx-1 px-0 bg-[#0b1938]"} />
+                  <button className={"text-[rgba(171,196,255,.5)]"}>
                     <AddIcon sx={{ fontSize: 12 }} />
                   </button>
                 </div>
               </div>
               <div className={"w-full border rounded-sm p-1 pb-3"}>
-                <p className={"text-xs"}>Max Price</p>
+                <p className={"text-xs text-[rgba(171,196,255,.5)]"}>
+                  Max Price
+                </p>
                 <div className={"flex flex-row justify-between mt-1"}>
-                  <button>
+                  <button className={"text-[rgba(171,196,255,.5)]"}>
                     <RemoveIcon sx={{ fontSize: 12 }} />
                   </button>
-                  <input className={"w-full mx-1 px-0"} />
-                  <button>
+                  <input className={"w-full mx-1 px-0 bg-[#0b1938]"} />
+                  <button className={"text-[rgba(171,196,255,.5)]"}>
                     <AddIcon sx={{ fontSize: 12 }} />
                   </button>
                 </div>
@@ -400,27 +448,32 @@ const CreatePositionModal = (props: Props) => {
             </div>
             <div className={"flex flex-col gap-2"}>
               <div className={"flex flex-row justify-between items-center"}>
-                <div className={"flex flex-row text-base gap-1 items-center"}>
+                <div
+                  className={
+                    "flex flex-row text-sm gap-1 items-center text-[#abc4ff]"
+                  }
+                >
                   <p>Estimated APR</p>
                   <div
                     onClick={handleSwitch}
                     onMouseEnter={() => setTooltipVisible(true)}
                     onMouseLeave={() => setTooltipVisible(false)}
                     className={
-                      "flex flex-row items-center border rounded-sm h-4 w-4 justify-center border-amber-300 cursor-pointer"
+                      "flex flex-row items-center border rounded-sm h-4 w-4 justify-center text-[#abc4ff] cursor-pointer"
                     }
                   >
                     {switchMethod ? (
-                      <p className={"text-xs text-amber-300"}>M</p>
+                      <p className={"text-[8px] text-[#abc4ff]"}>M</p>
                     ) : (
-                      <p className={"text-xs text-amber-300"}>D</p>
+                      <p className={"text-[8px] text-[#abc4ff]"}>D</p>
                     )}
                   </div>
                   <p>0%</p>
                 </div>
+                {/* Tooltip */}
                 {tooltipVisible && (
                   <div
-                    className="absolute bg-amber-400 border p-3 z-10 mb-36 rounded-sm text-xs w-72"
+                    className="absolute bg-[#0d111b] border p-3 z-10 mb-36 rounded-sm text-xs w-72 text-[#abc4ff]"
                     onMouseEnter={() => setTooltipVisible(true)}
                     onMouseLeave={() => setTooltipVisible(false)}
                   >
@@ -442,7 +495,7 @@ const CreatePositionModal = (props: Props) => {
                         Estimated APR is calculated by the Delta Method. Click
                         the ‘D’ icon to switch to the Multiplier Method
                       </p>
-                      <p className={"mt-2"}>
+                      <p className={"mt-2 text-[rgba(171,196,255,.5)]"}>
                         <a>Learn More</a>
                       </p>
                     </div>
@@ -452,19 +505,19 @@ const CreatePositionModal = (props: Props) => {
                 <div className="inline-flex rounded-md shadow-sm" role="group">
                   <button
                     type="button"
-                    className="px-2 py-1 text-xs text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                    className="px-2 py-1 text-xs text-[#abc4ff] border border-[#0d111b] bg-[#0d111b] rounded-s-lg focus:z-10 focus:ring-2"
                   >
                     24H
                   </button>
                   <button
                     type="button"
-                    className="px-2 py-1 text-xs text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                    className="px-2 py-1 text-xs text-[#abc4ff] border border-[#0d111b] bg-[#0d111b] border-t border-b focus:z-10 focus:ring-2"
                   >
                     7D
                   </button>
                   <button
                     type="button"
-                    className="px-2 py-1 text-xs text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                    className="px-2 py-1 text-xs text-[#abc4ff] border border-[#0d111b] bg-[#0d111b] rounded-e-lg focus:z-10 focus:ring-2"
                   >
                     30D
                   </button>
@@ -489,12 +542,18 @@ const CreatePositionModal = (props: Props) => {
                       ))}
                     </Pie>
                   </PieChart>
-                  <div className={"bg-amber-400 w-2 h-2 rounded-full"} />
-                  <p className={"text-xs"}>Trade Fee</p>
-                  <p className={"text-xs"}>9.34</p>
-                  <div className={"bg-amber-400 w-2 h-2 rounded-full"} />
-                  <p className={"text-xs"}>RAY</p>
-                  <p className={"text-xs"}>0%</p>
+                  <div
+                    className={
+                      "flex flex-row justify-between items-center gap-1 text-[#abc4ff] text-xs"
+                    }
+                  >
+                    <div className={"bg-amber-400 w-2 h-2 rounded-full"} />
+                    <p className={"text-xs"}>Trade Fee</p>
+                    <p className={"text-xs"}>9.34</p>
+                    <div className={"bg-amber-400 w-2 h-2 rounded-full"} />
+                    <p className={"text-xs"}>RAY</p>
+                    <p className={"text-xs"}>0%</p>
+                  </div>
                 </div>
               </div>
             </div>
