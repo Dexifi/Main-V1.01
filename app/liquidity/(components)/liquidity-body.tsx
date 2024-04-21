@@ -1,10 +1,9 @@
-import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { axios } from "@/data/axios";
-import { useEffect, useState } from "react";
-import { MyPositions, PoolsTab } from "./(tabs)";
-import { Header } from "./liquidity-header";
-import RemoveLiquidityModal from "../../../src/components/modals/remove-liquidity-modal";
+import {Tabs, TabsContent, TabsList} from "@/components/ui/tabs";
+import {useWallet} from "@solana/wallet-adapter-react";
+import {axios} from "@/data/axios";
+import {useEffect, useState} from "react";
+import {MyPositions, PoolsTab} from "./(tabs)";
+import {Header} from "./liquidity-header";
 
 type Props = {
   isEXTRASMALL: boolean;
