@@ -106,7 +106,7 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
               "info" in account.account.data.parsed &&
               "mint" in account.account.data.parsed.info &&
               account.account.data.parsed.info.mint ===
-                reserve.stats.mintAddress
+                reserve?.stats.mintAddress
           );
           if (balance.length > 0 && "parsed" in balance[0].account.data)
             setTokenBalance(

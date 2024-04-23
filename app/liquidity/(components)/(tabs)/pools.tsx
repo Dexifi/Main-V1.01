@@ -15,24 +15,26 @@ import {
   useRemoveLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import formatedString from "@/lib/string";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useLiquidity } from "@/applications/Liquidity/store";
+import { CircularProgress, Stack } from "@mui/material";
+import { debounce } from "lodash";
+import { RaydiumPools } from "@/applications/Liquidity/pool";
 
-type Props = {
-  data: any;
-};
-
-const PoolsTab = ({ data }: Props) => {
+const PoolsTab = () => {
   const [search, setSearch] = useState("");
   const [tokenF, setTokenF] = useState("all");
   const [protocolF, setProtocolF] = useState("all");
-  const [timeF, setTimeF] = useState("all");
   const [tvlF, setTvlF] = useState("tvl");
-  const [gdata, setData] = useState<any[]>([]);
+  const ammPools = useLiquidity((state) => state.ammPools);
+  const userAmmDeposits = useLiquidity((state) => state.userAmmDeposits);
+  const raydiumInfo = useLiquidity((state) => state.raydiumInfo);
+  const poolApiConfig = useLiquidity((state) => state.poolApiConfig);
+  const setPoolConfig = useLiquidity((state) => state.setPoolApiConfig);
   const d_data = {
     title: "List of All Active Pools in Ecosystem",
     protocol_filter: ["All", "Raydium", "Orca"],
-    time_filter: ["All", "AMM", "CLMM"],
+    time_filter: ["All", "Standard", "Concentrated"],
     tvl_filter: ["TVL", "APR"],
     token_filter: [
       {
@@ -61,32 +63,45 @@ const PoolsTab = ({ data }: Props) => {
 
   const { onAddLiquidityOpen } = useAddLiquidityModal();
   const { onRemoveLiquidityOpen } = useRemoveLiquidityModal();
+
+  const onScroll = async () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      await RaydiumPools.fetchNextPage();
+    }
+  };
   useEffect(() => {
-    gdata.length <= 0 &&
-      setTimeout(() => {
-        setData([
-          {
-            address: "FpCMFDFGYotvufJ7HrFHsWEiiQCGbkLCtwHiDnh7o28Q",
-            symbol: "SOL-USDC",
-            pool_logos: [
-              "/assets/images/raydiumraycoin-1@2x.png",
-              "/assets/images/raydiumraycoin-1@2x.png",
-            ],
-            protocol: "Raydium",
-            protocol_sub: "AMM",
-            protocol_tvl: 47650000,
-            protocol_tvl_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            pool_liq: 12650000,
-            volume: 2650000,
-            fee: 0.5,
-            apr: 65.64,
-            value: 100000.66,
-            lp_tokens: 15354.65,
-            your_share: 0.01,
-          },
-        ]);
-      }, 5000);
-  }, [gdata]);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const debouncedSearch = (id: string) => {
+    setSearch(id);
+    debounce(async () => {
+      if (id) {
+        await RaydiumPools.fetchPoolById(id, true);
+      } else {
+        await RaydiumPools.fetchNextPage();
+      }
+    }, 500)();
+  };
+
+  const handleChangeFilter = useCallback(
+    async (type: "all" | "standard" | "concentrated") => {
+      if (type !== poolApiConfig.type) {
+        console.log("here", type, poolApiConfig.type);
+        setPoolConfig({
+          pageSize: 100,
+          currentPage: 0,
+          type: type,
+        });
+        await RaydiumPools.fetchNextPage();
+      }
+    },
+    [poolApiConfig, setPoolConfig]
+  );
 
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
@@ -107,10 +122,7 @@ const PoolsTab = ({ data }: Props) => {
               </label>
               <Input
                 value={search}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setSearch(value);
-                }}
+                onChange={(e) => debouncedSearch(e.target.value)}
                 type="text"
                 placeholder="Search"
                 className="bg-transparent outline-none text-[#d9f8ff] w-full rounded-xl max-w-xs"
@@ -148,16 +160,17 @@ const PoolsTab = ({ data }: Props) => {
                       className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
                       style={{
                         boxShadow:
-                          formatedString(item).toLocaleLowerCase() === timeF
+                          item.toLocaleLowerCase() === poolApiConfig.type
                             ? "0 0 4px #88d6ff"
                             : "none",
                       }}
                       onClick={() => {
-                        const value = formatedString(item).toLocaleLowerCase();
-
-                        if (value !== timeF) {
-                          setTimeF(value);
-                        }
+                        handleChangeFilter(
+                          item.toLocaleLowerCase() as
+                            | "all"
+                            | "standard"
+                            | "concentrated"
+                        );
                       }}
                     >
                       {item}
@@ -201,25 +214,16 @@ const PoolsTab = ({ data }: Props) => {
                             ? "0 0 4px #88d6ff"
                             : "none",
                       }}
-                      onClick={() => {
-                        const value = formatedString(
-                          item.name
-                        ).toLocaleLowerCase();
-
-                        if (value !== tokenF) {
-                          setTokenF(value);
-                        }
-                      }}
                     >
                       {!!item.icon && (
                         <>
                           {item.icon ? (
-                            <Image
+                            <img
                               src={item.icon}
                               alt={`${item.name}-logo / lend`}
                               width={20}
                               height={20}
-                              className="w-5 h-5 aspect-square object-contain"
+                              className="w-5 h-5 aspect-square rounded-full object-contain"
                             />
                           ) : (
                             <Skeleton className="w-5 h-5 aspect-square object-contain" />
@@ -235,12 +239,12 @@ const PoolsTab = ({ data }: Props) => {
           </div>
         </div>
         <div
-          className="w-full bg-[#142030] p-4 rounded-2xl px-5 min-h-[50dvh]"
+          className="w-full bg-[#142030] p-4 rounded-2xl px-5  "
           style={{
             boxShadow: "0 0 5px 1px #d9f8ff",
           }}
         >
-          <Table className="w-full flex-1 mt-2 overflow-scroll">
+          <Table className="w-full flex-1 mt-2  overflow-scroll">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 {d_data.headers.map((header, index) => (
@@ -258,46 +262,58 @@ const PoolsTab = ({ data }: Props) => {
                 ))}
               </TableRow>
             </TableHeader>
-            {gdata.length > 0 ? (
-              <TableBody>
-                {gdata.slice(0, 60).map((row: any, index) => (
+            {ammPools.length > 0 ? (
+              <TableBody className={"h-20 overflow-hidden "}>
+                {ammPools?.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
                     key={`${formatedString(
-                      row.address.toLocaleLowerCase()
+                      row?.id?.toLocaleLowerCase()
                     )}_${index}`}
                   >
                     <TableCell className="font-medium text-left py-2 pl-0">
                       <div className="flex flex-col gap-2">
-                        <span className="text-sm text-[#d9f8ff]">
-                          {row.symbol}
+                        <span className="text-sm max-w-32  text-nowrap overflow-hidden text-[#d9f8ff]">
+                          {row.mintA.symbol + " / " + row.mintB.symbol}
                         </span>
-                        <div className="flex items-center mt-2 w-max gap-4">
-                          {row.pool_logos.map((icon: any, id: number) => (
-                            <Image
-                              src={icon}
-                              alt={`${row.symbol}_logo-icon`}
-                              className="aspect-square object-contain w-9 h-9"
+                        <div className="flex items-center mt-2 w-max">
+                          {row.mintA.logoURI ? (
+                            <img
+                              src={row.mintA.logoURI}
+                              alt={`${row.mintA.symbol}_logo-icon`}
+                              className="aspect-square object-contain rounded-full w-9 h-9"
                               width={36}
                               height={36}
-                              key={id}
                             />
-                          ))}
+                          ) : (
+                            <Stack className="rounded-full w-9 h-9 bg-[#303030]" />
+                          )}
+                          {row.mintB.logoURI ? (
+                            <img
+                              src={row.mintB.logoURI}
+                              alt={`${row.mintB.symbol}_logo-icon`}
+                              className="aspect-square object-contain rounded-full w-9 h-9"
+                              width={36}
+                              height={36}
+                            />
+                          ) : (
+                            <Stack className="rounded-full w-9 h-9 bg-[#303030]" />
+                          )}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-32">
                       <div className="flex flex-col gap-2">
-                        <span className="text-sm">{row.protocol}</span>
-                        <div className="min-h-[36px] flex items-end">
-                          <span className="text-xl">{row.protocol_sub}</span>
+                        <span className="text-lg">Raydium</span>
+                        <div className="flex items-end">
+                          <span className="text-lg">{row.type}</span>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
                       <div className="flex flex-col gap-2">
                         <span className="text-sm">
-                          ${formatedNumber(row.protocol_tvl, 2, true)}
+                          ${formatedNumber(raydiumInfo.tvl, 2, true)}
                         </span>
                         <Button
                           size="sm"
@@ -314,38 +330,46 @@ const PoolsTab = ({ data }: Props) => {
                     <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
                       <div className="flex flex-col gap-2">
                         <span className="text-sm">
-                          ${formatedNumber(row.pool_liq, 2, true)}
+                          ${formatedNumber(row.tvl, 2, true)}
                         </span>
                         <span className="text-sm">
-                          Value: ${formatedNumber(row.value, 2, true)}
+                          {/* TODO */}
+                          Value: $
+                          {formatedNumber(
+                            userAmmDeposits?.find((e) => e.ammId === row.id)
+                              ?.amount ?? 0,
+                            0,
+                            true
+                          )}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-44">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm">
+                          ${formatedNumber(row.day.volume, 2, true)}
+                        </span>
+                        <span className="text-sm">
+                          {/* TODO */}
+                          LP Tokens: {formatedNumber(4, 2, true)} LP
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-44">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-sm">
+                          ${formatedNumber(row.day.volumeFee, 0, false)}
+                        </span>
+                        <span className="text-sm">
+                          {/* TODO */}
+                          Your share: {formatedNumber(3, 2, false)}%{" <"}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
                       <div className="flex flex-col gap-2">
                         <span className="text-sm">
-                          ${formatedNumber(row.volume, 2, true)}
-                        </span>
-                        <span className="text-sm">
-                          LP Tokens: {formatedNumber(row.lp_tokens, 2, true)} LP
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                      <div className="flex flex-col gap-2">
-                        <span className="text-sm">
-                          ${formatedNumber(row.fee, 2, false)}
-                        </span>
-                        <span className="text-sm">
-                          Your share: {formatedNumber(row.your_share, 2, false)}
-                          %{" <"}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                      <div className="flex flex-col gap-2">
-                        <span className="text-sm">
-                          {formatedNumber(row.apr, 2, true)}%
+                          {formatedNumber(row.day.apr, 2, true)}%
                         </span>
                         <Button
                           size="sm"
@@ -364,17 +388,19 @@ const PoolsTab = ({ data }: Props) => {
               </TableBody>
             ) : (
               <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-                {d_data.headers.map((header, index) => (
-                  <TableCell
-                    className="font-medium text-left text-[#7c7c8d] py-2 pl-0"
-                    key={`${header}_skeleton_${index}`}
-                  >
-                    <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                  </TableCell>
-                ))}
+                <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pl-0">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-sm">No Data</span>
+                  </div>
+                </TableCell>
               </TableRow>
             )}
           </Table>
+          {ammPools.length > 0 && (
+            <div className={"flex w-full items-center justify-center"}>
+              <CircularProgress />
+            </div>
+          )}
         </div>
       </div>
     </div>

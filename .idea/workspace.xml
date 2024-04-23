@@ -5,7 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="swap api implement">
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/Provider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/deposit.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/formatClmmConfig.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/formatClmmKeys.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/initial.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/pool.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/store.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/type.d.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lend/(components)/(modals)/supply-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/lend/(components)/(modals)/supply-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/liquidity/(components)/(tabs)/my-positions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/liquidity/(components)/(tabs)/my-positions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/liquidity/(components)/(tabs)/pools.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/liquidity/(components)/(tabs)/pools.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/liquidity/(components)/liquidity-body.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/liquidity/(components)/liquidity-body.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/liquidity/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/liquidity/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/formatClmmKeys.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/formatClmmKeys.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/get-connections.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/get-connections.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,33 +82,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feat/#6",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/Codes/tqk/app",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "npm.dev.executor": "Run",
-    "prettierjs.PrettierConfiguration.Package": "D:\\Codes\\Dexify_v2\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "D:\\Codes\\Dexify_v2\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/#19&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Codes/Dexify_v2/src/applications/Liquidity&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JSON",
-      "Markdown"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;,
+      &quot;Markdown&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactBuddySettings">
     <option name="extensionsIgnore" value="true" />
   </component>
@@ -102,9 +123,13 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\src\applications\Liquidity" />
+      <recent name="D:\Codes\Dexify_v2\app\api\pool" />
+      <recent name="D:\Codes\Dexify_v2\src\data" />
       <recent name="D:\Codes\Dexify_v2\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\app\api\pool\[slug]" />
       <recent name="D:\Codes\Dexify_v2\src\data" />
       <recent name="D:\Codes\Dexify_v2\src" />
       <recent name="D:\Codes\Dexify_v2\src\hooks" />
@@ -190,6 +215,20 @@
       <workItem from="1708410612651" duration="49000" />
       <workItem from="1708410682516" duration="649000" />
       <workItem from="1708424934533" duration="25837000" />
+      <workItem from="1712392400943" duration="780000" />
+      <workItem from="1712393874352" duration="129000" />
+      <workItem from="1712990073623" duration="15198000" />
+      <workItem from="1713013851300" duration="4384000" />
+      <workItem from="1713085067334" duration="2650000" />
+      <workItem from="1713088416714" duration="12713000" />
+      <workItem from="1713171582959" duration="18673000" />
+      <workItem from="1713254374032" duration="19298000" />
+      <workItem from="1713342522442" duration="8078000" />
+      <workItem from="1713434208086" duration="11000" />
+      <workItem from="1713604187847" duration="16301000" />
+      <workItem from="1713692215126" duration="12601000" />
+      <workItem from="1713772930333" duration="16571000" />
+      <workItem from="1713864580792" duration="534000" />
     </task>
     <task id="LOCAL-00001" summary="network connections">
       <option name="closed" value="true" />

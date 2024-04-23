@@ -59,7 +59,7 @@ const DashboardHeader = ({ isMobile }: Props) => {
           value="default"
           className="w-full text-sm md:text-lg text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"
         >
-          {/*<DefaultTab />*/}
+          <DefaultTab />
         </TabsContent>
         <TabsContent
           value="nft_gallery"

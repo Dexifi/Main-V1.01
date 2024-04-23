@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -18,23 +17,55 @@ import {
   useRemoveAllPoRLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import formatedString from "@/lib/string";
-import { CheckCircle, XCircle } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useLiquidity } from "@/applications/Liquidity/store";
+import { RaydiumPools } from "@/applications/Liquidity/pool";
+import {
+  AmmPoolApiResponse,
+  UserAmmPositionType,
+} from "@/applications/Liquidity/type";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import {
+  ClmmPoolInfo,
+  ClmmPoolPersonalPosition,
+} from "@raydium-io/raydium-sdk";
 
-type Props = {
-  data: any;
+type DataType = {
+  deposit: UserAmmPositionType;
+  pool: AmmPoolApiResponse["data"]["data"][0];
 };
 
-const MyPositions = ({ data }: Props) => {
+const MyPositions = () => {
   const [rangeF, setRangeF] = useState("all");
-  const [gdata, setData] = useState<any[]>([]);
-
+  const [gdata, setData] = useState<DataType[]>([]);
+  const userAmmDeposits = useLiquidity((state) => state.userAmmDeposits);
   const { onRemoveAllPiRLiquidityOpen } = useRemoveAllPiRLiquidityModal();
   const { onRemoveAllPoRLiquidityOpen } = useRemoveAllPoRLiquidityModal();
   const { onClaimAllLiquidityOpen } = useClaimAllLiquidityModal();
-  const { onManageLiquidityOpen } = useManageLiquidityModal();
   const { onCreatePositionLiquidityOpen } = useCreatePositionLiquidityModal();
+  const raydiumInfo = useLiquidity((state) => state.raydiumInfo);
+  const userClmmDeposits = useLiquidity((state) => state.userClmmDeposits);
+
+  console.log("userAmmDeposits", userAmmDeposits, userClmmDeposits);
+  const fetchAmmData = async () => {
+    const list: any[] = [];
+    for (const item of userAmmDeposits) {
+      const data = await RaydiumPools.fetchPoolById(item.ammId);
+      if (!data.data[0]) return;
+      list.push({
+        pool: data.data[0],
+        deposit: item,
+      });
+    }
+    setData(list);
+  };
+  const fetchClmmData = async () => {
+    const list: DataType[] = [];
+  };
+  useEffect(() => {
+    userAmmDeposits && fetchAmmData();
+  }, [userAmmDeposits]);
 
   const d_data = {
     title: "List of All of My Positions",
@@ -52,76 +83,6 @@ const MyPositions = ({ data }: Props) => {
       "APR",
     ],
   };
-
-  useEffect(() => {
-    gdata.length <= 0 &&
-      setTimeout(() => {
-        setData([
-          {
-            address: "FpCMFDFGYotvufJ7HrFHsWEiiQCGbkLCtwHiDnh7o28Q",
-            symbol: "SOL-USDC",
-            pool_logos: [
-              "/assets/images/raydiumraycoin-1@2x.png",
-              "/assets/images/raydiumraycoin-1@2x.png",
-            ],
-            protocol: "Raydium",
-            protocol_sub: "AMM",
-            protocol_tvl: 47650000,
-            protocol_tvl_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            pool_liq: 12650000,
-            volume: 2650000,
-            fee: 0.5,
-            apr: 65.64,
-            value: 100000.66,
-            lp_tokens: 15354.65,
-            your_share: 0.01,
-            price: 22.55,
-            range_status: "In Range",
-            pending: 1000.68,
-            lev: 18.18,
-            range: {
-              min: 18.263,
-              max: 23.658,
-              currency: {
-                first: "USDC",
-                second: "SOL",
-              },
-            },
-          },
-          {
-            address: "FpCMFDFGYotvufJ7HrFHsWEiiQCGbkLCtwHiDnh7o28Q",
-            symbol: "SOL-USDC",
-            pool_logos: [
-              "/assets/images/raydiumraycoin-1@2x.png",
-              "/assets/images/raydiumraycoin-1@2x.png",
-            ],
-            protocol: "Raydium",
-            protocol_sub: "AMM",
-            protocol_tvl: 47650000,
-            protocol_tvl_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            pool_liq: 12650000,
-            volume: 2650000,
-            fee: 0.5,
-            apr: 65.64,
-            value: 100000.66,
-            lp_tokens: 15354.65,
-            your_share: 0.01,
-            price: 22.55,
-            range_status: "Out of Range",
-            pending: 1000.68,
-            lev: 18.18,
-            range: {
-              min: 18.263,
-              max: 23.658,
-              currency: {
-                first: "USDC",
-                second: "SOL",
-              },
-            },
-          },
-        ]);
-      }, 5000);
-  }, [gdata]);
 
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
@@ -176,13 +137,13 @@ const MyPositions = ({ data }: Props) => {
                     >
                       <span>In Range:</span>
                       <span>
-                        {formatedNumber(
-                          gdata.filter(
-                            (item) => item.range_status === "In Range"
-                          ).length,
-                          1,
-                          true
-                        )}
+                        {/*{formatedNumber(*/}
+                        {/*  gdata.filter(*/}
+                        {/*    (item) => item.range_status === "In Range"*/}
+                        {/*  ).length,*/}
+                        {/*  1,*/}
+                        {/*  true*/}
+                        {/*)}*/}
                       </span>
                     </div>
                     <Button
@@ -203,13 +164,13 @@ const MyPositions = ({ data }: Props) => {
                     >
                       <span>Out of Range:</span>
                       <span>
-                        {formatedNumber(
-                          gdata.filter(
-                            (item) => item.range_status === "Out of Range"
-                          ).length,
-                          1,
-                          true
-                        )}
+                        {/*{formatedNumber(*/}
+                        {/*  gdata.filter(*/}
+                        {/*    (item) => item.poolrange_status === "Out of Range"*/}
+                        {/*  ).length,*/}
+                        {/*  1,*/}
+                        {/*  true*/}
+                        {/*)}*/}
                       </span>
                     </div>
                     <Button
@@ -274,157 +235,34 @@ const MyPositions = ({ data }: Props) => {
             </TableHeader>
             {gdata.length > 0 ? (
               <TableBody>
-                {gdata.slice(0, 60).map((row: any, index) => (
-                  <TableRow
-                    className="hover:bg-transparent border-[#7c7c8d]"
-                    key={`${formatedString(
-                      row.address.toLocaleLowerCase()
-                    )}_${index}`}
-                  >
-                    <TableCell className="font-medium text-left py-2 pl-0 min-w-48">
-                      <div className="flex flex-col items-start min-h-12">
-                        <span className="text-sm text-[#d9f8ff]">
-                          {row.symbol}
-                        </span>
-                        <div className="flex items-center mt-2 w-max gap-4">
-                          {row.pool_logos.map((icon: any, id: number) => (
-                            <Image
-                              src={icon}
-                              alt={`${row.symbol}_logo-icon`}
-                              className="aspect-square object-contain w-6 h-6"
-                              width={24}
-                              height={24}
-                              key={id}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-start min-h-12 mt-2">
-                        <div
-                          className={`flex items-center gap-4 text-sm ${
-                            formatedString(
-                              row.range_status
-                            ).toLocaleLowerCase() === "in_range"
-                              ? "text-green-500"
-                              : "text-red-500"
-                          }`}
-                        >
-                          {formatedString(
-                            row.range_status
-                          ).toLocaleLowerCase() === "in_range" ? (
-                            <CheckCircle className="w-4 h-4 aspect-square object-contain" />
-                          ) : (
-                            <XCircle className="w-4 h-4 aspect-square object-contain" />
-                          )}
-                          <span>{row.range_status}</span>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                      <div className="flex flex-col items-start min-h-12">
-                        <span className="text-sm">{row.protocol}</span>
-                        <span className="text-sm">{row.protocol_sub}</span>
-                      </div>
-
-                      <div className="flex flex-col items-start min-h-12 mt-2">
-                        Value: ${formatedNumber(row.value, 2, true)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-72">
-                      <div className="flex flex-col items-start min-h-12">
-                        <span className="text-sm">
-                          ${formatedNumber(row.protocol_tvl, 2, true)}
-                        </span>
-                        <span className="text-sm">
-                          Token Price Index: $
-                          {formatedNumber(row.price, 2, false)}
-                        </span>
-                      </div>
-                      <div className="flex flex-col items-start min-h-12 mt-2">
-                        APR: {formatedNumber(row.apr, 2, false)}%
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-72">
-                      <div className="flex flex-col items-start min-h-12">
-                        <span className="text-sm">
-                          ${formatedNumber(row.pool_liq, 2, true)}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col items-start min-h-12 mt-2">
-                        <div className="flex items-center gap-1">
-                          <span>Range:</span>
-                          <span>{formatedNumber(row.range.min, 2, false)}</span>
-                          <span>-</span>
-                          <span>{formatedNumber(row.range.min, 2, false)}</span>
-                          <div className="flex items-center gap-1">
-                            <span>{row.range.currency.first}</span>
-                            <span>per</span>
-                            <span>{row.range.currency.second}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                      <div className="flex flex-col items-start min-h-12">
-                        <span className="text-sm">
-                          ${formatedNumber(row.volume, 2, true)}
-                        </span>
-                      </div>
-                      <div className="flex flex-col items-start min-h-12 mt-2">
-                        Pending Yiel: ${formatedNumber(row.pending, 2, true)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                      <div className="flex flex-col items-start min-h-12">
-                        <span className="text-sm">
-                          ${formatedNumber(row.fee, 2, false)}
-                        </span>
-                      </div>
-                      <div className="flex flex-col items-start min-h-12 mt-2">
-                        Lev: x{formatedNumber(row.lev, 2, false)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
-                      <div className="flex flex-col items-start min-h-12">
-                        <Button
-                          size="sm"
-                          className="w-max text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-start items-center box-border gap-2 bg-transparent"
-                          style={{
-                            boxShadow: "0 0 4px #88d6ff",
-                          }}
-                          onClick={onCreatePositionLiquidityOpen}
-                        >
-                          Create Position
-                        </Button>
-                      </div>
-                      <div className="flex flex-col items-start min-h-12">
-                        <Button
-                          size="sm"
-                          className="w-max text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-start items-center box-border gap-2 bg-transparent"
-                          style={{
-                            boxShadow: "0 0 4px #88d6ff",
-                          }}
-                          onClick={onManageLiquidityOpen}
-                        >
-                          Manage
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                {gdata.map((row) => (
+                  <StandardLiquidityRow
+                    key={row.pool.id}
+                    row={row}
+                    raydiumInfo={raydiumInfo}
+                  />
+                ))}
+                {userClmmDeposits.map((row) => (
+                  <ConcentratedLiquidityRow
+                    key={row.state.id.toBase58()}
+                    row={row}
+                    raydiumInfo={raydiumInfo}
+                  />
                 ))}
               </TableBody>
             ) : (
-              <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-                {d_data.headers.map((header, index) => (
-                  <TableCell
-                    className="font-medium text-left text-[#7c7c8d] py-2 pl-0"
-                    key={`${header}_skeleton_${index}`}
-                  >
-                    <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                  </TableCell>
-                ))}
-              </TableRow>
+              <TableBody>
+                <TableRow className="hover:bg-transparent border-[#7c7c8d]">
+                  {d_data.headers.map((header, index) => (
+                    <TableCell
+                      className="font-medium text-left text-[#7c7c8d] py-2 pl-0"
+                      key={`${header}_skeleton_${index}`}
+                    >
+                      <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableBody>
             )}
           </Table>
         </div>
@@ -434,3 +272,342 @@ const MyPositions = ({ data }: Props) => {
 };
 
 export default MyPositions;
+
+type ClmmRowProps = {
+  row: {
+    state: ClmmPoolInfo;
+    positionAccount?: ClmmPoolPersonalPosition[] | undefined;
+  };
+  raydiumInfo: any;
+};
+const ConcentratedLiquidityRow = ({ row }: ClmmRowProps) => {
+  const { onManageLiquidityOpen } = useManageLiquidityModal();
+  const [poolDetails, setPoolDetails] = useState<
+    AmmPoolApiResponse["data"]["data"][0] | null
+  >(null);
+
+  useEffect(() => {
+    const fetchPoolDetails = async () => {
+      const pool = await RaydiumPools.fetchPoolById(row.state.id.toBase58());
+      setPoolDetails(pool.data[0]);
+    };
+    fetchPoolDetails();
+  }, [row.state.id]);
+  console.log("clmm", row, poolDetails);
+  return (
+    <>
+      <TableRow className="hover:bg-transparent !border-b-0 !outline-t-2  outline-t-[#fff] table-row my-1 -outline-offset-2">
+        <TableCell className="font-medium text-left py-2 pl-0 min-w-32">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm text-[#d9f8ff]">
+              {poolDetails?.lpMint?.symbol}
+            </span>
+            <div className="flex items-center mt-2 w-max gap-4">
+              <img
+                src={poolDetails?.mintA.logoURI}
+                alt={`${poolDetails?.mintA.symbol}_logo-icon`}
+                className="aspect-square object-contain rounded-full w-9 h-9"
+                width={36}
+                height={36}
+              />
+              <img
+                src={poolDetails?.mintB.logoURI}
+                alt={`${poolDetails?.mintB.symbol}_logo-icon`}
+                className="aspect-square object-contain rounded-full w-9 h-9"
+                width={36}
+                height={36}
+              />
+            </div>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-32">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              {poolDetails?.rewardDefaultPoolInfos}
+            </span>
+            <span className="text-sm">{poolDetails?.type}</span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-56">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(poolDetails?.tvl ?? 0, 2, true)}
+            </span>
+            <span className="text-sm">
+              Token Price Index: ${formatedNumber(0, 2, false)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(poolDetails?.tvl ?? 0, 2, true)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(poolDetails?.day.volume ?? 0, 2, true)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(poolDetails?.day.volumeFee ?? 0, 2, false)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-24">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              {formatedNumber(poolDetails?.day.apr ?? 0, 2, false)}%
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-32"></TableCell>
+      </TableRow>
+      {row.positionAccount?.map((position, index) => (
+        <ClmmPositionRow key={index} row={row} position={position} />
+      ))}
+    </>
+  );
+};
+
+type RowProps = {
+  row: DataType;
+  raydiumInfo: any;
+};
+const StandardLiquidityRow = ({ row, raydiumInfo }: RowProps) => {
+  const { onManageLiquidityOpen } = useManageLiquidityModal();
+  const userShare =
+    row.deposit.amount /
+    10 ** (row.pool.lpMint?.decimals ?? 0) /
+    (row.pool.lpAmount ?? 0);
+  return (
+    <>
+      <TableRow className="hover:bg-transparent !border-b-0 !border-t-2 border-t-[#fff] ">
+        <TableCell className="font-medium text-left py-2 pl-0 min-w-32">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm text-[#d9f8ff]">
+              {row.pool.lpMint?.symbol}
+            </span>
+            <div className="flex items-center mt-2 w-max gap-4">
+              <img
+                src={row.pool.mintA.logoURI}
+                alt={`${row.pool.mintA.symbol}_logo-icon`}
+                className="aspect-square object-contain rounded-full w-9 h-9"
+                width={36}
+                height={36}
+              />
+              <img
+                src={row.pool.mintB.logoURI}
+                alt={`${row.pool.mintB.symbol}_logo-icon`}
+                className="aspect-square object-contain rounded-full w-9 h-9"
+                width={36}
+                height={36}
+              />
+            </div>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-32">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">{row.pool.rewardDefaultPoolInfos}</span>
+            <span className="text-sm">{row.pool.type}</span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-56">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(raydiumInfo.tvl, 2, true)}
+            </span>
+            <span className="text-sm">
+              Token Price Index: ${formatedNumber(0, 2, false)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(row.pool.tvl, 2, true)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(row.pool.day.volume, 2, true)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(row.pool.day.volumeFee, 2, false)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-24">
+          <div className="flex flex-col items-start min-h-12">
+            <span className="text-sm">
+              {formatedNumber(row.pool.day.apr, 2, false)}%
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-32"></TableCell>
+      </TableRow>
+      <TableRow
+        className="bg-[#0d111b] hover:bg-[#0d111b] !rounded-full overflow-hidden !outline outline-offset-[-2px] !outline-[#757788] !border-0"
+        style={{ clipPath: "border-box" }}
+      >
+        <TableCell className="!p-1.5" />
+        <TableCell className="!p-1.5" />
+        <TableCell className="!p-1.5" />
+        <TableCell className="!p-1.5">
+          <div className="flex flex-row gap-2 items-center justify-center">
+            <span className="!text-md text-[#757788]">
+              Value : $
+              {formatedNumber(
+                (row.deposit.amount / 10 ** (row.pool.lpMint?.decimals ?? 0)) *
+                  (row.pool.lpPrice ?? 0),
+                5,
+                false
+              )}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="!p-1.5 w-60">
+          <div className="flex flex-row gap-2 items-center justify-center">
+            <span className="!text-md text-[#757788]">
+              LP Tokens :{" "}
+              {formatedNumber(
+                row.deposit.amount / 10 ** (row.pool.lpMint?.decimals ?? 0),
+                5,
+                false
+              )}{" "}
+              LP
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className=" !p-1.5 w-52">
+          <div className="flex flex-row gap-2 items-center justify-center">
+            <span className="!text-md text-[#757788]">
+              Your share :{" "}
+              {userShare < 0.01
+                ? "< 0.01%"
+                : `${formatedNumber(userShare, 2, false)}%`}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="!p-1.5">
+          <div className="flex flex-row gap-2 items-center justify-center">
+            <Button
+              size="sm"
+              className="w-max text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-start items-center box-border gap-2 bg-transparent"
+              style={{
+                boxShadow: "0 0 4px #88d6ff",
+              }}
+              onClick={onManageLiquidityOpen}
+            >
+              Add Liquidity
+            </Button>
+          </div>
+        </TableCell>{" "}
+        <TableCell className="!p-1.5">
+          <div className="flex flex-row gap-2 items-center justify-center">
+            <Button
+              size="sm"
+              className="w-max text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-start items-center box-border gap-2 bg-transparent"
+              style={{
+                boxShadow: "0 0 4px #88d6ff",
+              }}
+              onClick={onManageLiquidityOpen}
+            >
+              Remove Liquidity
+            </Button>
+          </div>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
+
+type ClmmPositionRowProps = {
+  row: ClmmRowProps["row"];
+  position: ClmmPoolPersonalPosition;
+};
+
+const ClmmPositionRow = ({ row, position }: ClmmPositionRowProps) => {
+  const isInRange =
+    position.tickLower < row.state.tickCurrent &&
+    position.tickUpper > row.state.tickCurrent;
+
+  return (
+    <TableRow
+      className="bg-[#0d111b] hover:bg-[#0d111b] !rounded-full overflow-hidden !outline outline-offset-[-2px] !outline-[#757788] border-separate"
+      style={{ clipPath: "border-box" }}
+    >
+      <TableCell className="!p-1.5">
+        {!isInRange ? (
+          <div className="flex flex-row gap-2 items-center justify-center">
+            <CheckCircleOutlineIcon className="!fill-[#50AF95] !text-[32px]" />
+            <span className="!text-md text-[#50AF95]">In Range</span>
+          </div>
+        ) : (
+          <div className="flex flex-row gap-2 items-center justify-center">
+            <ErrorOutlineIcon className="!fill-[#BA0000] !text-[32px]" />
+            <span className="!text-sm text-nowrap text-[#BA0000]">
+              Out Range
+            </span>
+          </div>
+        )}
+      </TableCell>
+      <TableCell className="!p-1.5">
+        <div className="flex flex-row gap-2 items-center justify-center">
+          <span className="!text-md text-[#7c7c8d]">Value : $ 100,000.66 </span>
+        </div>
+      </TableCell>
+      <TableCell className="!p-1.5">
+        <div className="flex flex-col gap-2 items-start justify-center">
+          <span className="!text-md text-[#7c7c8d]">
+            Range : 18.263 - 23.682
+          </span>
+          <span className="!text-md text-[#7c7c8d]">USDC per SOL</span>
+        </div>
+      </TableCell>
+      <TableCell className="!p-1.5">
+        <div className="flex flex-row gap-2 items-center justify-center">
+          <span className="!text-md text-[#7c7c8d]">APR : 80.65 %</span>
+        </div>
+      </TableCell>
+      <TableCell className="!p-1.5">
+        <div className="flex flex-row gap-2 items-center justify-center">
+          <span className="!text-md text-[#7c7c8d]">Lev : x18.18</span>
+        </div>
+      </TableCell>
+      <TableCell className="!p-1.5">
+        <div className="flex flex-row gap-2 items-center justify-center">
+          <span className="!text-md text-[#7c7c8d]">
+            Pending Yield : $ 1,000.69
+          </span>
+        </div>
+      </TableCell>
+
+      <TableCell className="!p-1.5">
+        <div className="flex flex-row gap-2 items-center justify-center">
+          <Button
+            size="sm"
+            className="w-max text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-start items-center box-border gap-2 bg-transparent"
+            style={{
+              boxShadow: "0 0 4px #88d6ff",
+            }}
+            // onClick={onManageLiquidityOpen}
+          >
+            Manage
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+};

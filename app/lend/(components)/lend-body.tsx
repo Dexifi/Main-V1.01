@@ -272,7 +272,7 @@ const LendBody = ({ isEXTRASMALL }: Props) => {
   const [user, setUser] = useState<any>({});
   const { publicKey } = useWallet();
   const [page, setPage] = useState("main");
-
+  console.log();
   const fetchMarketData = async () => {
     let marketPubkey =
       page === "turbo"
