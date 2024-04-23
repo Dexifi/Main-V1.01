@@ -1,6 +1,7 @@
 const nextConfig = {
   pageExtensions: ["ts", "tsx"],
   images: {
+    disableStaticImages: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -29,6 +30,14 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "solana.com",
+      },
+      {
+        protocol: "https",
+        hostname: "arweave.net",
+      },
+      {
+        protocol: "https",
+        hostname: "fakeimg.pl",
       },
     ],
   },

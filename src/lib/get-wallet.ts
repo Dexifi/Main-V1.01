@@ -1,16 +1,17 @@
-import { TokenListProvider } from "@solana/spl-token-registry";
-import axios from "@/data/axios";
+import { TokenInfo, TokenListProvider } from "@solana/spl-token-registry";
 import { connection } from "@/lib/get-connections";
 import { PublicKey } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import axios from "@/data/axios";
 
 export const findToken = async (mintOrSymbol: string) => {
-  const tokens = await new TokenListProvider().resolve();
-  const tokenList = tokens.filterByChainId(101).getList();
+  const tokens = await axios
+    .get<TokenInfo[]>("https://token.jup.ag/all")
+    .then((res) => res.data);
 
   let tokenInfo =
-    tokenList.find((t) => t.address === mintOrSymbol) ||
-    tokenList.find((t) => t.symbol === mintOrSymbol);
+    tokens.find((t) => t.address === mintOrSymbol) ||
+    tokens.find((t) => t.symbol === mintOrSymbol);
   return tokenInfo;
 };
 

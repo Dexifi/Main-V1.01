@@ -9,7 +9,7 @@ import { useMediaQuery } from "usehooks-ts";
 import Image from "next/image";
 import { removeMiddleString } from "@/lib/string";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import {
   Tooltip,
@@ -17,10 +17,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { MarketsListType } from "@/applications/Trade/types";
+import { useAtomValue } from "jotai";
+import { exploreAtom } from "@/stores/config";
+import {
+  getMarket,
+  getMarketBAF,
+  getMarketDetails,
+  useTrade,
+} from "@/applications/Trade";
+import { LinearProgress } from "@mui/material";
 
 type Props = {
-  markets?: any;
-  setSelectedMarket: (item: any) => void;
+  markets: MarketsListType;
 };
 
 const filterData = (data: any, searchValue: string) =>
@@ -28,15 +37,40 @@ const filterData = (data: any, searchValue: string) =>
     token.name.concat(token.body).includes(searchValue)
   );
 
-const TradeMarketModal = ({ markets, setSelectedMarket }: Props) => {
+const TradeMarketModal = memo(({ markets }: Props) => {
   const isSmall = useMediaQuery("(max-width: 720px)");
   const isEXTRASMALL = useMediaQuery("(max-width: 420px)");
   const { isMarketOpen, onMarketClose } = useTradeModal();
   const [search, setSearch] = useState("");
-
+  const explore = useAtomValue(exploreAtom);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [currentAddress, setCurrentAddress] = useState("");
   const swap_modal = {
     title: "Markets List",
   };
+
+  const handleAdd = useCallback(
+    async (marketID: string) => {
+      setCurrentAddress(marketID);
+      setLoading(true);
+      const newMarket = await getMarket(marketID);
+      if (!marketID || !newMarket) return;
+      await getMarket(marketID);
+      await getMarketBAF(newMarket);
+      await getMarketDetails(newMarket);
+      // await getTokens(publicKey?.toBase58() || "");
+      setLoading(false);
+      onMarketClose();
+    },
+    [onMarketClose]
+  );
+
+  useEffect(() => {
+    const ad = useTrade.getState().marketDetails.address?.toString();
+    if (ad) {
+      setCurrentAddress(ad);
+    }
+  }, []);
 
   return (
     <Dialog open={isMarketOpen} onOpenChange={onMarketClose}>
@@ -46,7 +80,7 @@ const TradeMarketModal = ({ markets, setSelectedMarket }: Props) => {
         } sm:max-w-lg z-[110] rounded-xl`}
         style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
       >
-        <div className="flex justify-between flex-col gap-3">
+        <div className="flex justify-between relative flex-col gap-3">
           <div className="flex justify-between items-center">
             <h6 className="text-lg text-[#d9f8ff]">{swap_modal.title}</h6>
             <Button
@@ -70,11 +104,14 @@ const TradeMarketModal = ({ markets, setSelectedMarket }: Props) => {
               {filterData(markets, search).map((item: any, index: number) => (
                 <Button
                   key={index}
-                  onClick={async () => {
-                    await setSelectedMarket(item);
-                    onMarketClose();
+                  onClick={() => {
+                    handleAdd(item.address);
                   }}
-                  className={`flex justify-between py-4 md:py-7 rounded-xl flex-col sm:flex-row h-max gap-4 items-start sm:items-center`}
+                  className={`flex justify-between py-4 md:py-7 rounded-xl flex-col sm:flex-row min-h-20 gap-4 items-start sm:items-center relative overflow-clip ${
+                    currentAddress === item.address.toString()
+                      ? "bg-[#162853]"
+                      : ""
+                  } `}
                 >
                   <div className="flex justify-between items-center bg-[#0d111b] px-5 py-2 rounded-xl gap-2 min-w-full sm:min-w-[244px]">
                     <div className="flex gap-2">
@@ -120,9 +157,29 @@ const TradeMarketModal = ({ markets, setSelectedMarket }: Props) => {
                   </div>
                   <div className="text-xs flex-1 text-start pl-4">
                     Market ID :{" "}
-                    {item.address &&
-                      removeMiddleString(item.address.toString())}
+                    {item.address && (
+                      <a
+                        href={`${explore}account/${item.address}`}
+                        target={"_blank"}
+                        className={"text-blue-400 hover:underline"}
+                      >
+                        {removeMiddleString(item.address.toString())}
+                      </a>
+                    )}
                   </div>
+                  {loading && currentAddress === item.address.toString() && (
+                    <LinearProgress
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: "#1c2438",
+                      }}
+                      classes={{ bar: "!bg-[#78bcb9]" }}
+                      variant={"indeterminate"}
+                    />
+                  )}
                 </Button>
               ))}
             </div>
@@ -131,6 +188,6 @@ const TradeMarketModal = ({ markets, setSelectedMarket }: Props) => {
       </DialogContent>
     </Dialog>
   );
-};
-
+});
+TradeMarketModal.displayName = "TradeMarketModal";
 export default TradeMarketModal;

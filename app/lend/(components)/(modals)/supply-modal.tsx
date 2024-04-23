@@ -11,23 +11,21 @@ import { connection } from "@/lib/get-connections";
 import formatedNumber from "@/lib/numbers";
 import { useSupplyModal } from "@/lib/stores/lend.store";
 import formatedString from "@/lib/string";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { useWallet } from "@solana/wallet-adapter-react";
-import {
-  GetProgramAccountsFilter,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-} from "@solana/web3.js";
-import { SolendAction } from "@solendprotocol/solend-sdk";
-import { BN } from "bn.js";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { LendState, useLend } from "@/applications/Lend/store";
+import useWalletBalance from "@/hooks/useWalletBalance";
+import { onSupply } from "@/applications/Lend/actions";
+import InitialLending from "@/applications/Lend/initial";
+import { useAtom } from "jotai";
+import { exploreAtom } from "@/stores/config";
+import { CircularProgress } from "@mui/material";
 
 type Props = {
-  user: any;
-  pool: any;
-  reserve: any;
+  reserve: LendState["poolList"][0] | null;
+  page: "main" | "turbo";
 };
 
 const filterData = (data: any, searchValue: string) =>
@@ -37,106 +35,98 @@ const filterData = (data: any, searchValue: string) =>
       token.address.concat(token.body).includes(searchValue)
   );
 
-const SupplyModal = ({ user, pool, reserve }: Props) => {
+const SupplyModal = ({ reserve, page }: Props) => {
+  const mainMarket = useLend((state) => state.mainMarket);
+  const turboMarket = useLend((state) => state.turboMarket);
+  const mainObligations = useLend((state) => state.mainObligations);
+  const turboObligations = useLend((state) => state.turboObligations);
+  const { publicKey, sendTransaction } = useWallet();
+  const { tokens } = useWalletBalance(connection, publicKey);
+  const [amount, setAmount] = useState(0);
+  const [explorer] = useAtom(exploreAtom);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
   const { isOpen, onClose } = useSupplyModal();
+  const currentTokenInWallet = tokens.find(
+    (e) => e.symbol === reserve?.marketReserve?.stats?.symbol
+  );
+
+  const pool = useMemo(
+    () => (page === "main" ? mainMarket : turboMarket),
+    [mainMarket, page, turboMarket]
+  );
+
+  const obligation = useMemo(
+    () => (page === "main" ? mainObligations : turboObligations),
+    [mainObligations, page, turboObligations]
+  );
   const supply_modal = {
     title: "Supply",
 
     body: [
       {
         title: "Price",
-        value: reserve?.stats?.assetPriceUSD,
+        value: reserve?.marketReserve?.stats?.assetPriceUSD,
       },
       {
         title: "User Borrow Limit",
-        range: {
-          min: 3804,
-          max: 5317,
-          sign: "$",
-        },
+        value: obligation?.obligationStats.borrowLimit,
+        sign: "$",
       },
       {
         title: "Utilization",
-        range: {
-          min: 54.47,
-          max: 18.82,
-          sign: "%",
-        },
+        value: reserve?.marketReserve?.stats?.optimalUtilizationRate,
+        sign: "%",
       },
       {
         title: "Supply APR",
-        value: "Supply APR",
+        sign: "%",
+        value: (reserve?.marketReserve?.totalSupplyAPY()?.totalAPY ?? 0) * 100,
       },
     ],
   };
 
-  const { publicKey, sendTransaction } = useWallet();
-  const [tokenBalance, setTokenBalance] = useState(0);
-  const [amount, setAmount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const { toast } = useToast();
-  if (isLoading && publicKey) {
-    if (reserve?.config?.liquidityToken?.symbol === "SOL")
-      connection.getBalance(publicKey).then((res: any) => {
-        setTokenBalance(res / LAMPORTS_PER_SOL);
-        setIsLoading(false);
-      });
-    else {
-      const filters: GetProgramAccountsFilter[] = [
-        {
-          dataSize: 165, //size of account (bytes)
-        },
-        {
-          memcmp: {
-            offset: 32, //location of our query in the account (bytes)
-            bytes: publicKey.toString(), //our search criteria, a base58 encoded string
-          },
-        },
-      ];
-      connection
-        .getParsedProgramAccounts(
-          TOKEN_PROGRAM_ID, //new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
-          { filters: filters }
-        )
-        .then((accounts: any) => {
-          const balance = accounts.filter(
-            (account: any) =>
-              "parsed" in account.account.data &&
-              "info" in account.account.data.parsed &&
-              "mint" in account.account.data.parsed.info &&
-              account.account.data.parsed.info.mint ===
-                reserve?.stats.mintAddress
-          );
-          if (balance.length > 0 && "parsed" in balance[0].account.data)
-            setTokenBalance(
-              balance[0].account.data.parsed.info.tokenAmount.uiAmount
-            );
-          else setTokenBalance(0);
-        });
-      if (tokenBalance) setIsLoading(false);
-    }
-  }
   const handleSupply = async () => {
+    setLoading(true);
     if (Number(amount) <= 0)
       return toast({
         title: "Enter amount for supply!",
       });
-
-    const a = new BN(amount * LAMPORTS_PER_SOL);
-    if (publicKey === null) {
+    if (!reserve?.marketReserve?.stats?.symbol) {
       return;
     }
-    const solendAction = await SolendAction.buildDepositTxns(
-      connection,
-      a,
-      reserve.stats.symbol,
-      publicKey,
-      "production",
-      new PublicKey(pool.config.address)
-    );
-    if (solendAction) (await solendAction).sendTransactions(sendTransaction);
+    if (!publicKey || !sendTransaction || !reserve?.reserve || !pool) {
+      return;
+    }
+    try {
+      const tx = await onSupply({
+        market: pool,
+        env: "production",
+        amount: amount.toString(),
+        reserve: reserve?.reserve,
+        publicKey,
+        reserves: useLend.getState().poolList,
+        connection,
+        sendTransaction: sendTransaction,
+      });
+      toast({
+        title: "success",
+        description: "transaction sent",
+        link: `${explorer}tx/${tx}`,
+      });
+      await InitialLending(connection, publicKey);
+    } catch (e: any) {
+      console.log(e);
+      toast({
+        title: "error",
+        description: e.message,
+        variant: "destructive",
+      });
+    }
+    setLoading(false);
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
@@ -155,15 +145,15 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
             <div className="flex gap-4 items-center">
               {reserve ? (
                 <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  {reserve.stats.symbol}
+                  {reserve.marketReserve?.stats?.symbol}
                 </div>
               ) : (
                 <Skeleton className="w-24 h-6 bg-slate-600" />
               )}
               {reserve ? (
                 <Image
-                  alt={`${reserve.stats.symbol}-logo / lend`}
-                  src={reserve.config.liquidityToken.logo}
+                  alt={`${reserve.marketReserve?.stats?.symbol}-logo / lend`}
+                  src={reserve.marketReserve?.config.liquidityToken.logo ?? ""}
                   width={24}
                   height={24}
                   className="w-6 h-6 aspect-square object-contain rounded-sm"
@@ -191,9 +181,11 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
             <span className="text-sm text-[#757788] flex gap-1 flex-nowrap">
               <span>Balance:</span>
               <span>
-                {tokenBalance ? formatedNumber(tokenBalance, 1, true) : 0}
+                {currentTokenInWallet
+                  ? formatedNumber(currentTokenInWallet.amount, 4)
+                  : 0}
               </span>
-              <span>{reserve.stats.symbol}</span>
+              <span>{reserve.marketReserve?.stats?.symbol}</span>
             </span>
           ) : (
             <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -204,8 +196,8 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
           <div className="flex gap-4 items-center w-1/2">
             {reserve ? (
               <Image
-                alt={`${reserve.stats.symbol}-logo / lend`}
-                src={reserve.config.liquidityToken.logo}
+                alt={`${reserve.marketReserve?.stats?.symbol}-logo / lend`}
+                src={reserve.marketReserve?.config.liquidityToken.logo ?? ""}
                 width={24}
                 height={24}
                 className="w-6 h-6 aspect-square object-contain rounded-sm"
@@ -215,7 +207,7 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
             )}
             {reserve ? (
               <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                {reserve.stats.symbol}
+                {reserve.marketReserve?.stats?.symbol}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -239,14 +231,24 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
           <div className="w-full flex justify-between items-center text-end">
             {reserve ? (
               <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                &asymp; ${formatedNumber(reserve.stats.assetPriceUSD, 3, false)}
+                &asymp; $
+                {formatedNumber(
+                  reserve.marketReserve?.stats?.assetPriceUSD ?? 0,
+                  3,
+                  false
+                )}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
             )}
             {reserve ? (
               <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                ${formatedNumber(amount * reserve.stats.assetPriceUSD, 2, true)}
+                $
+                {formatedNumber(
+                  amount * (reserve.marketReserve?.stats?.assetPriceUSD ?? 0),
+                  2,
+                  true
+                )}
               </div>
             ) : (
               <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -256,7 +258,7 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
             <Button
               className="text-xs w-full md:w-1/2"
               size="sm"
-              onClick={() => setAmount(tokenBalance / 2)}
+              onClick={() => setAmount(currentTokenInWallet?.amount / 2)}
             >
               Half
             </Button>
@@ -264,7 +266,11 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
               className="text-xs w-full md:w-1/2"
               size="sm"
               onClick={() =>
-                setAmount(tokenBalance > 0 ? tokenBalance - 0.02 : 0)
+                setAmount(
+                  currentTokenInWallet?.amount > 0
+                    ? currentTokenInWallet?.amount
+                    : 0
+                )
               }
             >
               Max
@@ -274,7 +280,7 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
 
         <Table className="w-full flex-1">
           <TableBody>
-            {supply_modal.body.map((row: any, index: number) => (
+            {supply_modal.body.map((row, index) => (
               <TableRow
                 className="hover:bg-transparent border-[#7c7c8d]"
                 key={`${formatedString(
@@ -289,25 +295,22 @@ const SupplyModal = ({ user, pool, reserve }: Props) => {
                 <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
                   {row.value && (
                     <span>
-                      {typeof row.value === "number"
-                        ? `$${formatedNumber(row.value, 2, false)}`
-                        : "0"}
+                      {`${row.sign ?? "$"}${formatedNumber(
+                        row.value,
+                        2,
+                        false
+                      )}`}
                     </span>
                   )}
-                  {row.range
-                    ? `${formatedNumber(row.range.min, 2, true)}${
-                        row.range.sign
-                      } to ${formatedNumber(row.range.max, 2, true)}${
-                        row.range.sign
-                      }`
-                    : null}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
 
-        <Button onClick={handleSupply}>Supply</Button>
+        <Button disabled={loading} onClick={handleSupply}>
+          {loading ? <CircularProgress size={24} /> : "Supply"}
+        </Button>
       </DialogContent>
     </Dialog>
   );

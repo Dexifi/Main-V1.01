@@ -252,7 +252,6 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
       )
         return;
       try {
-        console.log(swapData);
         setIsFetching(true);
         const quoteResponse = await jupiterQuoteApi.quoteGet({
           inputMint: swapData.firstToken.address,

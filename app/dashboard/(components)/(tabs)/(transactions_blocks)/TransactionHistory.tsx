@@ -69,7 +69,6 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
       await connection.getParsedTransactions(sig, {
         maxSupportedTransactionVersion: 0,
       });
-    console.log("transactions", transactions);
     for (const transaction of transactions) {
       const date = moment(transaction.blockTime! * 1000).format("YYYY-MM-DD");
       const description = transaction.meta?.logMessages
