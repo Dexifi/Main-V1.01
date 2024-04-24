@@ -1,15 +1,5 @@
 import { Key, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import formatedString from "@/lib/string";
 import formatedNumber from "@/lib/numbers";
 
 type OrderBookProps = {
@@ -26,6 +16,8 @@ const OrderBook = ({ data, isEXTRASMALL, bids, asks }: OrderBookProps) => {
       className="h-max w-full rounded-xl p-5 gap-4 flex flex-col"
       style={{
         boxShadow: "0 0 4px #88d6ff",
+        background:
+          "radial-gradient(50% 50% at 50% 50%, rgba(119, 186, 234, 0.2), transparent ), radial-gradient( 50% 50% at 50% 50%, rgba(251, 0, 196, 0) 3.49%, rgba(119, 186, 234, 0) 7.6%, rgba(253, 0, 197, 0) 10.46%, rgba(119, 186, 234, 0) 14.46%, rgba(255, 0, 199, 0) 18.56%, rgba(3, 0, 3, 0) 19.53%, transparent 79.82%, rgba(246, 0, 192, 0) 81.08%, rgba(119, 186, 234, 0) 84.04%, rgba(247, 0, 193, 0) 86.61%, rgba(119, 186, 234, 0) 91.01%, rgba(249, 0, 194, 0) 95.16%, rgba(119, 186, 234, 0) 98.6% )",
       }}
     >
       <Tabs defaultValue="buy" className="w-full">
@@ -39,26 +31,28 @@ const OrderBook = ({ data, isEXTRASMALL, bids, asks }: OrderBookProps) => {
                 isEXTRASMALL ? "flex-1 justify-between" : ""
               }`}
             >
-              {tabsDATA.map((tab_item, id) => (
-                <TabsTrigger
-                  value={tab_item.toLocaleLowerCase()}
-                  key={`${tab_item}_${id}`}
-                  className="bg-[#d9f8ff10] data-[state='active']:bg-[#d9f8ff10] data-[state='active']:border-[#d9f8ff] rounded-full"
-                  style={{
-                    border:
-                      tab_item.toLocaleLowerCase() === tab
-                        ? "1px solid #d9f8ff10"
-                        : "transparent",
-                    boxShadow:
-                      tab_item.toLocaleLowerCase() === tab
-                        ? "0 0 5px #d9f8ff"
-                        : "none",
-                  }}
-                  onClick={() => setTab(tab_item.toLocaleLowerCase())}
-                >
-                  {tab_item}
-                </TabsTrigger>
-              ))}
+              <div className={"bg-[#0D111B] rounded-full"}>
+                {tabsDATA.map((tab_item, id) => (
+                  <TabsTrigger
+                    value={tab_item.toLocaleLowerCase()}
+                    key={`${tab_item}_${id}`}
+                    className="bg-[#0D111B] mx-0.5 data-[state='active']:bg-[#d9f8ff10] data-[state='active']:border-[#d9f8ff] rounded-full shadow-[0px_0px_5px_0px_#D9F8FF]"
+                    style={{
+                      border:
+                        tab_item.toLocaleLowerCase() === tab
+                          ? "1px solid #d9f8ff10"
+                          : "transparent",
+                      boxShadow:
+                        tab_item.toLocaleLowerCase() === tab
+                          ? "0 0 5px #d9f8ff"
+                          : "none",
+                    }}
+                    onClick={() => setTab(tab_item.toLocaleLowerCase())}
+                  >
+                    {tab_item}
+                  </TabsTrigger>
+                ))}
+              </div>
             </div>
           </div>
         </TabsList>
