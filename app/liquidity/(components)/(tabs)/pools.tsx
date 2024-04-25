@@ -15,6 +15,11 @@ import {
   useRemoveLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import formatedString from "@/lib/string";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { CreatePositionModal } from "@/components/modals";
+import AddLiquidityModal from "@/components/modals/add-liquidity-modal";
+import ManageModal from "@/components/modals/manage-modal";
 import { useCallback, useEffect, useState } from "react";
 import { useLiquidity } from "@/applications/Liquidity/store";
 import { CircularProgress, Stack } from "@mui/material";
