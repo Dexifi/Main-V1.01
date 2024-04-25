@@ -62,6 +62,7 @@ export async function formatClmmKeys(
   ]
     .filter((i) => i !== filterDefKey)
     .map((i) => ({ pubkey: new PublicKey(i) }));
+
   const mintAccount = await getMultipleAccountsInfoWithCustomFlags(
     connection,
     allMint

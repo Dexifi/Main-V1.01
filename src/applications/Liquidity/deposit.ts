@@ -1,7 +1,11 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import {
+  ApiFarmAprV3,
   Clmm,
+  getMultipleAccountsInfoWithCustomFlags,
+  Liquidity,
   MAINNET_PROGRAM_ID,
+  PoolInfoLayout,
   SPL_ACCOUNT_LAYOUT,
   TOKEN_PROGRAM_ID,
   TokenAccount,
@@ -13,6 +17,8 @@ import { formatClmmKeys } from "./formatClmmKeys";
 import { toast } from "@/components/ui/use-toast";
 import { Metaplex } from "@metaplex-foundation/js";
 import BN from "bn.js";
+import axios from "@/data/axios";
+import { RaydiumPools } from "@/applications/Liquidity/pool";
 
 export const userDeposit = async (
   connection: Connection,
@@ -20,12 +26,14 @@ export const userDeposit = async (
 ) => {
   if (!ownerKey) return;
   const tokenAccounts = await getWalletTokenAccount(connection, ownerKey);
-  const ammPools = useLiquidity.getState().ammPools;
+  const ammPools = await RaydiumPools.fetchPool(1, "standard", 1000);
   const usersRaydiumDeposits: UserAmmPositionType[] = [];
-  for (const pool of ammPools) {
+
+  for (const pool of ammPools.data.data.data) {
     const poolTokenAccount = tokenAccounts.find(
       (account) => account.accountInfo.mint.toBase58() === pool.lpMint?.address
     );
+
     if (!poolTokenAccount) continue;
     const tokenAPrice = await getPrice(pool.mintA.address);
     const tokenBPrice = await getPrice(pool.mintB.address);
@@ -40,7 +48,6 @@ export const userDeposit = async (
       ammId: pool.id,
     });
   }
-  console.log("usersRaydiumDeposits", usersRaydiumDeposits);
   useLiquidity.setState({
     userAmmDeposits: usersRaydiumDeposits.filter((e) => e.amount > 0),
   });

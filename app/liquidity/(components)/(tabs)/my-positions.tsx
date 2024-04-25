@@ -17,19 +17,23 @@ import {
   useRemoveAllPoRLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import formatedString from "@/lib/string";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLiquidity } from "@/applications/Liquidity/store";
 import { RaydiumPools } from "@/applications/Liquidity/pool";
 import {
   AmmPoolApiResponse,
+  Daum,
   UserAmmPositionType,
 } from "@/applications/Liquidity/type";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import {
+  Clmm,
   ClmmPoolInfo,
   ClmmPoolPersonalPosition,
+  Fraction,
 } from "@raydium-io/raydium-sdk";
+import { getPrice } from "@/data/price";
 
 type DataType = {
   deposit: UserAmmPositionType;
@@ -46,8 +50,8 @@ const MyPositions = () => {
   const { onCreatePositionLiquidityOpen } = useCreatePositionLiquidityModal();
   const raydiumInfo = useLiquidity((state) => state.raydiumInfo);
   const userClmmDeposits = useLiquidity((state) => state.userClmmDeposits);
+  const tokenPrices = useLiquidity((state) => state.tokenPrices);
 
-  console.log("userAmmDeposits", userAmmDeposits, userClmmDeposits);
   const fetchAmmData = async () => {
     const list: any[] = [];
     for (const item of userAmmDeposits) {
@@ -60,9 +64,7 @@ const MyPositions = () => {
     }
     setData(list);
   };
-  const fetchClmmData = async () => {
-    const list: DataType[] = [];
-  };
+
   useEffect(() => {
     userAmmDeposits && fetchAmmData();
   }, [userAmmDeposits]);
@@ -84,6 +86,84 @@ const MyPositions = () => {
     ],
   };
 
+  const netValue = useMemo(() => {
+    const ammValues = gdata.reduce((acc, item) => {
+      const value =
+        (item.deposit.amount / 10 ** (item.pool.lpMint?.decimals ?? 0)) *
+        (item.pool.lpPrice ?? 0);
+      return acc + value;
+    }, 0);
+    const clmmValues = userClmmDeposits.reduce((acc, item) => {
+      const value =
+        item.positionAccount?.reduce((acc, pos) => {
+          const tokenA =
+            pos.amountA.toNumber() / 10 ** item.state.mintA.decimals;
+          const tokenB =
+            pos.amountB.toNumber() / 10 ** item.state.mintB.decimals;
+          const tokensPrice = {
+            tokenA: tokenPrices[item.state.mintA.mint.toBase58()],
+            tokenB: tokenPrices[item.state.mintB.mint.toBase58()],
+          };
+          console.log("tokensPrice ", tokensPrice);
+          const tokenAValue = tokenA * tokensPrice.tokenA;
+          const tokenBValue = tokenB * tokensPrice.tokenB;
+          const totalValue = tokenAValue + tokenBValue;
+          return acc + totalValue;
+        }, 0) ?? 0;
+      return acc + value;
+    }, 0);
+
+    return ammValues + clmmValues;
+  }, [gdata, tokenPrices, userClmmDeposits]);
+
+  const inRangePositions = useMemo(() => {
+    return userClmmDeposits
+      .map((item) => {
+        const data: {
+          state: ClmmPoolInfo;
+          positionAccount?: ClmmPoolPersonalPosition;
+        }[] = [];
+        item.positionAccount?.forEach((pos) => {
+          if (
+            pos.tickLower < item.state.tickCurrent &&
+            pos.tickUpper > item.state.tickCurrent
+          ) {
+            data.push({
+              state: item.state,
+              positionAccount: pos,
+            });
+          }
+        });
+        return data;
+      })
+      .flat();
+  }, [userClmmDeposits]);
+
+  const outOfRangePositions = useMemo(() => {
+    return userClmmDeposits
+      .map((item) => {
+        const data: {
+          state: ClmmPoolInfo;
+          positionAccount?: ClmmPoolPersonalPosition;
+        }[] = [];
+        item.positionAccount?.forEach((pos) => {
+          if (
+            pos.tickLower > item.state.tickCurrent &&
+            pos.tickUpper < item.state.tickCurrent
+          ) {
+            data.push({
+              state: item.state,
+              positionAccount: pos,
+            });
+          }
+        });
+        return data;
+      })
+      .flat();
+  }, [userClmmDeposits]);
+  const totalPositions = useMemo(() => {
+    return gdata.length + inRangePositions.length + outOfRangePositions.length;
+  }, [gdata.length, inRangePositions.length, outOfRangePositions.length]);
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
       <div
@@ -99,10 +179,10 @@ const MyPositions = () => {
           <div className="flex justify-between items-start xl:items-center gap-4 w-full flex-col lg:flex-row">
             <div className="flex flex-col max-w-md w-full gap-2 text-[#d9f8ff]">
               <span className="text-lg">
-                Net Value: ${formatedNumber(d_data.netvalue, 2, false)}
+                Net Value: ${formatedNumber(netValue, 2, false)}
               </span>
               <span className="text-sm">
-                Positions: {formatedNumber(gdata.length, 0, false)}
+                Positions: {formatedNumber(totalPositions, 0, false)}
               </span>
             </div>
             <div className="flex flex-col flex-1 gap-2 sm:gap-4 justify-start xl:justify-end">
@@ -137,13 +217,7 @@ const MyPositions = () => {
                     >
                       <span>In Range:</span>
                       <span>
-                        {/*{formatedNumber(*/}
-                        {/*  gdata.filter(*/}
-                        {/*    (item) => item.range_status === "In Range"*/}
-                        {/*  ).length,*/}
-                        {/*  1,*/}
-                        {/*  true*/}
-                        {/*)}*/}
+                        {formatedNumber(inRangePositions.length, 1, true)}
                       </span>
                     </div>
                     <Button
@@ -164,13 +238,7 @@ const MyPositions = () => {
                     >
                       <span>Out of Range:</span>
                       <span>
-                        {/*{formatedNumber(*/}
-                        {/*  gdata.filter(*/}
-                        {/*    (item) => item.poolrange_status === "Out of Range"*/}
-                        {/*  ).length,*/}
-                        {/*  1,*/}
-                        {/*  true*/}
-                        {/*)}*/}
+                        {formatedNumber(outOfRangePositions.length, 1, true)}
                       </span>
                     </div>
                     <Button
@@ -233,7 +301,7 @@ const MyPositions = () => {
                 ))}
               </TableRow>
             </TableHeader>
-            {gdata.length > 0 ? (
+            {gdata.length > 0 || userClmmDeposits.length > 0 ? (
               <TableBody>
                 {gdata.map((row) => (
                   <StandardLiquidityRow
@@ -293,7 +361,6 @@ const ConcentratedLiquidityRow = ({ row }: ClmmRowProps) => {
     };
     fetchPoolDetails();
   }, [row.state.id]);
-  console.log("clmm", row, poolDetails);
   return (
     <>
       <TableRow className="hover:bg-transparent !border-b-0 !outline-t-2  outline-t-[#fff] table-row my-1 -outline-offset-2">
@@ -329,47 +396,60 @@ const ConcentratedLiquidityRow = ({ row }: ClmmRowProps) => {
           </div>
         </TableCell>
         <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-56">
-          <div className="flex flex-col items-start min-h-12">
-            <span className="text-sm">
-              ${formatedNumber(poolDetails?.tvl ?? 0, 2, true)}
-            </span>
-            <span className="text-sm">
-              Token Price Index: ${formatedNumber(0, 2, false)}
-            </span>
-          </div>
-        </TableCell>
-        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
-          <div className="flex flex-col items-start min-h-12">
+          <div className="flex flex-col items-start justify-center min-h-12">
             <span className="text-sm">
               ${formatedNumber(poolDetails?.tvl ?? 0, 2, true)}
             </span>
           </div>
         </TableCell>
         <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
-          <div className="flex flex-col items-start min-h-12">
+          <div className="flex flex-col items-start justify-center min-h-12">
+            <span className="text-sm">
+              ${formatedNumber(poolDetails?.tvl ?? 0, 2, true)}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
+          <div className="flex flex-col items-start justify-center min-h-12">
             <span className="text-sm">
               ${formatedNumber(poolDetails?.day.volume ?? 0, 2, true)}
             </span>
           </div>
         </TableCell>
         <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-36">
-          <div className="flex flex-col items-start min-h-12">
+          <div className="flex flex-col items-start justify-center min-h-12">
             <span className="text-sm">
               ${formatedNumber(poolDetails?.day.volumeFee ?? 0, 2, false)}
             </span>
           </div>
         </TableCell>
         <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-24">
-          <div className="flex flex-col items-start min-h-12">
+          <div className="flex flex-col items-start justify-center min-h-12">
             <span className="text-sm">
               {formatedNumber(poolDetails?.day.apr ?? 0, 2, false)}%
             </span>
           </div>
         </TableCell>
-        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-32"></TableCell>
+        <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-32 flex justify-center items-center">
+          <Button
+            size="sm"
+            className="max text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 bg-transparent"
+            style={{
+              boxShadow: "0 0 4px #88d6ff",
+            }}
+            // onClick={onManageLiquidityOpen}
+          >
+            Create Position
+          </Button>
+        </TableCell>
       </TableRow>
       {row.positionAccount?.map((position, index) => (
-        <ClmmPositionRow key={index} row={row} position={position} />
+        <ClmmPositionRow
+          key={index}
+          poolDetails={poolDetails}
+          row={row}
+          position={position}
+        />
       ))}
     </>
   );
@@ -536,21 +616,53 @@ const StandardLiquidityRow = ({ row, raydiumInfo }: RowProps) => {
 type ClmmPositionRowProps = {
   row: ClmmRowProps["row"];
   position: ClmmPoolPersonalPosition;
+  poolDetails: Daum | null;
 };
 
-const ClmmPositionRow = ({ row, position }: ClmmPositionRowProps) => {
+const ClmmPositionRow = ({
+  row,
+  position,
+  poolDetails,
+}: ClmmPositionRowProps) => {
+  const [tokensPrice, setTokensPrice] = useState({
+    tokenA: 0,
+    tokenB: 0,
+  });
+
   const isInRange =
     position.tickLower < row.state.tickCurrent &&
     position.tickUpper > row.state.tickCurrent;
 
+  useEffect(() => {
+    const fetchTokensPrice = async () => {
+      if (!poolDetails) return;
+      const tokenA = await getPrice(poolDetails?.mintA.address);
+      const tokenB = await getPrice(poolDetails?.mintB.address);
+      setTokensPrice({
+        tokenA: tokenA,
+        tokenB: tokenB,
+      });
+    };
+    fetchTokensPrice();
+  }, [poolDetails]);
+
+  if (!poolDetails) return <></>;
+
+  const planCApr = Clmm?.estimateAprsForPriceRangeMultiplier({
+    aprType: "day",
+    // @ts-ignore TODO
+    poolInfo: poolDetails,
+    positionTickLowerIndex: position.tickLower,
+    positionTickUpperIndex: position.tickUpper,
+  });
   return (
     <TableRow
       className="bg-[#0d111b] hover:bg-[#0d111b] !rounded-full overflow-hidden !outline outline-offset-[-2px] !outline-[#757788] border-separate"
       style={{ clipPath: "border-box" }}
     >
       <TableCell className="!p-1.5">
-        {!isInRange ? (
-          <div className="flex flex-row gap-2 items-center justify-center">
+        {isInRange ? (
+          <div className="flex flex-row gap-2 items-center pl-2">
             <CheckCircleOutlineIcon className="!fill-[#50AF95] !text-[32px]" />
             <span className="!text-md text-[#50AF95]">In Range</span>
           </div>
@@ -564,41 +676,65 @@ const ClmmPositionRow = ({ row, position }: ClmmPositionRowProps) => {
         )}
       </TableCell>
       <TableCell className="!p-1.5">
-        <div className="flex flex-row gap-2 items-center justify-center">
-          <span className="!text-md text-[#7c7c8d]">Value : $ 100,000.66 </span>
-        </div>
-      </TableCell>
-      <TableCell className="!p-1.5">
-        <div className="flex flex-col gap-2 items-start justify-center">
+        <div className="flex flex-row gap-2 items-center">
           <span className="!text-md text-[#7c7c8d]">
-            Range : 18.263 - 23.682
-          </span>
-          <span className="!text-md text-[#7c7c8d]">USDC per SOL</span>
-        </div>
-      </TableCell>
-      <TableCell className="!p-1.5">
-        <div className="flex flex-row gap-2 items-center justify-center">
-          <span className="!text-md text-[#7c7c8d]">APR : 80.65 %</span>
-        </div>
-      </TableCell>
-      <TableCell className="!p-1.5">
-        <div className="flex flex-row gap-2 items-center justify-center">
-          <span className="!text-md text-[#7c7c8d]">Lev : x18.18</span>
-        </div>
-      </TableCell>
-      <TableCell className="!p-1.5">
-        <div className="flex flex-row gap-2 items-center justify-center">
-          <span className="!text-md text-[#7c7c8d]">
-            Pending Yield : $ 1,000.69
+            Value : ${" "}
+            {formatedNumber(
+              (position.amountA.toNumber() /
+                10 ** (poolDetails?.mintA.decimals ?? 0)) *
+                tokensPrice.tokenA +
+                (position.amountB.toNumber() /
+                  10 ** (poolDetails?.mintB.decimals ?? 0)) *
+                  tokensPrice.tokenB,
+              5
+            )}
           </span>
         </div>
       </TableCell>
-
+      <TableCell className="!p-1.5">
+        <div className="flex flex-row gap-2 items-start justify-start">
+          <span className="!text-md text-[#7c7c8d]">
+            {`Range : ${formatedNumber(
+              position.priceLower.toNumber(),
+              4
+            )} - ${formatedNumber(position.priceUpper.toNumber(), 4)}`}
+          </span>
+          <span className="!text-md text-[#7c7c8d]">
+            {`${poolDetails?.mintA.symbol} per ${poolDetails?.mintB.symbol}`}
+          </span>
+        </div>
+      </TableCell>
+      <TableCell className="!p-1.5">
+        <span className="!text-md text-[#7c7c8d]">
+          APR : {formatedNumber(planCApr.apr, 1)} %
+        </span>
+      </TableCell>
+      <TableCell className="!p-1.5">
+        <span className="!text-md text-[#7c7c8d]">
+          Lev : x{formatedNumber(position.leverage, 2)}
+        </span>
+      </TableCell>
+      <TableCell className="!p-1.5">
+        <span className="!text-md text-[#7c7c8d]">
+          Pending Yield : ${" "}
+          {formatedNumber(
+            (position.tokenFeeAmountA.toNumber() /
+              10 ** (poolDetails?.mintA.decimals ?? 0)) *
+              tokensPrice.tokenA +
+              (position.tokenFeeAmountB.toNumber() /
+                10 ** (poolDetails?.mintB.decimals ?? 0)) *
+                tokensPrice.tokenB,
+            2,
+            false
+          )}
+        </span>
+      </TableCell>
+      <TableCell />
       <TableCell className="!p-1.5">
         <div className="flex flex-row gap-2 items-center justify-center">
           <Button
             size="sm"
-            className="w-max text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-start items-center box-border gap-2 bg-transparent"
+            className="w-32 text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 bg-transparent"
             style={{
               boxShadow: "0 0 4px #88d6ff",
             }}
@@ -611,3 +747,7 @@ const ClmmPositionRow = ({ row, position }: ClmmPositionRowProps) => {
     </TableRow>
   );
 };
+
+function toPercent(feeApr: number, param2: { alreadyDecimaled: boolean }) {
+  return feeApr;
+}

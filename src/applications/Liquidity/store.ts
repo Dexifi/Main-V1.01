@@ -4,6 +4,7 @@ import { ApiPoolInfo } from "@raydium-io/raydium-sdk";
 import {
   ApiClmmPoolsItem,
   ApiPairsItem,
+  ApiPrice,
 } from "@raydium-io/raydium-sdk/src/baseInfo/interface";
 import {
   AmmPoolApiResponse,
@@ -30,6 +31,7 @@ export type LiquidityState = {
     state: ClmmPoolInfo;
     positionAccount?: ClmmPoolPersonalPosition[] | undefined;
   }[];
+  tokenPrices: ApiPrice;
   raydiumInfo: infoApiResponse;
 };
 
@@ -42,6 +44,7 @@ export const useLiquidity = create<LiquidityState>((set) => ({
     totalvolume: 0,
     volume24h: 0,
   },
+  tokenPrices: {},
   poolApiConfig: {
     currentPage: 0,
     pageSize: 100,

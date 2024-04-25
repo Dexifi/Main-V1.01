@@ -8,6 +8,7 @@ import {
   raydiumGetPollAPI,
   raydiumInfoAPI,
 } from "@/applications/Liquidity/config";
+import { ApiPrice, ENDPOINT, RAYDIUM_MAINNET } from "@raydium-io/raydium-sdk";
 
 const fetchNextPage = async () => {
   const config = useLiquidity.getState().poolApiConfig;
@@ -40,10 +41,16 @@ const fetchPrevPage = async () => {
   });
 };
 
-const fetchPool = (page: number, type: "all" | "standard" | "concentrated") => {
+const fetchPool = (
+  page: number,
+  type: "all" | "standard" | "concentrated",
+  size?: number
+) => {
   const config = useLiquidity.getState().poolApiConfig;
   return axios.get<AmmPoolApiResponse>(
-    `https://uapi.raydium.io/v3/pools/info/${type}/default/desc/${config.pageSize}/${page}`
+    `https://uapi.raydium.io/v3/pools/info/${type}/default/desc/${
+      size ?? config.pageSize
+    }/${page}`
   );
 };
 const fetchInfo = async () => {
@@ -73,10 +80,17 @@ const fetchPoolById = async (id: string, setInPools?: boolean) => {
   }
 };
 
+const fetchTokensPrice = async () => {
+  const data = await axios
+    .get<ApiPrice>(ENDPOINT + RAYDIUM_MAINNET.price)
+    .then((res) => res.data);
+  useLiquidity.setState({ tokenPrices: data });
+};
 export const RaydiumPools = {
   fetchNextPage,
   fetchPrevPage,
   fetchPool,
   fetchPoolById,
   fetchInfo,
+  fetchTokensPrice,
 };
