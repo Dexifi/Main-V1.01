@@ -17,6 +17,9 @@ import {
 import formatedString from "@/lib/string";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { CreatePositionModal } from "@/components/modals";
+import AddLiquidityModal from "@/components/modals/add-liquidity-modal";
+import ManageModal from "@/components/modals/manage-modal";
 
 type Props = {
   data: any;
