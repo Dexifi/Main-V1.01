@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import formatedNumber from "@/lib/numbers";
 import {
+  useAddAmmLiquidityModal,
   useAddLiquidityModal,
   useRemoveLiquidityModal,
 } from "@/lib/stores/liquidity.store";
@@ -20,6 +21,9 @@ import { useEffect, useState } from "react";
 import { CreatePositionModal } from "@/components/modals";
 import AddLiquidityModal from "@/components/modals/add-liquidity-modal";
 import ManageModal from "@/components/modals/manage-modal";
+import AddAmmLiquidityModal from "@/components/modals/add-amm-liquidity-modal";
+import PoolSearchModal from "@/components/modals/pool-search-modal";
+import SelectAmmTokenModal from "@/components/modals/select-amm-token-modal";
 
 type Props = {
   data: any;
@@ -62,7 +66,7 @@ const PoolsTab = ({ data }: Props) => {
     ],
   };
 
-  const { onAddLiquidityOpen } = useAddLiquidityModal();
+  const { onAddAmmLiquidityOpen } = useAddAmmLiquidityModal();
   const { onRemoveLiquidityOpen } = useRemoveLiquidityModal();
   useEffect(() => {
     gdata.length <= 0 &&
@@ -93,6 +97,9 @@ const PoolsTab = ({ data }: Props) => {
 
   return (
     <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
+      <AddAmmLiquidityModal />
+      <PoolSearchModal />
+      <SelectAmmTokenModal />
       <div
         className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#19232d] rounded-3xl px-5 lg:px-10 py-5 max-w-full"
         style={{ boxShadow: "0 0 4px #88d6ff" }}
@@ -304,8 +311,8 @@ const PoolsTab = ({ data }: Props) => {
                         </span>
                         <Button
                           size="sm"
-                          className="max-w-[150px] text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
-                          onClick={onAddLiquidityOpen}
+                          className="max-w-[150px] text-xs rounded-full z-10 hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
+                          onClick={onAddAmmLiquidityOpen}
                           style={{
                             boxShadow: "0 0 4px #88d6ff",
                           }}
