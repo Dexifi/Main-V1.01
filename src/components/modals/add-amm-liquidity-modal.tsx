@@ -1,5 +1,6 @@
 import {
   useAddAmmLiquidityModal,
+  useCreatePoolModal,
   usePoolSearchModal,
   useSelectAmmTokenModal,
 } from "@/lib/stores/liquidity.store";
@@ -13,12 +14,15 @@ import { useCallback, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import TokenListSettingModal from "@/components/modals/token-list-setting-modal";
+import CreatePoolModal from "@/components/modals/create-pool-modal";
 
 const AddAmmLiquidityModal = () => {
   const { isOpen, onClose } = useAddAmmLiquidityModal();
   const [loading, setLoading] = useState(false);
   const { onPoolSearchOpen } = usePoolSearchModal();
   const { onSelectAmmTokenOpen } = useSelectAmmTokenModal();
+  const { onCreatePoolOpen } = useCreatePoolModal();
 
   const [showMore, setShowMore] = useState(false);
   const handleChangeCrypto = useCallback(() => {}, []);
@@ -35,6 +39,8 @@ const AddAmmLiquidityModal = () => {
         style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
       >
         {/*  first Box */}
+        <CreatePoolModal />
+        <button onClick={onCreatePoolOpen}>fdsf</button>
         <div
           className={
             "p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2 mt-3"
@@ -242,7 +248,6 @@ const AddAmmLiquidityModal = () => {
             <>
               <div className={"flex flex-row"}>
                 <p>Addresses</p>
-                <p>@</p>
               </div>
               <div className={"flex flex-row w-full justify-between"}>
                 <p>Slippage Tolerance</p>
@@ -318,7 +323,10 @@ const AddAmmLiquidityModal = () => {
             interface. Read the guide before attempting.
           </p>
           <div className={"w-1/3 flex flex-row justify-center items-center"}>
-            <button className={"bg-[#0d111b] p-3 rounded-3xl"}>
+            <button
+              className={"bg-[#0d111b] p-3 rounded-3xl"}
+              onClick={onCreatePoolOpen}
+            >
               <AddIcon sx={{ fontSize: 20, mr: 1 }} />
               Create Pool
             </button>

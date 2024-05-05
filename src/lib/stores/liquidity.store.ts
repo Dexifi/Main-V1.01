@@ -124,3 +124,29 @@ export const useSelectAmmTokenModal = create<SelectAmmTokenModal>((set) => ({
   onSelectAmmTokenOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
+
+interface TokenListSettingModal {
+  isOpen: boolean;
+  onTokenListSettingOpen: () => void;
+  onClose: () => void;
+}
+
+export const useTokenListSettingModal = create<TokenListSettingModal>(
+  (set) => ({
+    isOpen: false,
+    onTokenListSettingOpen: () => set({ isOpen: true }),
+    onClose: () => set({ isOpen: false }),
+  })
+);
+
+interface CratePoolModal {
+  isOpen: boolean;
+  onCreatePoolOpen: () => void;
+  onClose: () => void;
+}
+
+export const useCreatePoolModal = create<CratePoolModal>((set) => ({
+  isOpen: false,
+  onCreatePoolOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
