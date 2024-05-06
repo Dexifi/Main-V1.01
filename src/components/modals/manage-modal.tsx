@@ -131,6 +131,7 @@ const ManageModal = (props: Props) => {
         className="bg-[#0d111b] w-full max-w-[760px]"
         style={{
           boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
+          borderColor: "rgba(171,196,255,0.5",
         }}
       >
         {/* Header */}
