@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   useAddLiquidityModal,
   useManageLiquidityModal,
+  useRemoveLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import { useCallback, useEffect, useState } from "react";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -26,7 +27,6 @@ import { Clmm } from "@raydium-io/raydium-sdk";
 import formatedNumber from "@/lib/numbers";
 import { getPrice } from "@/data/price";
 import { toast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
 import { exploreAtom } from "@/stores/config";
 import { RaydiumPools } from "@/applications/Liquidity/pool";
 import ClmmChart from "@/components/ui/ClmmChart";
@@ -45,6 +45,7 @@ const ManageModal = (props: Props) => {
   const { isOpen, onClose } = useManageLiquidityModal();
   const [open, setOpen] = useState(false);
   const { onAddLiquidityOpen } = useAddLiquidityModal();
+  const { onRemoveLiquidityOpen } = useRemoveLiquidityModal();
   const [selectedPool] = useAtom(selectedPoolAtom);
   const [position] = useAtom(selectedPositionAtom);
   const [row] = useAtom(selectedPositionRowAtom);
@@ -101,13 +102,6 @@ const ManageModal = (props: Props) => {
     setOpen(!open); // toggle between true and false
   };
 
-  const planCApr = Clmm?.estimateAprsForPriceRangeMultiplier({
-    aprType: aprPeriod,
-    // @ts-ignore TODO
-    poolInfo: selectedPool,
-    positionTickLowerIndex: position?.tickLower ?? 0,
-    positionTickUpperIndex: position?.tickUpper ?? 0,
-  });
   const handleHarvest = useCallback(async () => {
     if (!wallet || !row || !position) return;
     await raydiumActions.harvestClmmPosition({
@@ -118,6 +112,14 @@ const ManageModal = (props: Props) => {
   }, [position, row, wallet]);
 
   if (!selectedPool || !row || !position) return <></>;
+
+  const planCApr = Clmm?.estimateAprsForPriceRangeMultiplier({
+    aprType: aprPeriod,
+    // @ts-ignore TODO
+    poolInfo: selectedPool,
+    positionTickLowerIndex: position?.tickLower ?? 0,
+    positionTickUpperIndex: position?.tickUpper ?? 0,
+  });
 
   const isInRange =
     position.tickLower < row.state.tickCurrent &&
@@ -180,7 +182,7 @@ const ManageModal = (props: Props) => {
           </div>
           <div className={"flex flex-row items-center justify-between gap-2"}>
             <Button onClick={onAddLiquidityOpen}>Add Liquidity</Button>
-            <Button>Remove Liquidity</Button>
+            <Button onClick={onRemoveLiquidityOpen}>Remove Liquidity</Button>
             <CloseIcon color={"inherit"} style={{ color: "white" }} />
           </div>
         </div>

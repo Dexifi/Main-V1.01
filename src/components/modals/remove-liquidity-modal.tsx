@@ -209,13 +209,7 @@ const RemoveLiquidityModal = (props: Props) => {
             <p>0.03234325423</p>
           </div>
         </div>
-        <button
-          className={"h-12 rounded-3xl text-white"}
-          style={{
-            background:
-              "linear-gradient(138deg, rgba(0,0,0,1) 0%, rgba(119,186,234,1) 0%, rgba(37,58,73,1) 100%)",
-          }}
-        >
+        <button className={"h-12 rounded-md text-white bg-[#0b1938]"}>
           Withdraw Liquidity
         </button>
         <button className={"bg-[#0D111B] h-12 rounded-3xl text-white"}>
