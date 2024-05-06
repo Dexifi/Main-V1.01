@@ -44,6 +44,13 @@ const AddAmmLiquidityModal = () => {
     []
   );
 
+  const handleMaxAmount = useCallback((e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+  }, []);
+  const handleHalfAmount = useCallback((e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
@@ -98,6 +105,7 @@ const AddAmmLiquidityModal = () => {
                 className={
                   "bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6 text-xs"
                 }
+                onClick={(e) => handleMaxAmount(e)}
               >
                 Max
               </button>
@@ -105,6 +113,7 @@ const AddAmmLiquidityModal = () => {
                 className={
                   "bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6 text-xs"
                 }
+                onClick={(e) => handleHalfAmount(e)}
               >
                 Half
               </button>
@@ -194,6 +203,7 @@ const AddAmmLiquidityModal = () => {
                 className={
                   "bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6 text-xs"
                 }
+                onClick={(e) => handleMaxAmount(e)}
               >
                 Max
               </button>
@@ -201,6 +211,7 @@ const AddAmmLiquidityModal = () => {
                 className={
                   "bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6 text-xs"
                 }
+                onClick={(e) => handleHalfAmount(e)}
               >
                 Half
               </button>
