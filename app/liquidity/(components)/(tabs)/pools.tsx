@@ -20,6 +20,8 @@ import { useLiquidity } from "@/applications/Liquidity/store";
 import { CircularProgress, Stack } from "@mui/material";
 import { debounce } from "lodash";
 import { RaydiumPools } from "@/applications/Liquidity/pool";
+import { useAtom } from "jotai";
+import { selectedPoolAtom } from "@/components/modals/store";
 
 const PoolsTab = () => {
   const [search, setSearch] = useState("");
@@ -31,9 +33,11 @@ const PoolsTab = () => {
   const raydiumInfo = useLiquidity((state) => state.raydiumInfo);
   const poolApiConfig = useLiquidity((state) => state.poolApiConfig);
   const setPoolConfig = useLiquidity((state) => state.setPoolApiConfig);
+  const [selectedPool, setSelectedPool] = useAtom(selectedPoolAtom);
+
   const d_data = {
     title: "List of All Active Pools in Ecosystem",
-    protocol_filter: ["All", "Raydium", "Orca"],
+    protocol_filter: ["All", "Raydium"],
     time_filter: ["All", "Standard", "Concentrated"],
     tvl_filter: ["TVL", "APR"],
     token_filter: [
@@ -91,7 +95,6 @@ const PoolsTab = () => {
   const handleChangeFilter = useCallback(
     async (type: "all" | "standard" | "concentrated") => {
       if (type !== poolApiConfig.type) {
-        console.log("here", type, poolApiConfig.type);
         setPoolConfig({
           pageSize: 100,
           currentPage: 0,
@@ -104,7 +107,7 @@ const PoolsTab = () => {
   );
 
   return (
-    <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
+    <div className="w-full flex flex-wrap justify-between z-20 gap-5 my-5 flex-col md:flex-row">
       <div
         className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#19232d] rounded-3xl px-5 lg:px-10 py-5 max-w-full"
         style={{ boxShadow: "0 0 4px #88d6ff" }}
@@ -115,7 +118,7 @@ const PoolsTab = () => {
               {d_data.title}
             </h6>
           </div>
-          <div className="flex justify-between items-start xl:items-center gap-4 w-full flex-col lg:flex-row">
+          <div className="flex justify-between  z-20 items-start xl:items-center gap-4 w-full flex-col lg:flex-row">
             <div className="flex flex-col max-w-md w-full gap-4">
               <label className="text-sm text-[#7c7c8d] w-full">
                 Earn yield on trading fees by providing liquidity
@@ -239,7 +242,7 @@ const PoolsTab = () => {
           </div>
         </div>
         <div
-          className="w-full bg-[#142030] p-4 rounded-2xl px-5  "
+          className="w-full bg-[#101a26CC] p-4 z-20 rounded-2xl px-5  "
           style={{
             boxShadow: "0 0 5px 1px #d9f8ff",
           }}
@@ -274,7 +277,15 @@ const PoolsTab = () => {
                     <TableCell className="font-medium text-left py-2 pl-0">
                       <div className="flex flex-col gap-2">
                         <span className="text-sm max-w-32  text-nowrap overflow-hidden text-[#d9f8ff]">
-                          {row.mintA.symbol + " / " + row.mintB.symbol}
+                          {`${
+                            row.mintA.symbol
+                              ? row.mintA.symbol
+                              : row.mintA.address.slice(0, 4).toUpperCase()
+                          }/${
+                            row.mintB.symbol
+                              ? row.mintB.symbol
+                              : row.mintB.address.slice(0, 4).toUpperCase()
+                          }`}
                         </span>
                         <div className="flex items-center mt-2 w-max">
                           {row.mintA.logoURI ? (
@@ -318,7 +329,10 @@ const PoolsTab = () => {
                         <Button
                           size="sm"
                           className="max-w-[150px] text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
-                          onClick={onAddLiquidityOpen}
+                          onClick={() => {
+                            setSelectedPool(row);
+                            onAddLiquidityOpen();
+                          }}
                           style={{
                             boxShadow: "0 0 4px #88d6ff",
                           }}
@@ -332,16 +346,16 @@ const PoolsTab = () => {
                         <span className="text-sm">
                           ${formatedNumber(row.tvl, 2, true)}
                         </span>
-                        <span className="text-sm">
-                          {/* TODO */}
-                          Value: $
-                          {formatedNumber(
-                            userAmmDeposits?.find((e) => e.ammId === row.id)
-                              ?.amount ?? 0,
-                            0,
-                            true
-                          )}
-                        </span>
+                        {/*<span className="text-sm">*/}
+                        {/*  /!* TODO *!/*/}
+                        {/*  Value: $*/}
+                        {/*  {formatedNumber(*/}
+                        {/*    userAmmDeposits?.find((e) => e.ammId === row.id)*/}
+                        {/*      ?.amount ?? 0,*/}
+                        {/*    0,*/}
+                        {/*    true*/}
+                        {/*  )}*/}
+                        {/*</span>*/}
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-44">
@@ -349,10 +363,10 @@ const PoolsTab = () => {
                         <span className="text-sm">
                           ${formatedNumber(row.day.volume, 2, true)}
                         </span>
-                        <span className="text-sm">
-                          {/* TODO */}
-                          LP Tokens: {formatedNumber(4, 2, true)} LP
-                        </span>
+                        {/*<span className="text-sm">*/}
+                        {/*  /!* TODO *!/*/}
+                        {/*  LP Tokens: {formatedNumber(4, 2, true)} LP*/}
+                        {/*</span>*/}
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-44">
@@ -360,10 +374,10 @@ const PoolsTab = () => {
                         <span className="text-sm">
                           ${formatedNumber(row.day.volumeFee, 0, false)}
                         </span>
-                        <span className="text-sm">
-                          {/* TODO */}
-                          Your share: {formatedNumber(3, 2, false)}%{" <"}
-                        </span>
+                        {/*<span className="text-sm">*/}
+                        {/*  /!* TODO *!/*/}
+                        {/*  Your share: {formatedNumber(3, 2, false)}%{" <"}*/}
+                        {/*</span>*/}
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left py-2 pl-0 text-[#7c7c8d] min-w-48">
@@ -371,16 +385,16 @@ const PoolsTab = () => {
                         <span className="text-sm">
                           {formatedNumber(row.day.apr, 2, true)}%
                         </span>
-                        <Button
-                          size="sm"
-                          className="max-w-[150px] text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
-                          style={{
-                            boxShadow: "0 0 4px #88d6ff",
-                          }}
-                          onClick={onRemoveLiquidityOpen}
-                        >
-                          Remove Liquidity
-                        </Button>
+                        {/*<Button*/}
+                        {/*  size="sm"*/}
+                        {/*  className="max-w-[150px] text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"*/}
+                        {/*  style={{*/}
+                        {/*    boxShadow: "0 0 4px #88d6ff",*/}
+                        {/*  }}*/}
+                        {/*  onClick={onRemoveLiquidityOpen}*/}
+                        {/*>*/}
+                        {/*  Remove Liquidity*/}
+                        {/*</Button>*/}
                       </div>
                     </TableCell>
                   </TableRow>

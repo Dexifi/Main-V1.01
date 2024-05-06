@@ -1,5 +1,16 @@
+import { LOOKUP_TABLE_CACHE, TxVersion } from "@raydium-io/raydium-sdk";
+import { PublicKey } from "@solana/web3.js";
+
 export const raydiumInfoAPI = "https://uapi.raydium.io/v2/main/info";
 export const raydiumGetPollAPI = `https://uapi.raydium.io/v3/pools/info/ids/`;
+export const makeTxVersion = TxVersion.V0; // LEGACY
+export const addLookupTableInfo = LOOKUP_TABLE_CACHE; // only mainnet. other = undefined
+
+export const SOL_MINT = new PublicKey(
+  "So11111111111111111111111111111111111111112"
+);
+export const raydiumGetChartAPI =
+  "https://uapi.raydium.io/v2/ammV3/positionLine/";
 export const defaultAmmPools = [
   {
     id: "13uCPybNakXHGVd2DDVB7o2uwXuf9GqPFkvJMVgKy6UJ",

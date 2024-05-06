@@ -1,7 +1,5 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import {
-  fetchObligationsByAddress,
-  formatObligation,
   getProgramId,
   getReservesFromChain,
   SolendMarket,

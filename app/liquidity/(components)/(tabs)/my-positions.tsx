@@ -31,9 +31,14 @@ import {
   Clmm,
   ClmmPoolInfo,
   ClmmPoolPersonalPosition,
-  Fraction,
 } from "@raydium-io/raydium-sdk";
 import { getPrice } from "@/data/price";
+import { useAtom } from "jotai";
+import {
+  selectedPoolAtom,
+  selectedPositionAtom,
+  selectedPositionRowAtom,
+} from "@/components/modals/store";
 
 type DataType = {
   deposit: UserAmmPositionType;
@@ -47,7 +52,6 @@ const MyPositions = () => {
   const { onRemoveAllPiRLiquidityOpen } = useRemoveAllPiRLiquidityModal();
   const { onRemoveAllPoRLiquidityOpen } = useRemoveAllPoRLiquidityModal();
   const { onClaimAllLiquidityOpen } = useClaimAllLiquidityModal();
-  const { onCreatePositionLiquidityOpen } = useCreatePositionLiquidityModal();
   const raydiumInfo = useLiquidity((state) => state.raydiumInfo);
   const userClmmDeposits = useLiquidity((state) => state.userClmmDeposits);
   const tokenPrices = useLiquidity((state) => state.tokenPrices);
@@ -350,6 +354,8 @@ type ClmmRowProps = {
 };
 const ConcentratedLiquidityRow = ({ row }: ClmmRowProps) => {
   const { onManageLiquidityOpen } = useManageLiquidityModal();
+  const { onCreatePositionLiquidityOpen } = useCreatePositionLiquidityModal();
+
   const [poolDetails, setPoolDetails] = useState<
     AmmPoolApiResponse["data"]["data"][0] | null
   >(null);
@@ -437,7 +443,7 @@ const ConcentratedLiquidityRow = ({ row }: ClmmRowProps) => {
             style={{
               boxShadow: "0 0 4px #88d6ff",
             }}
-            // onClick={onManageLiquidityOpen}
+            onClick={onCreatePositionLiquidityOpen}
           >
             Create Position
           </Button>
@@ -624,6 +630,11 @@ const ClmmPositionRow = ({
   position,
   poolDetails,
 }: ClmmPositionRowProps) => {
+  const { onManageLiquidityOpen } = useManageLiquidityModal();
+  const [, setSelectedPool] = useAtom(selectedPoolAtom);
+  const [, setSelectedPosition] = useAtom(selectedPositionAtom);
+  const [, setRow] = useAtom(selectedPositionRowAtom);
+
   const [tokensPrice, setTokensPrice] = useState({
     tokenA: 0,
     tokenB: 0,
@@ -738,7 +749,12 @@ const ClmmPositionRow = ({
             style={{
               boxShadow: "0 0 4px #88d6ff",
             }}
-            // onClick={onManageLiquidityOpen}
+            onClick={() => {
+              setRow(row);
+              setSelectedPosition(position);
+              setSelectedPool(poolDetails);
+              onManageLiquidityOpen();
+            }}
           >
             Manage
           </Button>

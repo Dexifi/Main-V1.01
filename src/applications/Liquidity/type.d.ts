@@ -188,3 +188,8 @@ export interface LpMint {
 }
 
 export interface Extensions4 {}
+
+export type ChartPoint = {
+  x: number;
+  y: number;
+};

@@ -16,6 +16,7 @@ import {
   ClmmPoolInfo,
   ClmmPoolPersonalPosition,
 } from "@raydium-io/raydium-sdk/src/clmm/clmm";
+import { TokenInfo } from "@solana/spl-token-registry";
 
 export type LiquidityState = {
   pairsPools: ApiPairsItem[];
@@ -33,6 +34,7 @@ export type LiquidityState = {
   }[];
   tokenPrices: ApiPrice;
   raydiumInfo: infoApiResponse;
+  userTokens: Partial<TokenInfo & { balance: number }>[];
 };
 
 export const useLiquidity = create<LiquidityState>((set) => ({
@@ -50,6 +52,7 @@ export const useLiquidity = create<LiquidityState>((set) => ({
     pageSize: 100,
     type: "all",
   },
+  userTokens: [],
   setPoolApiConfig: (config) => set({ poolApiConfig: config }),
   userAmmDeposits: [],
 }));

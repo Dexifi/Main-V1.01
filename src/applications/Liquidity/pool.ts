@@ -2,13 +2,20 @@ import { useLiquidity } from "@/applications/Liquidity/store";
 import axios from "@/data/axios";
 import {
   AmmPoolApiResponse,
+  ChartPoint,
   infoApiResponse,
 } from "@/applications/Liquidity/type";
 import {
+  raydiumGetChartAPI,
   raydiumGetPollAPI,
   raydiumInfoAPI,
 } from "@/applications/Liquidity/config";
-import { ApiPrice, ENDPOINT, RAYDIUM_MAINNET } from "@raydium-io/raydium-sdk";
+import {
+  ApiClmmPositionLinePoint,
+  ApiPrice,
+  ENDPOINT,
+  RAYDIUM_MAINNET,
+} from "@raydium-io/raydium-sdk";
 
 const fetchNextPage = async () => {
   const config = useLiquidity.getState().poolApiConfig;
@@ -48,7 +55,7 @@ const fetchPool = (
 ) => {
   const config = useLiquidity.getState().poolApiConfig;
   return axios.get<AmmPoolApiResponse>(
-    `https://uapi.raydium.io/v3/pools/info/${type}/default/desc/${
+    `https://uapi.raydium.io/v3/pools/info/${type}/liquidity/desc/${
       size ?? config.pageSize
     }/${page}`
   );
@@ -86,6 +93,21 @@ const fetchTokensPrice = async () => {
     .then((res) => res.data);
   useLiquidity.setState({ tokenPrices: data });
 };
+
+const getChartPoints = async (poolID: string) => {
+  const { data } = await axios.get<any>(raydiumGetChartAPI + poolID);
+  return toXYChartFormat(data.data);
+};
+
+export function toXYChartFormat(
+  points: ApiClmmPositionLinePoint[]
+): ChartPoint[] {
+  return points.map(({ liquidity, price }) => ({
+    x: price,
+    y: liquidity,
+  }));
+}
+
 export const RaydiumPools = {
   fetchNextPage,
   fetchPrevPage,
@@ -93,4 +115,5 @@ export const RaydiumPools = {
   fetchPoolById,
   fetchInfo,
   fetchTokensPrice,
+  getChartPoints,
 };

@@ -6,12 +6,86 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 import { useAddLiquidityModal } from "@/lib/stores/liquidity.store";
+import { useAtom } from "jotai";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  selectedPoolAtom,
+  selectedPositionAtom,
+  selectedPositionRowAtom,
+} from "@/components/modals/store";
+import BN from "bn.js";
+import formatedNumber from "@/lib/numbers";
+import { useLiquidity } from "@/applications/Liquidity/store";
+import { raydiumActions } from "@/applications/Liquidity/actions";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { debounce, isNumber } from "lodash";
+import { connection } from "@/lib/get-connections";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { PublicKey } from "@solana/web3.js";
+import { getWalletTokenAccount } from "@/hooks/useLiquidity";
+import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
 
 type Props = {};
 
 const AddLiquidityModal = (props: Props) => {
   const { isOpen, onClose } = useAddLiquidityModal();
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState({
+    amountA: 0,
+    amountB: 0,
+  });
+  const [selectedPool] = useAtom(selectedPoolAtom);
+  const [position] = useAtom(selectedPositionAtom);
+  const [row] = useAtom(selectedPositionRowAtom);
+  const userTokens = useLiquidity((state) => state.userTokens);
+  const tokenPrices = useLiquidity((state) => state.tokenPrices);
+  const { wallet } = useWallet();
+  const handleMaximizeAmount = async (token?: string) => {
+    if (!token) return;
+    const balance = userTokens.find((e) => e.address === token)?.balance;
+    if (!balance) return;
+    setAmount((prev) => ({
+      ...prev,
+      [token === selectedPool?.mintA.address ? "amountA" : "amountB"]: balance,
+    }));
+    await updateInputs(balance, token === selectedPool?.mintA.address);
+  };
+  const updateInputs = debounce(async (amountN: number, isMintA?: boolean) => {
+    if (!row?.state || !position || !wallet?.adapter.publicKey) return;
+    const data = await raydiumActions.calculateAmounts(
+      row.state,
+      position,
+
+      new BN(
+        amountN *
+          10 ** (isMintA ? row.state.mintA.decimals : row.state.mintB.decimals)
+      ),
+      isMintA ? "mintA" : "mintB",
+      0.01
+    );
+
+    setAmount({
+      amountA: data.amountA.amount.toNumber() / 10 ** row.state.mintA.decimals,
+      amountB: data.amountB.amount.toNumber() / 10 ** row.state.mintB.decimals,
+    });
+  }, 1500);
+
+  const handleAddLiquidity = async () => {
+    if (!row?.state || !position || !wallet?.adapter.publicKey) return;
+    const walletAccounts = await getWalletTokenAccount(
+      connection,
+      wallet.adapter.publicKey
+    );
+    await raydiumActions.addClmmLiquidity({
+      poolInfo: row.state,
+      position,
+      inputTokenAmount: new BN(
+        amount.amountA * 10 ** (row.state.mintA.decimals ?? 0)
+      ),
+      inputTokenMint: "mintA",
+      walletTokenAccounts: walletAccounts,
+      wallet: wallet.adapter as BaseSignerWalletAdapter,
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -23,9 +97,19 @@ const AddLiquidityModal = (props: Props) => {
           {/*Header */}
           <div className={"flex flex-row justify-between"}>
             <p className={"text-white text-xl font-bold"}>
-              Add liquidity to SOL - RAY
+              {`Add liquidity to ${
+                selectedPool?.mintA.symbol
+                  ? selectedPool?.mintA.symbol
+                  : selectedPool?.mintA.address.slice(0, 4)
+              } - ${
+                selectedPool?.mintB.symbol
+                  ? selectedPool?.mintB.symbol
+                  : selectedPool?.mintB.address.slice(0, 4)
+              }`}
             </p>
-            <p className={"text-white"}>X</p>
+            <button>
+              <CloseIcon color={"inherit"} style={{ color: "white" }} />
+            </button>
           </div>
           {/*First Box */}
           <div
@@ -47,17 +131,28 @@ const AddLiquidityModal = (props: Props) => {
                     <img
                       alt={"icon"}
                       className={"w-4 h-4 rounded-full"}
-                      src={
-                        "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
-                      }
+                      src={selectedPool?.mintA.logoURI}
                     />
                   </div>
                 </div>
-                <p className={"text-sky-700 font-bold"}>Sol</p>
+                <p className={"text-sky-700 font-bold"}>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
               </div>
               <div className="flex flex-row gap-1">
-                <p className={"text-white"}>0.01293237434</p>
-                <p className={"text-white"}>SOL</p>
+                <p className={"text-white"}>
+                  {(
+                    (position?.amountA.toNumber() ?? 0) /
+                    10 ** (selectedPool?.mintA.decimals ?? 0)
+                  ).toFixed(4)}
+                </p>
+                <p className={"text-white"}>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
               </div>
             </div>
             {/*Row Two*/}
@@ -72,17 +167,28 @@ const AddLiquidityModal = (props: Props) => {
                     <img
                       alt={"icon"}
                       className={"w-4 h-4 rounded-full"}
-                      src={
-                        "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
-                      }
+                      src={selectedPool?.mintB.logoURI}
                     />
                   </div>
                 </div>
-                <p className={"text-sky-700 font-bold"}>Sol</p>
+                <p className={"text-sky-700 font-bold"}>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
               </div>
               <div className={"flex flex-row gap-1"}>
-                <p className={"text-white"}>0.13213124324</p>
-                <p className={"text-white"}>RAY</p>
+                <p className={"text-white"}>
+                  {(
+                    (position?.amountB.toNumber() ?? 0) /
+                    10 ** (selectedPool?.mintB.decimals ?? 0)
+                  ).toFixed(4)}
+                </p>
+                <p className={"text-white"}>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
               </div>
             </div>
           </div>
@@ -102,9 +208,15 @@ const AddLiquidityModal = (props: Props) => {
                   current Price
                 </p>
                 <div className={"flex flex-row text-sm gap-1"}>
-                  <p className={"text-white"}>85,3432545435432</p>
+                  <p className={"text-white"}>
+                    {formatedNumber(row?.state.currentPrice.toNumber() ?? 0)}
+                  </p>
                   <p className={"text-white"}>per</p>
-                  <p className={"text-white"}>SOL</p>
+                  <p className={"text-white"}>
+                    {selectedPool?.mintA.symbol
+                      ? selectedPool?.mintA.symbol
+                      : selectedPool?.mintA.address.slice(0, 4)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -118,15 +230,25 @@ const AddLiquidityModal = (props: Props) => {
                 <p className={"text-sky-500 font-semibold text-base"}>
                   Min Price
                 </p>
-                <p className={"text-white text-xl"}>75.21642</p>
+                <p className={"text-white text-xl"}>
+                  {formatedNumber(position?.priceLower.toNumber() ?? 0)}
+                </p>
                 <div
                   className={
                     "flex flex-row gap-1 text-xs text-sky-700 font-semibold"
                   }
                 >
-                  <p>RAY</p>
+                  <p>
+                    {selectedPool?.mintA.symbol
+                      ? selectedPool?.mintA.symbol
+                      : selectedPool?.mintA.address.slice(0, 4)}
+                  </p>
                   <p>per</p>
-                  <p>SOL</p>
+                  <p>
+                    {selectedPool?.mintB.symbol
+                      ? selectedPool?.mintB.symbol
+                      : selectedPool?.mintB.address.slice(0, 4)}
+                  </p>
                 </div>
               </div>
               <div
@@ -137,15 +259,25 @@ const AddLiquidityModal = (props: Props) => {
                 <p className={"text-sky-500 font-semibold text-base"}>
                   Max Price
                 </p>
-                <p className={"text-white text-xl"}>113.053485</p>
+                <p className={"text-white text-xl"}>
+                  {formatedNumber(position?.priceUpper.toNumber() ?? 0)}
+                </p>
                 <div
                   className={
                     "flex flex-row gap-1 text-xs text-sky-700 font-semibold"
                   }
                 >
-                  <p>RAY</p>
+                  <p>
+                    {selectedPool?.mintA.symbol
+                      ? selectedPool?.mintA.symbol
+                      : selectedPool?.mintA.address.slice(0, 4)}
+                  </p>
                   <p>per</p>
-                  <p>SOL</p>
+                  <p>
+                    {selectedPool?.mintB.symbol
+                      ? selectedPool?.mintB.symbol
+                      : selectedPool?.mintB.address.slice(0, 4)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -162,7 +294,11 @@ const AddLiquidityModal = (props: Props) => {
                 }
               >
                 <p>Balance:</p>
-                <p>0.043564351</p>
+                <p>
+                  {userTokens.find(
+                    (e) => e.address === selectedPool?.mintA.address
+                  )?.balance ?? 0}
+                </p>
               </div>
             </div>
             <div className={"flex flex-row justify-between"}>
@@ -180,25 +316,41 @@ const AddLiquidityModal = (props: Props) => {
                     <img
                       alt={"icon"}
                       className={"w-6 h-6 rounded-full"}
-                      src={
-                        "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
-                      }
+                      src={selectedPool?.mintA.logoURI}
                     />
                   </div>
                 </div>
-                <p>SOL</p>
+                <p>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
                 <div className="w-[1px] h-7 bg-white bg-opacity-40"></div>
                 {/* Right divider */}
-                <Button size={"sm"} className={"bg-white bg-opacity-10 h-7"}>
+                <Button
+                  size={"sm"}
+                  className={"bg-white bg-opacity-10 h-7"}
+                  onClick={() =>
+                    handleMaximizeAmount(selectedPool?.mintA.address)
+                  }
+                >
                   Max
                 </Button>
               </div>
               <div className={"flex flex-col items-end"}>
                 <input
-                  className={"bg-[#071233] text-white text-right px-0"}
-                  defaultValue={0}
+                  className={
+                    "bg-[#071233] text-white text-right py-1 outline-0 border-0 px-0"
+                  }
                   autoFocus={false}
-                  type={"number"}
+                  value={amount.amountA}
+                  onChange={(e) => {
+                    setAmount((prev) => ({
+                      ...prev,
+                      amountA: e.target.value as unknown as number,
+                    }));
+                    updateInputs(e.target.value as unknown as number, true);
+                  }}
                 />
                 <div
                   className={
@@ -206,7 +358,12 @@ const AddLiquidityModal = (props: Props) => {
                   }
                 >
                   <p>$</p>
-                  <p>0.05</p>
+                  <p>
+                    {(
+                      amount.amountA *
+                      tokenPrices[selectedPool?.mintA.address ?? ""]
+                    ).toFixed(4)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -223,7 +380,11 @@ const AddLiquidityModal = (props: Props) => {
                 }
               >
                 <p>Balance:</p>
-                <p>0</p>
+                <p>
+                  {userTokens.find(
+                    (e) => e.address === selectedPool?.mintB.address
+                  )?.balance ?? 0}
+                </p>
               </div>
             </div>
             <div className={"flex flex-row justify-between"}>
@@ -240,24 +401,38 @@ const AddLiquidityModal = (props: Props) => {
                   <img
                     alt={"icon"}
                     className={"w-6 h-6 rounded-full"}
-                    src={
-                      "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
-                    }
+                    src={selectedPool?.mintB.logoURI}
                   />
                 </div>
-                <p>SOL</p>
+                <p>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
                 <div className="w-[1px] h-7 bg-white bg-opacity-40"></div>
                 {/* Right divider */}
-                <Button size={"sm"} className={"bg-white bg-opacity-10 h-7"}>
+                <Button
+                  size={"sm"}
+                  className={"bg-white bg-opacity-10 h-7"}
+                  onClick={() => {
+                    handleMaximizeAmount(selectedPool?.mintB.address);
+                  }}
+                >
                   Max
                 </Button>
               </div>
               <div className={"flex flex-col items-end"}>
                 <input
-                  className={"bg-[#071233] text-white text-right px-0"}
-                  defaultValue={0}
+                  className="bg-[#071233] text-white text-right py-1 outline-0 border-0 px-0"
                   autoFocus={false}
-                  type={"number"}
+                  value={amount.amountB}
+                  onChange={(e) => {
+                    setAmount((prev) => ({
+                      ...prev,
+                      amountB: parseInt(e.target.value),
+                    }));
+                    updateInputs(parseInt(e.target.value), false);
+                  }}
                 />
                 <div
                   className={
@@ -265,7 +440,12 @@ const AddLiquidityModal = (props: Props) => {
                   }
                 >
                   <p>$</p>
-                  <p>0.05</p>
+                  <p>
+                    {(
+                      amount.amountB *
+                      tokenPrices[selectedPool?.mintB.address ?? ""]
+                    ).toFixed(4)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -275,7 +455,11 @@ const AddLiquidityModal = (props: Props) => {
           >
             <div className="flex flex-row justify-between text-white">
               <div className="flex flex-row gap-1">
-                <p>SOL</p>
+                <p>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
                 <div
                   className={
                     "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
@@ -284,17 +468,19 @@ const AddLiquidityModal = (props: Props) => {
                   <img
                     alt={"icon"}
                     className={"w-4 h-4 rounded-full"}
-                    src={
-                      "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
-                    }
+                    src={selectedPool?.mintA.logoURI}
                   />
                 </div>
               </div>
-              <p>0.05</p>
+              <p>{formatedNumber(amount.amountA)}</p>
             </div>
             <div className="flex flex-row justify-between text-white">
               <div className="flex flex-row gap-1">
-                <p>RAY</p>
+                <p>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
                 <div
                   className={
                     "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
@@ -303,24 +489,31 @@ const AddLiquidityModal = (props: Props) => {
                   <img
                     alt={"icon"}
                     className={"w-4 h-4 rounded-full"}
-                    src={
-                      "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
-                    }
+                    src={selectedPool?.mintB.logoURI}
                   />
                 </div>
               </div>
-              <p>2.093429</p>
+              <p>{formatedNumber(amount.amountB)}</p>
             </div>
             <div className="flex flex-row justify-between text-sky-500 font-semibold mt-1">
               <p>Total Deposit</p>
               <div className="flex flex-row gap-1">
                 <p>$</p>
-                <p>0.05</p>
+                <p>
+                  {(
+                    amount.amountA *
+                      tokenPrices[selectedPool?.mintA.address ?? ""] +
+                    amount.amountB *
+                      tokenPrices[selectedPool?.mintB.address ?? ""]
+                  ).toFixed(4)}
+                </p>
               </div>
             </div>
           </div>
         </div>
-        <Button size="lg">RAY Amount Too Large</Button>
+        <Button onClick={handleAddLiquidity} size="lg">
+          Add liquidity
+        </Button>
         <Button className={"bg-transparent"}>Cancel</Button>
       </DialogContent>
     </Dialog>
