@@ -14,7 +14,10 @@ const PoolSearchModal = () => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] w-[360px] z-[110] rounded-2xl p-4 sm:p-5"
-        style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
+        style={{
+          boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
+          borderColor: "rgba(171,196,255,0.5",
+        }}
       >
         <div
           className={

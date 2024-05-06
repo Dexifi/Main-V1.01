@@ -55,11 +55,13 @@ const AddAmmLiquidityModal = () => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] max-w-xs md:max-w-lg z-[110] rounded-2xl p-4 sm:p-5"
-        style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
+        style={{
+          boxShadow: "0 0 8px 1px rgba(171,196,255,0.5)",
+          borderColor: "rgba(171,196,255,0.5",
+        }}
       >
         {/*  first Box */}
         <CreatePoolModal />
-
         <div
           className={
             "p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2 mt-3"
