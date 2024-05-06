@@ -23,13 +23,24 @@ const AddAmmLiquidityModal = () => {
   const { onPoolSearchOpen } = usePoolSearchModal();
   const { onSelectAmmTokenOpen } = useSelectAmmTokenModal();
   const { onCreatePoolOpen } = useCreatePoolModal();
-  const inputRef = useRef(null);
+  const inputRefOne = useRef(null);
+  const inputRefTwo = useRef(null);
 
   const [showMore, setShowMore] = useState(false);
   const handleChangeCrypto = useCallback(() => {}, []);
 
   const handleShowMore = useCallback(
     () => setShowMore((prevShowMore) => !prevShowMore),
+    []
+  );
+
+  const handleFocusBox = useCallback(
+    (inputRef: { current: { focus: () => void } | null }) => {
+      if (inputRef.current !== null) {
+        // @ts-ignore
+        inputRef.current.focus();
+      }
+    },
     []
   );
 
@@ -46,6 +57,7 @@ const AddAmmLiquidityModal = () => {
           className={
             "p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2 mt-3"
           }
+          onClick={() => handleFocusBox(inputRefOne)}
         >
           <div className={"flex flex-row text-white justify-end"}>
             <div
@@ -101,6 +113,7 @@ const AddAmmLiquidityModal = () => {
               className={"bg-[#19232d] h-5 w-1/3 focus:outline-none"}
               type={"number"}
               id={"box-1"}
+              ref={inputRefOne}
             />
           </div>
           <div className={"flex flex-row text-white justify-end text-xs"}>
@@ -145,6 +158,7 @@ const AddAmmLiquidityModal = () => {
         {/*  Second Box */}
         <div
           className={"p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2"}
+          onClick={() => handleFocusBox(inputRefTwo)}
         >
           <div className={"flex flex-row text-white justify-end"}>
             <div
@@ -192,6 +206,7 @@ const AddAmmLiquidityModal = () => {
               </button>
             </div>
             <input
+              ref={inputRefTwo}
               className={"bg-[#19232d] h-5 w-1/3 focus:outline-none"}
               type={"number"}
               id={"box-2"}
