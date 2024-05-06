@@ -6,6 +6,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import { useCallback } from "react";
+import TokenListSettingModal from "@/components/modals/token-list-setting-modal";
 
 const AddAmmTokenModal = () => {
   const { isOpen, onClose } = useSelectAmmTokenModal();
@@ -21,13 +22,14 @@ const AddAmmTokenModal = () => {
         className="bg-[#0d111b] w-[360px] md:max-w-lg z-[110] rounded-2xl p-0"
         style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
       >
+        <TokenListSettingModal />
         <div
           className={
             "flex flex-row text-white justify-between w-full px-3 pt-4"
           }
         >
           <p>Select a Token</p>
-          <div onClick={onClose}>
+          <div onClick={onClose} className={"cursor-pointer"}>
             <CloseIcon />
           </div>
         </div>

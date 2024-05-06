@@ -10,7 +10,7 @@ import { CheckIcon } from "lucide-react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -23,6 +23,7 @@ const AddAmmLiquidityModal = () => {
   const { onPoolSearchOpen } = usePoolSearchModal();
   const { onSelectAmmTokenOpen } = useSelectAmmTokenModal();
   const { onCreatePoolOpen } = useCreatePoolModal();
+  const inputRef = useRef(null);
 
   const [showMore, setShowMore] = useState(false);
   const handleChangeCrypto = useCallback(() => {}, []);
@@ -40,7 +41,7 @@ const AddAmmLiquidityModal = () => {
       >
         {/*  first Box */}
         <CreatePoolModal />
-        <button onClick={onCreatePoolOpen}>fdsf</button>
+
         <div
           className={
             "p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2 mt-3"
@@ -96,7 +97,11 @@ const AddAmmLiquidityModal = () => {
                 Half
               </button>
             </div>
-            <input className={"bg-[#19232d] h-5 w-1/3"} type={"number"} />
+            <input
+              className={"bg-[#19232d] h-5 w-1/3 focus:outline-none"}
+              type={"number"}
+              id={"box-1"}
+            />
           </div>
           <div className={"flex flex-row text-white justify-end text-xs"}>
             <p>$3.74</p>
@@ -186,13 +191,18 @@ const AddAmmLiquidityModal = () => {
                 Half
               </button>
             </div>
-            <input className={"bg-[#19232d] h-5 w-1/3"} type={"number"} />
+            <input
+              className={"bg-[#19232d] h-5 w-1/3 focus:outline-none"}
+              type={"number"}
+              id={"box-2"}
+            />
           </div>
           <div className={"flex flex-row text-white justify-end text-xs"}>
             <p>$3.74</p>
           </div>
         </div>
         {/*  Third Box */}
+
         <div
           className={
             "p-3 rounded-3xl flex flex-col gap-1 text-xs text-white border border-[#757788]"
@@ -278,13 +288,13 @@ const AddAmmLiquidityModal = () => {
         {/*  Fourth box */}
         <div className={"p-3 bg-[#19232d] rounded-3xl text-xs text-white"}>
           <p>
-            I have read Raydium's Liquidity Guide and understand the risks
+            I have read Raydiums Liquidity Guide and understand the risks
             involved with providing liquidity and impermanent loss.
           </p>
           <div className={"flex flex-col gap-1 mt-2"}>
             <div className={"flex flex-row gap-2 items-center"}>
               <Checkbox.Root
-                className=" hover:bg-red-600 flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-red-600 "
+                className="flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-[#0d111b] "
                 id="c1"
               >
                 <Checkbox.Indicator className="text-sm">
@@ -295,7 +305,7 @@ const AddAmmLiquidityModal = () => {
             </div>
             <div className={"flex flex-row gap-2 items-center"}>
               <Checkbox.Root
-                className=" hover:bg-red-600 flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-red-600 "
+                className=" hover:bg-red-600 flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-[#0d111b] "
                 id="c1"
               >
                 <Checkbox.Indicator className="text-sm">
