@@ -7,6 +7,8 @@ import { useState } from "react";
 
 import { useAddLiquidityModal } from "@/lib/stores/liquidity.store";
 
+import CloseIcon from "@mui/icons-material/Close";
+
 type Props = {};
 
 const AddLiquidityModal = (props: Props) => {
@@ -25,7 +27,9 @@ const AddLiquidityModal = (props: Props) => {
             <p className={"text-white text-xl font-bold"}>
               Add liquidity to SOL - RAY
             </p>
-            <p className={"text-white"}>X</p>
+            <div className={"text-white"} onClick={onClose}>
+              <CloseIcon />
+            </div>
           </div>
           {/*First Box */}
           <div
