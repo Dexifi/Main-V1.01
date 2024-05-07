@@ -11,6 +11,7 @@ import {
   ClmmPoolPersonalPosition,
   fetchMultipleMintInfos,
   InnerSimpleV0Transaction,
+  ZERO,
 } from "@raydium-io/raydium-sdk";
 import { connection } from "@/lib/get-connections";
 import BN from "bn.js";
@@ -145,10 +146,62 @@ const harvestClmmPosition = async ({
   }
 };
 
+const removeClmmPosition = async ({
+  poolInfo,
+  position,
+  inputTokenAmount,
+  inputTokenMint,
+  wallet,
+  walletTokenAccounts,
+}: AddLiquidityProps) => {
+  if (!wallet.publicKey) return;
+
+  // -------- step 1: calculate liquidity --------
+  const { liquidity } = await calculateAmounts(
+    poolInfo,
+    position,
+    inputTokenAmount,
+    inputTokenMint,
+    0
+  );
+
+  // -------- step 3: create instructions by SDK function --------
+  const { innerTransactions } =
+    await Clmm.makeDecreaseLiquidityInstructionSimple({
+      connection,
+      poolInfo,
+      ownerPosition: position,
+      checkCreateATAOwner: true,
+      ownerInfo: {
+        wallet: wallet.publicKey,
+        tokenAccounts: walletTokenAccounts,
+        feePayer: wallet.publicKey,
+        useSOLBalance:
+          poolInfo.mintA.mint.equals(SOL_MINT) ||
+          poolInfo.mintB.mint.equals(SOL_MINT),
+      },
+      liquidity,
+      makeTxVersion: makeTxVersion,
+      amountMinA: ZERO,
+      amountMinB: ZERO,
+    });
+  try {
+    buildAndSendTx(innerTransactions, wallet);
+  } catch (e: any) {
+    console.log(e);
+    toast({
+      title: "Error",
+      description: e.message,
+      variant: "destructive",
+    });
+  }
+};
+
 export const raydiumActions = {
   addClmmLiquidity,
   calculateAmounts,
   harvestClmmPosition,
+  removeClmmPosition,
 };
 
 export async function buildAndSendTx(

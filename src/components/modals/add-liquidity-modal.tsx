@@ -18,10 +18,8 @@ import formatedNumber from "@/lib/numbers";
 import { useLiquidity } from "@/applications/Liquidity/store";
 import { raydiumActions } from "@/applications/Liquidity/actions";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { debounce, isNumber } from "lodash";
+import { debounce } from "lodash";
 import { connection } from "@/lib/get-connections";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { PublicKey } from "@solana/web3.js";
 import { getWalletTokenAccount } from "@/hooks/useLiquidity";
 import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
 

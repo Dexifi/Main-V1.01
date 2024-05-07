@@ -375,8 +375,8 @@ const ManageModal = (props: Props) => {
                     <p className={"text-[#abc4ff]"}>
                       {formatedNumber(row.state.currentPrice.toNumber())}
                     </p>
-                    <p>per</p>
-                    <p>
+                    <p className={"text-[#abc4ff]"}>per</p>
+                    <p className={"text-[#abc4ff]"}>
                       {selectedPool.mintB.symbol
                         ? selectedPool.mintB.symbol
                         : selectedPool.mintB.address.slice(0, 4)}
@@ -387,7 +387,9 @@ const ManageModal = (props: Props) => {
                     <p className={"text-[rgba(171,196,255,.5)]"}>
                       24H Price Range
                     </p>
-                    <p className={"text-[#abc4ff]"}>{`[, 35.243959932]`}</p>
+                    <p className={"text-[#abc4ff]"}>{`[ ${formatedNumber(
+                      selectedPool.day.priceMin
+                    )} , ${formatedNumber(selectedPool.day.priceMax)} ]`}</p>
                   </div>
                 </div>
                 <div className={"w-full flex-1"}>
