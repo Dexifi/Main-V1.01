@@ -11,6 +11,8 @@ import Image from "next/image";
 import { useState } from "react";
 
 import { useRemoveLiquidityModal } from "@/lib/stores/liquidity.store";
+import CloseIcon from "@mui/icons-material/Close";
+import { Slider } from "@mui/material";
 
 type Props = {};
 
@@ -28,135 +30,200 @@ const RemoveLiquidityModal = (props: Props) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="bg-[#0d111b] max-w-xs md:max-w-lg z-[110] rounded-2xl p-4 sm:p-5"
-        style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
+        style={{
+          boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
+          borderColor: "rgba(171,196,255,0.5",
+        }}
       >
-        <div className="flex justify-between flex-col gap-3">
+        <div className={"text-white"}>
+          <div className={"flex flex-row gap-1 w-full justify-between"}>
+            <div className={"flex flex-row gap-1"}>
+              <p>Remove Liquidity from</p>
+              <div className={"flex flex-row"}>
+                <p>SOL</p>
+                <p>-</p>
+                <p>RAY</p>
+              </div>
+            </div>
+            <div onClick={onClose}>
+              <CloseIcon />
+            </div>
+          </div>
+        </div>
+        {/* First Box */}
+        <div
+          className={
+            "text-white border rounded-3xl p-3 bg-[#19232d] border-[#757788]"
+          }
+        >
+          <div className={"flex flex-row justify-between w-full"}>
+            <p>Base</p>
+            <div className={"flex flex-row"}>
+              <p>Deposited:</p>
+              <p>0.32143241</p>
+            </div>
+          </div>
           <div
-            className="flex justify-between items-center py-2 px-4 rounded-md"
-            style={{
-              boxShadow: "0 0 5px rgba(217, 248, 255, 0.25)",
-            }}
+            className={"flex flex-row mt-2 w-full justify-between items-center"}
           >
-            <h6 className="text-lg text-[#d9f8ff]">{data_modal.title}</h6>
-
-            <div className="flex gap-4 items-center">
-              {data_modal ? (
-                <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  {data_modal.symbol}
-                </div>
-              ) : (
-                <Skeleton className="w-24 h-6 bg-slate-600" />
-              )}
-              {data_modal.symbol_logo ? (
-                <Image
-                  alt={`${data_modal.symbol}-logo / lend`}
-                  src={data_modal.symbol_logo}
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 aspect-square object-contain rounded-sm"
+            <div className={"flex flex-row items-center gap-2"}>
+              <div
+                className={
+                  "bg-white h-8 w-8 flex flex-row justify-center items-center rounded-full"
+                }
+              >
+                <img
+                  className={"w-6 h-6 rounded-full"}
+                  src={
+                    "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                  }
                 />
-              ) : (
-                <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
-              )}
+              </div>
+
+              <p>SOL</p>
+              <div className="border-r border-[rgba(171,196,255,0.5)] self-stretch" />
+              <button
+                className={"bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6"}
+              >
+                Max
+              </button>
             </div>
-
-            <Button
-              size="icon"
-              className="hover:bg-[#d9f8ff20] transition-all h-6 w-6"
-              onClick={onClose}
-            >
-              <X className="w-4 h-4 aspect-square object-contain" />
-            </Button>
+            <input className={"bg-[#19232d] h-5"} type={"number"} />
           </div>
+          <div className={"flex flex-row mt-2 justify-end"}>$0</div>
         </div>
-
-        <div className="flex justify-between flex-col gap-1">
-          {data_modal.symbol_logo ? (
-            <span className="text-sm text-[#757788] flex gap-1 flex-nowrap">
-              <span>Balance:</span>
-              <span>{formatedNumber(data_modal.balance, 1, true)}</span>
-              <span>{data_modal.symbol}</span>
-            </span>
-          ) : (
-            <Skeleton className="w-24 h-6 bg-slate-600" />
-          )}
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-4 justify-between items-center px-4 py-2 rounded-md bg-[#202d3a] flex-wrap">
-            <div className="flex gap-4 items-center w-1/2">
-              {data_modal.symbol_logo ? (
-                <Image
-                  alt={`${data_modal.symbol}-logo / lend`}
-                  src={data_modal.symbol_logo}
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 aspect-square object-contain rounded-sm"
+        {/* Second Box */}
+        <div
+          className={
+            "text-white border rounded-3xl p-3 bg-[#19232d] border-[#757788]"
+          }
+        >
+          <div className={"flex flex-row justify-between w-full"}>
+            <p>Qoute</p>
+            <div className={"flex flex-row"}>
+              <p>Deposited:</p>
+              <p>0.32143241</p>
+            </div>
+          </div>
+          <div
+            className={"flex flex-row mt-2 w-full justify-between items-center"}
+          >
+            <div className={"flex flex-row items-center gap-2"}>
+              <div
+                className={
+                  "bg-white h-8 w-8 flex flex-row justify-center items-center rounded-full"
+                }
+              >
+                <img
+                  className={"w-6 h-6 rounded-full"}
+                  src={
+                    "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                  }
                 />
-              ) : (
-                <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
-              )}
-              {data_modal.symbol ? (
-                <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  {data_modal.symbol}
-                </div>
-              ) : (
-                <Skeleton className="w-24 h-6 bg-slate-600" />
-              )}
-            </div>
-            <Input
-              value={amount}
-              onChange={(e) => {
-                const value = +e.target.value;
-                if (value > 4000) setAmount(4000);
-                else setAmount(value);
-              }}
-              type="number"
-              placeholder="Amount"
-              className="bg-transparent outline-none text-[#d9f8ff] flex-1 rounded-xl"
-            />
-            <div className="w-full flex justify-between items-center text-end">
-              <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                &asymp; ${formatedNumber(25.56, 3, false)}
               </div>
-              <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                ${formatedNumber(amount * 25.56, 2, true)}
-              </div>
+
+              <p>RAY</p>
+              <div className="border-r border-[rgba(171,196,255,0.5)] self-stretch" />
+              <button
+                className={"bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6"}
+              >
+                Max
+              </button>
             </div>
+            <input className={"bg-[#19232d] h-5"} type={"number"} />
           </div>
-          <div className="w-full flex justify-between items-center text-end gap-2 md:gap-4 flex-col md:flex-row">
-            <Button
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full md:w-1/2 bg-transparent text-xs md:text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-              size="sm"
-              onClick={() => setAmount(data_modal.balance / 2)}
-            >
-              Half
-            </Button>
-            <Button
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full md:w-1/2 bg-transparent text-xs md:text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-              size="sm"
-              onClick={() => setAmount(data_modal.balance)}
-            >
-              Max
-            </Button>
+          <div className={"flex flex-row mt-2 justify-end"}>$0</div>
+        </div>
+        {/*Third box*/}
+        <div className={"border p-3 rounded-3xl border-[#757788]"}>
+          <div className={"flex flex-row justify-between items-center"}>
+            <div className={"flex flex-row text-white gap-2 items-center"}>
+              <p>Amount</p>
+              <button
+                className={"bg-[#19232d] text-[#abc4ff] px-1.5 rounded-sm h-6 "}
+              >
+                Max
+              </button>
+              <button
+                className={"bg-[#19232d] text-[#abc4ff] px-1.5 rounded-sm h-6 "}
+              >
+                75%
+              </button>
+              <button
+                className={"bg-[#19232d] text-[#abc4ff] px-1.5 rounded-sm h-6"}
+              >
+                50%
+              </button>
+              <button
+                className={"bg-[#19232d] text-[#abc4ff] px-1.5 rounded-sm h-6"}
+              >
+                25%
+              </button>
+            </div>
+            <p className={"text-white"}>0.24%</p>
+          </div>
+          <Slider defaultValue={30} className={"mt-3"} color={"info"} />
+        </div>
+        {/* Last Box */}
+        <div className={"border rounded-3xl p-3 text-white border-[#757788]"}>
+          <p>Pending Yield</p>
+          <div className={"flex flex-row justify-end"}>
+            <p>$0.62</p>
+          </div>
+          <p>Minimum Received</p>
+          <div
+            className={"w-full flex flex-row justify-between mt-2 items-center"}
+          >
+            <div className={"flex flex-row gap-3 items-center"}>
+              <div
+                className={
+                  "bg-white h-8 w-8 flex flex-row justify-center items-center rounded-full"
+                }
+              >
+                <img
+                  className={"w-6 h-6 rounded-full"}
+                  src={
+                    "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                  }
+                />
+              </div>
+              <p>SOL</p>
+            </div>
+            <p>0.03234325423</p>
+          </div>
+          <div
+            className={"w-full flex flex-row justify-between mt-2 items-center"}
+          >
+            <div className={"flex flex-row gap-3 items-center"}>
+              <div
+                className={
+                  "bg-white h-8 w-8 flex flex-row justify-center items-center rounded-full"
+                }
+              >
+                <img
+                  className={"w-6 h-6 rounded-full"}
+                  src={
+                    "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                  }
+                />
+              </div>
+              <p>RAY</p>
+            </div>
+            <p>0.03234325423</p>
           </div>
         </div>
-
-        <Button
-          onClick={() => {}}
-          className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-xs md:text-sm"
+        <button
+          className={"h-12 rounded-3xl text-white"}
           style={{
-            boxShadow: "0 0 4px #88d6ff",
+            background:
+              "linear-gradient(138deg, rgba(0,0,0,1) 0%, rgba(119,186,234,1) 0%, rgba(37,58,73,1) 100%)",
           }}
         >
-          Remove Liquidity
-        </Button>
+          Withdraw Liquidity
+        </button>
+        <button className={"bg-[#0D111B] h-12 rounded-3xl text-white"}>
+          Cancel
+        </button>
       </DialogContent>
     </Dialog>
   );

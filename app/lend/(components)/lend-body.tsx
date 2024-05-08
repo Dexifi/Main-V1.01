@@ -9,6 +9,9 @@ import PoolLists from "./PoolLists";
 import PoolOverview from "./PoolOverview";
 import { LendState } from "@/applications/Lend/store";
 import Header from "./Header";
+import ManageModal from "@/components/modals/manage-modal";
+import CreatePositionModal from "@/components/modals/create-position-modal";
+import AddLiquidityModal from "@/components/modals/add-liquidity-modal";
 
 type Props = {
   isEXTRASMALL: boolean;
