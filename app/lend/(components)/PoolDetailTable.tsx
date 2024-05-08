@@ -5,7 +5,7 @@ import { useLend } from "@/applications/Lend/store";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { findToken } from "@/lib/get-wallet";
 import { getPrice } from "@/data/price";
-
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 type Props = {
   page: "main" | "turbo";
 };
@@ -80,162 +80,95 @@ const PoolDetailTable = ({ page }: Props) => {
   }, [page]);
   return (
     <div
-      className="flex justify-center items-center gap-5 bg-[#0d111b] rounded-3xl p-8 h-max flex-wrap sticky top-24  flex-col"
+      className="flex justify-center items-center bg-[#0d111b] rounded-3xl p-4 h-max flex-wrap sticky top-24  flex-col w-1/4"
       style={{
         boxShadow: "0 0 4px #88d6ff",
         background:
           "radial-gradient(50% 50% at 50% 50%, rgba(119, 186, 234, 0.2), transparent ), radial-gradient( 50% 50% at 50% 50%, rgba(251, 0, 196, 0) 3.49%, rgba(119, 186, 234, 0) 7.6%, rgba(253, 0, 197, 0) 10.46%, rgba(119, 186, 234, 0) 14.46%, rgba(255, 0, 199, 0) 18.56%, rgba(3, 0, 3, 0) 19.53%, transparent 79.82%, rgba(246, 0, 192, 0) 81.08%, rgba(119, 186, 234, 0) 84.04%, rgba(247, 0, 193, 0) 86.61%, rgba(119, 186, 234, 0) 91.01%, rgba(249, 0, 194, 0) 95.16%, rgba(119, 186, 234, 0) 98.6% )",
       }}
     >
-      <div className="flex justify-between w-full gap-4">
-        {chartData.map(({ percentage, color }, index) => (
-          <div
-            key={color}
-            className={`w-16 h-40 flex justify-end items-end relative overflow-hidden`}
-          >
-            <div
-              className={`w-full h-full ${color} opacity-50 max-h-full rounded-[25px/12.5px]`}
-            />
-            <div
-              className={`w-16 h-full ${color} opacity-40 max-h-5 absolute right-0 top-0 rounded-[25px/12.5px]`}
-            />
-            <div
-              className={`w-16 h-full  absolute right-0 bottom-0 rounded-[25px/12.5px]`}
-              style={{
-                maxHeight: percentage + "%",
-              }}
-            >
-              <div
-                className={`w-16 h-5 ${color} opacity-100 absolute  top-0 rounded-[25px/12.5px]`}
-              />
-              <div
-                className={`w-16 ${color} h-full opacity-70 flex-1 bottom-0 rounded-[25px/12.5px]`}
-              />
-            </div>
-          </div>
-        ))}
+      <div className={"flex flex-row text-white w-full justify-between mt-4"}>
+        <div className={"flex flex-col gap-4"}>
+          <p>Equity</p>
+          <p>$1000</p>
+        </div>
+        <div className={"flex flex-col justify-end"}>
+          <p>=</p>
+        </div>
+        <div className={"flex flex-col gap-4"}>
+          <p>Supply</p>
+          <p>$2300</p>
+        </div>
+        <div className={"flex flex-col justify-end"}>
+          <p>-</p>
+        </div>
+        <div className={"flex flex-col gap-4"}>
+          <p>Borrow</p>
+          <p>$1000</p>
+        </div>
       </div>
+      <div className={"w-full bg-[#757788] h-0.5 mt-5"} />
+      <div className={"flex flex-row w-full justify-between text-white mt-5"}>
+        <p>Weighted Borrow</p>
+        <p>Borrow Limit</p>
+      </div>
+      <div className={"flex flex-row w-full justify-between text-white mt-5"}>
+        <p>$1000</p>
+        <p>$1000</p>
+      </div>
+      {/*  Progress bar */}
+      <div className={"bg-red-50 h-3 w-full mt-3"} />
+      <div className={"flex flex-row w-full justify-between text-white mt-3"}>
+        <p>Liquidation Threshold</p>
+        <p>$1000</p>
+      </div>
+      <div className={"w-full bg-[#757788] h-1 mt-3"} />
 
-      <div className="w-full flex-1 min-w-[250px]">
-        <Table>
-          <TableBody>
-            <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-              <TableCell
-                className={`font-medium text-white text-left py-2 text-sm pl-0`}
-              >
-                Net value
-              </TableCell>
-              <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
-                $
-                {formatedNumber(
-                  obligation?.obligationStats?.netAccountValue ?? 0,
-                  1,
-                  true
-                )}
-              </TableCell>
-            </TableRow>
-            {chartData?.map((row, index) => (
-              <TableRow
-                className="hover:bg-transparent border-[#7c7c8d]"
-                key={`${formatedString(
-                  row.title.toLocaleLowerCase()
-                )}_${index}`}
-              >
-                <TableCell
-                  className={`font-medium text-left ${row.textColor} py-2 text-sm pl-0`}
-                >
-                  {row.title}
-                </TableCell>
-                <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
-                  ${formatedNumber(row?.value ?? 0, 1, true)}
-                </TableCell>
-              </TableRow>
-            ))}
-            <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-              <TableCell
-                className={`font-medium text-white text-left py-2 text-sm pl-0`}
-              >
-                Weight Borrow
-              </TableCell>
-              <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
-                TODO ${formatedNumber(0, 1, true)}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-        <p className={"text-sky-100 my-2"}>
-          Assets <span className={"text-cyan-400"}>Supplied</span>
-        </p>
-        <hr />
-        <Table>
-          <TableBody>
-            {deposits.map((e, index) => (
-              <TableRow
-                key={`${e.title}_${index}_${page}_deposits`}
-                className={"hover:bg-inherit "}
-              >
-                <TableCell
-                  className={
-                    "flex items-center flex-row justify-between mt-1 pb-2"
-                  }
-                >
-                  <div className={"flex flex-row items-center gap-2"}>
-                    <img
-                      src={e.logoURI}
-                      alt={e.title}
-                      className={"w-5 h-5 rounded-full"}
-                    />
-                    <p className={"text-sky-100"}>{e.title}</p>
-                  </div>
-                  <div>
-                    <p className={"text-gray-500"}>
-                      {formatedNumber(e.amount, 4)}
-                    </p>
-                    <p className={"text-gray-500"}>
-                      ${formatedNumber(e.price, 3)}
-                    </p>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <p className={"text-sky-100 my-2 mt-6"}>
-          Assets <span className={"text-cyan-400"}>Borrowed</span>
-        </p>
-        <hr />
-        <Table>
-          <TableBody>
-            {borrows.map((e, index) => (
-              <TableRow
-                key={`${e.title}_${index}_${page}_borrows`}
-                className={"hover:bg-inherit"}
-              >
-                <TableCell
-                  className={"flex items-center flex-row justify-between mt-1"}
-                >
-                  <div className={"flex flex-row items-center gap-2"}>
-                    <img
-                      src={e.logoURI}
-                      alt={e.title}
-                      className={"w-5 h-5 rounded-full"}
-                    />
-                    <p className={"text-sky-100"}>{e.title}</p>
-                  </div>
-                  <div>
-                    <p className={"text-gray-500"}>
-                      {formatedNumber(e.amount, 4)}
-                    </p>
-                    <p className={"text-gray-500"}>
-                      ${formatedNumber(e.price, 3)}
-                    </p>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      {/* ===================================== */}
+      <div className={"bg-blue-500 w-full"}>
+        <div className={"flex flex-row justify-center items-center gap-2 m-2"}>
+          <div className={"h-5 w-5 bg-amber-950"} />
+          <p>Weighted Borrow</p>
+        </div>
+        <div className={"flex flex-row gap-2 justify-center mt-3"}>
+          <p>Position</p>
+          <p>x</p>
+          <p>Price</p>
+          <p>x</p>
+          <p>Weight</p>
+          <p>=</p>
+          <p>Total</p>
+        </div>
+        <div className={"flex flex-row gap-2 justify-center mt-1"}>
+          <p>Total Weighted Borrow</p>
+          <p>=</p>
+          <p>$1000</p>
+        </div>
+        <div className={"flex flex-row justify-center mt-3"}>
+          <div className={"w-2/3 h-0.5 bg-red-50"} />
+        </div>
+        <div className={"flex flex-row justify-center items-center gap-2 m-2"}>
+          <div className={"h-5 w-5 bg-blue-200"} />
+          <p>Borrow Limit</p>
+        </div>
+        <div className={"flex flex-row gap-2 justify-center mt-3"}>
+          <p>Position</p>
+          <p>x</p>
+          <p>Price</p>
+          <p>x</p>
+          <p>Open LTV</p>
+          <p>=</p>
+          <p>Total</p>
+        </div>
       </div>
+      {/* ===================================== */}
+      <div className={"w-full bg-[#757788] h-1"} />
+
+      {/*<div className={"flex flex-row justify-between text-white items-center"}>*/}
+      {/*  <ExpandMoreIcon />*/}
+      {/*  <p>Show Details</p>*/}
+      {/*  <ExpandMoreIcon />*/}
+      {/*</div>*/}
     </div>
   );
 };
