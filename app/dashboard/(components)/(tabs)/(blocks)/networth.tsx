@@ -148,9 +148,9 @@ const Networth = ({ isEXTRASMALL }: Props) => {
   ];
 
   return (
-    <div className="w-full flex flex-wrap justify-between gap-5">
+    <div className="w-full flex flex-wrap justify-between gap-4">
       <div
-        className="flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl px-5 lg:px-10 py-5 overflow-auto"
+        className="flex-1 bg-[#0d111b] rounded-3xl px-4 lg:px-10 py-4 overflow-auto"
         style={{ boxShadow: "0 0 4px #88d6ff" }}
       >
         <div className="flex gap-x-5 text-[#D9F8FF] text-lg md:text-2xl">
@@ -165,7 +165,7 @@ const Networth = ({ isEXTRASMALL }: Props) => {
               {data.table.header.map((header, index) => (
                 <TableHead
                   key={`${formatedString(header.toLocaleLowerCase())}_${index}`}
-                  className="text-sm md:text-md truncate max-w-[110px]"
+                  className="text-sm md:text-md truncate max-w-[110px] text-[#D9F8FF] p-0"
                 >
                   {header}
                 </TableHead>
@@ -181,17 +181,17 @@ const Networth = ({ isEXTRASMALL }: Props) => {
                   row.title.toLocaleLowerCase()
                 )}_${index}`}
               >
-                <TableCell className="font-medium text-left py-2 text-sm md:text-md truncate max-w-[110px]">
+                <TableCell className="font-medium text-left py-2 text-sm md:text-md truncate max-w-[110px] pl-0">
                   {row.title}
                   <span className={cn("ml-1", row.color)}>*</span>
                 </TableCell>
-                <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
+                <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pl-0">
                   ${formatedNumber(Number(row.value))}
                 </TableCell>
-                <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
+                <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pl-0">
                   ${formatedNumber(row.pending)}
                 </TableCell>
-                <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
+                <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pl-0">
                   {formatedNumber(Number(row.worth))}%
                 </TableCell>
               </TableRow>
@@ -200,7 +200,7 @@ const Networth = ({ isEXTRASMALL }: Props) => {
             <TableRow className="hover:bg-transparent">
               <TableCell />
               <TableCell />
-              <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
+              <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pl-0">
                 $
                 {formatedNumber(
                   data.table.rows
@@ -211,7 +211,7 @@ const Networth = ({ isEXTRASMALL }: Props) => {
                     )
                 )}
               </TableCell>
-              <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
+              <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pl-0">
                 {formatedNumber(
                   Number(
                     data.table.rows
@@ -223,14 +223,13 @@ const Networth = ({ isEXTRASMALL }: Props) => {
                       )
                   )
                 )}
-                %
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </div>
       <div
-        className={`min-w-max md:min-w-80 w-full md:w-max overflow-hidden items-center flex ${
+        className={`min-w-[320px] overflow-hidden items-center flex ${
           isEXTRASMALL ? "flex-col" : "flex-row"
         } md:flex-col ${
           isEXTRASMALL ? "justify-center" : "justify-start"
@@ -262,11 +261,11 @@ const Networth = ({ isEXTRASMALL }: Props) => {
             ))}
           </Pie>
         </PieChart>
-        <div className="flex flex-col gap-y-1 w-full">
+        <div className="flex flex-col w-full px-10 -m-4">
           {data.table.rows.map((entry, index) => (
             <div
               key={`cell-${index}`}
-              className="text-left flex items-center gap-x-2 w-full text-[0.69rem] text-[#7c7c8d] font-medium truncate"
+              className="text-left flex items-center gap-x-2 w-full text-sm text-[#7c7c8d] font-medium truncate"
             >
               <div
                 className={`w-3 h-3 object-contain aspect-square ${entry.background} rounded-[3px]`}

@@ -60,7 +60,7 @@ const Trading = ({ isEXTRASMALL }: Props) => {
     >
       <div className="text-lg md:text-2xl truncate flex items-center gap-5 text-[#D9F8FF]">
         <div className="flex">
-          <h3>{data.title}</h3>
+          <h3 className={"mr-2"}>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
         <span>${formatedNumber(total)}</span>
@@ -95,7 +95,7 @@ const Trading = ({ isEXTRASMALL }: Props) => {
               {data.table.header.map((header, index) => (
                 <TableHead
                   key={`${formatedString(header.toLocaleLowerCase())}_${index}`}
-                  className="text-sm md:text-md truncate max-w-[110px]"
+                  className="text-sm md:text-md truncate max-w-[110px] text-[#D9F8FF]"
                   align="left"
                 >
                   {header}
