@@ -21,6 +21,7 @@ const ClaimAllPendingModal = (props: Props) => {
     symbol_logo: "/assets/images/solana-1@2x.png",
     balance: 14941,
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent

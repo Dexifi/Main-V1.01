@@ -8,10 +8,7 @@ import { removeMiddleString } from "@/lib/string";
 import { TOKEN_LIST_URL } from "@jup-ag/core";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { ChevronsDown, ChevronsUpDown } from "lucide-react";
-import {
-  sendAndConfirmTransaction,
-  VersionedTransaction,
-} from "@solana/web3.js";
+import { VersionedTransaction } from "@solana/web3.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { useAtom } from "jotai";
@@ -441,6 +438,7 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
         const tokens: TokenType[] = await (
           await fetch(TOKEN_LIST_URL["mainnet-beta"])
         ).json();
+        console.log(tokens, TOKEN_LIST_URL["mainnet-beta"]);
         if (tokens) {
           setTokenList(tokens);
           const solana = tokens.find((t: any) => t.symbol === "SOL");
@@ -684,6 +682,7 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
 
 export default IndexSwap;
 
+// TODO make dynamic
 let swapInformation: SwapInfoProps["data"] = [
   {
     title: "Price Impact",

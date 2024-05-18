@@ -21,7 +21,6 @@ type Props = {
 const ClmmChart = ({ points, lowerPrice, upperPrice, currentPrice }: Props) => {
   const [xAxisDomain, setXAxisDomain] = useState([60, 120]);
   const [userRange, setUserRange] = useState([0, 0]);
-  const [editable, setEditable] = useState(false);
   const data = useMemo(() => {
     return points;
   }, [points]);

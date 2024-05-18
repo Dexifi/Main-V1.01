@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/table";
 import formatedNumber from "@/lib/numbers";
 import {
+  useAddAmmLiquidityModal,
   useAddLiquidityModal,
-  useRemoveLiquidityModal,
+  useCreatePositionLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import formatedString from "@/lib/string";
 import { useCallback, useEffect, useState } from "react";
@@ -65,8 +66,8 @@ const PoolsTab = () => {
     ],
   };
 
-  const { onAddLiquidityOpen } = useAddLiquidityModal();
-  const { onRemoveLiquidityOpen } = useRemoveLiquidityModal();
+  const { onAddAmmLiquidityOpen } = useAddAmmLiquidityModal();
+  const { onCreatePositionLiquidityOpen } = useCreatePositionLiquidityModal();
 
   const onScroll = async () => {
     const scrollTop = document.documentElement.scrollTop;
@@ -331,7 +332,12 @@ const PoolsTab = () => {
                           className="max-w-[150px] text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
                           onClick={() => {
                             setSelectedPool(row);
-                            onAddLiquidityOpen();
+                            console.log(row);
+                            row.type.toLocaleLowerCase() === "standard"
+                              ? onAddAmmLiquidityOpen()
+                              : row.type.toLocaleLowerCase() === "concentrated"
+                              ? onCreatePositionLiquidityOpen()
+                              : null;
                           }}
                           style={{
                             boxShadow: "0 0 4px #88d6ff",

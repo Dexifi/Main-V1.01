@@ -63,14 +63,13 @@ const ManageModal = (props: Props) => {
   });
   useEffect(() => {
     (async () => {
-      if (selectedPool?.id) {
+      if (selectedPool?.id && selectedPool.type === "Concentrated") {
         const chartData = await RaydiumPools.getChartPoints(selectedPool?.id);
         const d = chartData.map((p) => ({ x: p.x, y: p.y })).reverse();
         setChartData(d);
       }
     })();
   }, [selectedPool]);
-
   useEffect(() => {
     const fetchTokensPrice = async () => {
       if (!selectedPool || !position) return;
