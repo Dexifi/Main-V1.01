@@ -15,7 +15,7 @@ import { useAtom } from "jotai";
 import { tokenAtom, TokenType } from "@/stores/tokens";
 import { mainTokens } from "@/configuration/tokens";
 import { swapAtom, swapModalAtom } from "@/stores/swap";
-
+import IosShareIcon from "@mui/icons-material/IosShare";
 const filterData = (data: TokenType[], searchValue: string) =>
   data.filter(
     (token: TokenType) =>
@@ -134,14 +134,14 @@ const SwapModal = () => {
           {/*  */}
         </div>
         {tokenList && (
-          <div className="flex flex-col w-full max-h-96 overflow-y-scroll ">
-            <div className="grid md:grid-cols-2 gap-4 w-full pr-4">
+          <div className="flex flex-col w-full max-h-96 overflow-y-scroll">
+            <div className="w-full">
               {filterData(tokenList, search)
                 .slice(0, 90)
                 .map((token) => (
-                  <Button
+                  <div
                     key={token.address}
-                    className="flex justify-start w-full gap-4"
+                    className="flex justify-start w-full gap-4 p-3 cursor-pointer items-center"
                     onClick={() => handleSelect(token)}
                   >
                     {token.logoURI ? (
@@ -155,10 +155,43 @@ const SwapModal = () => {
                     ) : (
                       <Skeleton className="w-6 h-6 aspect-square object-contain bg-[#d9f8ff20]" />
                     )}
-                    <span className="text-sm text-[#d9f8ff]">
-                      {token.symbol}
-                    </span>
-                  </Button>
+                    <div className={"flex flex-row"}>
+                      <div className={"flex flex-col min-w-[90px]"}>
+                        <span className="text-sm text-[#d9f8ff]">
+                          {token.symbol}
+                        </span>
+                        <p className={"text-xs text-[#757788]"}>{token.name}</p>
+                      </div>
+                      <div
+                        className={
+                          "bg-[#1E1E1E] px-1 h-5 flex flex-row items-center justify-center rounded-sm ml-1 gap-1"
+                        }
+                      >
+                        <p className={"text-xs text-[#757788]"}>
+                          {token.address.slice(0, 3) +
+                            "..." +
+                            token.address.slice(-3)}
+                        </p>
+                        <IosShareIcon sx={{ fontSize: 14, color: "#757788" }} />
+                      </div>
+                    </div>
+                    <div className={"w-full flex flex-row justify-end gap-2"}>
+                      {token.tags.includes("token2022") && (
+                        <div className={"border rounded-xl border-[#757788]"}>
+                          <p className={"text-[#757788] text-xs p-1"}>
+                            Token2022
+                          </p>
+                        </div>
+                      )}
+                      {token.tags.includes("unknown") && (
+                        <div className={"border rounded-xl border-[#757788]"}>
+                          <p className={"text-[#757788] text-xs p-1"}>
+                            Unknown
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 ))}
             </div>
           </div>
