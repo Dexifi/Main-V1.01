@@ -1,33 +1,43 @@
-import {
-  useAddAmmLiquidityModal,
-  useCreatePoolModal,
-  usePoolSearchModal,
-  useSelectAmmTokenModal,
-} from "@/lib/stores/liquidity.store";
+import { useAddAmmLiquidityModal } from "@/lib/stores/liquidity.store";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CheckIcon } from "lucide-react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddIcon from "@mui/icons-material/Add";
-import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import { useCallback, useRef, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import TokenListSettingModal from "@/components/modals/token-list-setting-modal";
 import CreatePoolModal from "@/components/modals/create-pool-modal";
+import { useLiquidity } from "@/applications/Liquidity/store";
+import { useAtom } from "jotai";
+import { selectedPoolAtom } from "@/components/modals/store";
+import formatedNumber from "@/lib/numbers";
+import { raydiumActions } from "@/applications/Liquidity/actions";
+import { Percent, Token, TokenAmount } from "@raydium-io/raydium-sdk";
+import { PublicKey } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
+import { getWalletTokenAccount } from "@/hooks/useLiquidity";
+import { connection } from "@/lib/get-connections";
+import { debounce } from "lodash";
+import Decimal from "decimal.js";
+import { toast } from "@/components/ui/use-toast";
 
 const AddAmmLiquidityModal = () => {
   const { isOpen, onClose } = useAddAmmLiquidityModal();
   const [loading, setLoading] = useState(false);
-  const { onPoolSearchOpen } = usePoolSearchModal();
-  const { onSelectAmmTokenOpen } = useSelectAmmTokenModal();
-  const { onCreatePoolOpen } = useCreatePoolModal();
   const inputRefOne = useRef(null);
   const inputRefTwo = useRef(null);
+  const [confirmed, setConfirmed] = useState<"indeterminate" | boolean>(false);
 
+  const userTokens = useLiquidity((state) => state.userTokens);
+  const tokenPrices = useLiquidity((state) => state.tokenPrices);
+  const [selectedPool] = useAtom(selectedPoolAtom);
+  const { wallet } = useWallet();
+  const [amounts, setAmounts] = useState({
+    amountA: 0,
+    amountB: 0,
+  });
   const [showMore, setShowMore] = useState(false);
-  const handleChangeCrypto = useCallback(() => {}, []);
 
   const handleShowMore = useCallback(
     () => setShowMore((prevShowMore) => !prevShowMore),
@@ -44,12 +54,132 @@ const AddAmmLiquidityModal = () => {
     []
   );
 
-  const handleMaxAmount = useCallback((e: { stopPropagation: () => void }) => {
-    e.stopPropagation();
-  }, []);
-  const handleHalfAmount = useCallback((e: { stopPropagation: () => void }) => {
-    e.stopPropagation();
-  }, []);
+  const tokenA = useMemo(() => {
+    return userTokens.find(
+      (token) => token.address === selectedPool?.mintA.address
+    );
+  }, [selectedPool?.mintA.address, userTokens]);
+
+  const tokenB = useMemo(() => {
+    return userTokens.find(
+      (token) => token.address === selectedPool?.mintB.address
+    );
+  }, [selectedPool?.mintB.address, userTokens]);
+
+  const handleAddLiquidity = useCallback(async () => {
+    if (
+      !selectedPool ||
+      !selectedPool?.mintA?.address ||
+      !wallet?.adapter.publicKey
+    )
+      return;
+    setLoading(true);
+
+    const baseToken: Token = {
+      equals(other: Token): boolean {
+        return false;
+      },
+      symbol: selectedPool?.mintA.symbol,
+      name: selectedPool?.mintA.name,
+      decimals: selectedPool?.mintA.decimals,
+      mint: new PublicKey(selectedPool.mintA.address),
+      programId: new PublicKey(selectedPool?.mintA.programId),
+    };
+
+    const quoteToken: Token = {
+      equals(other: Token): boolean {
+        return false;
+      },
+      symbol: selectedPool?.mintB.symbol,
+      name: selectedPool?.mintB.name,
+      decimals: selectedPool?.mintB.decimals,
+      mint: new PublicKey(selectedPool.mintB.address),
+      programId: new PublicKey(selectedPool?.mintB.programId),
+    };
+    const walletAccounts = await getWalletTokenAccount(
+      connection,
+      wallet.adapter.publicKey
+    );
+    try {
+      const tx = await raydiumActions.addAmmLiquidity({
+        wallet: wallet?.adapter as BaseSignerWalletAdapter,
+        inputTokenAmount: new TokenAmount(
+          baseToken,
+          new Decimal(
+            amounts.amountA * 10 ** selectedPool.mintA.decimals
+          ).toFixed(0)
+        ),
+        quoteToken: quoteToken,
+        slippage: new Percent(0, 100),
+        targetPool: selectedPool?.id ?? "",
+        walletTokenAccounts: walletAccounts,
+      });
+      setLoading(false);
+    } catch (e) {
+      toast({
+        title: "Transaction failed",
+        description: "Transaction has failed",
+        variant: "destructive",
+      });
+      console.error(e);
+      setLoading(false);
+    }
+  }, [amounts.amountA, selectedPool, wallet?.adapter]);
+
+  useEffect(() => {
+    selectedPool && setLoading(false);
+  }, [selectedPool]);
+
+  const handleUpdateAmountWithPercentage = (
+    mint: "A" | "B",
+    percent: number
+  ) => {
+    const userToken = mint === "A" ? tokenA : tokenB;
+    if (!userToken) return;
+    const amount = (percent / 100) * (userToken?.balance ?? 0);
+    if (mint === "A") {
+      setAmounts((prev) => ({ ...prev, amountA: amount }));
+    } else {
+      setAmounts((prev) => ({ ...prev, amountB: amount }));
+    }
+    updateSecondAmount(mint, amount);
+  };
+
+  const updateSecondAmount = debounce((mint: "A" | "B", newAmount: number) => {
+    if (!selectedPool) return;
+    setLoading(true);
+    const targetToken = mint === "A" ? selectedPool.mintA : selectedPool.mintB;
+    const token: Token = {
+      equals(other: Token): boolean {
+        return false;
+      },
+      symbol: targetToken.symbol,
+      name: targetToken.name,
+      decimals: targetToken.decimals,
+      mint: new PublicKey(targetToken.address),
+      programId: new PublicKey(targetToken.programId),
+    };
+    const tokenAmount = new TokenAmount(
+      token,
+      parseInt((newAmount * 10 ** token.decimals).toString())
+    );
+    raydiumActions
+      .computeAnotherAmount(
+        token,
+        selectedPool.id,
+        tokenAmount,
+        new Percent(1, 100)
+      )
+      .then((res) => {
+        setAmounts((prev) => ({
+          ...prev,
+          [mint === "A" ? "amountB" : "amountA"]:
+            res.maxAnotherAmount.numerator.toNumber() /
+            10 ** selectedPool[mint === "A" ? "mintB" : "mintA"].decimals,
+        }));
+      });
+    setLoading(false);
+  }, 1000);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -62,9 +192,10 @@ const AddAmmLiquidityModal = () => {
       >
         {/*  first Box */}
         <CreatePoolModal />
+        <p className="text-white font-medium text-lg">Add liquidity</p>
         <div
           className={
-            "p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2 mt-3"
+            "p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2 mt-1"
           }
           onClick={() => handleFocusBox(inputRefOne)}
         >
@@ -74,17 +205,18 @@ const AddAmmLiquidityModal = () => {
               onClick={() => console.log("click")}
             >
               <p>Balance:</p>
-              {loading ? <p>-</p> : <p>0.943241321</p>}
+              {!tokenA?.balance ? (
+                <p>-</p>
+              ) : (
+                <p>{formatedNumber(tokenA?.balance, 4)}</p>
+              )}
             </div>
           </div>
           <div
             className={"text-white flex flex-row justify-between items-center"}
           >
             <div className={"flex flex-row gap-2 items-center"}>
-              <div
-                className={"flex flex-row gap-2 items-center cursor-pointer"}
-                onClick={onSelectAmmTokenOpen}
-              >
+              <div className={"flex flex-row gap-2 items-center"}>
                 <div>
                   <div
                     className={
@@ -92,22 +224,30 @@ const AddAmmLiquidityModal = () => {
                     }
                   >
                     <img
-                      className={"w-6 h-6 rounded-full"}
+                      className={"w-6 h-6 rounded-full bg-gray-600"}
                       src={
-                        "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                        selectedPool?.mintA.logoURI
+                          ? selectedPool?.mintA.logoURI
+                          : "/unknown.svg"
                       }
                     />
                   </div>
                 </div>
-                <p className={"text-base"}>SOL</p>
-                <ExpandMoreIcon />
+                <p className={"text-base"}>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
               </div>
               <div className="border-r border-[rgba(171,196,255,0.5)] self-stretch" />
               <button
                 className={
                   "bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6 text-xs"
                 }
-                onClick={(e) => handleMaxAmount(e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUpdateAmountWithPercentage("A", 100);
+                }}
               >
                 Max
               </button>
@@ -115,58 +255,44 @@ const AddAmmLiquidityModal = () => {
                 className={
                   "bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6 text-xs"
                 }
-                onClick={(e) => handleHalfAmount(e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUpdateAmountWithPercentage("A", 50);
+                }}
               >
                 Half
               </button>
             </div>
             <input
-              className={"bg-[#19232d] h-5 w-1/3 focus:outline-none"}
+              className={
+                "bg-[#19232d] h-5 w-1/3 focus:outline-none font-bold text-right"
+              }
               type={"number"}
               id={"box-1"}
               ref={inputRefOne}
+              value={amounts.amountA}
+              onChange={(e) => {
+                updateSecondAmount("A", parseFloat(e.target.value));
+
+                setAmounts((prev) => ({
+                  ...prev,
+                  amountA: parseFloat(e.target.value),
+                }));
+              }}
             />
           </div>
           <div className={"flex flex-row text-white justify-end text-xs"}>
-            <p>$3.74</p>
+            <p>
+              ${" "}
+              {formatedNumber(
+                amounts.amountA *
+                  tokenPrices[selectedPool?.mintA.address ?? ""],
+                4
+              )}
+            </p>
           </div>
         </div>
-        {/*  Between Boxes */}
-        <div
-          className={
-            "flex flex-row text-white items-center justify-between px-6 text-sm"
-          }
-        >
-          <div className={"flex flex-row gap-2 items-center"}>
-            <AddIcon />
-            {!loading && (
-              <>
-                <div className={"flex flex-row gap-1"}>
-                  <p>1</p>
-                  <p>USDC</p>
-                </div>
-                <p>≈</p>
-                <div className={"flex flex-row gap-1"}>
-                  <p>0.007402</p>
-                  <p>SOL</p>
-                </div>
-                <div onClick={handleChangeCrypto} className={"cursor-pointer"}>
-                  <SwapHorizIcon sx={{ fontSize: 16 }} />
-                </div>
-              </>
-            )}
-          </div>
-          <div className={"flex flex-row gap-4 items-center "}>
-            <div
-              className={"bg-[#19232d] rounded-full p-1 cursor-pointer"}
-              onClick={onPoolSearchOpen}
-            >
-              <SearchIcon />
-            </div>
-            <p>O</p>
-          </div>
-        </div>
-        {/*  Second Box */}
+
         <div
           className={"p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2"}
           onClick={() => handleFocusBox(inputRefTwo)}
@@ -177,7 +303,11 @@ const AddAmmLiquidityModal = () => {
               onClick={() => console.log("click")}
             >
               <p>Balance:</p>
-              {loading ? <p>-</p> : <p>0.943241321</p>}
+              {!tokenB?.balance ? (
+                <p>-</p>
+              ) : (
+                <p>{formatedNumber(tokenB?.balance, 4)}</p>
+              )}
             </div>
           </div>
           <div
@@ -191,21 +321,29 @@ const AddAmmLiquidityModal = () => {
                   }
                 >
                   <img
-                    className={"w-6 h-6 rounded-full"}
+                    className={"w-6 h-6 rounded-full bg-gray-600"}
                     src={
-                      "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                      selectedPool?.mintB.logoURI
+                        ? selectedPool?.mintB.logoURI
+                        : "/unknown.svg"
                     }
                   />
                 </div>
               </div>
-              <p className={"text-base"}>SOL</p>
-              <ExpandMoreIcon />
+              <p className={"text-base"}>
+                {selectedPool?.mintB.symbol
+                  ? selectedPool?.mintB.symbol
+                  : selectedPool?.mintB.address.slice(0, 4)}
+              </p>
               <div className="border-r border-[rgba(171,196,255,0.5)] self-stretch" />
               <button
                 className={
                   "bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6 text-xs"
                 }
-                onClick={(e) => handleMaxAmount(e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUpdateAmountWithPercentage("B", 100);
+                }}
               >
                 Max
               </button>
@@ -213,20 +351,40 @@ const AddAmmLiquidityModal = () => {
                 className={
                   "bg-[#0d111b] text-[#abc4ff] px-1.5 rounded-sm h-6 text-xs"
                 }
-                onClick={(e) => handleHalfAmount(e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUpdateAmountWithPercentage("B", 50);
+                }}
               >
                 Half
               </button>
             </div>
             <input
               ref={inputRefTwo}
-              className={"bg-[#19232d] h-5 w-1/3 focus:outline-none"}
+              className={
+                "bg-[#19232d] h-5 w-1/3 font-bold text-right focus:outline-none"
+              }
               type={"number"}
               id={"box-2"}
+              value={amounts.amountB}
+              onChange={(e) => {
+                updateSecondAmount("B", parseFloat(e.target.value));
+                setAmounts((prev) => ({
+                  ...prev,
+                  amountB: parseFloat(e.target.value),
+                }));
+              }}
             />
           </div>
           <div className={"flex flex-row text-white justify-end text-xs"}>
-            <p>$3.74</p>
+            <p>
+              ${" "}
+              {formatedNumber(
+                amounts.amountB *
+                  tokenPrices[selectedPool?.mintB.address ?? ""],
+                4
+              )}
+            </p>
           </div>
         </div>
         {/*  Third Box */}
@@ -238,66 +396,91 @@ const AddAmmLiquidityModal = () => {
         >
           <div className={"flex flex-row w-full justify-between"}>
             <p>Base</p>
-            <p>SOL</p>
+            <p>
+              {selectedPool?.mintA.symbol
+                ? selectedPool?.mintA.symbol
+                : selectedPool?.mintA.address.slice(0, 4)}
+            </p>
           </div>
           <div className={"flex flex-row w-full justify-between"}>
-            <p>Max Amount</p>
-            {loading ? (
+            <div className={"flex flex-row gap-1"}>
+              <p>Pool liquidity</p>
+              <p>
+                (
+                {selectedPool?.mintA.symbol
+                  ? selectedPool?.mintA.symbol
+                  : selectedPool?.mintA.address.slice(0, 4)}
+                )
+              </p>
+            </div>
+            {!selectedPool?.mintAmountB ? (
               <p>-</p>
             ) : (
               <div className={"flex flex-row gap-1"}>
-                <p>3.781081 </p>
-                <p>USDC</p>
+                <p>{formatedNumber(selectedPool?.mintAmountB ?? 0, 4)} </p>
+                <p>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
               </div>
             )}
           </div>
           <div className={"flex flex-row w-full justify-between"}>
             <div className={"flex flex-row gap-1"}>
               <p>Pool liquidity</p>
-              <p>(SOL)</p>
+              <p>
+                (
+                {selectedPool?.mintB.symbol
+                  ? selectedPool?.mintB.symbol
+                  : selectedPool?.mintB.address.slice(0, 4)}
+                )
+              </p>
             </div>
-            {loading ? (
+            {!selectedPool?.mintAmountB ? (
               <p>-</p>
             ) : (
               <div className={"flex flex-row gap-1"}>
-                <p>32.781081 </p>
-                <p>SOL</p>
+                <p>{formatedNumber(selectedPool?.mintAmountB ?? 0, 4)} </p>
+                <p>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
               </div>
             )}
           </div>
           <div className={"flex flex-row w-full justify-between"}>
             <div className={"flex flex-row gap-1"}>
-              <p>Pool liquidity</p>
-              <p>(USDC)</p>
+              <p>LP supply</p>
             </div>
-            {loading ? (
+            {!selectedPool?.lpAmount ? (
               <p>-</p>
             ) : (
               <div className={"flex flex-row gap-1"}>
-                <p>3.7231,81081 </p>
-                <p>USDC</p>
+                <p>{formatedNumber(selectedPool?.lpAmount ?? 0, 4)} </p>
+                <p>LP</p>
               </div>
             )}
           </div>
-          <div className={"flex flex-row w-full justify-between"}>
-            <p>LP supply</p>
-          </div>
+
           {showMore && (
             <>
-              <div className={"flex flex-row"}>
+              <div className={"flex flex-row justify-between"}>
                 <p>Addresses</p>
-              </div>
-              <div className={"flex flex-row w-full justify-between"}>
-                <p>Slippage Tolerance</p>
-                <div
-                  className={"flex flex-row bg-[#19232d] rounded-3xl px-0.5"}
+                <p
+                  className={"text-[#3b82f6] cursor-pointer"}
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      selectedPool?.mintA.address ?? ""
+                    );
+                    alert("Address copied to clipboard");
+                  }}
                 >
-                  <input
-                    className={"bg-[#19232d] w-6 mx-1 text-white px-1 text-xs"}
-                    type={"number"}
-                  />
-                  <p className={"text-white text-xs mr-0.5"}>%</p>
-                </div>
+                  {selectedPool?.mintA.address.slice(0, 4) +
+                    "..." +
+                    selectedPool?.mintA.address.slice(-4)}
+                </p>
               </div>
             </>
           )}
@@ -322,54 +505,50 @@ const AddAmmLiquidityModal = () => {
           <div className={"flex flex-col gap-1 mt-2"}>
             <div className={"flex flex-row gap-2 items-center"}>
               <Checkbox.Root
+                checked={confirmed}
+                onCheckedChange={setConfirmed}
                 className="flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-[#0d111b] "
                 id="c1"
               >
                 <Checkbox.Indicator className="text-sm">
-                  <CheckIcon style={{ color: "white" }} size={18} />
+                  {confirmed === true && (
+                    <CheckIcon style={{ color: "white" }} size={18} />
+                  )}
                 </Checkbox.Indicator>
               </Checkbox.Root>
               <i>Confirm</i>
             </div>
-            <div className={"flex flex-row gap-2 items-center"}>
-              <Checkbox.Root
-                className=" hover:bg-red-600 flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-[#0d111b] "
-                id="c1"
-              >
-                <Checkbox.Indicator className="text-sm">
-                  <CheckIcon style={{ color: "white" }} size={18} />
-                </Checkbox.Indicator>
-              </Checkbox.Root>
-              <i>Do not warn again for this pool</i>
-            </div>
           </div>
         </div>
-        <Button>Enter an amount</Button>
-        <p className={"text-white mt-8"}>Your liquidity</p>
-        <div className={"text-white rounded-3xl bg-[#19232d] p-4 text-xs"}>
-          <p>
-            If you staked your LP tokens in a farm, unstake them to see them
-            here
-          </p>
-        </div>
-        <p className={"text-white mt-4"}>Create Pool</p>
-        <div
-          className={"rounded-3xl bg-[#19232d] p-4 flex flex-row text-white"}
+        <Button
+          disabled={
+            !confirmed ||
+            loading ||
+            amounts.amountA === 0 ||
+            amounts.amountB === 0
+          }
+          onClick={handleAddLiquidity}
         >
-          <p className={"w-2/3 text-xs"}>
-            Create a liquidity pool on Raydium that can be traded on the swap
-            interface. Read the guide before attempting.
-          </p>
-          <div className={"w-1/3 flex flex-row justify-center items-center"}>
-            <button
-              className={"bg-[#0d111b] p-3 rounded-3xl"}
-              onClick={onCreatePoolOpen}
-            >
-              <AddIcon sx={{ fontSize: 20, mr: 1 }} />
-              Create Pool
-            </button>
-          </div>
-        </div>
+          {loading ? (
+            <div className={"flex flex-row gap-2 items-center"}>
+              <p>loading</p>
+            </div>
+          ) : amounts.amountA < 0 && amounts.amountB < 0 ? (
+            <div className={"flex flex-row gap-2 items-center"}>
+              <p>Enter an amount</p>
+            </div>
+          ) : confirmed ? (
+            <div className={"flex flex-row gap-2 items-center"}>
+              <p>Add Liquidity</p>
+            </div>
+          ) : (
+            <div className={"flex flex-row gap-2 items-center"}>
+              <p className="text-sm">
+                please confirm the Raydium Liquidity Guide
+              </p>
+            </div>
+          )}
+        </Button>
       </DialogContent>
     </Dialog>
   );

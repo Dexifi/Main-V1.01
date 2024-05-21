@@ -24,6 +24,12 @@ export const useRemoveLiquidityModal = create<RemoveProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
+export const useRemoveAmmLiquidityModal = create<RemoveProps>((set) => ({
+  isOpen: false,
+  onRemoveLiquidityOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
 interface ManageProps {
   isOpen: boolean;
   onManageLiquidityOpen: () => void;
