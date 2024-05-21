@@ -83,7 +83,7 @@ const NFT = ({ isEXTRASMALL }: Props) => {
     >
       <div className="text-lg md:text-2xl truncate flex items-center gap-5 text-[#D9F8FF]">
         <div className="flex">
-          <h3>{data.title}</h3>
+          <h3 className={"mr-2"}>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
         <span>${formatedNumber(NFTValue)}</span>
@@ -91,14 +91,14 @@ const NFT = ({ isEXTRASMALL }: Props) => {
       {/*  */}
 
       <div className="flex justify-between gap-6 relative flex-col md:flex-row">
-        <Table className="w-4/5 sm:w-full flex-1">
+        <Table className="w-4/5 sm:w-full flex-1 text-base">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="min-w-64" />
               {data.table.header.map((header, index) => (
                 <TableHead
                   key={`${formatedString(header.toLocaleLowerCase())}_${index}`}
-                  className="text-sm md:text-md truncate max-w-[110px]"
+                  className="text-sm md:text-md truncate max-w-[110px] text-[#D9F8FF]"
                   align="left"
                 >
                   {header}
@@ -136,7 +136,7 @@ const NFT = ({ isEXTRASMALL }: Props) => {
                       row.id.toLocaleLowerCase()
                     )}_${index}`}
                   >
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d]">
+                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d] pl-0">
                       {row.name}
                     </TableCell>
                     <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-white">
@@ -170,7 +170,7 @@ const NFT = ({ isEXTRASMALL }: Props) => {
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                       <Button
                         size="sm"
-                        className="hover:bg-[#7c7c8d80] max-h-8 text-[14px] rounded-full"
+                        className="hover:bg-[#7c7c8d80] max-h-6 text-[14px] rounded-full w-full"
                         onClick={() => setDetailModal(true)}
                         style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
                       >

@@ -72,97 +72,104 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
 
   return (
     <div
-      className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5"
+      className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-4 lg:px-10 py-5"
       style={{ boxShadow: "0 0 4px #88d6ff" }}
     >
       <div className="text-lg md:text-2xl truncate flex items-center gap-5 text-[#D9F8FF]">
         <div className="flex">
-          <h3>{data.title}</h3>
+          <h3 className={"mr-2"}>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
         <span>
-          ${walletBalance ? formatedNumber(walletBalance) : formatedNumber(0)}
+          $ {walletBalance ? formatedNumber(walletBalance) : formatedNumber(0)}
         </span>
       </div>
 
       <div className="flex justify-between gap-6 relative flex-col md:flex-row">
-        <Table className="w-4/5 sm:w-full flex-1">
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              {data.table.header.map((header, index) => (
-                <TableHead
-                  key={`${formatedString(header.toLocaleLowerCase())}_${index}`}
-                  className="text-sm md:text-md truncate max-w-[110px]"
-                  align="left"
-                >
-                  {header}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <>
-                <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-                  {data.table.header.map((header, index) => (
-                    <TableCell
-                      className="font-medium text-left text-[#7c7c8d] py-2"
-                      key={`${header}_skeleton_${index}`}
-                    >
-                      <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </>
-            ) : (
-              <>
-                {cToken.map((row, index) => (
-                  <TableRow
-                    className="hover:bg-transparent border-[#7c7c8d] "
+        <div className={"w-full"}>
+          <Table className="w-4/5 sm:w-full flex-1]">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                {data.table.header.map((header, index) => (
+                  <TableHead
                     key={`${formatedString(
-                      row.symbol.toLocaleLowerCase()
+                      header.toLocaleLowerCase()
                     )}_${index}`}
+                    className="text-sm md:text-md truncate max-w-[110px] text-[#D9F8FF] p-0"
+                    align="left"
                   >
-                    <TableCell className="font-medium text-left py-2 text-sm md:text-md truncate max-w-[110px]">
-                      {row.symbol}
-                    </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.amount)}
-                    </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.price * row.amount)}
-                    </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.price, 5)}
-                    </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {walletBalance
-                        ? formatedNumber(
-                            ((row.price * row.amount) / walletBalance) * 100
-                          )
-                        : formatedNumber(0)}
-                    </TableCell>
-                  </TableRow>
+                    {header}
+                  </TableHead>
                 ))}
-              </>
-            )}
-          </TableBody>
-        </Table>
-        <div className="flex flex-col min-w-max md:min-w-72 p-4 bg-[#30425640] rounded-xl gap-5">
-          <div className="w-full border-b border-[#D9F8FF] border-solid pb-2">
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <>
+                  <TableRow className="hover:bg-transparent border-[#7c7c8d]">
+                    {data.table.header.map((header, index) => (
+                      <TableCell
+                        className="font-medium text-left text-[#7c7c8d]"
+                        key={`${header}_skeleton_${index}`}
+                      >
+                        <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </>
+              ) : (
+                <>
+                  {cToken.map((row, index) => (
+                    <TableRow
+                      className="hover:bg-transparent border-[#7c7c8d] text-[#7B8693] text-base"
+                      key={`${formatedString(
+                        row.symbol.toLocaleLowerCase()
+                      )}_${index}`}
+                    >
+                      <TableCell className="font-medium text-left text-sm md:text-md truncate max-w-[110px] p-0">
+                        {row.symbol}
+                      </TableCell>
+                      <TableCell className="font-medium text-left text-[#7c7c8d] p-0">
+                        {formatedNumber(row.amount)}
+                      </TableCell>
+                      <TableCell className="font-medium text-left text-[#7c7c8d] p-0">
+                        ${formatedNumber(row.price * row.amount)}
+                      </TableCell>
+                      <TableCell className="font-medium text-left text-[#7c7c8d] p-0">
+                        ${formatedNumber(row.price, 5)}
+                      </TableCell>
+                      <TableCell className="font-medium text-left text-[#7c7c8d] p-0">
+                        %
+                        {walletBalance
+                          ? formatedNumber(
+                              ((row.price * row.amount) / walletBalance) * 100
+                            )
+                          : formatedNumber(0)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex flex-col min-w-[280px] bg-[#30425640] rounded-3xl gap-5">
+          <div className="w-full border-b border-[#D9F8FF] border-solid p-3">
             <h6 className="text-sm md:text-lg truncate text-[#D9F8FF] text-left">
               Domains
             </h6>
           </div>
-          <div className="flex flex-col gap-3 h-44 overflow-auto">
+          <div className="flex flex-col gap-3 h-44 overflow-auto px-4 pr-2">
             {domains?.result?.map(({ domain }, index) => (
               <div
                 key={`${domain}_${index}`}
-                className="flex flex-nowrap justify-between items-center gap-x-6 border-b border-[#30425670] border-solid last:border-none pb-3 last:pb-0"
+                className="flex flex-nowrap justify-between items-center border-b border-[#30425670] border-solid last:border-none"
               >
-                <h6 className="text-sm font-medium">{domain}.sol</h6>
+                <h6 className="text-sm font-medium text-[#727383]">
+                  {domain}.sol
+                </h6>
                 <Button
-                  className=""
+                  className="border [background:#0D111B] shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)] p-2.5 rounded-[25px] border-solid border-[rgba(217,248,255,0.50)]"
                   size="sm"
                   onClick={() => setIsTransferDOpen({ open: true, domain })}
                 >
