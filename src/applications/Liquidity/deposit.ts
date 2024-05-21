@@ -1,11 +1,7 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import {
-  ApiFarmAprV3,
   Clmm,
-  getMultipleAccountsInfoWithCustomFlags,
-  Liquidity,
   MAINNET_PROGRAM_ID,
-  PoolInfoLayout,
   SPL_ACCOUNT_LAYOUT,
   TOKEN_PROGRAM_ID,
   TokenAccount,
@@ -17,7 +13,6 @@ import { formatClmmKeys } from "./formatClmmKeys";
 import { toast } from "@/components/ui/use-toast";
 import { Metaplex } from "@metaplex-foundation/js";
 import BN from "bn.js";
-import axios from "@/data/axios";
 import { RaydiumPools } from "@/applications/Liquidity/pool";
 
 export const userDeposit = async (

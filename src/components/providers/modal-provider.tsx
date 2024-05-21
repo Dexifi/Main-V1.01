@@ -24,9 +24,11 @@ import {
   useManageLiquidityModal,
   useRemoveAllPiRLiquidityModal,
   useRemoveAllPoRLiquidityModal,
+  useRemoveAmmLiquidityModal,
   useRemoveLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import { useSettingsModal } from "@/lib/stores/settings.store";
+import RemoveAmmLiquidityModal from "@/components/modals/remove-amm-liquidity-modal";
 
 type Props = {};
 
@@ -44,7 +46,7 @@ const ModalProvider = (props: Props) => {
     useRemoveAllPiRLiquidityModal();
   const { isOpen: isRemoveAllPoRLiquidityModal } =
     useRemoveAllPoRLiquidityModal();
-
+  const { isOpen: isRemoveAmmLiquidityModal } = useRemoveAmmLiquidityModal();
   return (
     <>
       {isImportMarketOpen && <TradeImportMarketModal />}
@@ -57,6 +59,7 @@ const ModalProvider = (props: Props) => {
       {isManageLiquidityModal && <ManageModal />}
       {isRemoveAllPiRLiquidityModal && <RemoveAllInModal />}
       {isRemoveAllPoRLiquidityModal && <RemoveAllOutModal />}
+      {isRemoveAmmLiquidityModal && <RemoveAmmLiquidityModal />}
       <RemoveFarmModal />
       <ClaimPendingModal />
       <NFTGalleryDetailsModal />

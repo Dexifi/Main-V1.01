@@ -25,6 +25,8 @@ export type LiquidityState = {
     currentPage: number;
     pageSize: number;
     type: "all" | "standard" | "concentrated";
+    sortType: "asc" | "desc";
+    sortField: "apr24h" | "liquidity";
   };
   setPoolApiConfig: (config: LiquidityState["poolApiConfig"]) => void;
   userAmmDeposits: UserAmmPositionType[];
@@ -51,6 +53,8 @@ export const useLiquidity = create<LiquidityState>((set) => ({
     currentPage: 0,
     pageSize: 100,
     type: "all",
+    sortField: "liquidity",
+    sortType: "desc",
   },
   userTokens: [],
   setPoolApiConfig: (config) => set({ poolApiConfig: config }),

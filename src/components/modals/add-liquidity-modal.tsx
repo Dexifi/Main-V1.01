@@ -20,8 +20,9 @@ import { raydiumActions } from "@/applications/Liquidity/actions";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { debounce } from "lodash";
 import { connection } from "@/lib/get-connections";
-import { getWalletTokenAccount } from "@/hooks/useLiquidity";
 import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
+import Decimal from "decimal.js";
+import { getWalletTokenAccount } from "@/applications/Liquidity/user";
 
 type Props = {};
 
@@ -69,6 +70,7 @@ const AddLiquidityModal = (props: Props) => {
 
   const handleAddLiquidity = async () => {
     if (!row?.state || !position || !wallet?.adapter.publicKey) return;
+
     const walletAccounts = await getWalletTokenAccount(
       connection,
       wallet.adapter.publicKey
@@ -77,7 +79,9 @@ const AddLiquidityModal = (props: Props) => {
       poolInfo: row.state,
       position,
       inputTokenAmount: new BN(
-        amount.amountA * 10 ** (row.state.mintA.decimals ?? 0)
+        new Decimal(
+          amount.amountA * 10 ** (row.state.mintA.decimals ?? 0)
+        ).toFixed(0)
       ),
       inputTokenMint: "mintA",
       walletTokenAccounts: walletAccounts,

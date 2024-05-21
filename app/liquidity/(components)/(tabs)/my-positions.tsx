@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/table";
 import formatedNumber from "@/lib/numbers";
 import {
+  useAddAmmLiquidityModal,
   useClaimAllLiquidityModal,
   useCreatePositionLiquidityModal,
   useManageLiquidityModal,
   useRemoveAllPiRLiquidityModal,
   useRemoveAllPoRLiquidityModal,
+  useRemoveAmmLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import formatedString from "@/lib/string";
 import { useEffect, useMemo, useState } from "react";
@@ -35,6 +37,7 @@ import {
 import { getPrice } from "@/data/price";
 import { useAtom } from "jotai";
 import {
+  selectedDepositAtom,
   selectedPoolAtom,
   selectedPositionAtom,
   selectedPositionRowAtom,
@@ -52,6 +55,7 @@ const MyPositions = () => {
   const { onRemoveAllPiRLiquidityOpen } = useRemoveAllPiRLiquidityModal();
   const { onRemoveAllPoRLiquidityOpen } = useRemoveAllPoRLiquidityModal();
   const { onClaimAllLiquidityOpen } = useClaimAllLiquidityModal();
+
   const raydiumInfo = useLiquidity((state) => state.raydiumInfo);
   const userClmmDeposits = useLiquidity((state) => state.userClmmDeposits);
   const tokenPrices = useLiquidity((state) => state.tokenPrices);
@@ -108,7 +112,6 @@ const MyPositions = () => {
             tokenA: tokenPrices[item.state.mintA.mint.toBase58()],
             tokenB: tokenPrices[item.state.mintB.mint.toBase58()],
           };
-          console.log("tokensPrice ", tokensPrice);
           const tokenAValue = tokenA * tokensPrice.tokenA;
           const tokenBValue = tokenB * tokensPrice.tokenB;
           const totalValue = tokenAValue + tokenBValue;
@@ -215,26 +218,30 @@ const MyPositions = () => {
                   ))}
                 </div>
                 <div className="flex justify-end items-center gap-4 text-white w-full">
-                  <div className="flex flex-col w-max gap-2 justify-center items-center">
+                  <div className="flex flex-col w-max mt-2 gap-2 justify-center items-center">
                     <div
                       className={`text-center text-xs font-semibold md:text-sm flex gap-1 text-[#50af95] flex-wrap`}
                     >
                       <span>In Range:</span>
                       <span>
-                        {formatedNumber(inRangePositions.length, 1, true)}
+                        {formatedNumber(
+                          inRangePositions.length + gdata.length,
+                          1,
+                          true
+                        )}
                       </span>
                     </div>
-                    <Button
-                      className="min-w-52 rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full"
-                      style={{
-                        boxShadow: "0px 0px 5px 0px #D9F8FF",
-                        border: "1px solid #D9F8FF",
-                      }}
-                      onClick={onRemoveAllPiRLiquidityOpen}
-                      size="sm"
-                    >
-                      Remove All Position in Range
-                    </Button>
+                    {/*<Button*/}
+                    {/*  className="min-w-52 rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full"*/}
+                    {/*  style={{*/}
+                    {/*    boxShadow: "0px 0px 5px 0px #D9F8FF",*/}
+                    {/*    border: "1px solid #D9F8FF",*/}
+                    {/*  }}*/}
+                    {/*  onClick={onRemoveAllPiRLiquidityOpen}*/}
+                    {/*  size="sm"*/}
+                    {/*>*/}
+                    {/*  Remove All Position in Range*/}
+                    {/*</Button>*/}
                   </div>
                   <div className="flex flex-col w-max gap-2 justify-center items-center">
                     <div
@@ -245,37 +252,37 @@ const MyPositions = () => {
                         {formatedNumber(outOfRangePositions.length, 1, true)}
                       </span>
                     </div>
-                    <Button
-                      className="min-w-52 rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full"
-                      style={{
-                        boxShadow: "0px 0px 5px 0px #D9F8FF",
-                        border: "1px solid #D9F8FF",
-                      }}
-                      size="sm"
-                      onClick={onRemoveAllPoRLiquidityOpen}
-                    >
-                      Remove All Position Out of Range
-                    </Button>
+                    {/*<Button*/}
+                    {/*  className="min-w-52 rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full"*/}
+                    {/*  style={{*/}
+                    {/*    boxShadow: "0px 0px 5px 0px #D9F8FF",*/}
+                    {/*    border: "1px solid #D9F8FF",*/}
+                    {/*  }}*/}
+                    {/*  size="sm"*/}
+                    {/*  onClick={onRemoveAllPoRLiquidityOpen}*/}
+                    {/*>*/}
+                    {/*  Remove All Position Out of Range*/}
+                    {/*</Button>*/}
                   </div>
-                  <div className="flex flex-col w-max gap-2 justify-center items-center">
-                    <div
-                      className={`text-center text-xs font-semibold md:text-sm flex gap-1 text-[#d9f8ff] flex-wrap`}
-                    >
-                      <span>Pending Reward:</span>
-                      <span>${formatedNumber(1000012, 1, true)}</span>
-                    </div>
-                    <Button
-                      className="min-w-52 rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full"
-                      style={{
-                        boxShadow: "0px 0px 5px 0px #D9F8FF",
-                        border: "1px solid #D9F8FF",
-                      }}
-                      onClick={onClaimAllLiquidityOpen}
-                      size="sm"
-                    >
-                      Claim All Pending
-                    </Button>
-                  </div>
+                  {/*<div className="flex flex-col w-max gap-2 justify-center items-center">*/}
+                  {/*  <div*/}
+                  {/*    className={`text-center text-xs font-semibold md:text-sm flex gap-1 text-[#d9f8ff] flex-wrap`}*/}
+                  {/*  >*/}
+                  {/*    <span>Pending Reward:</span>*/}
+                  {/*    <span>${formatedNumber(1000012, 1, true)}</span>*/}
+                  {/*  </div>*/}
+                  {/*  <Button*/}
+                  {/*    className="min-w-52 rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full"*/}
+                  {/*    style={{*/}
+                  {/*      boxShadow: "0px 0px 5px 0px #D9F8FF",*/}
+                  {/*      border: "1px solid #D9F8FF",*/}
+                  {/*    }}*/}
+                  {/*    onClick={onClaimAllLiquidityOpen}*/}
+                  {/*    size="sm"*/}
+                  {/*  >*/}
+                  {/*    Claim All Pending*/}
+                  {/*  </Button>*/}
+                  {/*</div>*/}
                 </div>
               </div>
             </div>
@@ -466,7 +473,10 @@ type RowProps = {
   raydiumInfo: any;
 };
 const StandardLiquidityRow = ({ row, raydiumInfo }: RowProps) => {
-  const { onManageLiquidityOpen } = useManageLiquidityModal();
+  const { onAddAmmLiquidityOpen } = useAddAmmLiquidityModal();
+  const { onRemoveLiquidityOpen } = useRemoveAmmLiquidityModal();
+  const [, setSelectedPool] = useAtom(selectedPoolAtom);
+  const [, setSelectedDeposit] = useAtom(selectedDepositAtom);
   const userShare =
     row.deposit.amount /
     10 ** (row.pool.lpMint?.decimals ?? 0) /
@@ -594,7 +604,10 @@ const StandardLiquidityRow = ({ row, raydiumInfo }: RowProps) => {
               style={{
                 boxShadow: "0 0 4px #88d6ff",
               }}
-              onClick={onManageLiquidityOpen}
+              onClick={() => {
+                setSelectedPool(row.pool);
+                onAddAmmLiquidityOpen();
+              }}
             >
               Add Liquidity
             </Button>
@@ -608,7 +621,11 @@ const StandardLiquidityRow = ({ row, raydiumInfo }: RowProps) => {
               style={{
                 boxShadow: "0 0 4px #88d6ff",
               }}
-              onClick={onManageLiquidityOpen}
+              onClick={() => {
+                setSelectedPool(row.pool);
+                setSelectedDeposit(row.deposit);
+                onRemoveLiquidityOpen();
+              }}
             >
               Remove Liquidity
             </Button>

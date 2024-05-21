@@ -51,14 +51,17 @@ const fetchPrevPage = async () => {
 const fetchPool = (
   page: number,
   type: "all" | "standard" | "concentrated",
-  size?: number
+  size?: number,
+  sortType?: "asc" | "desc",
+  sortField?: "apr24h" | "liquidity"
 ) => {
   const config = useLiquidity.getState().poolApiConfig;
-  return axios.get<AmmPoolApiResponse>(
-    `https://uapi.raydium.io/v3/pools/info/${type}/liquidity/desc/${
-      size ?? config.pageSize
-    }/${page}`
-  );
+  const api = `https://api-v3.raydium.io/pools/info/list?poolType=${type}&poolSortField=${
+    sortField ?? config.sortField
+  }&sortType=${sortType ?? config.sortType}&pageSize=${
+    size ?? config.pageSize
+  }&page=${page}`;
+  return axios.get<AmmPoolApiResponse>(api);
 };
 const fetchInfo = async () => {
   const data = await axios.get<infoApiResponse>(raydiumInfoAPI);

@@ -404,15 +404,15 @@ const ManageModal = (props: Props) => {
             <div className={"flex flex-row gap-1"}>
               <div className="flex flex-row border px-2 rounded-sm justify-center items-center gap-1 border-[rgba(171,196,255,.5)]">
                 <div className={"bg-[#9DB3EC] w-2 h-2 rounded-full"} />
-                <p className="text-xs text-[#abc4ff]">Pool liquidity</p>
+                <p className="text-xs text-[#fff]">Pool liquidity</p>
               </div>
               <div className="flex flex-row border px-2 rounded-sm justify-center items-center gap-1 border-[rgba(171,196,255,.5)]">
-                <div className={"bg-red-700 w-2 h-2 rounded-full"} />
-                <p className="text-xs text-[#abc4ff]">My Range</p>
+                <div className={"bg-[#21648F] w-2 h-2 rounded-full"} />
+                <p className="text-xs text-[#fff]">My Range</p>
               </div>
               <div className="flex flex-row border px-2 rounded-sm justify-center items-center gap-1 border-[rgba(171,196,255,.5)]">
-                <div className={"bg-amber-400 w-2 h-2 rounded-full"} />
-                <p className="text-xs text-[#abc4ff]">Current Price</p>
+                <div className={"bg-[#fff] w-2 h-2 rounded-full"} />
+                <p className="text-xs text-[#fff]">Current Price</p>
               </div>
             </div>
           </div>

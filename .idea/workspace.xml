@@ -5,25 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="liquidity api implement">
-      <change afterPath="$PROJECT_DIR$/public/unknown.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/formatAmmKeysById.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/applications/Liquidity/formatClmmKeysById.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/modals/remove-amm-liquidity-modal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/liquidity/(components)/(tabs)/my-positions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/liquidity/(components)/(tabs)/my-positions.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/liquidity/(components)/(tabs)/pools.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/liquidity/(components)/(tabs)/pools.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/swap/(components)/swap-body.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/swap/(components)/swap-body.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/applications/Liquidity/actions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Liquidity/actions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Liquidity/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Liquidity/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/applications/Liquidity/utils.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/applications/Liquidity/deposit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Liquidity/deposit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/applications/Liquidity/pool.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Liquidity/pool.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/applications/Liquidity/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Liquidity/store.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/modals/add-amm-liquidity-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/add-amm-liquidity-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/modals/claim-all-pending-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/claim-all-pending-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/modals/create-position-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/create-position-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/modals/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/add-liquidity-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/add-liquidity-modal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/modals/manage-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/manage-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/remove-liquidity-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/remove-liquidity-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/modals/store.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/providers/modal-provider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/providers/modal-provider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/ClmmChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/ClmmChart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/stores/liquidity.store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/stores/liquidity.store.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +84,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;feat/#19&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Codes/Dexify_v2/src/applications/Liquidity&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Codes/Dexify_v2/src/components/modals&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -123,6 +119,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\src\components\modals" />
       <recent name="D:\Codes\Dexify_v2\src\applications\Liquidity" />
       <recent name="D:\Codes\Dexify_v2\app\api\pool" />
       <recent name="D:\Codes\Dexify_v2\src\data" />
@@ -251,7 +248,11 @@
       <workItem from="1715789421803" duration="1067000" />
       <workItem from="1715851072285" duration="1455000" />
       <workItem from="1716020841973" duration="7132000" />
-      <workItem from="1716032972734" duration="13356000" />
+      <workItem from="1716032972734" duration="13631000" />
+      <workItem from="1716099813219" duration="10982000" />
+      <workItem from="1716200293723" duration="6000" />
+      <workItem from="1716204348831" duration="8003000" />
+      <workItem from="1716284235513" duration="7459000" />
     </task>
     <task id="LOCAL-00001" summary="network connections">
       <option name="closed" value="true" />
@@ -349,7 +350,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715088434546</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="liquidity api implement">
+      <option name="closed" value="true" />
+      <created>1716051575479</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1716051575480</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -367,6 +376,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="network connections" />
     <MESSAGE value="fix start issues" />
     <MESSAGE value="Dashboard new-worth implement" />

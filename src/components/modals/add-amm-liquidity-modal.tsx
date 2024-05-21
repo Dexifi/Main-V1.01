@@ -19,6 +19,8 @@ import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
 import { getWalletTokenAccount } from "@/hooks/useLiquidity";
 import { connection } from "@/lib/get-connections";
 import { debounce } from "lodash";
+import Decimal from "decimal.js";
+import { toast } from "@/components/ui/use-toast";
 
 const AddAmmLiquidityModal = () => {
   const { isOpen, onClose } = useAddAmmLiquidityModal();
@@ -98,20 +100,30 @@ const AddAmmLiquidityModal = () => {
       connection,
       wallet.adapter.publicKey
     );
-    const tx = await raydiumActions.addAmmLiquidity({
-      wallet: wallet?.adapter as BaseSignerWalletAdapter,
-      inputTokenAmount: new TokenAmount(
-        baseToken,
-        amounts.amountA * 10 ** selectedPool.mintA.decimals
-      ),
-
-      quoteToken: quoteToken,
-      baseToken: baseToken,
-      slippage: new Percent(1, 100),
-      targetPool: selectedPool?.id ?? "",
-      walletTokenAccounts: walletAccounts,
-    });
-    setLoading(false);
+    try {
+      const tx = await raydiumActions.addAmmLiquidity({
+        wallet: wallet?.adapter as BaseSignerWalletAdapter,
+        inputTokenAmount: new TokenAmount(
+          baseToken,
+          new Decimal(
+            amounts.amountA * 10 ** selectedPool.mintA.decimals
+          ).toFixed(0)
+        ),
+        quoteToken: quoteToken,
+        slippage: new Percent(0, 100),
+        targetPool: selectedPool?.id ?? "",
+        walletTokenAccounts: walletAccounts,
+      });
+      setLoading(false);
+    } catch (e) {
+      toast({
+        title: "Transaction failed",
+        description: "Transaction has failed",
+        variant: "destructive",
+      });
+      console.error(e);
+      setLoading(false);
+    }
   }, [amounts.amountA, selectedPool, wallet?.adapter]);
 
   useEffect(() => {
@@ -280,42 +292,7 @@ const AddAmmLiquidityModal = () => {
             </p>
           </div>
         </div>
-        {/*  Between Boxes */}
-        {/*<div*/}
-        {/*  className={*/}
-        {/*    "flex flex-row text-white items-center justify-between px-6 text-sm"*/}
-        {/*  }*/}
-        {/*>*/}
-        {/*  <div className={"flex flex-row gap-2 items-center"}>*/}
-        {/*    <AddIcon />*/}
-        {/*    {!loading && (*/}
-        {/*      <>*/}
-        {/*        <div className={"flex flex-row gap-1"}>*/}
-        {/*          <p>1</p>*/}
-        {/*          <p>USDC</p>*/}
-        {/*        </div>*/}
-        {/*        <p>≈</p>*/}
-        {/*        <div className={"flex flex-row gap-1"}>*/}
-        {/*          <p>0.007402</p>*/}
-        {/*          <p>SOL</p>*/}
-        {/*        </div>*/}
-        {/*        <div onClick={handleChangeCrypto} className={"cursor-pointer"}>*/}
-        {/*          <SwapHorizIcon sx={{ fontSize: 16 }} />*/}
-        {/*        </div>*/}
-        {/*      </>*/}
-        {/*    )}*/}
-        {/*  </div>*/}
-        {/*  <div className={"flex flex-row gap-4 items-center "}>*/}
-        {/*    <div*/}
-        {/*      className={"bg-[#19232d] rounded-full p-1 cursor-pointer"}*/}
-        {/*      onClick={onPoolSearchOpen}*/}
-        {/*    >*/}
-        {/*      <SearchIcon />*/}
-        {/*    </div>*/}
-        {/*    <p>O</p>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-        {/*  Second Box */}
+
         <div
           className={"p-3 bg-[#19232d] rounded-3xl px-4 flex flex-col gap-2"}
           onClick={() => handleFocusBox(inputRefTwo)}
@@ -353,7 +330,11 @@ const AddAmmLiquidityModal = () => {
                   />
                 </div>
               </div>
-              <p className={"text-base"}>SOL</p>
+              <p className={"text-base"}>
+                {selectedPool?.mintB.symbol
+                  ? selectedPool?.mintB.symbol
+                  : selectedPool?.mintB.address.slice(0, 4)}
+              </p>
               <div className="border-r border-[rgba(171,196,255,0.5)] self-stretch" />
               <button
                 className={
@@ -501,18 +482,6 @@ const AddAmmLiquidityModal = () => {
                     selectedPool?.mintA.address.slice(-4)}
                 </p>
               </div>
-              {/*<div className={"flex flex-row w-full justify-between"}>*/}
-              {/*  <p>Slippage Tolerance</p>*/}
-              {/*  <div*/}
-              {/*    className={"flex flex-row bg-[#19232d] rounded-3xl px-0.5"}*/}
-              {/*  >*/}
-              {/*    <input*/}
-              {/*      className={"bg-[#19232d] w-6 mx-1 text-white px-1 text-xs"}*/}
-              {/*      type={"number"}*/}
-              {/*    />*/}
-              {/*    <p className={"text-white text-xs mr-0.5"}>%</p>*/}
-              {/*  </div>*/}
-              {/*</div>*/}
             </>
           )}
           <div
@@ -549,17 +518,6 @@ const AddAmmLiquidityModal = () => {
               </Checkbox.Root>
               <i>Confirm</i>
             </div>
-            {/*<div className={"flex flex-row gap-2 items-center"}>*/}
-            {/*  <Checkbox.Root*/}
-            {/*    className=" hover:bg-red-600 flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-[#0d111b] "*/}
-            {/*    id="c1"*/}
-            {/*  >*/}
-            {/*    <Checkbox.Indicator className="text-sm">*/}
-            {/*      <CheckIcon style={{ color: "white" }} size={18} />*/}
-            {/*    </Checkbox.Indicator>*/}
-            {/*  </Checkbox.Root>*/}
-            {/*  <i>Do not warn again for this pool</i>*/}
-            {/*</div>*/}
           </div>
         </div>
         <Button
@@ -591,31 +549,6 @@ const AddAmmLiquidityModal = () => {
             </div>
           )}
         </Button>
-        {/*<p className={"text-white mt-8"}>Your liquidity</p>*/}
-        {/*<div className={"text-white rounded-3xl bg-[#19232d] p-4 text-xs"}>*/}
-        {/*  <p>*/}
-        {/*    If you staked your LP tokens in a farm, unstake them to see them*/}
-        {/*    here*/}
-        {/*  </p>*/}
-        {/*</div>*/}
-        {/*<p className={"text-white mt-4"}>Create Pool</p>*/}
-        {/*<div*/}
-        {/*  className={"rounded-3xl bg-[#19232d] p-4 flex flex-row text-white"}*/}
-        {/*>*/}
-        {/*  <p className={"w-2/3 text-xs"}>*/}
-        {/*    Create a liquidity pool on Raydium that can be traded on the swap*/}
-        {/*    interface. Read the guide before attempting.*/}
-        {/*  </p>*/}
-        {/*  <div className={"w-1/3 flex flex-row justify-center items-center"}>*/}
-        {/*    <button*/}
-        {/*      className={"bg-[#0d111b] p-3 rounded-3xl"}*/}
-        {/*      onClick={onCreatePoolOpen}*/}
-        {/*    >*/}
-        {/*      <AddIcon sx={{ fontSize: 20, mr: 1 }} />*/}
-        {/*      Create Pool*/}
-        {/*    </button>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
       </DialogContent>
     </Dialog>
   );

@@ -12,29 +12,27 @@ import {
 import formatedNumber from "@/lib/numbers";
 import {
   useAddAmmLiquidityModal,
-  useAddLiquidityModal,
   useCreatePositionLiquidityModal,
 } from "@/lib/stores/liquidity.store";
 import formatedString from "@/lib/string";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLiquidity } from "@/applications/Liquidity/store";
 import { CircularProgress, Stack } from "@mui/material";
 import { debounce } from "lodash";
 import { RaydiumPools } from "@/applications/Liquidity/pool";
 import { useAtom } from "jotai";
 import { selectedPoolAtom } from "@/components/modals/store";
+import { SOL_MINT } from "@/applications/Liquidity/config";
 
 const PoolsTab = () => {
   const [search, setSearch] = useState("");
-  const [tokenF, setTokenF] = useState("all");
   const [protocolF, setProtocolF] = useState("all");
   const [tvlF, setTvlF] = useState("tvl");
   const ammPools = useLiquidity((state) => state.ammPools);
-  const userAmmDeposits = useLiquidity((state) => state.userAmmDeposits);
   const raydiumInfo = useLiquidity((state) => state.raydiumInfo);
   const poolApiConfig = useLiquidity((state) => state.poolApiConfig);
   const setPoolConfig = useLiquidity((state) => state.setPoolApiConfig);
-  const [selectedPool, setSelectedPool] = useAtom(selectedPoolAtom);
+  const [, setSelectedPool] = useAtom(selectedPoolAtom);
 
   const d_data = {
     title: "List of All Active Pools in Ecosystem",
@@ -44,14 +42,38 @@ const PoolsTab = () => {
     token_filter: [
       {
         name: "All",
+        address: "all",
       },
       {
         icon: "/assets/images/solana-1@2x.png",
         name: "SOL",
+        address: SOL_MINT.toBase58(),
       },
       {
-        icon: "/assets/images/solana-1@2x.png",
-        name: "mSOL",
+        icon: "https://img-v1.raydium.io/icon/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png",
+        name: "USDC",
+        address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      },
+      {
+        icon: "https://img-v1.raydium.io/icon/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB.png",
+        name: "USDT",
+        address: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      },
+      {
+        icon: "https://img-v1.raydium.io/icon/2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk.png",
+        name: "ETH",
+        address: "2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk",
+      },
+      {
+        icon: "https://img-v1.raydium.io/icon/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So.png",
+        name: "MSOL",
+
+        address: "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+      },
+      {
+        icon: "https://img-v1.raydium.io/icon/J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn.png",
+        name: "JitoSOL",
+        address: "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
       },
     ],
 
@@ -100,11 +122,40 @@ const PoolsTab = () => {
           pageSize: 100,
           currentPage: 0,
           type: type,
+          sortType: poolApiConfig.sortType,
+          sortField: poolApiConfig.sortField,
         });
         await RaydiumPools.fetchNextPage();
       }
     },
     [poolApiConfig, setPoolConfig]
+  );
+  const [selectedTokenFilter, setSelectedTokenFilter] = useState("all");
+  const filteredPools = useMemo(
+    () =>
+      ammPools.filter((pool) => {
+        if (selectedTokenFilter === "all") return true;
+        return (
+          pool.mintA.address === selectedTokenFilter ||
+          pool.mintB.address === selectedTokenFilter
+        );
+      }),
+    [ammPools, selectedTokenFilter]
+  );
+  const handleChangeSortType = useCallback(
+    async (type: "tvl" | "apr") => {
+      if (type !== tvlF) {
+        setTvlF(type);
+        const poolType = type === "tvl" ? "liquidity" : "apr24h";
+        setPoolConfig({
+          ...poolApiConfig,
+          currentPage: 0,
+          sortField: poolType,
+        });
+        await RaydiumPools.fetchNextPage();
+      }
+    },
+    [poolApiConfig, setPoolConfig, tvlF]
   );
 
   return (
@@ -192,13 +243,11 @@ const PoolsTab = () => {
                             ? "0 0 4px #88d6ff"
                             : "none",
                       }}
-                      onClick={() => {
-                        const value = formatedString(item).toLocaleLowerCase();
-
-                        if (value !== tvlF) {
-                          setTvlF(value);
-                        }
-                      }}
+                      onClick={() =>
+                        handleChangeSortType(
+                          item.toLowerCase() as "tvl" | "apr"
+                        )
+                      }
                     >
                       {item}
                     </Button>
@@ -210,11 +259,11 @@ const PoolsTab = () => {
                   {d_data.token_filter.map((item, index) => (
                     <Button
                       key={`${item.name}-${index}--token-filter`}
+                      onClick={() => setSelectedTokenFilter(item.address)}
                       className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
                       style={{
                         boxShadow:
-                          formatedString(item.name).toLocaleLowerCase() ===
-                          tokenF
+                          selectedTokenFilter === item.address
                             ? "0 0 4px #88d6ff"
                             : "none",
                       }}
@@ -266,9 +315,9 @@ const PoolsTab = () => {
                 ))}
               </TableRow>
             </TableHeader>
-            {ammPools.length > 0 ? (
+            {filteredPools.length > 0 ? (
               <TableBody className={"h-20 overflow-hidden "}>
-                {ammPools?.map((row, index) => (
+                {filteredPools?.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
                     key={`${formatedString(
@@ -332,7 +381,6 @@ const PoolsTab = () => {
                           className="max-w-[150px] text-xs rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent"
                           onClick={() => {
                             setSelectedPool(row);
-                            console.log(row);
                             row.type.toLocaleLowerCase() === "standard"
                               ? onAddAmmLiquidityOpen()
                               : row.type.toLocaleLowerCase() === "concentrated"

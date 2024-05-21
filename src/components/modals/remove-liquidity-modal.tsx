@@ -27,6 +27,7 @@ import formatedNumber from "@/lib/numbers";
 import { raydiumActions } from "@/applications/Liquidity/actions";
 import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
 import { getWalletTokenAccount } from "@/hooks/useLiquidity";
+import Decimal from "decimal.js";
 
 type Props = {};
 
@@ -165,7 +166,9 @@ const RemoveLiquidityModal = (props: Props) => {
       wallet: wallet?.adapter as BaseSignerWalletAdapter,
       walletTokenAccounts: walletAccounts,
       inputTokenAmount: new BN(
-        amount.amountA * 10 ** (selectedPool?.mintA.decimals ?? 0)
+        new Decimal(
+          amount.amountA * 10 ** (selectedPool?.mintA.decimals ?? 0)
+        ).toFixed(0)
       ),
       inputTokenMint: "mintA",
     });

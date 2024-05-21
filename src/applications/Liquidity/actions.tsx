@@ -29,6 +29,7 @@ import { toast } from "@/components/ui/use-toast";
 import { ReturnTypeFetchMultiplePoolInfos } from "@raydium-io/raydium-sdk/lib/types/clmm/clmm";
 import { formatAmmKeysById } from "@/applications/Liquidity/formatAmmKeysById";
 import Decimal from "decimal.js";
+import assert from "assert";
 
 type WalletTokenAccounts = Awaited<ReturnType<typeof getWalletTokenAccount>>;
 
@@ -55,11 +56,17 @@ type HarvestLiquidityProps = {
   position: ClmmPoolPersonalPosition;
 };
 type addAmmLiquidityProps = {
-  baseToken: Token;
   quoteToken: Token;
   targetPool: string;
   inputTokenAmount: TokenAmount;
   slippage: Percent;
+  walletTokenAccounts: WalletTokenAccounts;
+  wallet: BaseSignerWalletAdapter;
+};
+
+type removeAmmLiquidityProps = {
+  targetPool: string;
+  removeLpTokenAmount: TokenAmount;
   walletTokenAccounts: WalletTokenAccounts;
   wallet: BaseSignerWalletAdapter;
 };
@@ -81,7 +88,7 @@ const addClmmLiquidity = async ({
       position,
       inputTokenAmount,
       inputTokenMint,
-      0.001
+      0.01
     );
 
   // -------- step 3: create instructions by SDK function --------
@@ -229,7 +236,6 @@ const addAmmLiquidity = async ({
   wallet,
   walletTokenAccounts,
   quoteToken,
-  baseToken,
   slippage,
   targetPool,
   inputTokenAmount,
@@ -239,14 +245,17 @@ const addAmmLiquidity = async ({
   const targetPoolInfo = await formatAmmKeysById(targetPool, connection);
 
   const poolKeys = jsonInfo2PoolKeys(targetPoolInfo) as LiquidityPoolKeys;
-  const { maxAnotherAmount, anotherAmount, liquidity } =
-    await computeAnotherAmount(
-      quoteToken,
-      targetPool,
-      inputTokenAmount,
-      slippage
-    );
+  const extraPoolInfo = await Liquidity.fetchInfo({ connection, poolKeys });
 
+  const { maxAnotherAmount, anotherAmount, liquidity } =
+    Liquidity.computeAnotherAmount({
+      poolKeys,
+      poolInfo: { ...targetPoolInfo, ...extraPoolInfo },
+      amount: inputTokenAmount,
+      anotherCurrency: quoteToken,
+      slippage: slippage,
+    });
+  const tokenAccountB = new TokenAmount(quoteToken, maxAnotherAmount.raw);
   const addLiquidityInstructionResponse =
     await Liquidity.makeAddLiquidityInstructionSimple({
       connection,
@@ -257,10 +266,11 @@ const addAmmLiquidity = async ({
         tokenAccounts: walletTokenAccounts,
       },
       amountInA: inputTokenAmount,
-      amountInB: maxAnotherAmount,
+      amountInB: tokenAccountB,
       fixedSide: "a",
       makeTxVersion,
     });
+
   return {
     txids: await buildAndSendTx(
       addLiquidityInstructionResponse.innerTransactions,
@@ -357,10 +367,43 @@ const createClmmPosition = async ({
   }
 };
 
+const removeAmmLiquidity = async ({
+  removeLpTokenAmount,
+  walletTokenAccounts,
+  wallet,
+  targetPool,
+}: removeAmmLiquidityProps) => {
+  // -------- pre-action: fetch basic info --------
+  const targetPoolInfo = await formatAmmKeysById(targetPool, connection);
+  assert(targetPoolInfo, "cannot find the target pool");
+  if (!wallet.publicKey) return;
+  // -------- step 1: make instructions --------
+  const poolKeys = jsonInfo2PoolKeys(targetPoolInfo) as LiquidityPoolKeys;
+  const removeLiquidityInstructionResponse =
+    await Liquidity.makeRemoveLiquidityInstructionSimple({
+      connection,
+      poolKeys,
+      userKeys: {
+        owner: wallet.publicKey,
+        payer: wallet.publicKey,
+        tokenAccounts: walletTokenAccounts,
+      },
+      amountIn: removeLpTokenAmount,
+      makeTxVersion,
+    });
+
+  return {
+    txids: await buildAndSendTx(
+      removeLiquidityInstructionResponse.innerTransactions,
+      wallet
+    ),
+  };
+};
 export const raydiumActions = {
   addClmmLiquidity,
   calculateAmounts,
   harvestClmmPosition,
+  removeAmmLiquidity,
   removeClmmPosition,
   addAmmLiquidity,
   computeAnotherAmount,
@@ -402,6 +445,12 @@ export async function sendTx(
         txids.push(await wallet.sendTransaction(iTx, connection));
       }
     }
+    toast({
+      title: "Transaction sent",
+      description: "Transaction has been sent to the blockchain",
+      link: `https://explorer.solana.com/tx/${txids?.[0]}`,
+      variant: "default",
+    });
     return txids;
   } catch (e: any) {
     console.log(e);
