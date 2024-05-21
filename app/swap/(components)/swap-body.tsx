@@ -489,6 +489,7 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
       {swapData.firstToken && swapData.secondToken ? (
         <div className="z-50 static p-5 flex flex-col gap-5 items-center justify-center">
           <SwapTitle />
+
           <div
             className={`${
               isEXTRASMALL ? "max-w-[300px]" : "max-w-xs"
