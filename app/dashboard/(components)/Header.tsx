@@ -90,7 +90,7 @@ const Header = ({ isMobile }: Props) => {
                 color: `${
                   window.location.pathname === `/${item.toLocaleLowerCase()}`
                     ? "#d9f8ff"
-                    : ""
+                    : "#757788"
                 }`,
               }}
               key={index}

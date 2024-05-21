@@ -53,6 +53,7 @@ const DashboardHeader = ({ isMobile }: Props) => {
               </TabsTrigger>
             ))}
           </div>
+          <div />
         </TabsList>
 
         <TabsContent

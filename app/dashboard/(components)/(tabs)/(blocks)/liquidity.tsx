@@ -164,12 +164,12 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5"
       style={{ boxShadow: "0 0 4px #88d6ff" }}
     >
-      <div className="text-lg md:text-2xl truncate flex items-center gap-5 text-[#D9F8FF]">
+      <div className="text-xl md:text-2xl truncate flex items-center gap-5 text-[#D9F8FF]">
         <div className="flex">
-          <h3>{hData.title}</h3>
+          <h3 className={"mr-2"}>{hData.title}</h3>
           <span className={hData.color}>*</span>
         </div>
-        <span>${formatedNumber(clmmTotal + ammTotal)}</span>
+        <span>$ {formatedNumber(clmmTotal + ammTotal)}</span>
       </div>
       {/*  */}
 
@@ -180,7 +180,7 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
               {hData.table.header.map((header, index) => (
                 <TableHead
                   key={`${formatedString(header.toLocaleLowerCase())}_${index}`}
-                  className="text-sm md:text-md truncate max-w-[110px]"
+                  className="text-sm md:text-md truncate max-w-[110px] text-[#D9F8FF] pl-0"
                   align="left"
                 >
                   {header}
@@ -209,14 +209,14 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                     className="hover:bg-transparent border-[#7c7c8d]"
                     key={index}
                   >
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d]">
-                      <div className="flex flex-col gap-3">
-                        <div className="flex gap-5 items-center justify-between w-full max-w-36">
+                    <TableCell className="font-medium text-left text-base md:text-md truncate uppercase text-[#7c7c8d] p-2 pl-0 pt-0">
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center justify-between w-full max-w-36">
                           {row.tokenA?.symbol + "-" + row.tokenB?.symbol}
                           {!isEXTRASMALL ? (
                             <div className="max-w-9 flex justify-between  items-center">
                               <Image
-                                className={"ml-1"}
+                                className={"mr-1"}
                                 src={row.tokenA?.logoURI ?? ""}
                                 alt={`${row.tokenA?.symbol}_logo-icon`}
                                 width={24}
@@ -230,14 +230,15 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                               />
                             </div>
                           ) : null}
+                          <div />
                         </div>
-                        <div className="flex gap-5 items-center justify-between w-full text-xs">
+                        <div className="flex gap-5 items-center justify-between w-full text-base">
                           TVL: ${formatedNumber(row.state.tvl, 0, true)}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d] align-top">
-                      <div className="flex flex-col gap-3">
+                    <TableCell className="font-medium text-left text-base md:text-md truncate uppercase text-[#7c7c8d] align-top p-2 pl-0">
+                      <div className="flex flex-col gap-1">
                         <div className="flex gap-5 items-center justify-between w-full">
                           {row.protocol}
                           {!isEXTRASMALL ? (
@@ -248,20 +249,23 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                               height={24}
                             />
                           ) : null}
+                          <div />
                         </div>
-                        <div className="flex gap-5 items-center justify-between w-full text-xs">
+                        <div className="flex gap-5 items-center justify-between w-full text-base">
                           Index TP: ${formatedNumber(0, 3)}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 align-top">
-                      <div className="flex flex-col gap-3">
+                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 align-top p-2 pl-0">
+                      <div className="flex flex-col gap-1">
                         <div
-                          className={"uppercase justify-center align-middle"}
+                          className={
+                            "uppercase justify-center align-middle text-base"
+                          }
                         >
                           clmm
                         </div>
-                        <div className="flex max-w-36 text-xs">
+                        <div className="flex max-w-36 text-base">
                           Range:{" "}
                           {formatedNumber(
                             row.position.priceLower.toNumber(),
@@ -278,10 +282,10 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 align-top">
+                    <TableCell className="font-medium text-left text-[#7c7c8d] align-top p-2 pl-0 text-base">
                       {formatedNumber(row.state.day.apr)}%
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 align-top">
+                    <TableCell className="font-medium text-left text-[#7c7c8d] align-top p-2 pl-0 text-base">
                       $
                       {formatedNumber(
                         (row.position.amountA.toNumber() /
@@ -293,8 +297,8 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                         2
                       )}
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 align-top">
-                      <div className="flex  flex-col gap-3">
+                    <TableCell className="font-medium text-left text-[#7c7c8d] p-2 pl-0 align-top text-base">
+                      <div className="flex  flex-col gap-0.5">
                         {/*<div>${formatedNumber(row.type, 2, isEXTRASMALL)}</div>*/}
                         <div>
                           {row.position.tokenFeeAmountA.toNumber() /
@@ -329,7 +333,7 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 align-top">
+                    <TableCell className="font-medium text-left text-[#7c7c8d] p-2 pl-0 align-top text-base">
                       <div>
                         <div>
                           {row.tokenA?.symbol}:{" "}
@@ -362,7 +366,7 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                         {/*))}*/}
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 align-top">
+                    <TableCell className="font-medium text-left text-[#7c7c8d] p-2 pl-0 align-top text-base">
                       x{formatedNumber(row.position.leverage, 2, isEXTRASMALL)}
                     </TableCell>
                   </TableRow>
