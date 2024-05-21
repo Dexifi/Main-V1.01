@@ -20,7 +20,7 @@ const Header = ({ setPage, page }: HeaderProps) => {
     },
   ];
   return (
-    <div className="flex gap-0 sm:gap-x-2 z-10 bg-[#0d111b] rounded-full">
+    <div className="flex gap-0 sm:gap-x-2 z-10 bg-[#0d111b] rounded-full mb-3">
       {data.map((tab, index) => (
         <div
           // value={tab.page_id.toLocaleLowerCase()}

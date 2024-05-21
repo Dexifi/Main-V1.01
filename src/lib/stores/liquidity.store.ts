@@ -24,6 +24,12 @@ export const useRemoveLiquidityModal = create<RemoveProps>((set) => ({
   onClose: () => set({ isOpen: false }),
 }));
 
+export const useRemoveAmmLiquidityModal = create<RemoveProps>((set) => ({
+  isOpen: false,
+  onRemoveLiquidityOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
 interface ManageProps {
   isOpen: boolean;
   onManageLiquidityOpen: () => void;
@@ -87,5 +93,66 @@ interface ClaimAllProps {
 export const useClaimAllLiquidityModal = create<ClaimAllProps>((set) => ({
   isOpen: false,
   onClaimAllLiquidityOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+interface AddAmmLiquidity {
+  isOpen: boolean;
+  onAddAmmLiquidityOpen: () => void;
+  onClose: () => void;
+}
+export const useAddAmmLiquidityModal = create<AddAmmLiquidity>((set) => ({
+  isOpen: false,
+  onAddAmmLiquidityOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+interface PoolSearchModal {
+  isOpen: boolean;
+  onPoolSearchOpen: () => void;
+  onClose: () => void;
+}
+
+export const usePoolSearchModal = create<PoolSearchModal>((set) => ({
+  isOpen: false,
+  onPoolSearchOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+interface SelectAmmTokenModal {
+  isOpen: boolean;
+  onSelectAmmTokenOpen: () => void;
+  onClose: () => void;
+}
+
+export const useSelectAmmTokenModal = create<SelectAmmTokenModal>((set) => ({
+  isOpen: false,
+  onSelectAmmTokenOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
+
+interface TokenListSettingModal {
+  isOpen: boolean;
+  onTokenListSettingOpen: () => void;
+  onClose: () => void;
+}
+
+export const useTokenListSettingModal = create<TokenListSettingModal>(
+  (set) => ({
+    isOpen: false,
+    onTokenListSettingOpen: () => set({ isOpen: true }),
+    onClose: () => set({ isOpen: false }),
+  })
+);
+
+interface CratePoolModal {
+  isOpen: boolean;
+  onCreatePoolOpen: () => void;
+  onClose: () => void;
+}
+
+export const useCreatePoolModal = create<CratePoolModal>((set) => ({
+  isOpen: false,
+  onCreatePoolOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));

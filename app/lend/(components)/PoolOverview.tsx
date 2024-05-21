@@ -43,13 +43,15 @@ const PoolOverview = ({ isEXTRASMALL, page }: POverwievProps) => {
     [mainDetails, page, turboDetails]
   );
   return (
-    <div className="w-full flex flex-wrap justify-between gap-5 my-5">
+    <div className="w-full flex flex-wrap justify-between gap-3 my-3">
       <div
         className="flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl px-5 lg:px-10 py-5 overflow-auto"
         style={{ boxShadow: "0 0 4px #88d6ff" }}
       >
         <div className="flex gap-x-5 text-[#D9F8FF] text-lg md:text-2xl">
-          <h3>{`${market?.config.name.toLocaleUpperCase() ?? "MAIN"} Pool`}</h3>
+          <h3>{`${
+            market?.config.name.toLocaleUpperCase() ?? "MAIN"
+          } Pool Overview`}</h3>
         </div>
 
         <div className="flex justify-center md:justify-between gap-12 relative flex-wrap md:flex-nowrap md:flex-row flex-1 w-full">
@@ -62,7 +64,7 @@ const PoolOverview = ({ isEXTRASMALL, page }: POverwievProps) => {
                       key={`${formatedString(
                         header.toLocaleLowerCase()
                       )}_${index}`}
-                      className="text-sm md:text-md truncate max-w-[110px]"
+                      className="text-sm md:text-base truncate max-w-[110px] text-[#D9F8FF]"
                       align="left"
                     >
                       {header}
@@ -97,7 +99,7 @@ const PoolOverview = ({ isEXTRASMALL, page }: POverwievProps) => {
                   </>
                 ) : (
                   <>
-                    <TableRow className="hover:bg-transparent border-[#7c7c8d]">
+                    <TableRow className="hover:bg-transparent border-[#7c7c8d] font-medium text-lg">
                       <TableCell className="font-medium text-left text-[#7c7c8d] py-4">
                         {details?.owner}
                       </TableCell>
@@ -128,16 +130,20 @@ const PoolOverview = ({ isEXTRASMALL, page }: POverwievProps) => {
                 {market?.config.description}
               </p>
             )}
+            <p className={"text-[#757788] w-full max-w-4xl text-lg"}>
+              The TURBO SOL pool offers increased LTV to allow a leveraged SOL
+              position up to 4x. Higher leverage comes at the cost of increased
+              liquidation risk so proceed with caution.
+            </p>
           </div>
-          <div className="flex flex-col">
-            <div className="flex flex-col items-center justify-center min-w-full md:min-w-[200px] min-h-[200px] md:aspect-square relative">
-              <Chart market={market} details={details} />
-              <div className="text-sm md:text-lg text-[#D9F8FF] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-            </div>
-            <div className="text-xs md:text-sm text-[#7c7c8d] text-center flex flex-col justify-center items-center gap-2">
-              <span>Pool Filling Rate</span>
-              <span>(Total borrow/Total supply)</span>
-            </div>
+        </div>
+      </div>
+      <div className="flex flex-col border w-1/4 rounded-3xl border-[#7c7c8d]">
+        <div className={"flex flex-col items-center w-full p-3"}>
+          <Chart market={market} details={details} />
+          <div className={"flex flex-col items-center -mt-1 font-medium"}>
+            <p className={"text-[#757788]"}>Pool Filling Rate</p>
+            <p className={"text-[#757788]"}>(Total borrow/Total supply)</p>
           </div>
         </div>
       </div>

@@ -70,7 +70,7 @@ const PoolLists = ({ headers, isEXTRASMALL, setSelectedLend, page }: Props) => {
   }, [market, rawReserves]);
 
   return (
-    <div className="w-full flex flex-wrap justify-between gap-5 my-5 flex-col md:flex-row">
+    <div className="w-full flex flex-wrap justify-between gap-3 my-3 flex-col md:flex-row">
       <div
         className="order-10 md:-order-10 flex flex-col justify-start items-start gap-y-5 flex-1 bg-[#0d111b] rounded-3xl lg:px-5 py-5"
         style={{

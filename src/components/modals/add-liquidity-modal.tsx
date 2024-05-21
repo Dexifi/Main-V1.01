@@ -3,291 +3,523 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import formatedNumber from "@/lib/numbers";
-import formatedString from "@/lib/string";
-import { X } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 
 import { useAddLiquidityModal } from "@/lib/stores/liquidity.store";
+import { useAtom } from "jotai";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  selectedPoolAtom,
+  selectedPositionAtom,
+  selectedPositionRowAtom,
+} from "@/components/modals/store";
+import BN from "bn.js";
+import formatedNumber from "@/lib/numbers";
+import { useLiquidity } from "@/applications/Liquidity/store";
+import { raydiumActions } from "@/applications/Liquidity/actions";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { debounce } from "lodash";
+import { connection } from "@/lib/get-connections";
+import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
+import Decimal from "decimal.js";
+import { getWalletTokenAccount } from "@/applications/Liquidity/user";
 
 type Props = {};
 
 const AddLiquidityModal = (props: Props) => {
   const { isOpen, onClose } = useAddLiquidityModal();
-  const [amount, setAmount] = useState<number>(0);
-
-  const data_modal = {
-    title: "Add AMM",
-    symbol: "SOL - USDC",
-    symbol_logo: "/assets/images/solana-1@2x.png",
-    balance: 14941,
-    body: [
-      {
-        title: "Base",
-        text: "SOL",
-      },
-      {
-        title: "Pool Liquidity (SOL)",
-        value: 5032865.53,
-        currency: "SOL",
-      },
-      {
-        title: "Pool Liquidity (USDC)",
-        value: 1234255.53,
-        currency: "USDC",
-      },
-      {
-        title: "LP Supply",
-        value: 51234.12,
-        currency: "LP",
-      },
-    ],
+  const [amount, setAmount] = useState({
+    amountA: 0,
+    amountB: 0,
+  });
+  const [selectedPool] = useAtom(selectedPoolAtom);
+  const [position] = useAtom(selectedPositionAtom);
+  const [row] = useAtom(selectedPositionRowAtom);
+  const userTokens = useLiquidity((state) => state.userTokens);
+  const tokenPrices = useLiquidity((state) => state.tokenPrices);
+  const { wallet } = useWallet();
+  const handleMaximizeAmount = async (token?: string) => {
+    if (!token) return;
+    const balance = userTokens.find((e) => e.address === token)?.balance;
+    if (!balance) return;
+    setAmount((prev) => ({
+      ...prev,
+      [token === selectedPool?.mintA.address ? "amountA" : "amountB"]: balance,
+    }));
+    await updateInputs(balance, token === selectedPool?.mintA.address);
   };
+  const updateInputs = debounce(async (amountN: number, isMintA?: boolean) => {
+    if (!row?.state || !position || !wallet?.adapter.publicKey) return;
+    const data = await raydiumActions.calculateAmounts(
+      row.state,
+      position,
+
+      new BN(
+        amountN *
+          10 ** (isMintA ? row.state.mintA.decimals : row.state.mintB.decimals)
+      ),
+      isMintA ? "mintA" : "mintB",
+      0.01
+    );
+
+    setAmount({
+      amountA: data.amountA.amount.toNumber() / 10 ** row.state.mintA.decimals,
+      amountB: data.amountB.amount.toNumber() / 10 ** row.state.mintB.decimals,
+    });
+  }, 1500);
+
+  const handleAddLiquidity = async () => {
+    if (!row?.state || !position || !wallet?.adapter.publicKey) return;
+
+    const walletAccounts = await getWalletTokenAccount(
+      connection,
+      wallet.adapter.publicKey
+    );
+    await raydiumActions.addClmmLiquidity({
+      poolInfo: row.state,
+      position,
+      inputTokenAmount: new BN(
+        new Decimal(
+          amount.amountA * 10 ** (row.state.mintA.decimals ?? 0)
+        ).toFixed(0)
+      ),
+      inputTokenMint: "mintA",
+      walletTokenAccounts: walletAccounts,
+      wallet: wallet.adapter as BaseSignerWalletAdapter,
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="bg-[#0d111b] max-w-xs md:max-w-lg z-[110] rounded-2xl p-4 sm:p-5"
-        style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
+        className="bg-[#0d111b] z-[110] rounded-xl p-6"
+        style={{
+          boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
+          borderColor: "rgba(171,196,255,0.5",
+        }}
       >
-        <div className="flex justify-between flex-col gap-3">
+        <div className={"flex flex-col"}>
+          {/*Header */}
+          <div className={"flex flex-row justify-between"}>
+            <p className={"text-white text-xl font-bold"}>
+              {`Add liquidity to ${
+                selectedPool?.mintA.symbol
+                  ? selectedPool?.mintA.symbol
+                  : selectedPool?.mintA.address.slice(0, 4)
+              } - ${
+                selectedPool?.mintB.symbol
+                  ? selectedPool?.mintB.symbol
+                  : selectedPool?.mintB.address.slice(0, 4)
+              }`}
+            </p>
+            <button>
+              <CloseIcon color={"inherit"} style={{ color: "white" }} />
+            </button>
+          </div>
+          {/*First Box */}
           <div
-            className="flex justify-between items-center py-2 px-4 rounded-md"
-            style={{
-              boxShadow: "0 0 5px rgba(217, 248, 255, 0.25)",
-            }}
+            className={
+              "flex flex-col border mt-6 p-3 rounded-sm gap-1 border-[#757788]"
+            }
           >
-            <h6 className="text-lg text-[#d9f8ff]">{data_modal.title}</h6>
-
-            <div className="flex gap-4 items-center">
-              {data_modal ? (
-                <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  {data_modal.symbol}
+            {/*Box Header*/}
+            <p className={"text-sky-500 font-bold text-base"}>My Position</p>
+            {/*Row One*/}
+            <div className={"flex flex-row justify-between"}>
+              <div className={"flex flex-row gap-2"}>
+                <div className={"flex flex-row"}>
+                  <div
+                    className={
+                      "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                    }
+                  >
+                    <img
+                      alt={"icon"}
+                      className={"w-4 h-4 rounded-full"}
+                      src={selectedPool?.mintA.logoURI}
+                    />
+                  </div>
                 </div>
-              ) : (
-                <Skeleton className="w-24 h-6 bg-slate-600" />
-              )}
-              {data_modal.symbol_logo ? (
-                <Image
-                  alt={`${data_modal.symbol}-logo / lend`}
-                  src={data_modal.symbol_logo}
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 aspect-square object-contain rounded-sm"
-                />
-              ) : (
-                <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
-              )}
+                <p className={"text-sky-700 font-bold"}>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
+              </div>
+              <div className="flex flex-row gap-1">
+                <p className={"text-white"}>
+                  {(
+                    (position?.amountA.toNumber() ?? 0) /
+                    10 ** (selectedPool?.mintA.decimals ?? 0)
+                  ).toFixed(4)}
+                </p>
+                <p className={"text-white"}>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
+              </div>
             </div>
-
-            <Button
-              size="icon"
-              className="hover:bg-[#d9f8ff20] transition-all h-6 w-6"
-              onClick={onClose}
-            >
-              <X className="w-4 h-4 aspect-square object-contain" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex justify-between flex-col gap-1">
-          {data_modal.symbol_logo ? (
-            <span className="text-sm text-[#757788] flex gap-1 flex-nowrap">
-              <span>Balance:</span>
-              <span>{formatedNumber(data_modal.balance, 1, true)}</span>
-              <span>{data_modal.symbol}</span>
-            </span>
-          ) : (
-            <Skeleton className="w-24 h-6 bg-slate-600" />
-          )}
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-4 justify-between items-center px-4 py-2 rounded-md bg-[#202d3a] flex-wrap">
-            <div className="flex gap-4 items-center w-1/2">
-              {data_modal.symbol_logo ? (
-                <Image
-                  alt={`${data_modal.symbol}-logo / lend`}
-                  src={data_modal.symbol_logo}
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 aspect-square object-contain rounded-sm"
-                />
-              ) : (
-                <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
-              )}
-              {data_modal.symbol ? (
-                <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  {data_modal.symbol}
+            {/*Row Two*/}
+            <div className={"flex flex-row justify-between"}>
+              <div className={"flex flex-row gap-1"}>
+                <div className={"flex flex-row"}>
+                  <div
+                    className={
+                      "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                    }
+                  >
+                    <img
+                      alt={"icon"}
+                      className={"w-4 h-4 rounded-full"}
+                      src={selectedPool?.mintB.logoURI}
+                    />
+                  </div>
                 </div>
-              ) : (
-                <Skeleton className="w-24 h-6 bg-slate-600" />
-              )}
-            </div>
-            <Input
-              value={amount}
-              onChange={(e) => {
-                const value = +e.target.value;
-                if (value > 4000) setAmount(4000);
-                else setAmount(value);
-              }}
-              type="number"
-              placeholder="Amount"
-              className="bg-transparent outline-none text-[#d9f8ff] flex-1 rounded-xl"
-            />
-            <div className="w-full flex justify-between items-center text-end">
-              <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                &asymp; ${formatedNumber(25.56, 3, false)}
+                <p className={"text-sky-700 font-bold"}>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
               </div>
-              <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                ${formatedNumber(amount * 25.56, 2, true)}
+              <div className={"flex flex-row gap-1"}>
+                <p className={"text-white"}>
+                  {(
+                    (position?.amountB.toNumber() ?? 0) /
+                    10 ** (selectedPool?.mintB.decimals ?? 0)
+                  ).toFixed(4)}
+                </p>
+                <p className={"text-white"}>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
               </div>
             </div>
           </div>
-          <div className="w-full flex justify-between items-center text-end gap-2 md:gap-4 flex-col md:flex-row">
-            <Button
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full md:w-1/2 bg-transparent text-xs md:text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-              size="sm"
-              onClick={() => setAmount(data_modal.balance / 2)}
-            >
-              Half
-            </Button>
-            <Button
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full md:w-1/2 bg-transparent text-xs md:text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-              size="sm"
-              onClick={() => setAmount(data_modal.balance)}
-            >
-              Max
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex justify-between flex-col gap-1">
-          {data_modal.symbol_logo ? (
-            <span className="text-sm text-[#757788] flex gap-1 flex-nowrap">
-              <span>Balance:</span>
-              <span>{formatedNumber(data_modal.balance, 1, true)}</span>
-              <span>{data_modal.symbol}</span>
-            </span>
-          ) : (
-            <Skeleton className="w-24 h-6 bg-slate-600" />
-          )}
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-4 justify-between items-center px-4 py-2 rounded-md bg-[#202d3a] flex-wrap">
-            <div className="flex gap-4 items-center w-1/2">
-              {data_modal.symbol_logo ? (
-                <Image
-                  alt={`${data_modal.symbol}-logo / lend`}
-                  src={data_modal.symbol_logo}
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 aspect-square object-contain rounded-sm"
-                />
-              ) : (
-                <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
-              )}
-              {data_modal.symbol ? (
-                <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  USDC
+          {/*Second Box */}
+          <div
+            className={
+              "flex flex-col border mt-6 p-3 rounded-xl gap-3 border-[#757788]"
+            }
+          >
+            {/*  Header */}
+            <div className={"flex flex-row justify-between items-start"}>
+              <p className={"text-sky-500 font-bold text-base"}>
+                Selected Range
+              </p>
+              <div className={"flex flex-row items-end"}>
+                <p className={"text-sky-700 text-xs font-bold mr-2"}>
+                  current Price
+                </p>
+                <div className={"flex flex-row text-sm gap-1"}>
+                  <p className={"text-white"}>
+                    {formatedNumber(row?.state.currentPrice.toNumber() ?? 0)}
+                  </p>
+                  <p className={"text-white"}>per</p>
+                  <p className={"text-white"}>
+                    {selectedPool?.mintA.symbol
+                      ? selectedPool?.mintA.symbol
+                      : selectedPool?.mintA.address.slice(0, 4)}
+                  </p>
                 </div>
-              ) : (
-                <Skeleton className="w-24 h-6 bg-slate-600" />
-              )}
-            </div>
-            <Input
-              value={amount}
-              onChange={(e) => {
-                const value = +e.target.value;
-                if (value > 4000) setAmount(4000);
-                else setAmount(value);
-              }}
-              type="number"
-              placeholder="Amount"
-              className="bg-transparent outline-none text-[#d9f8ff] flex-1 rounded-xl"
-            />
-            <div className="w-full flex justify-between items-center text-end">
-              <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                &asymp; ${formatedNumber(25.56, 3, false)}
-              </div>
-              <div className="text-xs md:text-sm text-[#d9f8ff60] font-medium">
-                ${formatedNumber(amount * 25.56, 2, true)}
               </div>
             </div>
-          </div>
-          <div className="w-full flex justify-between items-center text-end gap-2 md:gap-4 flex-col md:flex-row">
-            <Button
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full md:w-1/2 bg-transparent text-xs md:text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-              size="sm"
-              onClick={() => setAmount(data_modal.balance / 2)}
-            >
-              Half
-            </Button>
-            <Button
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full md:w-1/2 bg-transparent text-xs md:text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-              size="sm"
-              onClick={() => setAmount(data_modal.balance)}
-            >
-              Max
-            </Button>
-          </div>
-        </div>
-
-        <Table className="w-full flex-1">
-          <TableBody>
-            {data_modal.body.map((row: any, index: number) => (
-              <TableRow
-                className="hover:bg-transparent border-[#7c7c8d]"
-                key={`${formatedString(
-                  row.title.toLocaleLowerCase()
-                )}_${index}`}
+            {/*  Box Section */}
+            <div className={"flex flex-row justify-between gap-4"}>
+              <div
+                className={
+                  "flex flex-col border py-3 px-4 w-full items-center gap-3 rounded-sm border-[#757788]"
+                }
               >
-                <TableCell
-                  className={`font-medium text-left text-[#7c7c8d] py-2 text-sm pl-0`}
+                <p className={"text-sky-500 font-semibold text-base"}>
+                  Min Price
+                </p>
+                <p className={"text-white text-xl"}>
+                  {formatedNumber(position?.priceLower.toNumber() ?? 0)}
+                </p>
+                <div
+                  className={
+                    "flex flex-row gap-1 text-xs text-sky-700 font-semibold"
+                  }
                 >
-                  {row.title}
-                </TableCell>
-                <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
-                  {row.value && (
-                    <span>
-                      {typeof row.value === "number"
-                        ? `$${formatedNumber(row.value, 2, false)}`
-                        : "0"}
-                    </span>
-                  )}
-                  {row.currency && <span className="ml-1">{row.currency}</span>}
-                  {row.text && <span>{row.text}</span>}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        <Button
-          onClick={() => {}}
-          className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-xs md:text-sm"
-          style={{
-            boxShadow: "0 0 4px #88d6ff",
-          }}
-        >
-          Add Liquidity
+                  <p>
+                    {selectedPool?.mintA.symbol
+                      ? selectedPool?.mintA.symbol
+                      : selectedPool?.mintA.address.slice(0, 4)}
+                  </p>
+                  <p>per</p>
+                  <p>
+                    {selectedPool?.mintB.symbol
+                      ? selectedPool?.mintB.symbol
+                      : selectedPool?.mintB.address.slice(0, 4)}
+                  </p>
+                </div>
+              </div>
+              <div
+                className={
+                  "flex flex-col border py-3 px-4 w-full items-center gap-3 rounded-sm border-[#757788]"
+                }
+              >
+                <p className={"text-sky-500 font-semibold text-base"}>
+                  Max Price
+                </p>
+                <p className={"text-white text-xl"}>
+                  {formatedNumber(position?.priceUpper.toNumber() ?? 0)}
+                </p>
+                <div
+                  className={
+                    "flex flex-row gap-1 text-xs text-sky-700 font-semibold"
+                  }
+                >
+                  <p>
+                    {selectedPool?.mintA.symbol
+                      ? selectedPool?.mintA.symbol
+                      : selectedPool?.mintA.address.slice(0, 4)}
+                  </p>
+                  <p>per</p>
+                  <p>
+                    {selectedPool?.mintB.symbol
+                      ? selectedPool?.mintB.symbol
+                      : selectedPool?.mintB.address.slice(0, 4)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/*  Third box*/}
+          <div
+            className={"flex flex-col bg-[#071233]  mt-4 rounded-xl p-4 gap-2"}
+          >
+            <div className={"flex flex-row justify-between"}>
+              <p className={"text-sky-700 font-semibold text-sm"}>Amount</p>
+              <div
+                className={
+                  "flex flex-row gap-1 text-sky-700 font-semibold text-sm"
+                }
+              >
+                <p>Balance:</p>
+                <p>
+                  {userTokens.find(
+                    (e) => e.address === selectedPool?.mintA.address
+                  )?.balance ?? 0}
+                </p>
+              </div>
+            </div>
+            <div className={"flex flex-row justify-between"}>
+              <div
+                className={
+                  "flex flex-row text-sky-500 font-semibold text-base items-center gap-2"
+                }
+              >
+                <div className={"flex flex-row"}>
+                  <div
+                    className={
+                      "bg-[#abc4ff] h-7 w-7 flex flex-row justify-center items-center rounded-full"
+                    }
+                  >
+                    <img
+                      alt={"icon"}
+                      className={"w-6 h-6 rounded-full"}
+                      src={selectedPool?.mintA.logoURI}
+                    />
+                  </div>
+                </div>
+                <p>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
+                <div className="w-[1px] h-7 bg-white bg-opacity-40"></div>
+                {/* Right divider */}
+                <Button
+                  size={"sm"}
+                  className={"bg-white bg-opacity-10 h-7"}
+                  onClick={() =>
+                    handleMaximizeAmount(selectedPool?.mintA.address)
+                  }
+                >
+                  Max
+                </Button>
+              </div>
+              <div className={"flex flex-col items-end"}>
+                <input
+                  className={
+                    "bg-[#071233] text-white text-right py-1 outline-0 border-0 px-0"
+                  }
+                  autoFocus={false}
+                  value={amount.amountA}
+                  onChange={(e) => {
+                    setAmount((prev) => ({
+                      ...prev,
+                      amountA: e.target.value as unknown as number,
+                    }));
+                    updateInputs(e.target.value as unknown as number, true);
+                  }}
+                />
+                <div
+                  className={
+                    "flex flex-row mt-1 text-sky-700 font-semibold text-sm"
+                  }
+                >
+                  <p>$</p>
+                  <p>
+                    {(
+                      amount.amountA *
+                      tokenPrices[selectedPool?.mintA.address ?? ""]
+                    ).toFixed(4)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/*  Fourth Box*/}
+          <div
+            className={"flex flex-col bg-[#071233] mt-4 rounded-xl p-4 gap-2"}
+          >
+            <div className={"flex flex-row justify-between"}>
+              <p className={"text-sky-700 font-semibold text-sm"}>Amount</p>
+              <div
+                className={
+                  "flex flex-row gap-1 text-sky-700 font-semibold text-sm"
+                }
+              >
+                <p>Balance:</p>
+                <p>
+                  {userTokens.find(
+                    (e) => e.address === selectedPool?.mintB.address
+                  )?.balance ?? 0}
+                </p>
+              </div>
+            </div>
+            <div className={"flex flex-row justify-between"}>
+              <div
+                className={
+                  "flex flex-row text-sky-500 font-semibold text-base items-center gap-2"
+                }
+              >
+                <div
+                  className={
+                    "bg-[#abc4ff] h-7 w-7 flex flex-row justify-center items-center rounded-full"
+                  }
+                >
+                  <img
+                    alt={"icon"}
+                    className={"w-6 h-6 rounded-full"}
+                    src={selectedPool?.mintB.logoURI}
+                  />
+                </div>
+                <p>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
+                <div className="w-[1px] h-7 bg-white bg-opacity-40"></div>
+                {/* Right divider */}
+                <Button
+                  size={"sm"}
+                  className={"bg-white bg-opacity-10 h-7"}
+                  onClick={() => {
+                    handleMaximizeAmount(selectedPool?.mintB.address);
+                  }}
+                >
+                  Max
+                </Button>
+              </div>
+              <div className={"flex flex-col items-end"}>
+                <input
+                  className="bg-[#071233] text-white text-right py-1 outline-0 border-0 px-0"
+                  autoFocus={false}
+                  value={amount.amountB}
+                  onChange={(e) => {
+                    setAmount((prev) => ({
+                      ...prev,
+                      amountB: parseInt(e.target.value),
+                    }));
+                    updateInputs(parseInt(e.target.value), false);
+                  }}
+                />
+                <div
+                  className={
+                    "flex flex-row mt-1 text-sky-700 font-semibold text-sm"
+                  }
+                >
+                  <p>$</p>
+                  <p>
+                    {(
+                      amount.amountB *
+                      tokenPrices[selectedPool?.mintB.address ?? ""]
+                    ).toFixed(4)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className={"flex flex-col bg-[#071233] mt-4 p-3 gap-1 rounded-xl"}
+          >
+            <div className="flex flex-row justify-between text-white">
+              <div className="flex flex-row gap-1">
+                <p>
+                  {selectedPool?.mintA.symbol
+                    ? selectedPool?.mintA.symbol
+                    : selectedPool?.mintA.address.slice(0, 4)}
+                </p>
+                <div
+                  className={
+                    "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                  }
+                >
+                  <img
+                    alt={"icon"}
+                    className={"w-4 h-4 rounded-full"}
+                    src={selectedPool?.mintA.logoURI}
+                  />
+                </div>
+              </div>
+              <p>{formatedNumber(amount.amountA)}</p>
+            </div>
+            <div className="flex flex-row justify-between text-white">
+              <div className="flex flex-row gap-1">
+                <p>
+                  {selectedPool?.mintB.symbol
+                    ? selectedPool?.mintB.symbol
+                    : selectedPool?.mintB.address.slice(0, 4)}
+                </p>
+                <div
+                  className={
+                    "bg-[#abc4ff] h-5 w-5 flex flex-row justify-center items-center rounded-full"
+                  }
+                >
+                  <img
+                    alt={"icon"}
+                    className={"w-4 h-4 rounded-full"}
+                    src={selectedPool?.mintB.logoURI}
+                  />
+                </div>
+              </div>
+              <p>{formatedNumber(amount.amountB)}</p>
+            </div>
+            <div className="flex flex-row justify-between text-sky-500 font-semibold mt-1">
+              <p>Total Deposit</p>
+              <div className="flex flex-row gap-1">
+                <p>$</p>
+                <p>
+                  {(
+                    amount.amountA *
+                      tokenPrices[selectedPool?.mintA.address ?? ""] +
+                    amount.amountB *
+                      tokenPrices[selectedPool?.mintB.address ?? ""]
+                  ).toFixed(4)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Button onClick={handleAddLiquidity} size="lg">
+          Add liquidity
         </Button>
+        <Button className={"bg-transparent"}>Cancel</Button>
       </DialogContent>
     </Dialog>
   );

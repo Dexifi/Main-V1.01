@@ -78,7 +78,10 @@ const TradeMarketModal = memo(({ markets }: Props) => {
         className={`bg-[#0d111b] ${
           isEXTRASMALL ? "max-w-xs" : "max-w-md"
         } sm:max-w-lg z-[110] rounded-xl`}
-        style={{ boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)" }}
+        style={{
+          boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
+          borderColor: "rgba(171,196,255,0.5",
+        }}
       >
         <div className="flex justify-between relative flex-col gap-3">
           <div className="flex justify-between items-center">
