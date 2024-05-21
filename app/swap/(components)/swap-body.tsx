@@ -22,7 +22,7 @@ import { createJupiterApiClient } from "@jup-ag/api";
 import { getPrice } from "@/data/price";
 import { CircularProgress, Skeleton } from "@mui/material";
 import { debounce } from "lodash";
-
+import RefreshIcon from "@mui/icons-material/Refresh";
 type Props = {
   isEXTRASMALL: boolean;
 };
@@ -83,17 +83,17 @@ const SwapBlock = ({
   return (
     <>
       <div className="flex justify-between items-center w-full">
-        <h6 className="text-sm text-[#d9f8ff] truncate" key={title}>
+        <p className="text-base text-[#d9f8ff] truncate" key={title}>
           {title}
-        </h6>
+        </p>
         <div className="text-sm flex gap-2 items-center">
           Balance: {formatedNumber(+balance, 6, isEXTRASMALL)}
           <span>{token?.symbol}</span>
         </div>
       </div>
-      <div className="flex justify-between items-center w-full gap-4 p-3 md:p-5 bg-[#0d111b40] rounded-lg">
+      <div className="flex justify-between items-center w-full gap-4 p-3 md:p-5 rounded-xl bg-[#0D111B] z-40">
         <Button
-          className="rounded-full flex gap-3 md:gap-6 justify-between items-center flex-1 md:min-w-[170px]"
+          className="rounded-full flex gap-3 md:gap-6 justify-between items-center"
           onClick={onShowModal}
           style={{
             boxShadow: "0 0 5px rgba(217, 248, 255, 0.25)",
@@ -109,7 +109,7 @@ const SwapBlock = ({
             className="max-h-5 aspect-square object-contain"
           />
           <div className="text-sm">{token.symbol}</div>
-          <ChevronsDown className="w-5 h-5 min-w-[1.25rem] aspect-square object-contain text-[#d9f8ff50] hidden md:flex" />
+          <ChevronsDown className="w-5 h-5 min-w-[1.25rem] aspect-square object-contain text-[#D9F8FF] hidden md:flex" />
         </Button>
         {loading ? (
           <Skeleton
@@ -126,7 +126,7 @@ const SwapBlock = ({
             disabled={disabled}
             type="number"
             required
-            className="h-9 bg-[#0d111b] max-w-[80px] md:max-w-[140px] rounded-lg"
+            className="h-9 bg-[#0d111b] max-w-[80px] md:max-w-[140px] rounded-3xl"
             value={amount}
             color="#ff0"
             onChange={(e) => {
@@ -142,10 +142,14 @@ const SwapBlock = ({
 const SwapInfo = ({ data, isEXTRASMALL }: SwapInfoProps) => {
   const isSmall = useMediaQuery("(max-width: 660px)");
   return (
-    <div className="bg-[#0d111b] flex flex-col p-5 rounded-md gap-3">
-      <div className="text-[#757788] font-medium text-center">More info</div>
-      <div className="w-full h-[1px] bg-[#757788] rounded-md" />
-      <div className="flex flex-col w-full gap-3">
+    <div className="flex flex-col p-4 gap-3 bg-[#0D111B] z-40 rounded-xl">
+      <div className="text-[#757788] font-medium text-center text-[13px]">
+        More info
+      </div>
+      <div className={"flex flex-row justify-center"}>
+        <div className="w-5/6 h-[1px] bg-[#757788] rounded-md" />
+      </div>
+      <div className="flex flex-col w-full gap-1">
         {data.map((item, index) => (
           <div
             key={index}
@@ -179,10 +183,10 @@ const SwapActions = ({ onToggle, onRate }: SwapActionsProps) => {
     <div className="flex justify-between items-center gap-4 flex-wrap">
       <Button
         size="icon"
-        className="hover:bg-[#75778810] transition-all"
+        className="hover:bg-[#75778810] transition-all rounded-full border-[#757788] border"
         onClick={onToggle}
       >
-        <ChevronsUpDown className="w-4 sm:w-6 h-4 sm:h-6 aspect-square object-contain" />
+        <RefreshIcon sx={{ color: "#757788" }} />
       </Button>
 
       <div className="flex gap-2 items-center">
@@ -190,11 +194,11 @@ const SwapActions = ({ onToggle, onRate }: SwapActionsProps) => {
           <Button
             size="sm"
             key={`${value}-proccent-${index}-button`}
-            className="h-10 hover:bg-[#75778810] transition-all"
+            className="h-10 hover:bg-[#75778810] transition-all shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)] border rounded-full p-2 border-[#D9F8FF80]"
             onClick={() => onRate(value)}
           >
             <span className="text-xs sm:text-sm text-muted truncate">
-              {value * 100}%
+              %{value * 100}
             </span>
           </Button>
         ))}
@@ -485,10 +489,11 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
       {swapData.firstToken && swapData.secondToken ? (
         <div className="z-50 static p-5 flex flex-col gap-5 items-center justify-center">
           <SwapTitle />
+
           <div
             className={`${
               isEXTRASMALL ? "max-w-[300px]" : "max-w-xs"
-            } md:max-w-md w-full flex flex-col rounded-3xl p-6 text-[#757788] gap-4 min-h-[740px]`}
+            } md:max-w-md w-full flex flex-col rounded-3xl p-6 text-[#757788] gap-4 min-h-[740px] mt-6`}
             style={{
               boxShadow: "0 0 5px #d9f8ff",
             }}
@@ -512,24 +517,26 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
               }}
             />
 
-            <SwapActions
-              onToggle={() => {
-                setSwapData((e) => ({
-                  ...e,
-                  firstToken: e.secondToken,
-                  secondToken: e.firstToken,
-                }));
-                updateSwapBalance();
-              }}
-              onRate={(value: number) =>
-                setSwapData((b) => ({
-                  ...b,
-                  firstAmount: b.firstUserBalance
-                    ? b.firstUserBalance * value
-                    : 0,
-                }))
-              }
-            />
+            <div className={"mt-2"}>
+              <SwapActions
+                onToggle={() => {
+                  setSwapData((e) => ({
+                    ...e,
+                    firstToken: e.secondToken,
+                    secondToken: e.firstToken,
+                  }));
+                  updateSwapBalance();
+                }}
+                onRate={(value: number) =>
+                  setSwapData((b) => ({
+                    ...b,
+                    firstAmount: b.firstUserBalance
+                      ? b.firstUserBalance * value
+                      : 0,
+                  }))
+                }
+              />
+            </div>
 
             <SwapBlock
               title="To Receive"
@@ -548,123 +555,140 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
               }}
             />
 
-            <div className="flex flex-col gap-2">
-              <div className="text-[#757788] text-xs flex gap-2 w-full items-center relative">
-                <img
-                  src="/assets/icons/main/green_dot.svg"
-                  alt="green dot / main"
-                  width={4}
-                  height={4}
-                />
-                <p>{swapData.firstToken.symbol}</p>
-                <p>&asymp;</p>
-                <p>
-                  {formatedNumber(
-                    (swapData.firstToken.price ?? 0) /
-                      (swapData.secondToken.price ?? 0),
-                    4,
-                    isEXTRASMALL
-                  )}{" "}
-                  {swapData.secondToken.symbol}
-                </p>
+            <div className={"flex flex-col gap-1"}>
+              <div className="flex flex-col gap-2 text-sm">
+                <div className="text-[#757788] flex gap-2 w-full items-center relative">
+                  <img
+                    src="/assets/icons/main/green_dot.svg"
+                    alt="green dot / main"
+                    width={6}
+                    height={6}
+                  />
+                  <p>{swapData.firstToken.symbol}</p>
+                  <p>&asymp;</p>
+                  <p>
+                    {formatedNumber(
+                      (swapData.firstToken.price ?? 0) /
+                        (swapData.secondToken.price ?? 0),
+                      4,
+                      isEXTRASMALL
+                    )}{" "}
+                    {swapData.secondToken.symbol}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="flex flex-col gap-2">
-              <div className="text-[#757788] text-xs flex gap-2 w-full items-center relative">
-                <div className="w-1 h-1" />
-                <p>{swapData.secondToken.symbol}</p>
-                <p>&asymp;</p>
-                <p>
-                  {formatedNumber(
-                    (swapData.secondToken.price ?? 0) /
-                      (swapData.firstToken.price ?? 0),
-                    4,
-                    isEXTRASMALL
-                  )}{" "}
-                  {swapData.firstToken.symbol}
-                </p>
+              <div className="flex flex-col gap-2 text-sm">
+                <div className="text-[#757788] flex gap-2 w-full items-center relative">
+                  <div className="w-1 h-1" />
+                  <p>{swapData.secondToken.symbol}</p>
+                  <p>&asymp;</p>
+                  <p>
+                    {formatedNumber(
+                      (swapData.secondToken.price ?? 0) /
+                        (swapData.firstToken.price ?? 0),
+                      4,
+                      isEXTRASMALL
+                    )}{" "}
+                    {swapData.firstToken.symbol}
+                  </p>
+                </div>
               </div>
             </div>
 
             <SwapInfo data={swapInformation} isEXTRASMALL={isEXTRASMALL} />
 
-            <div className="flex justify-between items-center gap-4">
-              <div
-                key={`${swapData.firstToken.address}_address-info`}
-                className="w-full md:w-1/2 flex gap-4 items-center"
-              >
-                <img
-                  src={swapData.firstToken.logoURI}
-                  alt={`${swapData.firstToken.symbol}-logo / main`}
-                  width={24}
-                  height={24}
-                  className="aspect-square w-6 h-6 object-contain"
-                />
-                <div className="flex flex-col truncate gap-1">
-                  <span className="text-xs md:text-sm">
-                    {swapData.firstToken.symbol} $
-                    {formatedNumber(
-                      swapData.firstToken.price ?? 0,
-                      4,
-                      isEXTRASMALL
-                    )}
-                  </span>
-                  <span
-                    className="text-xs md:text-sm cursor-pointer border-b border-solid border-[#d9f8ff60] w-max"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        swapData.firstToken?.address ?? ""
-                      );
-                      toast({
-                        title: "Added to clipboard",
-                      });
-                    }}
-                  >
-                    {removeMiddleString(swapData.firstToken.address ?? "")}
-                  </span>
+            <div
+              className={
+                "flex flex-row w-full justify-center  items-center px-3"
+              }
+            >
+              <div className="flex justify-between items-center gap-4 w-full">
+                <div
+                  key={`${swapData.firstToken.address}_address-info`}
+                  className="w-full md:w-1/2 flex gap-4 items-center"
+                >
+                  <img
+                    src={swapData.firstToken.logoURI}
+                    alt={`${swapData.firstToken.symbol}-logo / main`}
+                    width={24}
+                    height={24}
+                    className="aspect-square w-6 h-6 object-contain"
+                  />
+                  <div className="flex flex-col truncate gap-1">
+                    <span className="text-xs md:text-sm">
+                      {swapData.firstToken.symbol} $
+                      {formatedNumber(
+                        swapData.firstToken.price ?? 0,
+                        4,
+                        isEXTRASMALL
+                      )}
+                    </span>
+                    <span
+                      className="text-xs md:text-sm cursor-pointer border-b border-solid border-[#d9f8ff60] w-max text-[#D9F8FF]"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          swapData.firstToken?.address ?? ""
+                        );
+                        toast({
+                          title: "Added to clipboard",
+                        });
+                      }}
+                    >
+                      {removeMiddleString(swapData.firstToken.address ?? "")}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div
-                key={`${swapData.secondToken.address}_address-info`}
-                className="w-full md:w-1/2 flex gap-4 items-center"
-              >
-                <img
-                  src={swapData.secondToken.logoURI}
-                  alt={`${swapData.secondToken.symbol}-logo / main`}
-                  width={24}
-                  height={24}
-                  className="aspect-square w-6 h-6 object-contain"
-                />
-                <div className="flex flex-col truncate gap-1">
-                  <span className="text-xs md:text-sm">
-                    {swapData.secondToken.symbol} $
-                    {formatedNumber(
-                      swapData.secondToken.price ?? 0,
-                      4,
-                      isEXTRASMALL
-                    )}
-                  </span>
-                  <span
-                    className="text-xs md:text-sm cursor-pointer border-b border-solid border-[#d9f8ff60] w-max"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        swapData.secondToken?.address ?? ""
-                      );
-                      toast({
-                        title: "Added to clipboard",
-                      });
-                    }}
-                  >
-                    {removeMiddleString(swapData.secondToken.address ?? "")}
-                  </span>
+                <div
+                  key={`${swapData.secondToken.address}_address-info`}
+                  className="w-full md:w-1/2 flex gap-4 items-center"
+                >
+                  <img
+                    src={swapData.secondToken.logoURI}
+                    alt={`${swapData.secondToken.symbol}-logo / main`}
+                    width={24}
+                    height={24}
+                    className="aspect-square w-6 h-6 object-contain"
+                  />
+                  <div className="flex flex-col truncate gap-1">
+                    <span className="text-xs md:text-sm">
+                      {swapData.secondToken.symbol} $
+                      {formatedNumber(
+                        swapData.secondToken.price ?? 0,
+                        4,
+                        isEXTRASMALL
+                      )}
+                    </span>
+                    <span
+                      className="text-xs md:text-sm cursor-pointer border-b border-solid border-[#d9f8ff60] w-max text-[#D9F8FF]"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          swapData.secondToken?.address ?? ""
+                        );
+                        toast({
+                          title: "Added to clipboard",
+                        });
+                      }}
+                    >
+                      {removeMiddleString(swapData.secondToken.address ?? "")}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <Button onClick={makeSwap} disabled={!publicKey}>
-              {loading || isFetching ? "Loading..." : "Swap"}
-            </Button>
+            <div className={"flex flex-row justify-center mt-5 w-full"}>
+              <Button
+                onClick={makeSwap}
+                disabled={!publicKey}
+                size={"lg"}
+                className={
+                  "w-4/5 shadow-[0px_0px_5px_0px_#D9F8FF] rounded-3xl text-[26px]"
+                }
+              >
+                {loading || isFetching ? "Loading..." : "Swap"}
+              </Button>
+            </div>
           </div>
         </div>
       ) : (
