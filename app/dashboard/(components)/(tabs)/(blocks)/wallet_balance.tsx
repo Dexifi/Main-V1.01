@@ -3,10 +3,8 @@ import { memo, useState } from "react";
 
 import { connection } from "@/lib/get-connections";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
 
 import formatedNumber from "@/lib/numbers";
-import { getAllDomains, performReverseLookup } from "@bonfida/spl-name-service";
 
 import {
   Table,
@@ -29,8 +27,8 @@ import { Button } from "@/components/ui/button";
 import formatedString from "@/lib/string";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import useWalletBalance from "@/hooks/useWalletBalance";
 import { useDomainsForOwner } from "@bonfida/sns-react";
+import { useDashboard } from "@/applications/Dashboard/store";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -38,22 +36,17 @@ type Props = {
 
 // eslint-disable-next-line react/display-name
 const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [address, setAddress] = useState<string>("");
   const [isTransferDOpen, setIsTransferDOpen] = useState({
     open: false,
     domain: "",
   });
-
   const { publicKey } = useWallet();
+  const { netWorth, walletTokenAccounts } = useDashboard();
 
-  const { tokens, walletBalance } = useWalletBalance(connection, publicKey);
-  const domains = useDomainsForOwner(
-    connection,
-    "3tEicmNcV2UHvC85ndbv6y3fFtcuYpEVuiQLC1Cc2wjV"
-  );
+  const domains = useDomainsForOwner(connection, publicKey?.toBase58());
 
-  const cToken = tokens
+  const cToken = walletTokenAccounts
     .filter((token) => token.amount > 0)
     .sort((a, b) => b.price - a.price);
 
@@ -81,7 +74,10 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
           <span className={data.color}>*</span>
         </div>
         <span>
-          $ {walletBalance ? formatedNumber(walletBalance) : formatedNumber(0)}
+          ${" "}
+          {netWorth.totalWallet
+            ? formatedNumber(netWorth.totalWallet)
+            : formatedNumber(0)}
         </span>
       </div>
 
@@ -104,7 +100,7 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading ? (
+              {cToken.length === 0 ? (
                 <>
                   <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                     {data.table.header.map((header, index) => (
@@ -126,7 +122,8 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
                         row.symbol.toLocaleLowerCase()
                       )}_${index}`}
                     >
-                      <TableCell className="font-medium text-left text-sm md:text-md truncate max-w-[110px] p-0">
+                      <TableCell className="font-medium flex my-2 flex-row gap-2 text-left text-sm md:text-md truncate max-w-[110px] p-0">
+                        <img className={"w-6 rounded-full"} src={row.logoURI} />
                         {row.symbol}
                       </TableCell>
                       <TableCell className="font-medium text-left text-[#7c7c8d] p-0">
@@ -140,9 +137,11 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
                       </TableCell>
                       <TableCell className="font-medium text-left text-[#7c7c8d] p-0">
                         %
-                        {walletBalance
+                        {netWorth.totalWallet
                           ? formatedNumber(
-                              ((row.price * row.amount) / walletBalance) * 100
+                              ((row.price * row.amount) /
+                                netWorth.totalWallet) *
+                                100
                             )
                           : formatedNumber(0)}
                       </TableCell>
@@ -153,32 +152,34 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
             </TableBody>
           </Table>
         </div>
-        <div className="flex flex-col min-w-[280px] bg-[#30425640] rounded-3xl gap-5">
-          <div className="w-full border-b border-[#D9F8FF] border-solid p-3">
-            <h6 className="text-sm md:text-lg truncate text-[#D9F8FF] text-left">
-              Domains
-            </h6>
-          </div>
-          <div className="flex flex-col gap-3 h-44 overflow-auto px-4 pr-2">
-            {domains?.result?.map(({ domain }, index) => (
-              <div
-                key={`${domain}_${index}`}
-                className="flex flex-nowrap justify-between items-center border-b border-[#30425670] border-solid last:border-none"
-              >
-                <h6 className="text-sm font-medium text-[#727383]">
-                  {domain}.sol
-                </h6>
-                <Button
-                  className="border [background:#0D111B] shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)] p-2.5 rounded-[25px] border-solid border-[rgba(217,248,255,0.50)]"
-                  size="sm"
-                  onClick={() => setIsTransferDOpen({ open: true, domain })}
+        {(domains?.result?.length ?? 0) > 0 && (
+          <div className="flex flex-col min-w-[280px] bg-[#30425640] rounded-3xl gap-5">
+            <div className="w-full border-b border-[#D9F8FF] border-solid p-3">
+              <h6 className="text-sm md:text-lg truncate text-[#D9F8FF] text-left">
+                Domains
+              </h6>
+            </div>
+            <div className="flex flex-col gap-3 h-44 overflow-auto px-4 pr-2">
+              {domains?.result?.map(({ domain }, index) => (
+                <div
+                  key={`${domain}_${index}`}
+                  className="flex flex-nowrap justify-between items-center border-b border-[#30425670] border-solid last:border-none"
                 >
-                  Transfer
-                </Button>
-              </div>
-            ))}
+                  <h6 className="text-sm font-medium text-[#727383]">
+                    {domain}.sol
+                  </h6>
+                  <Button
+                    className="border [background:#0D111B] shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)] p-2.5 rounded-[25px] border-solid border-[rgba(217,248,255,0.50)]"
+                    size="sm"
+                    onClick={() => setIsTransferDOpen({ open: true, domain })}
+                  >
+                    Transfer
+                  </Button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <AlertDialog
         open={isTransferDOpen.open}

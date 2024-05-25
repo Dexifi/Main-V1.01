@@ -9,11 +9,9 @@ import {
 } from "@/components/ui/table";
 import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
-import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import useLend from "@/hooks/useLend";
-import { connection } from "@/lib/get-connections";
+import { useDashboard } from "@/applications/Dashboard/store";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -33,12 +31,9 @@ type DataProps = {
 
 const Lending = ({ isEXTRASMALL }: Props) => {
   const [gdata, setData] = useState<DataProps[]>([]);
-  const { publicKey } = useWallet();
-  const [lendValue, setLendValue] = useState(12500);
-  const { states, deposits, userObligationState } = useLend(
-    connection,
-    publicKey
-  );
+
+  const { lend } = useDashboard();
+
   useEffect(() => {
     gdata.length === 0 &&
       setTimeout(() => {
@@ -74,7 +69,7 @@ const Lending = ({ isEXTRASMALL }: Props) => {
     },
   };
 
-  if (states.length === 0) return <></>;
+  if (lend?.states.length === 0) return <></>;
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5"
@@ -86,7 +81,7 @@ const Lending = ({ isEXTRASMALL }: Props) => {
           <span className={data.color}>*</span>
         </div>
         <span>
-          ${formatedNumber(userObligationState?.userTotalDeposit ?? 0)}
+          ${formatedNumber(lend?.userObligationState?.userTotalDeposit ?? 0)}
         </span>
       </div>
       {/*  */}
@@ -107,7 +102,7 @@ const Lending = ({ isEXTRASMALL }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {states.length <= 0 ? (
+            {(lend?.states?.length ?? 0) <= 0 ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   {data.table.header.map((header, index) => (
@@ -122,7 +117,7 @@ const Lending = ({ isEXTRASMALL }: Props) => {
               </>
             ) : (
               <>
-                {states.map((row, index) => (
+                {lend?.states.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
                     key={`${formatedString(row.symbol)}_${index}`}
@@ -159,21 +154,18 @@ const Lending = ({ isEXTRASMALL }: Props) => {
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                       $
-                      {formatedNumber(
-                        Number(row.totalLiquidityWads.toString()) /
-                          10 ** (row.token?.decimals ?? 0),
-                        2,
-                        true
-                      )}
+                      {row.totalLiquidityWads
+                        .divn(10 ** row.decimals ?? 0)
+                        .toString()}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
                       {formatedNumber(row.supplyInterestAPY)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.borrowed_apr)}
+                      {formatedNumber(row.borrowInterestAPY)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.ratio)}%
+                      {formatedNumber(row.maxBorrowRate)}%
                     </TableCell>
                   </TableRow>
                 ))}

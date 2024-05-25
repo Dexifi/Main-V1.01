@@ -1,7 +1,6 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import { RaydiumPools } from "@/applications/Liquidity/pool";
 import { userCLMMDeposit, userDeposit } from "@/applications/Liquidity/deposit";
-import { Wallet } from "@solana/wallet-adapter-react";
 import { userWalletBalance } from "@/applications/Liquidity/user";
 
 const initial = async (connection: Connection, publicKey: PublicKey | null) => {

@@ -11,17 +11,17 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import formatedNumber from "@/lib/numbers";
 import formatedString, { removeMiddleString } from "@/lib/string";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { CheckIcon, ChevronFirst, X } from "lucide-react";
+import { CheckIcon, X } from "lucide-react";
 import Image from "next/image";
 import * as Checkbox from "@radix-ui/react-checkbox";
+import { useDashboard } from "@/applications/Dashboard/store";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -39,9 +39,7 @@ type DataProps = {
 };
 
 const NFT = ({ isEXTRASMALL }: Props) => {
-  const [gdata, setData] = useState<DataProps[]>([]);
-  const { publicKey } = useWallet();
-  const [NFTValue, setNFTValue] = useState(12500);
+  const { nft } = useDashboard();
   const { toast } = useToast();
 
   const [detailModal, setDetailModal] = useState(false);
@@ -50,24 +48,6 @@ const NFT = ({ isEXTRASMALL }: Props) => {
 
   const [sendModal, setSendModal] = useState(false);
 
-  useEffect(() => {
-    gdata.length === 0 &&
-      setTimeout(() => {
-        setData([
-          {
-            id: "123456789",
-            name: "Ustur CSS Tier 1 (CSSLU1)",
-            mint: "0xcDbb88F82b687FC2246ae5A731Cbba198E050a58",
-            collection: "Star Atlas",
-            balance: 1,
-            nft_supply: 136,
-            value: 4812.99,
-            price: 4812.99,
-          },
-        ]);
-      }, 5000);
-  }, [gdata.length]);
-
   const data = {
     title: "NFT",
     color: "text-[#7000FF]",
@@ -75,7 +55,6 @@ const NFT = ({ isEXTRASMALL }: Props) => {
       header: ["Mint", "Collection", "Balance", "NFT Supply", "Value", "Price"],
     },
   };
-
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5"
@@ -86,7 +65,7 @@ const NFT = ({ isEXTRASMALL }: Props) => {
           <h3 className={"mr-2"}>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
-        <span>${formatedNumber(NFTValue)}</span>
+        {/*<span>${formatedNumber(NFTValue)}</span>*/}
       </div>
       {/*  */}
 
@@ -108,7 +87,7 @@ const NFT = ({ isEXTRASMALL }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {gdata.length <= 0 ? (
+            {nft.length <= 0 ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   <TableCell>
@@ -129,12 +108,10 @@ const NFT = ({ isEXTRASMALL }: Props) => {
               </>
             ) : (
               <>
-                {gdata.map((row, index) => (
+                {nft.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
-                    key={`${formatedString(
-                      row.id.toLocaleLowerCase()
-                    )}_${index}`}
+                    key={`${formatedString(row.address.toBase58())}_${index}`}
                   >
                     <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d] pl-0">
                       {row.name}
@@ -143,40 +120,42 @@ const NFT = ({ isEXTRASMALL }: Props) => {
                       <div
                         className="flex gap-5 items-center justify-between w-full cursor-pointer truncate max-w-36"
                         onClick={() => {
-                          navigator.clipboard.writeText(row.mint);
+                          navigator.clipboard.writeText(row.address.toBase58());
                           toast({
                             title: "Added to clipboard",
                           });
                         }}
                       >
-                        {removeMiddleString(row.mint)}
+                        {removeMiddleString(row.address.toBase58())}
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {row.collection}
+                      {row.collection?.address.toBase58()}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.balance, 0, true)}
+                      {/*{formatedNumber(row.balance, 0, true)}*/}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      {formatedNumber(row.nft_supply, 0, true)}
+                      {formatedNumber(row.uses?.total.toNumber() ?? 0, 0, true)}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.value, 2, isEXTRASMALL)}
+                      {/*${formatedNumber(row.value, 2, isEXTRASMALL)}*/}
+                      unknown
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.price, 2, isEXTRASMALL)}
+                      {/*${formatedNumber(row.price, 2, isEXTRASMALL)}*/}
+                      unknown
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      <Button
-                        size="sm"
-                        className="hover:bg-[#7c7c8d80] max-h-6 text-[14px] rounded-full w-full"
-                        onClick={() => setDetailModal(true)}
-                        style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}
-                      >
-                        Details
-                      </Button>
-                    </TableCell>
+                    {/*<TableCell className="font-medium text-left text-[#7c7c8d] py-2">*/}
+                    {/*  <Button*/}
+                    {/*    size="sm"*/}
+                    {/*    className="hover:bg-[#7c7c8d80] max-h-6 text-[14px] rounded-full w-full"*/}
+                    {/*    onClick={() => setDetailModal(true)}*/}
+                    {/*    style={{ boxShadow: "0 0 4px 1px #d9f8ff" }}*/}
+                    {/*  >*/}
+                    {/*    Details*/}
+                    {/*  </Button>*/}
+                    {/*</TableCell>*/}
                   </TableRow>
                 ))}
               </>

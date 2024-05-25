@@ -19,8 +19,8 @@ import { useMemo } from "react";
 import useTrade from "@/hooks/useTrade";
 import useLiquidity from "@/hooks/useLiquidity";
 import useStaking from "@/hooks/useStaking";
-import useNFT from "@/hooks/useNFT";
 import useFarm from "@/hooks/useFarm";
+import { useDashboard } from "@/applications/Dashboard/store";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -30,49 +30,32 @@ const Networth = ({ isEXTRASMALL }: Props) => {
 
   const { publicKey } = useWallet();
 
-  const { tokens, walletBalance } = useWalletBalance(connection, publicKey);
+  const { netWorth } = useDashboard();
 
-  const { userObligationState } = useLend(connection, publicKey);
-
-  const { ownerOpenOrders, totalPrices: totalTrade } = useTrade(
-    connection,
-    publicKey
-  );
-
-  const { clmmTotal, ammTotal } = useLiquidity(connection, publicKey);
-
-  const { totalDeposit: stakeDeposit, totalPendingReward: stakePending } =
-    useStaking(connection, publicKey);
-
-  const { pendingReward: farmPending, deposit: farmDeposit } = useFarm(
-    connection,
-    publicKey
-  );
-  const netWorth = useMemo(
-    () =>
-      walletBalance +
-      (userObligationState?.userTotalDeposit ?? 0) +
-      totalTrade +
-      clmmTotal +
-      ammTotal +
-      stakeDeposit +
-      farmDeposit +
-      stakePending +
-      farmPending,
-    [
-      walletBalance,
-      userObligationState?.userTotalDeposit,
-      totalTrade,
-      clmmTotal,
-      ammTotal,
-      stakeDeposit,
-      farmDeposit,
-    ]
-  );
-
+  const total = useMemo(() => {
+    return (
+      netWorth.totalAmm +
+      netWorth.totalClmm +
+      netWorth.totalFarm +
+      netWorth.totalLend +
+      netWorth.totalStake +
+      netWorth.totalTrade +
+      netWorth.totalWallet +
+      netWorth.totalStakesReward
+    );
+  }, [
+    netWorth.totalAmm,
+    netWorth.totalClmm,
+    netWorth.totalFarm,
+    netWorth.totalLend,
+    netWorth.totalStake,
+    netWorth.totalStakesReward,
+    netWorth.totalTrade,
+    netWorth.totalWallet,
+  ]);
   const data = {
     title: "Net Worth",
-    price: netWorth,
+    price: total,
     table: {
       header: ["Value", "Pending Value", "Value/NetWorth %"],
       rows: [
@@ -80,50 +63,50 @@ const Networth = ({ isEXTRASMALL }: Props) => {
           title: "Wallet Balance",
           color: "text-[#fa01d2]",
           background: "bg-[#fa01d2]",
-          value: walletBalance,
+          value: netWorth.totalWallet,
           pending: 0,
-          worth: (walletBalance / netWorth) * 100,
+          worth: (netWorth.totalWallet / total) * 100,
         },
         {
           title: "Staking",
           color: "text-[#00b127]",
           background: "bg-[#00b127]",
-          value: stakeDeposit,
-          pending: stakePending,
-          worth: ((stakeDeposit + stakePending) / netWorth) * 100,
+          value: netWorth.totalStake,
+          pending: netWorth.totalStakesReward,
+          worth:
+            ((netWorth.totalStake + netWorth.totalStakesReward) / total) * 100,
         },
         {
           title: "Lending",
           color: "text-[#00ffec]",
           background: "bg-[#00ffec]",
-          value: userObligationState?.userTotalDeposit.toFixed(2),
+          value: netWorth.totalLend,
           pending: 0,
-          worth:
-            ((userObligationState?.userTotalDeposit ?? 0) / netWorth) * 100,
+          worth: (netWorth.totalLend / total) * 100,
         },
         {
           title: "Trading",
           color: "text-[#c95901]",
           background: "bg-[#c95901]",
-          value: totalTrade,
+          value: netWorth.totalTrade,
           pending: 0,
-          worth: (totalTrade / netWorth) * 100,
+          worth: (netWorth.totalTrade / total) * 100,
         },
         {
           title: "Liquidity",
           color: "text-[#efd301]",
           background: "bg-[#efd301]",
-          value: ammTotal + clmmTotal,
+          value: netWorth.totalAmm + netWorth.totalClmm,
           pending: 0,
-          worth: ((ammTotal + clmmTotal) / netWorth) * 100,
+          worth: ((netWorth.totalAmm + netWorth.totalClmm) / total) * 100,
         },
         {
           title: "Farm",
           color: "text-[#ba0000]",
           background: "bg-[#ba0000]",
-          value: farmDeposit,
-          pending: farmPending,
-          worth: ((farmDeposit + farmPending) / netWorth) * 100,
+          value: netWorth.totalFarm,
+          pending: 0,
+          worth: (netWorth.totalFarm / total) * 100,
         },
         {
           title: "NFT",

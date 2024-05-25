@@ -22,7 +22,6 @@
     "@metaplex-foundation/js": "^0.18.3",
     "@metaplex-foundation/mpl-auction-house": "^2.5.1",
     "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
-    "@metaplex-foundation/umi": "^0.9.1",
     "@metaplex-foundation/umi-bundle-defaults": "^0.9.1",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",

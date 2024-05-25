@@ -4,13 +4,10 @@ import {
   ObligationStats,
   Position,
   ReserveDataType,
-  SOLEND_PRODUCTION_PROGRAM_ID,
   SolendMarket,
 } from "@solendprotocol/solend-sdk";
 import { findToken } from "@/lib/get-wallet";
 import { TokenInfo } from "@solana/spl-token-registry";
-
-import { Market } from "@openbook-dex/openbook";
 
 type stateType = ReserveDataType & { token?: TokenInfo };
 
@@ -69,17 +66,6 @@ const useLend = (connection: Connection, publicKey: PublicKey | null) => {
       getMarkets();
     }
   }, [connection, getMarkets, publicKey]);
-
-  const getLends = useCallback(async () => {
-    if (!publicKey) return;
-    let lend = 0;
-    // await getSolendLends();
-    // const transactions = await connection.getSignaturesForAddress(publicKey, {
-    //   limit: 1000,
-    // });
-
-    return lend;
-  }, [publicKey]);
 
   return { loading, userObligationState, borrows, deposits, markets, states };
 };

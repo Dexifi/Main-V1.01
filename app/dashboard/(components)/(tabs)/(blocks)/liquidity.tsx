@@ -19,6 +19,7 @@ import {
   ClmmPoolPersonalPosition,
 } from "@raydium-io/raydium-sdk";
 import { TokenInfo } from "@solana/spl-token-registry";
+import { useDashboard } from "@/applications/Dashboard/store";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -50,8 +51,10 @@ type DataProps = {
 };
 
 type dataType = {
-  position: ClmmPoolPersonalPosition;
-  state: ClmmPoolInfo;
+  position?: ClmmPoolPersonalPosition;
+  state?: ClmmPoolInfo;
+  type: "Concentrated" | "Standard";
+  tvl: number;
   tokenA?: TokenInfo;
   tokenB?: TokenInfo;
   tokenAAmount: number;
@@ -66,82 +69,63 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
   const [gdata, setData] = useState<DataProps[]>([]);
   const { publicKey } = useWallet();
   const [LiquidityValue, setLiquidityValue] = useState(12500);
-  const { clmmTotal, ammTotal, userClmmDetails } = useLiquidity(
-    connection,
-    publicKey
-  );
+  const {
+    liquidity: { clmm, amm },
+    tokensPrice,
+    netWorth: { totalClmm, totalAmm },
+  } = useDashboard();
 
-  // TODO: should add real data on tvl and indexTP
-
+  console.log("amm", amm);
   const data: dataType = useMemo(() => {
     let d: dataType = [];
 
     // flat the data by position
-    userClmmDetails.forEach(async (item) => {
-      item.value.positionAccount?.forEach((position) => {
-        d.push({
-          tokenAAmount:
-            (position.amountA.toNumber() /
-              10 ** item.value.state.mintA.decimals) *
-            (item.tokenAPrice ?? 0),
-          tokenBAmount:
-            (position.amountB.toNumber() /
-              10 ** item.value.state.mintB.decimals) *
-            (item.tokenBPrice ?? 0),
-          position,
-          state: item.value.state,
-          tokenA: item.tokenA,
-          tokenB: item.tokenB,
-          tokenAPrice: item.tokenAPrice ?? 0,
-          tokenBPrice: item.tokenBPrice ?? 0,
-          protocol: "Raydium",
-          protocol_icon: "/assets/images/raydiumraycoin-1@2x.png",
-        });
+    if (!tokensPrice) return [];
+    clmm?.forEach((item) => {
+      item.positionAccount?.forEach((position) => {
+        if (tokensPrice) {
+          d.push({
+            tokenAAmount:
+              (position.amountA.toNumber() / 10 ** item.state.mintA.decimals) *
+              (tokensPrice[item.poolDetail.mintA.address] ?? 0),
+            tokenBAmount:
+              (position.amountB.toNumber() / 10 ** item.state.mintB.decimals) *
+              (tokensPrice[item.poolDetail.mintB.address] ?? 0),
+            position,
+            state: item.state,
+            tokenA: item.poolDetail.mintA,
+            tokenB: item.poolDetail.mintB,
+            tokenAPrice: tokensPrice[item.poolDetail.mintA.address],
+            tokenBPrice: tokensPrice[item.poolDetail.mintB.address],
+            protocol: "Raydium",
+            tvl: item.poolDetail.tvl,
+            type: item.poolDetail.type as "Concentrated" | "Standard",
+            protocol_icon: "/assets/images/raydiumraycoin-1@2x.png",
+          });
+        }
       });
     }, []);
-    return d;
-  }, [userClmmDetails]);
-  useEffect(() => {
-    gdata.length === 0 &&
-      setTimeout(() => {
-        setData([
-          {
-            apr: "SOL-USDC",
-            apr_icons: [
-              "/assets/images/raydiumraycoin-1@2x.png",
-              "/assets/images/raydiumraycoin-1@2x.png",
-            ],
-            tvl: 12000000,
-            protocol: "Raydium",
-            protocol_icon: "/assets/images/raydiumraycoin-1@2x.png",
-            index_tp: 22.654,
-            value: "Normal",
-            range: {
-              min: 18.9231,
-              max: 23.6432,
-              currency: "USDC",
-              per: "SOL",
-            },
-            pending: 6.15,
-            deposit_ratio: 4812.99,
-            type: 222.21,
-            status: "In Range",
-            pool: [
-              {
-                currency: "SOL",
-                value: 45.56,
-              },
-              {
-                currency: "USDC",
-                value: 54.44,
-              },
-            ],
-            leverage: 18.18,
-          },
-        ]);
-      }, 5000);
-  }, [gdata.length]);
 
+    amm?.forEach(async (item) => {
+      d.push({
+        tokenAAmount:
+          (item.amount / 10 ** (item.lpMint?.decimals ?? 0)) *
+          (item.poolDetail.lpPrice ?? 0),
+        tokenBAmount: 0,
+        tokenA: item.poolDetail.mintA,
+        tokenB: item.poolDetail.mintB,
+        tokenAPrice: tokensPrice[item.poolDetail.mintA.address],
+        tokenBPrice: tokensPrice[item.poolDetail.mintB.address],
+        protocol: "Raydium",
+        tvl: item.poolDetail.tvl,
+        type: "Standard",
+        protocol_icon: "/assets/images/raydiumraycoin-1@2x.png",
+      });
+    });
+
+    return d;
+  }, [amm, clmm, tokensPrice]);
+  console.log("data", data);
   const hData = {
     title: "Liquidity",
     color: "text-[#efd301]",
@@ -169,7 +153,7 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
           <h3 className={"mr-2"}>{hData.title}</h3>
           <span className={hData.color}>*</span>
         </div>
-        <span>$ {formatedNumber(clmmTotal + ammTotal)}</span>
+        <span>$ {formatedNumber(totalClmm + totalAmm)}</span>
       </div>
       {/*  */}
 
@@ -189,7 +173,7 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {gdata.length <= 0 ? (
+            {data.length <= 0 ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   {hData.table.header.map((header, index) => (
@@ -215,16 +199,17 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                           {row.tokenA?.symbol + "-" + row.tokenB?.symbol}
                           {!isEXTRASMALL ? (
                             <div className="max-w-9 flex justify-between  items-center">
-                              <Image
-                                className={"mr-1"}
+                              <img
+                                className={"mr-1 rounded-full"}
                                 src={row.tokenA?.logoURI ?? ""}
                                 alt={`${row.tokenA?.symbol}_logo-icon`}
                                 width={24}
                                 height={24}
                               />
-                              <Image
+                              <img
                                 src={row.tokenB?.logoURI ?? ""}
                                 alt={`${row.tokenB?.symbol}_logo-icon`}
+                                className={"rounded-full"}
                                 width={24}
                                 height={24}
                               />
@@ -233,7 +218,7 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                           <div />
                         </div>
                         <div className="flex gap-5 items-center justify-between w-full text-base">
-                          TVL: ${formatedNumber(row.state.tvl, 0, true)}
+                          TVL: ${formatedNumber(row.tvl, 0, true)}
                         </div>
                       </div>
                     </TableCell>
@@ -242,7 +227,7 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                         <div className="flex gap-5 items-center justify-between w-full">
                           {row.protocol}
                           {!isEXTRASMALL ? (
-                            <Image
+                            <img
                               src={row.protocol_icon}
                               alt={`${row.protocol}_logo-icon`}
                               width={24}
@@ -251,9 +236,9 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                           ) : null}
                           <div />
                         </div>
-                        <div className="flex gap-5 items-center justify-between w-full text-base">
-                          Index TP: ${formatedNumber(0, 3)}
-                        </div>
+                        {/*<div className="flex gap-5 items-center justify-between w-full text-base">*/}
+                        {/*  Index TP: ${formatedNumber(0, 3)}*/}
+                        {/*</div>*/}
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] py-2 align-top p-2 pl-0">
@@ -263,75 +248,91 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                             "uppercase justify-center align-middle text-base"
                           }
                         >
-                          clmm
+                          {row.type}
                         </div>
-                        <div className="flex max-w-36 text-base">
-                          Range:{" "}
-                          {formatedNumber(
-                            row.position.priceLower.toNumber(),
-                            2,
-                            true
-                          )}
-                          -
-                          {formatedNumber(
-                            row.position.priceUpper.toNumber(),
-                            2,
-                            true
-                          )}{" "}
-                          {row.tokenB?.symbol} per {row.tokenA?.symbol}
-                        </div>
+                        {row.position && (
+                          <div className="flex max-w-36 text-base text-sm">
+                            Range:{" "}
+                            {formatedNumber(
+                              row.position.priceLower.toNumber(),
+                              2,
+                              true
+                            )}
+                            -
+                            {formatedNumber(
+                              row.position.priceUpper.toNumber(),
+                              2,
+                              true
+                            )}{" "}
+                            {row.tokenB?.symbol} per {row.tokenA?.symbol}
+                          </div>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] align-top p-2 pl-0 text-base">
-                      {formatedNumber(row.state.day.apr)}%
+                      {formatedNumber(row.state?.day.apr ?? 0)}%
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] align-top p-2 pl-0 text-base">
-                      $
-                      {formatedNumber(
-                        (row.position.amountA.toNumber() /
-                          10 ** row.state.mintA.decimals) *
-                          (row.tokenAPrice ?? 0) +
-                          (row.position.amountB.toNumber() /
-                            10 ** row.state.mintB.decimals) *
-                            (row.tokenBPrice ?? 0),
-                        2
+                      {row.position ? (
+                        <>
+                          $
+                          {formatedNumber(
+                            (row.position.amountA.toNumber() /
+                              10 ** (row?.state?.mintA?.decimals ?? 0)) *
+                              (row.tokenAPrice ?? 0) +
+                              (row.position.amountB.toNumber() /
+                                10 ** (row?.state?.mintB?.decimals ?? 0)) *
+                                (row.tokenBPrice ?? 0),
+                            2
+                          )}
+                        </>
+                      ) : (
+                        <p>
+                          ${" "}
+                          {formatedNumber(
+                            row.tokenAAmount + row.tokenBAmount,
+                            2
+                          )}
+                        </p>
                       )}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] p-2 pl-0 align-top text-base">
-                      <div className="flex  flex-col gap-0.5">
-                        {/*<div>${formatedNumber(row.type, 2, isEXTRASMALL)}</div>*/}
-                        <div>
-                          {row.position.tokenFeeAmountA.toNumber() /
-                            10 ** row.state.mintA.decimals}{" "}
-                          {row.tokenA?.symbol}
-                        </div>
-                        <div>
-                          {row.position.tokenFeeAmountB.toNumber() /
-                            10 ** row.state.mintB.decimals}{" "}
-                          {row.tokenB?.symbol}
-                        </div>
+                      {row.position && (
+                        <div className="flex  flex-col gap-0.5">
+                          {/*<div>${formatedNumber(row.type, 2, isEXTRASMALL)}</div>*/}
+                          <div>
+                            {row.position.tokenFeeAmountA.toNumber() /
+                              10 ** (row.state?.mintA.decimals ?? 0)}{" "}
+                            {row.tokenA?.symbol}
+                          </div>
+                          <div>
+                            {row.position.tokenFeeAmountB.toNumber() /
+                              10 ** (row.state?.mintB.decimals ?? 0)}{" "}
+                            {row.tokenB?.symbol}
+                          </div>
 
-                        <div className={`flex max-w-36 text-xs`}>
-                          Status:{" "}
-                          <span
-                            className={
-                              row.state.currentPrice.toNumber() >
-                                row.position.priceLower.toNumber() &&
-                              row.state.currentPrice.toNumber() <
-                                row.position.priceUpper.toNumber()
-                                ? "text-green-500 ml-1"
-                                : "text-red-500  ml-1"
-                            }
-                          >
-                            {row.state.currentPrice.toNumber() >
-                              row.position.priceLower.toNumber() &&
-                            row.state.currentPrice.toNumber() <
-                              row.position.priceUpper.toNumber()
-                              ? "In Range"
-                              : "Out of Range"}
-                          </span>
+                          <div className={`flex max-w-36 text-xs`}>
+                            Status:{" "}
+                            <span
+                              className={
+                                (row.state?.currentPrice.toNumber() ?? 0) >
+                                  row.position.priceLower.toNumber() &&
+                                (row.state?.currentPrice.toNumber() ?? 0) <
+                                  row.position.priceUpper.toNumber()
+                                  ? "text-green-500 ml-1"
+                                  : "text-red-500  ml-1"
+                              }
+                            >
+                              {(row.state?.tickCurrent ?? 0) >
+                                row.position.tickLower &&
+                              (row.state?.tickCurrent ?? 0) <
+                                row.position.tickUpper
+                                ? "In Range"
+                                : "Out of Range"}
+                            </span>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] p-2 pl-0 align-top text-base">
                       <div>
@@ -367,7 +368,12 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
                       </div>
                     </TableCell>
                     <TableCell className="font-medium text-left text-[#7c7c8d] p-2 pl-0 align-top text-base">
-                      x{formatedNumber(row.position.leverage, 2, isEXTRASMALL)}
+                      x
+                      {formatedNumber(
+                        row.position?.leverage ?? 0,
+                        2,
+                        isEXTRASMALL
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

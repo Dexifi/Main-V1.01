@@ -11,10 +11,10 @@ import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import useTrade, { ownerOpenOrders } from "@/hooks/useTrade";
-import { connection } from "@/lib/get-connections";
+import { useMemo } from "react";
 import { Order } from "@openbook-dex/openbook/lib/market";
+import { useDashboard } from "@/applications/Dashboard/store";
+import { ownerOpenOrders } from "@/applications/Dashboard/types";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -22,13 +22,13 @@ type Props = {
 
 const Trading = ({ isEXTRASMALL }: Props) => {
   const { publicKey } = useWallet();
-  const { ownerOpenOrders: tradingData } = useTrade(connection, publicKey);
+  const { trades: tradingData } = useDashboard();
 
   // TODO Settled orders design and logic
 
   const gdata = useMemo(() => {
     const d: Array<Order & ownerOpenOrders> = [];
-    tradingData.map((openOrder) => {
+    tradingData?.map((openOrder) => {
       openOrder.orders.map((order) => {
         d.push({ ...order, ...openOrder });
       });
@@ -107,7 +107,7 @@ const Trading = ({ isEXTRASMALL }: Props) => {
               </TableRow>
             </TableHeader>
             <TableBody className={"text-base"}>
-              {tradingData.length <= 0 ? (
+              {(tradingData?.length ?? 0) <= 0 ? (
                 <>
                   <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                     {data.table.header.map((header, index) => (

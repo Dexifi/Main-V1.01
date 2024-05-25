@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useState } from "react";
 import useFarm from "@/hooks/useFarm";
 import { connection } from "@/lib/get-connections";
+import { useDashboard } from "@/applications/Dashboard/store";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -37,8 +38,11 @@ const data = {
 };
 
 const Farm = ({ isEXTRASMALL }: Props) => {
-  const { publicKey } = useWallet();
-  const { userDepositedFarm, deposit } = useFarm(connection, publicKey);
+  const {
+    farms,
+    netWorth: { totalFarm },
+  } = useDashboard();
+
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-5 lg:px-10 py-5"
@@ -49,7 +53,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
           <h3 className={"mr-2"}>{data.title}</h3>
           <span className={data.color}>*</span>
         </div>
-        <span>${formatedNumber(deposit)}</span>
+        <span>${formatedNumber(totalFarm)}</span>
       </div>
       {/*  */}
 
@@ -69,7 +73,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {userDepositedFarm.length <= 0 ? (
+            {farms.length <= 0 ? (
               <>
                 <TableRow className="hover:bg-transparent border-[#7c7c8d]">
                   {data.table.header.map((header, index) => (
@@ -84,7 +88,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
               </>
             ) : (
               <>
-                {userDepositedFarm.map((row, index) => (
+                {farms?.map((row, index) => (
                   <TableRow
                     className="hover:bg-transparent border-[#7c7c8d]"
                     key={`${formatedString(
