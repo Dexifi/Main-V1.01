@@ -1,15 +1,5 @@
-import { useState } from "react";
+import { Key, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import formatedString from "@/lib/string";
 import formatedNumber from "@/lib/numbers";
 
 type OrderBookProps = {
@@ -26,12 +16,14 @@ const OrderBook = ({ data, isEXTRASMALL, bids, asks }: OrderBookProps) => {
       className="h-max w-full rounded-xl p-5 gap-4 flex flex-col"
       style={{
         boxShadow: "0 0 4px #88d6ff",
+        background:
+          "radial-gradient(50% 50% at 50% 50%, rgba(119, 186, 234, 0.2), transparent ), radial-gradient( 50% 50% at 50% 50%, rgba(251, 0, 196, 0) 3.49%, rgba(119, 186, 234, 0) 7.6%, rgba(253, 0, 197, 0) 10.46%, rgba(119, 186, 234, 0) 14.46%, rgba(255, 0, 199, 0) 18.56%, rgba(3, 0, 3, 0) 19.53%, transparent 79.82%, rgba(246, 0, 192, 0) 81.08%, rgba(119, 186, 234, 0) 84.04%, rgba(247, 0, 193, 0) 86.61%, rgba(119, 186, 234, 0) 91.01%, rgba(249, 0, 194, 0) 95.16%, rgba(119, 186, 234, 0) 98.6% )",
       }}
     >
       <Tabs defaultValue="buy" className="w-full">
         <TabsList className="w-full">
-          <div className="flex gap-5 sm:gap-5 justify-between w-full items-center flex-wrap">
-            <h3 className="text-sm sm:text-lg md:text-2xl text-[#D9F8FF]">
+          <div className="flex gap-5 sm:gap-5 justify-between w-full items-center">
+            <h3 className="text-sm sm:text-lg md:text-base text-[#757788]">
               Order Book
             </h3>
             <div
@@ -39,175 +31,130 @@ const OrderBook = ({ data, isEXTRASMALL, bids, asks }: OrderBookProps) => {
                 isEXTRASMALL ? "flex-1 justify-between" : ""
               }`}
             >
-              {tabsDATA.map((tab_item, id) => (
-                <TabsTrigger
-                  value={tab_item.toLocaleLowerCase()}
-                  key={`${tab_item}_${id}`}
-                  className="bg-[#d9f8ff10] data-[state='active']:bg-[#d9f8ff10] data-[state='active']:border-[#d9f8ff] rounded-full"
-                  style={{
-                    border:
-                      tab_item.toLocaleLowerCase() === tab
-                        ? "1px solid #d9f8ff10"
-                        : "transparent",
-                    boxShadow:
-                      tab_item.toLocaleLowerCase() === tab
-                        ? "0 0 5px #d9f8ff"
-                        : "none",
-                  }}
-                  onClick={() => setTab(tab_item.toLocaleLowerCase())}
-                >
-                  {tab_item}
-                </TabsTrigger>
-              ))}
+              <div className={"bg-[#0D111B] rounded-full"}>
+                {tabsDATA.map((tab_item, id) => (
+                  <TabsTrigger
+                    value={tab_item.toLocaleLowerCase()}
+                    key={`${tab_item}_${id}`}
+                    className="bg-[#0D111B] mx-0.5 data-[state='active']:bg-[#d9f8ff10] data-[state='active']:border-[#d9f8ff] rounded-full shadow-[0px_0px_5px_0px_#D9F8FF]"
+                    style={{
+                      border:
+                        tab_item.toLocaleLowerCase() === tab
+                          ? "1px solid #d9f8ff10"
+                          : "transparent",
+                      boxShadow:
+                        tab_item.toLocaleLowerCase() === tab
+                          ? "0 0 5px #d9f8ff"
+                          : "none",
+                    }}
+                    onClick={() => setTab(tab_item.toLocaleLowerCase())}
+                  >
+                    {tab_item}
+                  </TabsTrigger>
+                ))}
+              </div>
             </div>
           </div>
         </TabsList>
-        {tabsDATA.map((tab_item, id) => (
-          <TabsContent
-            value={tab_item.toLocaleLowerCase()}
-            key={`${tab_item}_${id}--content`}
-          >
-            <div className="flex flex-col w-full gap-6 mt-6">
-              <div className="px-5 py-3 bg-[#7c7c8d10] rounded-2xl">
-                <Table className="w-full flex-1">
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent">
-                      <TableHead
-                        className="text-sm md:text-md truncate max-w-[110px]"
-                        align="left"
-                      >
-                        Size
-                      </TableHead>
-                      <TableHead
-                        className="text-sm md:text-md truncate max-w-[110px]"
-                        align="left"
-                      >
-                        Price
-                      </TableHead>
-                      <TableHead
-                        className="text-sm md:text-md truncate max-w-[110px]"
-                        align="left"
-                      >
-                        Side
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {bids.length <= 0 ? (
-                      <>
-                        <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-                          <TableCell className="font-medium text-left text-[#7c7c8d]">
-                            <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                          </TableCell>
-                          <TableCell className="font-medium text-left text-[#7c7c8d]">
-                            <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                          </TableCell>
-                          <TableCell className="font-medium text-left text-[#7c7c8d]">
-                            <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                          </TableCell>
-                        </TableRow>
-                      </>
-                    ) : (
-                      <>
-                        {bids.map((row, index) => (
-                          <TableRow
-                            className="hover:bg-transparent border-[#7c7c8d]"
-                            key={`${formatedString(
-                              row.side.toLocaleLowerCase()
-                            )}_${index}`}
-                          >
-                            <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] py-3">
-                              {formatedNumber(row.size, 2, isEXTRASMALL)}
-                            </TableCell>
-
-                            <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] py-3">
-                              {formatedNumber(row.price, 2, isEXTRASMALL)}
-                            </TableCell>
-
-                            <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] py-3">
-                              {row.side}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </>
-                    )}
-                  </TableBody>
-                </Table>
+        <div className={"mt-3 border border-[#757788] rounded-xl px-3 py-2"}>
+          <TabsContent value={"all"} className={"text-white"}>
+            <div className={"flex flex-col gap-2"}>
+              <div
+                className={
+                  "flex flex-row justify-between text-[#757788] font-medium"
+                }
+              >
+                <p>Size</p>
+                <p>Price</p>
               </div>
-              {asks.length > 0 ? (
-                <div className="border-b border-[#7c7c8d]" />
-              ) : null}
-              {asks.length > 0 ? (
-                <div className="px-5 py-3 bg-[#7c7c8d10] rounded-2xl">
-                  <Table className="w-4/5 sm:w-full flex-1">
-                    <TableHeader>
-                      <TableRow className="hover:bg-transparent">
-                        <TableHead
-                          className="text-sm md:text-md truncate max-w-[110px]"
-                          align="left"
-                        >
-                          Size
-                        </TableHead>
-                        <TableHead
-                          className="text-sm md:text-md truncate max-w-[110px]"
-                          align="left"
-                        >
-                          Price
-                        </TableHead>
-                        <TableHead
-                          className="text-sm md:text-md truncate max-w-[110px]"
-                          align="left"
-                        >
-                          Side
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {asks.length <= 0 ? (
-                        <>
-                          <TableRow className="hover:bg-transparent border-[#7c7c8d]">
-                            <TableCell className="font-medium text-left text-[#7c7c8d]">
-                              <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                            </TableCell>
-                            <TableCell className="font-medium text-left text-[#7c7c8d]">
-                              <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                            </TableCell>
-                            <TableCell className="font-medium text-left text-[#7c7c8d]">
-                              <Skeleton className="w-full h-6 bg-[#7c7c8d]" />
-                            </TableCell>
-                          </TableRow>
-                        </>
-                      ) : (
-                        <>
-                          {asks.map((row: any, index: number) => (
-                            <TableRow
-                              className="hover:bg-transparent border-[#7c7c8d]"
-                              key={`${formatedString(
-                                row.side.toLocaleLowerCase()
-                              )}_${index}`}
-                            >
-                              <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] py-3">
-                                {formatedNumber(row.size, 2, isEXTRASMALL)}
-                              </TableCell>
 
-                              <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] py-3">
-                                {formatedNumber(row.price, 2, isEXTRASMALL)}
-                              </TableCell>
-
-                              <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d] py-3">
-                                {row.side}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </>
-                      )}
-                    </TableBody>
-                  </Table>
+              {bids.slice(0, 6).map((bid, index) => (
+                <div
+                  key={index}
+                  className={
+                    "flex flex-row justify-between font-medium text-[#88E8AD] text-sm"
+                  }
+                >
+                  <p> {formatedNumber(bid.size, 2, isEXTRASMALL)}</p>
+                  <p> {formatedNumber(bid.price, 2, isEXTRASMALL)}</p>
                 </div>
-              ) : null}
+              ))}
+              <div className={"border border-dotted w-full"} />
+              {asks
+                .slice(0, 6)
+                .map(
+                  (
+                    asks: { size: number; price: number },
+                    index: Key | null | undefined
+                  ) => (
+                    <div
+                      key={index}
+                      className={
+                        "flex flex-row justify-between font-medium text-[#BA0000] text-sm"
+                      }
+                    >
+                      <p> {formatedNumber(asks.size, 2, isEXTRASMALL)}</p>
+                      <p> {formatedNumber(asks.price, 2, isEXTRASMALL)}</p>
+                    </div>
+                  )
+                )}
             </div>
           </TabsContent>
-        ))}
+          <TabsContent value={"buy"} className={"text-[#88E8AD]"}>
+            <div className={"flex flex-col gap-2"}>
+              <div
+                className={
+                  "flex flex-row justify-between text-[#757788] font-medium"
+                }
+              >
+                <p>Size</p>
+                <p>Price</p>
+              </div>
+              {bids.slice(0, 12).map((bid, index) => (
+                <div
+                  key={index}
+                  className={
+                    "flex flex-row justify-between font-medium text-[#88E8AD] text-sm"
+                  }
+                >
+                  <p> {formatedNumber(bid.size, 2, isEXTRASMALL)}</p>
+                  <p> {formatedNumber(bid.price, 2, isEXTRASMALL)}</p>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value={"sell"} className={"text-[#88E8AD]"}>
+            <div className={"flex flex-col gap-2"}>
+              <div
+                className={
+                  "flex flex-row justify-between text-[#757788] font-medium"
+                }
+              >
+                <p>Size</p>
+                <p>Price</p>
+              </div>
+
+              {asks
+                .slice(0, 12)
+                .map(
+                  (
+                    asks: { size: number; price: number },
+                    index: Key | null | undefined
+                  ) => (
+                    <div
+                      key={index}
+                      className={
+                        "flex flex-row justify-between font-medium text-[#BA0000] text-sm"
+                      }
+                    >
+                      <p> {formatedNumber(asks.size, 2, isEXTRASMALL)}</p>
+                      <p> {formatedNumber(asks.price, 2, isEXTRASMALL)}</p>
+                    </div>
+                  )
+                )}
+            </div>
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   );
