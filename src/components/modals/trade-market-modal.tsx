@@ -77,46 +77,70 @@ const TradeMarketModal = memo(({ markets }: Props) => {
       <DialogContent
         className={`bg-[#0d111b] ${
           isEXTRASMALL ? "max-w-xs" : "max-w-md"
-        } sm:max-w-lg z-[110] rounded-xl`}
+        } z-[110] rounded-xl p-0`}
         style={{
           boxShadow: "0 0 20px 1px rgba(217, 248, 255, 0.25)",
           borderColor: "rgba(171,196,255,0.5",
         }}
       >
         <div className="flex justify-between relative flex-col gap-3">
-          <div className="flex justify-between items-center">
-            <h6 className="text-lg text-[#d9f8ff]">{swap_modal.title}</h6>
+          <div className="flex justify-between items-center p-4 pb-0">
+            <h4 className="text-sm text-[#d9f8ff]">{swap_modal.title}</h4>
             <Button
               size="icon"
-              className="rounded-full hover:bg-[#d9f8ff20] transition-all"
+              className="rounded-full hover:bg-[#d9f8ff20] transition-all h-6 w-6"
               onClick={onMarketClose}
             >
-              <X className="w-6 h-6 aspect-square object-contain" />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clip-path="url(#clip0_109_2230)">
+                  <path
+                    d="M10 1.875C12.1549 1.875 14.2215 2.73102 15.7452 4.25476C17.269 5.77849 18.125 7.84512 18.125 10C18.125 12.1549 17.269 14.2215 15.7452 15.7452C14.2215 17.269 12.1549 18.125 10 18.125C7.84512 18.125 5.77849 17.269 4.25476 15.7452C2.73102 14.2215 1.875 12.1549 1.875 10C1.875 7.84512 2.73102 5.77849 4.25476 4.25476C5.77849 2.73102 7.84512 1.875 10 1.875ZM10 20C12.6522 20 15.1957 18.9464 17.0711 17.0711C18.9464 15.1957 20 12.6522 20 10C20 7.34784 18.9464 4.8043 17.0711 2.92893C15.1957 1.05357 12.6522 0 10 0C7.34784 0 4.8043 1.05357 2.92893 2.92893C1.05357 4.8043 0 7.34784 0 10C0 12.6522 1.05357 15.1957 2.92893 17.0711C4.8043 18.9464 7.34784 20 10 20ZM6.83594 6.83594C6.46875 7.20312 6.46875 7.79687 6.83594 8.16016L8.67188 9.99609L6.83594 11.832C6.46875 12.1992 6.46875 12.793 6.83594 13.1562C7.20312 13.5195 7.79687 13.5234 8.16016 13.1562L9.99609 11.3203L11.832 13.1562C12.1992 13.5234 12.793 13.5234 13.1562 13.1562C13.5195 12.7891 13.5234 12.1953 13.1562 11.832L11.3203 9.99609L13.1562 8.16016C13.5234 7.79297 13.5234 7.19922 13.1562 6.83594C12.7891 6.47266 12.1953 6.46875 11.832 6.83594L9.99609 8.67188L8.16016 6.83594C7.79297 6.46875 7.19922 6.46875 6.83594 6.83594Z"
+                    fill="#757788"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_109_2230">
+                    <rect width="20" height="20" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
             </Button>
           </div>
-          <Input
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-            placeholder="Search by Token or paste address"
-            className="bg-slate-900 outline-none text-[#d9f8ff]"
-          />
+          <div className={"px-4"}>
+            <Input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              placeholder="Search by Token or paste address"
+              className="bg-slate-900 outline-none text-[#757788] rounded-2xl border-[#757788]"
+            />
+          </div>
           {markets && (
-            <div className="flex flex-col gap-3 overflow-y-scroll max-h-96">
+            <div className="flex flex-col overflow-y-scroll max-h-96 scrollbar-none">
               {filterData(markets, search).map((item: any, index: number) => (
                 <Button
                   key={index}
                   onClick={() => {
                     handleAdd(item.address);
                   }}
-                  className={`flex justify-between py-4 md:py-7 rounded-xl flex-col sm:flex-row min-h-20 gap-4 items-start sm:items-center relative overflow-clip ${
+                  className={`flex justify-between py-4 md:py-7 flex-col rounded-none sm:flex-row min-h-20 gap-4 items-start sm:items-center relative overflow-clip ${
                     currentAddress === item.address.toString()
                       ? "bg-[#162853]"
                       : ""
+                  } ${
+                    index % 2 === 0
+                      ? "[background:rgba(48,66,86,0.40)]"
+                      : "bg-[#0D111B]"
                   } `}
                 >
-                  <div className="flex justify-between items-center bg-[#0d111b] px-5 py-2 rounded-xl gap-2 min-w-full sm:min-w-[244px]">
+                  <div className="flex justify-between items-center bg-[#0d111b] px-5 py-1.5 rounded-2xl gap-2 min-w-full sm:min-w-[244px] shadow-[0px_0px_5px_0px_rgba(217,248,255,0.25)]">
                     <div className="flex gap-2">
                       {item.tokenA ? (
                         <Image
@@ -141,30 +165,18 @@ const TradeMarketModal = memo(({ markets }: Props) => {
                         <Skeleton className="w-6 h-6 aspect-square object-contain bg-[#d9f8ff20]" />
                       )}
                     </div>
-                    <div className="flex gap-2 flex-1 text-xs">
+                    <div className="flex flex-row flex-1 text-xs w-full justify-around">
                       <div>{item.name.split("/")[0]}</div>
                       <div>{item.name.split("/")[1]}</div>
                     </div>
-                    {!isEXTRASMALL && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Info className="w-6 h-6 aspect-square object-contain text-muted" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{item.name}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
                   </div>
-                  <div className="text-xs flex-1 text-start pl-4">
+                  <div className="text-xs flex-1 text-start text-[#D9F8FF]">
                     Market ID :{" "}
                     {item.address && (
                       <a
                         href={`${explore}account/${item.address}`}
                         target={"_blank"}
-                        className={"text-blue-400 hover:underline"}
+                        className={"hover:underline"}
                       >
                         {removeMiddleString(item.address.toString())}
                       </a>

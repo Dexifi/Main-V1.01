@@ -167,15 +167,13 @@ const Sidebar = memo(
         <Tabs defaultValue="buy" className="w-full">
           <TabsList className="w-full">
             <div className="flex gap-3 sm:gap-5 justify-between w-full items-center">
-              <h3 className="text-sm sm:text-lg md:text-2xl text-[#D9F8FF]">
-                Limit Order
-              </h3>
-              <div className="flex gap-2">
+              <h3 className="text-sm text-[#757788]">Limit Order</h3>
+              <div className="flex gap-1 bg-[#0D111B] rounded-3xl">
                 {tabsDATA.map((tab_item, id) => (
                   <TabsTrigger
                     value={tab_item.toLocaleLowerCase()}
                     key={`${tab_item}_${id}`}
-                    className="bg-[#d9f8ff10] data-[state='active']:bg-[#d9f8ff10] data-[state='active']:border-[#d9f8ff] rounded-full"
+                    className="bg-[#0D111B] data-[state='active']:bg-[#d9f8ff10] data-[state='active']:border-[#d9f8ff] rounded-full text-[#FFFFFF]"
                     style={{
                       border:
                         tab_item.toLocaleLowerCase() === form.tab
@@ -207,16 +205,16 @@ const Sidebar = memo(
                     className="flex  gap-2 items-center bg-[#111b2a] p-4 rounded-xl"
                     style={{ boxShadow: "0 0 5px rgba(217, 248, 255, 0.5)" }}
                   >
-                    <label className="text-white flex-1 text-xs sm:text-sm">
+                    <label className="text-white flex-1 text-sm">
                       Limit Price
-                      <span className="text-white bg-[#0d111b] text-[10px] px-2 py-1 ml-1 rounded w-fit">
-                        {selectedMarket?.tokenB?.symbol}
-                      </span>
                     </label>
+                    <span className="text-white bg-[#0d111b] text-[10px] px-2 py-1 rounded w-fit">
+                      {selectedMarket?.tokenB?.symbol}
+                    </span>
                     <Input
                       aria-label="Limit Price"
                       value={form.limit_price}
-                      className={`bg-transparent text-white rounded-2xl border-[#d9f8ff50] ${
+                      className={`bg-transparent text-white rounded-3xl shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)] border-[#d9f8ff50] ${
                         isEXTRASMALL ? "max-w-[120px]" : "max-w-[170px]"
                       }`}
                       onChange={handleLimitPriceChange}
@@ -237,7 +235,7 @@ const Sidebar = memo(
                     <Input
                       aria-label="Amount"
                       value={form.amount}
-                      className={`bg-transparent text-white rounded-2xl border-[#d9f8ff50] ${
+                      className={`bg-transparent text-white rounded-3xl shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)] border-[#d9f8ff50] ${
                         isEXTRASMALL ? "max-w-[120px]" : "max-w-[170px]"
                       }`}
                       type={"number"}
@@ -261,14 +259,14 @@ const Sidebar = memo(
                           ? form.limit_price * form.amount
                           : 0
                       }
-                      className={`bg-transparent text-white rounded-2xl border-[#d9f8ff50] ${
+                      className={`bg-transparent text-white rounded-3xl shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)] border-[#d9f8ff50] ${
                         isEXTRASMALL ? "max-w-[120px]" : "max-w-[170px]"
                       }`}
                     />
                   </div>
                 </div>
                 <div
-                  className={`flex w-full gap-4 ${
+                  className={`flex w-full flex-row justify-between px-6 gap-5 ${
                     isEXTRASMALL ? "flex-wrap" : "flex-nowrap"
                   }`}
                 >
@@ -278,19 +276,19 @@ const Sidebar = memo(
                         handleCalculateAmount(part);
                       }}
                       key={id}
-                      className="w-full"
+                      className="w-full border shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)] rounded-full border-[rgba(217,248,255,0.50)] p-0"
                     >
-                      {part * 100}%
+                      %{part * 100}
                     </Button>
                   ))}
                 </div>
-                <div className="flex w-full gap-4 flex-nowrap">
-                  <span className="text-[#D9F8FF] text-sm">
+                <div className="flex w-full flex-nowrap gap-1">
+                  <span className="text-[#757788] text-sm">
                     {tab_item.toLocaleLowerCase() === "buy"
                       ? selectedMarket?.tokenB?.symbol
                       : selectedMarket?.tokenA?.symbol}
                   </span>
-                  <span className="text-[#D9F8FF] text-sm">
+                  <span className="text-[#757788] text-sm">
                     Balance:{" "}
                     {formatedNumber(
                       tab_item.toLocaleLowerCase() === "buy"
