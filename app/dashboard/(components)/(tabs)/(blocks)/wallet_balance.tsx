@@ -152,7 +152,7 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
             </TableBody>
           </Table>
         </div>
-        {(domains?.result?.length ?? 0) > 0 && (
+        {(domains?.data?.length ?? 0) > 0 && (
           <div className="flex flex-col min-w-[280px] bg-[#30425640] rounded-3xl gap-5">
             <div className="w-full border-b border-[#D9F8FF] border-solid p-3">
               <h6 className="text-sm md:text-lg truncate text-[#D9F8FF] text-left">
@@ -160,7 +160,7 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
               </h6>
             </div>
             <div className="flex flex-col gap-3 h-44 overflow-auto px-4 pr-2">
-              {domains?.result?.map(({ domain }, index) => (
+              {domains?.data?.map(({ domain }, index) => (
                 <div
                   key={`${domain}_${index}`}
                   className="flex flex-nowrap justify-between items-center border-b border-[#30425670] border-solid last:border-none"
