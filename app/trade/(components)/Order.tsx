@@ -95,7 +95,7 @@ const Orders = ({ data, selectedMarket, isEXTRASMALL }: OrderProps) => {
   console.log(ordersData);
   return (
     <div
-      className="bg-[#0d111b] min-h-56 w-full md:w-1/2 rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5 flex overflow"
+      className="bg-[#0d111b] min-h-56 w-full md:w-1/2 rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5 flex overflow "
       style={{ boxShadow: "0 0 4px #88d6ff" }}
     >
       <div className="w-full flex-1" defaultValue="all">
@@ -109,15 +109,15 @@ const Orders = ({ data, selectedMarket, isEXTRASMALL }: OrderProps) => {
                 isEXTRASMALL ? "justify-between" : "justify-end"
               } items-center w-max`}
             >
-              <div className="w-max flex  gap-2">
+              <div className="w-max flex gap-1 bg-[#0D111B] rounded-3xl">
                 {gdata.tabs.map((tab, index) => (
                   <button
                     onClick={() => setCurrentTab(tab.toLocaleLowerCase())}
                     key={`${formatedString(tab)}_${index}`}
                     className={`text-xs font-medium sm:text-sm px-4 py-1 rounded-full hover:bg-[#D9F8FF20] text-[#D9F8FF] hover:text-[#D9F8FF] transition-all  ${
                       currentTab === tab.toLocaleLowerCase()
-                        ? "bg-[#b9b5b5] text-[#0d111b]"
-                        : "bg-[#D9F8FF10]"
+                        ? "bg-[#d9f8ff1a] text-[#0d111b] border-[#d9f8ff] shadow-[0px_0px_5px_#d9f8ff]"
+                        : "bg-[#0d111b]"
                     } `}
                   >
                     {tab}
