@@ -265,12 +265,9 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
         swapInformation[0].value = Math.ceil(
           Number(quoteResponse.priceImpactPct)
         );
-        swapInformation[1].currency = swapData.secondToken.symbol;
         swapInformation[1].value = Number(
-          (Number(quoteResponse.outAmount) -
-            (quoteResponse.slippageBps / 1000) *
-              Number(quoteResponse.outAmount)) /
-            10 ** swapData.secondToken.decimals
+          Number(quoteResponse.outAmount) -
+            quoteResponse.slippageBps * Number(quoteResponse.outAmount)
         );
         setIsFetching(false);
       } catch (error) {
@@ -699,7 +696,7 @@ let swapInformation: SwapInfoProps["data"] = [
   },
   {
     title: "Transaction Fee",
-    value: 0.005,
+    value: 0.000005,
     currency: "SOL",
   },
 ];
