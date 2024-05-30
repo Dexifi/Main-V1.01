@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="liquidity api implement">
+      <change afterPath="$PROJECT_DIR$/src/applications/Dashboard/Provider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Dashboard/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Dashboard/store.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/applications/Dashboard/types.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/farm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/farm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/lending.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/lending.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/liquidity.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/liquidity.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/networth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/networth.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/nft.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/nft.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/staking.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/staking.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/trading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/trading.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/wallet_balance.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/(blocks)/wallet_balance.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/DefaultTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/(tabs)/DefaultTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/(components)/Dashboard_Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/applications/Liquidity/initial.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/applications/Liquidity/initial.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/price.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/price.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useLend.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useLend.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useTrade.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useTrade.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/token.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/token.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="adaptive/v2" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feat/#3" />
+                    <option name="lastUsedInstant" value="1706083842" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="adaptive/v2" />
+                    <option name="lastUsedInstant" value="1705312096" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1704869907" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2akk2TRgUKfwV2oI1MWTTIjWUMW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Codes/briefly-web-ui&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Codes\\Dexify_v2\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;,
+      &quot;Markdown&quot;
+    ]
+  }
+}</component>
+  <component name="ReactBuddySettings">
+    <option name="extensionsIgnore" value="true" />
+  </component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\src\components\modals" />
+      <recent name="D:\Codes\Dexify_v2\src\applications\Liquidity" />
+      <recent name="D:\Codes\Dexify_v2\app\api\pool" />
+      <recent name="D:\Codes\Dexify_v2\src\data" />
+      <recent name="D:\Codes\Dexify_v2\src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Codes\Dexify_v2\app\api\pool\[slug]" />
+      <recent name="D:\Codes\Dexify_v2\src\data" />
+      <recent name="D:\Codes\Dexify_v2\src" />
+      <recent name="D:\Codes\Dexify_v2\src\hooks" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d64b9af0-39ef-4e83-85cb-155f89144fb4" name="Changes" comment="" />
+      <created>1704869757015</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1704869757015</updated>
+      <workItem from="1704869758327" duration="818000" />
+      <workItem from="1704871495403" duration="6813000" />
+      <workItem from="1704881020818" duration="7346000" />
+      <workItem from="1704892410375" duration="4374000" />
+      <workItem from="1704899989961" duration="2608000" />
+      <workItem from="1704963048544" duration="15519000" />
+      <workItem from="1705131613791" duration="6145000" />
+      <workItem from="1705166229055" duration="4269000" />
+      <workItem from="1705222112159" duration="14645000" />
+      <workItem from="1705310777923" duration="10395000" />
+      <workItem from="1705499902393" duration="1812000" />
+      <workItem from="1705583038115" duration="11155000" />
+      <workItem from="1705598697396" duration="3234000" />
+      <workItem from="1705740652840" duration="19815000" />
+      <workItem from="1705775671117" duration="708000" />
+      <workItem from="1705821220501" duration="16719000" />
+      <workItem from="1705914069354" duration="16997000" />
+      <workItem from="1705939798033" duration="837000" />
+      <workItem from="1705992158477" duration="9842000" />
+      <workItem from="1706019117691" duration="2794000" />
+      <workItem from="1706027658988" duration="2492000" />
+      <workItem from="1706083132932" duration="2111000" />
+      <workItem from="1706103060346" duration="4513000" />
+      <workItem from="1706188328221" duration="3288000" />
+      <workItem from="1706257164055" duration="54000" />
+      <workItem from="1706367886272" duration="634000" />
+      <workItem from="1706371459927" duration="1380000" />
+      <workItem from="1706374113540" duration="137000" />
+      <workItem from="1706375195298" duration="1778000" />
+      <workItem from="1706377044749" duration="10000" />
+      <workItem from="1706377441292" duration="47000" />
+      <workItem from="1706427202870" duration="228000" />
+      <workItem from="1706519127646" duration="16172000" />
+      <workItem from="1706612513132" duration="3628000" />
+      <workItem from="1706628479213" duration="412000" />
+      <workItem from="1706691942360" duration="25494000" />
+      <workItem from="1706951795742" duration="18288000" />
+      <workItem from="1706981948819" duration="10344000" />
+      <workItem from="1707049443002" duration="719000" />
+      <workItem from="1707123877479" duration="9229000" />
+      <workItem from="1707155903269" duration="12326000" />
+      <workItem from="1707299041323" duration="8712000" />
+      <workItem from="1707378399873" duration="3957000" />
+      <workItem from="1707725172282" duration="25477000" />
+      <workItem from="1707763302139" duration="633000" />
+      <workItem from="1707804931795" duration="9000" />
+      <workItem from="1707815811778" duration="3372000" />
+      <workItem from="1707819949282" duration="1076000" />
+      <workItem from="1707822557754" duration="5033000" />
+      <workItem from="1707827824589" duration="7403000" />
+      <workItem from="1707903582441" duration="11000" />
+      <workItem from="1707908551852" duration="2050000" />
+      <workItem from="1708157557270" duration="4150000" />
+      <workItem from="1708163044384" duration="11924000" />
+      <workItem from="1708241805118" duration="3000" />
+      <workItem from="1708255653903" duration="24580000" />
+      <workItem from="1708345872750" duration="12204000" />
+      <workItem from="1708410612651" duration="49000" />
+      <workItem from="1708410682516" duration="649000" />
+      <workItem from="1708424934533" duration="25837000" />
+      <workItem from="1712392400943" duration="780000" />
+      <workItem from="1712393874352" duration="129000" />
+      <workItem from="1712990073623" duration="15198000" />
+      <workItem from="1713013851300" duration="4384000" />
+      <workItem from="1713085067334" duration="2650000" />
+      <workItem from="1713088416714" duration="12713000" />
+      <workItem from="1713171582959" duration="18673000" />
+      <workItem from="1713254374032" duration="19298000" />
+      <workItem from="1713342522442" duration="8078000" />
+      <workItem from="1713434208086" duration="11000" />
+      <workItem from="1713604187847" duration="16301000" />
+      <workItem from="1713692215126" duration="12601000" />
+      <workItem from="1713772930333" duration="16571000" />
+      <workItem from="1713864580792" duration="534000" />
+      <workItem from="1713868385722" duration="25367000" />
+      <workItem from="1714036247391" duration="3261000" />
+      <workItem from="1714208855752" duration="353000" />
+      <workItem from="1714237196367" duration="4091000" />
+      <workItem from="1714295228323" duration="25026000" />
+      <workItem from="1714466781877" duration="1324000" />
+      <workItem from="1714468280135" duration="9427000" />
+      <workItem from="1714549661219" duration="10697000" />
+      <workItem from="1714896275459" duration="35867000" />
+      <workItem from="1715004845822" duration="3456000" />
+      <workItem from="1715012163858" duration="12000" />
+      <workItem from="1715071428966" duration="2605000" />
+      <workItem from="1715074230679" duration="11412000" />
+      <workItem from="1715090916899" duration="5096000" />
+      <workItem from="1715157881726" duration="18599000" />
+      <workItem from="1715416597637" duration="20219000" />
+      <workItem from="1715499746707" duration="12633000" />
+      <workItem from="1715580643391" duration="8315000" />
+      <workItem from="1715595704000" duration="7850000" />
+      <workItem from="1715789421803" duration="1067000" />
+      <workItem from="1715851072285" duration="1455000" />
+      <workItem from="1716020841973" duration="7132000" />
+      <workItem from="1716032972734" duration="13631000" />
+      <workItem from="1716099813219" duration="10982000" />
+      <workItem from="1716200293723" duration="6000" />
+      <workItem from="1716204348831" duration="8003000" />
+      <workItem from="1716284235513" duration="8162000" />
+      <workItem from="1716453744950" duration="131000" />
+      <workItem from="1716453885681" duration="21515000" />
+      <workItem from="1716488509878" duration="79000" />
+      <workItem from="1716539773825" duration="3991000" />
+      <workItem from="1716552438201" duration="1675000" />
+      <workItem from="1716623324380" duration="3214000" />
+      <workItem from="1716631891663" duration="13825000" />
+    </task>
+    <task id="LOCAL-00001" summary="network connections">
+      <option name="closed" value="true" />
+      <created>1705310813036</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1705310813036</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fix start issues">
+      <option name="closed" value="true" />
+      <created>1705312072844</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705312072844</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Dashboard new-worth implement">
+      <option name="closed" value="true" />
+      <created>1706084213617</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1706084213617</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Dashboard new-worth implement">
+      <option name="closed" value="true" />
+      <created>1706427416544</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1706427416544</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Dashboard api implement">
+      <option name="closed" value="true" />
+      <created>1707835830870</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707835830870</updated>
+    </task>
+    <task id="LOCAL-00006" summary="transactions api implement">
+      <option name="closed" value="true" />
+      <created>1708263081606</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1708263081606</updated>
+    </task>
+    <task id="LOCAL-00007" summary="swap api implement">
+      <option name="closed" value="true" />
+      <created>1708519862951</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1708519862951</updated>
+    </task>
+    <task id="LOCAL-00008" summary="swap api implement">
+      <option name="closed" value="true" />
+      <created>1708522832233</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1708522832233</updated>
+    </task>
+    <task id="LOCAL-00009" summary="liquidity api implement">
+      <option name="closed" value="true" />
+      <created>1714039477499</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1714039477499</updated>
+    </task>
+    <task id="LOCAL-00010" summary="liquidity api implement">
+      <option name="closed" value="true" />
+      <created>1715005100227</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1715005100227</updated>
+    </task>
+    <task id="LOCAL-00011" summary="liquidity api implement">
+      <option name="closed" value="true" />
+      <created>1715009072306</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1715009072306</updated>
+    </task>
+    <task id="LOCAL-00012" summary="liquidity api implement">
+      <option name="closed" value="true" />
+      <created>1715088434546</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1715088434546</updated>
+    </task>
+    <task id="LOCAL-00013" summary="liquidity api implement">
+      <option name="closed" value="true" />
+      <created>1716051575479</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1716051575480</updated>
+    </task>
+    <task id="LOCAL-00014" summary="liquidity api implement">
+      <option name="closed" value="true" />
+      <created>1716295489804</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1716295489804</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="network connections" />
+    <MESSAGE value="fix start issues" />
+    <MESSAGE value="Dashboard new-worth implement" />
+    <MESSAGE value="Dashboard api implement" />
+    <MESSAGE value="transactions api implement" />
+    <MESSAGE value="swap api implement" />
+    <MESSAGE value="liquidity api implement" />
+    <option name="LAST_COMMIT_MESSAGE" value="liquidity api implement" />
+  </component>
+</project>
