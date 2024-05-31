@@ -27,8 +27,8 @@ import { Button } from "@/components/ui/button";
 import formatedString from "@/lib/string";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useDomainsForOwner } from "@bonfida/sns-react";
 import { useDashboard } from "@/applications/Dashboard/store";
+import { useDomainsForOwner } from "@bonfida/sns-react";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -152,7 +152,7 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
             </TableBody>
           </Table>
         </div>
-        {(domains?.data?.length ?? 0) > 0 && (
+        {(domains?.result?.length ?? 0) > 0 && (
           <div className="flex flex-col min-w-[280px] bg-[#30425640] rounded-3xl gap-5">
             <div className="w-full border-b border-[#D9F8FF] border-solid p-3">
               <h6 className="text-sm md:text-lg truncate text-[#D9F8FF] text-left">
@@ -160,7 +160,7 @@ const WalletBalance = memo(({ isEXTRASMALL }: Props) => {
               </h6>
             </div>
             <div className="flex flex-col gap-3 h-44 overflow-auto px-4 pr-2">
-              {domains?.data?.map(({ domain }, index) => (
+              {domains?.result?.map(({ domain }, index) => (
                 <div
                   key={`${domain}_${index}`}
                   className="flex flex-nowrap justify-between items-center border-b border-[#30425670] border-solid last:border-none"
