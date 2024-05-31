@@ -9,7 +9,8 @@ import { MARKETS } from "@openbook-dex/openbook";
 import TradeProvider from "@/applications/Trade/Provider";
 import Balance from "./Balance";
 import { CircularProgress } from "@mui/material";
-import { memo } from "react";
+import { memo, useState } from "react";
+import JupiterSidebar from "./JupiterSidebar";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -40,6 +41,9 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
     fetchLoading,
     placeOrder,
   } = useTrade();
+  const [selectedProvider, setSelectedProvider] = useState<"jup" | "openBook">(
+    "jup"
+  );
   return (
     <TradeProvider>
       {fetchLoading ? (
@@ -55,14 +59,16 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
           }}
         />
       ) : (
-        <div className="z-50 static py-5 flex flex-col gap-5 items-center w-full">
+        <div className="z-50 relative static py-5 flex flex-col gap-5 items-center w-full">
           <div className="flex w-full gap-4 flex-wrap xl:flex-nowrap xl:grid-cols-12 xl:grid">
             <div className="flex flex-col gap-2 md:gap-4 w-full xl:col-span-9">
-              <Header
-                currentMarket={marketDetails}
-                lastOrder={fills[0]}
-                isEXTRASMALL={isEXTRASMALL}
-              />
+              {selectedProvider === "openBook" && (
+                <Header
+                  currentMarket={marketDetails}
+                  lastOrder={fills[0]}
+                  isEXTRASMALL={isEXTRASMALL}
+                />
+              )}
 
               <Chart
                 tokenA={marketDetails?.tokenA?.address ?? ""}
@@ -79,21 +85,95 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
               </div>
             </div>
             <div className="flex flex-col w-full gap-4 xl:col-span-3">
-              <Sidebar
-                setForm={useTrade.getState().setNewOrder}
-                isEXTRASMALL={isEXTRASMALL}
-                selectedMarket={marketDetails}
-                form={newOrder}
-                userBalance={tokens}
-                availableSide={availableSide}
-                market={market}
-              />
-              <OrderBook
-                data={marketDetails}
-                isEXTRASMALL={isEXTRASMALL}
-                bids={bids}
-                asks={asks}
-              />
+              <div
+                className="h-max  w-full rounded-xl p-5 gap-4 flex flex-col"
+                style={{
+                  boxShadow: "0 0 4px #88d6ff",
+                }}
+              >
+                <h3 className="text-sm sm:text-lg md:text-2xl text-[#D9F8FF]">
+                  Providers
+                </h3>
+                <div
+                  className={
+                    "text-white flex flex-row justify-between items-center gap-6"
+                  }
+                >
+                  <button
+                    onClick={() => setSelectedProvider("jup")}
+                    className={
+                      "flex justify-center items-center flex-1 flex-row gap-2 text-lg bg-[#111b2a] p-4 rounded-xl "
+                    }
+                    style={{
+                      boxShadow:
+                        selectedProvider === "jup"
+                          ? "0 0 8px rgba(217, 248, 255, 0.8)"
+                          : "0 0 5px rgba(217, 248, 255, 0.5)",
+                    }}
+                  >
+                    <img
+                      src={"/assets/icons/logos/jupiter_logo.svg"}
+                      className={"w-5 h-5"}
+                    />
+                    Jupiter
+                  </button>
+                  <button
+                    onClick={() => setSelectedProvider("openBook")}
+                    className={
+                      "flex justify-center items-center flex-1 flex-row gap-2 text-lg bg-[#111b2a] p-4 rounded-xl "
+                    }
+                    style={{
+                      boxShadow:
+                        selectedProvider === "openBook"
+                          ? "0 0 8px rgba(217, 248, 255, 0.8)"
+                          : "0 0 5px rgba(217, 248, 255, 0.5)",
+                    }}
+                  >
+                    <img
+                      src={"/assets/icons/logos/openbook.svg"}
+                      className={"w-5 h-5"}
+                    />
+                    OpenBook
+                  </button>
+                </div>
+              </div>
+
+              {selectedProvider === "jup" ? (
+                <>
+                  <JupiterSidebar
+                    setForm={useTrade.getState().setNewOrder}
+                    isEXTRASMALL={isEXTRASMALL}
+                    form={newOrder}
+                    userBalance={tokens}
+                    availableSide={availableSide}
+                    market={market}
+                  />
+                  <OrderBook
+                    data={marketDetails}
+                    isEXTRASMALL={isEXTRASMALL}
+                    bids={bids}
+                    asks={asks}
+                  />
+                </>
+              ) : (
+                <>
+                  <Sidebar
+                    setForm={useTrade.getState().setNewOrder}
+                    isEXTRASMALL={isEXTRASMALL}
+                    selectedMarket={marketDetails}
+                    form={newOrder}
+                    userBalance={tokens}
+                    availableSide={availableSide}
+                    market={market}
+                  />
+                  <OrderBook
+                    data={marketDetails}
+                    isEXTRASMALL={isEXTRASMALL}
+                    bids={bids}
+                    asks={asks}
+                  />{" "}
+                </>
+              )}
             </div>
           </div>
 

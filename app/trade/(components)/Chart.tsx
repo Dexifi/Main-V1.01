@@ -6,8 +6,7 @@ type ChartProps = {
   tokenB: string;
 };
 
-const Chart = memo(({ tokenB, tokenA, isEXTRASMALL }: ChartProps) => {
-  const actions = [1, 6, 12, 24];
+const Chart = memo(({ tokenB, tokenA }: ChartProps) => {
   return (
     <div
       className="w-full rounded-xl overflow-hidden gap-4 md:flex flex-col"
@@ -19,7 +18,7 @@ const Chart = memo(({ tokenB, tokenA, isEXTRASMALL }: ChartProps) => {
         <iframe
           width="100%"
           height="100%"
-          src={`https://birdeye.so/tv-widget/${tokenA}/${tokenB}?chain=solana&chartType=candle&chartInterval=3&chartLeftToolbar=show`}
+          src={`https://birdeye.so/tv-widget/${tokenA}?chain=solana&chartType=candle&chartInterval=3&chartLeftToolbar=show`}
           allowFullScreen
         ></iframe>
       </div>

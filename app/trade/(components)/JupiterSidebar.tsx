@@ -28,7 +28,7 @@ type SidebarProps = {
   availableSide: Array<"buy" | "sell">;
   market: Market | null;
 };
-const Sidebar = memo(
+const JupiterSidebar = memo(
   ({
     isEXTRASMALL,
     selectedMarket,
@@ -62,98 +62,7 @@ const Sidebar = memo(
         ),
       [userBalance, selectedMarket]
     );
-
-    const handleCalculateAmount = useCallback(
-      async (part: number) => {
-        if (selectedMarket && tokenABalance && tokenBBalance) {
-          const tokenAPrice = selectedMarket.tokenAPrice;
-          const tokenBPrice = selectedMarket.tokenBPrice;
-          console.log(tokenAPrice, tokenBPrice);
-          if (form.tab === "buy" && tokenAPrice && tokenBPrice) {
-            setForm({
-              ...form,
-              userChanged: true,
-              amount: tokenBBalance.tokenBalance
-                ? Number(
-                    formatedNumber(
-                      (tokenBBalance.tokenBalance * part * tokenBPrice) /
-                        tokenAPrice,
-                      decimal
-                    )
-                  )
-                : 0,
-            });
-          } else {
-            setForm({
-              ...form,
-              userChanged: true,
-              amount: Number(
-                formatedNumber(
-                  tokenABalance?.tokenBalance
-                    ? tokenABalance.tokenBalance * part
-                    : 0,
-                  decimal
-                )
-              ),
-            });
-          }
-        }
-      },
-      [selectedMarket, form, setForm, tokenBBalance, tokenABalance]
-    );
-
-    const updateAmount = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        const value = +e.target.value;
-        setForm({ ...form, userChanged: true, amount: value });
-      },
-      [form, setForm]
-    );
-
-    const handleLimitPriceChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        const value = +e.target.value;
-        setForm({ ...form, userChanged: true, limit_price: value });
-      },
-      [form, setForm]
-    );
-
-    const handleOrder = useCallback(async () => {
-      if (!wallet) {
-        return;
-      }
-      setPlaceOrderLoading(true);
-      try {
-        const result = await placeOrder({
-          side: form.tab as "buy" | "sell",
-          wallet: wallet.adapter as BaseSignerWalletAdapter<string>,
-          connection: connection,
-          orderType: "limit",
-          baseCurrencyAccount: new PublicKey(tokenABalance?.address),
-          feeDiscountPubkey: undefined,
-          quoteCurrencyAccount: new PublicKey(tokenBBalance?.address),
-          price: form.limit_price,
-          size: form.amount,
-          market,
-        });
-      } catch (e) {
-        console.log(e);
-        toast({
-          description: "Failed to place order",
-          variant: "destructive",
-        });
-      }
-      setPlaceOrderLoading(false);
-    }, [
-      wallet,
-      setPlaceOrderLoading,
-      tokenABalance,
-      tokenBBalance,
-      form.tab,
-      form.limit_price,
-      form.amount,
-      market,
-    ]);
+    const handleOrder = useCallback(async () => {}, []);
 
     return (
       <div
@@ -227,7 +136,7 @@ const Sidebar = memo(
                     style={{ boxShadow: "0 0 5px rgba(217, 248, 255, 0.5)" }}
                   >
                     <label className="text-white text-xs sm:text-sm">
-                      Amount
+                      Sell WEN at rate
                       <span className="text-white bg-[#0d111b] text-[10px] px-2 py-1 ml-1 rounded w-fit">
                         {selectedMarket?.tokenA?.symbol}
                       </span>
@@ -330,5 +239,5 @@ const Sidebar = memo(
   }
 );
 
-Sidebar.displayName = "Sidebar";
-export default Sidebar;
+JupiterSidebar.displayName = "Sidebar";
+export default JupiterSidebar;
