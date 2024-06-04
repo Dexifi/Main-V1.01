@@ -39,9 +39,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "fakeimg.pl",
       },
+      { protocol: "https", hostname: "img.raydium.io" },
     ],
   },
-  webpack: (config, {isServer}) => {
+  webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
         fs: false,
