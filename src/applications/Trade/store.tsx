@@ -6,9 +6,8 @@ import { placeOrder } from "./send";
 import { TokenInfo } from "@solana/spl-token-registry";
 import { MarketsListType, ownerOpenOrders } from "./types";
 import MARKETS from "./markets.json";
-import { USDC_MINT } from "@bonfida/spl-name-service";
-import { PublicKey } from "@solana/web3.js";
-import { SOL_MINT } from "@/applications/Liquidity/config";
+import { TokenType } from "@/stores/tokens";
+
 export type TradeState = {
   bids: { price: number; size: number; side: "buy" | "sell" }[];
   asks: { price: number; size: number; side: "buy" | "sell" }[];
@@ -58,11 +57,12 @@ export type TradeState = {
     userChanged: boolean;
   }) => void;
 };
+
 export type JupTradeState = {
   amountIn: number;
   amountOut: number;
-  MintA: PublicKey;
-  MintB: PublicKey;
+  limitPrice: number;
+  tokenList: TokenType[];
   tokenA: TokenInfo | null;
   tokenB: TokenInfo | null;
 };
@@ -117,8 +117,8 @@ export const useTrade = create<TradeState>((set) => ({
 export const useJupiterTrade = create<JupTradeState>((set) => ({
   amountIn: 0,
   amountOut: 0,
-  MintA: USDC_MINT,
-  MintB: SOL_MINT,
-  tokenB: null,
+  limitPrice: 0,
+  tokenList: [],
   tokenA: null,
+  tokenB: null,
 }));

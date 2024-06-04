@@ -11,6 +11,13 @@ interface Props {
   onImportMarketClose: () => void;
 }
 
+type JUPModal = {
+  open: boolean;
+  target?: "tokenA" | "tokenB";
+  onClose: () => void;
+  onOpen?: () => void;
+};
+
 export const useTradeModal = create<Props>((set) => ({
   isMarketOpen: false,
   // marketID: "8BnEgHoWFysVcuFFX7QztDmzuH8r5ZFvyP3sYwn1XTh6",
@@ -21,4 +28,11 @@ export const useTradeModal = create<Props>((set) => ({
   isImportMarketOpen: false,
   onImportMarketOpen: () => set({ isImportMarketOpen: true }),
   onImportMarketClose: () => set({ isImportMarketOpen: false }),
+}));
+
+export const useJupiterModal = create<JUPModal>((set) => ({
+  onClose: () => set({ open: false }),
+  onOpen: () => set({ open: true }),
+  target: "tokenA",
+  open: false,
 }));

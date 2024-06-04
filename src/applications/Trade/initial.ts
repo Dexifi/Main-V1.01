@@ -1,5 +1,5 @@
 import { Wallet } from "@solana/wallet-adapter-react";
-import { useTrade } from "./store";
+import { useJupiterTrade, useTrade } from "./store";
 import { Market, OpenOrders } from "@mehranml/openbook";
 import { connection } from "@/lib/get-connections";
 import { PublicKey } from "@solana/web3.js";
@@ -11,8 +11,8 @@ import { OPENBOOK_PROGRAM_ID } from "./config";
 
 const initialTrade = async (wallet: Wallet) => {
   useTrade.setState({ fetchLoading: true });
-
   try {
+    await getInitTokens();
     if (!useTrade.getState().market) {
       await getMarket(useTrade.getState().marketList[0].address);
     }
@@ -226,4 +226,10 @@ export const getWalletOrders = async (
       console.log("Order fetch failed", e);
     }
   }
+};
+
+export const getInitTokens = async () => {
+  const tokenA = await findToken("SOL");
+  const tokenB = await findToken("USDC");
+  useJupiterTrade.setState({ tokenA, tokenB });
 };

@@ -10,7 +10,8 @@ import TradeProvider from "@/applications/Trade/Provider";
 import Balance from "./Balance";
 import { CircularProgress } from "@mui/material";
 import { memo, useState } from "react";
-import JupiterSidebar from "./JupiterSidebar";
+import JupiterSidebar from "./Jupiter/JupiterSidebar";
+import JupiterHeader from "./Jupiter/JupiterHeader";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -62,8 +63,14 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
         <div className="z-50 relative static py-5 flex flex-col gap-5 items-center w-full">
           <div className="flex w-full gap-4 flex-wrap xl:flex-nowrap xl:grid-cols-12 xl:grid">
             <div className="flex flex-col gap-2 md:gap-4 w-full xl:col-span-9">
-              {selectedProvider === "openBook" && (
+              {selectedProvider === "openBook" ? (
                 <Header
+                  currentMarket={marketDetails}
+                  lastOrder={fills[0]}
+                  isEXTRASMALL={isEXTRASMALL}
+                />
+              ) : (
+                <JupiterHeader
                   currentMarket={marketDetails}
                   lastOrder={fills[0]}
                   isEXTRASMALL={isEXTRASMALL}
