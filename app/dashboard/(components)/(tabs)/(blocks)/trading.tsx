@@ -67,28 +67,6 @@ const Trading = ({ isEXTRASMALL }: Props) => {
       </div>
 
       <div className="flex justify-between gap-12 relative flex-col md:flex-row bg-[#30425630] p-4 rounded-2xl">
-        {/*<div className="flex flex-col gap-6 md:gap-10">*/}
-        {/*  <div className="flex items-center gap-3 border-b border-solid border-muted h-12">*/}
-        {/*    openbook*/}
-        {/*    {!isEXTRASMALL ? (*/}
-        {/*      <Image*/}
-        {/*        src={"/assets/icons/openBook.svg"}*/}
-        {/*        alt="openBook"*/}
-        {/*        className="w-6 aspect-square object-contain"*/}
-        {/*        width={24}*/}
-        {/*        height={24}*/}
-        {/*      />*/}
-        {/*    ) : null}*/}
-        {/*  </div>*/}
-        {/*  <div className="flex flex-row md:flex-col gap-2">*/}
-        {/*    <div className="flex text-base w-max text-left truncate">*/}
-        {/*      Balance:*/}
-        {/*    </div>*/}
-        {/*    <div className="flex text-base w-max text-left truncate">*/}
-        {/*      $ {formatedNumber(total, 2, isEXTRASMALL)}*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
         <div className={"w-full mt-2"}>
           <Table className="w-4/5 sm:w-full flex-1">
             <TableHeader>
