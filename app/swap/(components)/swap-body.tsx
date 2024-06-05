@@ -5,7 +5,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { connection } from "@/lib/get-connections";
 import formatedNumber from "@/lib/numbers";
 import { removeMiddleString } from "@/lib/string";
-import { TOKEN_LIST_URL } from "@jup-ag/core";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { ChevronsDown, ChevronsUpDown } from "lucide-react";
 import { VersionedTransaction } from "@solana/web3.js";
@@ -19,6 +18,7 @@ import { createJupiterApiClient } from "@jup-ag/api";
 import { getPrice } from "@/data/price";
 import { CircularProgress, Skeleton } from "@mui/material";
 import { debounce } from "lodash";
+import { TOKEN_LIST_URL } from "@/configuration/configs";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -435,10 +435,8 @@ const IndexSwap = ({ isEXTRASMALL }: Props) => {
     if (loading && userWalletTokens.length > 0) {
       (async () => {
         setLoading(false);
-        const tokens: TokenType[] = await (
-          await fetch(TOKEN_LIST_URL["mainnet-beta"])
-        ).json();
-        console.log(tokens, TOKEN_LIST_URL["mainnet-beta"]);
+        const tokens: TokenType[] = await (await fetch(TOKEN_LIST_URL)).json();
+
         if (tokens) {
           setTokenList(tokens);
           const solana = tokens.find((t: any) => t.symbol === "SOL");
