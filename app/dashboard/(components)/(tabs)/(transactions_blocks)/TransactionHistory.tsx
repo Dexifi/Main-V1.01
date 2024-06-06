@@ -155,7 +155,11 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5"
-      style={{ boxShadow: "0 0 4px #88d6ff" }}
+      style={{
+        boxShadow: "0 0 4px #88d6ff",
+        background:
+          "radial-gradient(50% 50% at 50% 50%, rgba(119, 186, 234, 0.2), transparent ), radial-gradient( 50% 50% at 50% 50%, rgba(251, 0, 196, 0) 3.49%, rgba(119, 186, 234, 0) 7.6%, rgba(253, 0, 197, 0) 10.46%, rgba(119, 186, 234, 0) 14.46%, rgba(255, 0, 199, 0) 18.56%, rgba(3, 0, 3, 0) 19.53%, transparent 79.82%, rgba(246, 0, 192, 0) 81.08%, rgba(119, 186, 234, 0) 84.04%, rgba(247, 0, 193, 0) 86.61%, rgba(119, 186, 234, 0) 91.01%, rgba(249, 0, 194, 0) 95.16%, rgba(119, 186, 234, 0) 98.6% )",
+      }}
     >
       <Tabs className="w-full" defaultValue="all">
         <TabsList className="w-full h-max">
@@ -167,14 +171,13 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
                 </h3>
                 <div className="flex gap-2 sm:gap-5 justify-end">
                   <div className="flex justify-between">
-                    <div className="text-lg md:text-2xl truncate flex items-center  gap-2 sm:gap-5 text-[#D9F8FF] overflow-auto">
+                    <div className="text-lg md:text-2xl truncate flex items-center gap-2 text-[#D9F8FF] overflow-auto bg-[#0D111B] rounded-3xl">
                       {hdata.actions.rows.map((rows, index) => (
                         <Button
                           onClick={() => setRowsMax(rows)}
-                          size="sm"
                           key={index}
                           className={`rounded-full ${
-                            rows === rowsMax ? "bg-[#D9F8FF10]" : ""
+                            rows === rowsMax ? "bg-[#D9F8FF10]" : "bg-[#0D111B]"
                           } text-xs`}
                           style={{
                             boxShadow:
@@ -205,11 +208,9 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
                           }
                         }}
                         key={index}
-                        className={`rounded-full hover:bg-[#D9F8FF10] transition-all w-10 h-10 aspect-square`}
+                        className={`rounded-full hover:bg-[#D9F8FF10] transition-all w-10 h-10 aspect-square border shadow-[0px_0px_5px_#d9f8ff]`}
                         size="icon"
                       >
-                        {index}
-
                         {arrows}
                       </Button>
                     ))}
@@ -218,15 +219,17 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
               </div>
 
               <div className="flex gap-3 sm:gap-5 justify-center sm:justify-end flex-wrap">
-                {hdata.actions.tabs.map((tab, index) => (
-                  <TabsTrigger
-                    value={formatedString(tab).toLocaleLowerCase()}
-                    key={`${formatedString(tab)}_${index}`}
-                    className="data-[state=active]:bg-[#D9F8FF10] data-[state=active]:rounded-full text-xs sm:text-sm"
-                  >
-                    {tab}
-                  </TabsTrigger>
-                ))}
+                <div className={"bg-[#0D111B] rounded-3xl text-[#D9F8FF]"}>
+                  {hdata.actions.tabs.map((tab, index) => (
+                    <TabsTrigger
+                      value={formatedString(tab).toLocaleLowerCase()}
+                      key={`${formatedString(tab)}_${index}`}
+                      className="data-[state=active]:bg-[#D9F8FF10] data-[state=active]:rounded-full text-xs sm:text-sm data-[state=active]:border shadow"
+                    >
+                      {tab}
+                    </TabsTrigger>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -300,17 +303,20 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
                                   });
                                 }}
                               >
-                                {removeMiddleString(row.txid)}
+                                <p className={"underline"}>
+                                  {removeMiddleString(row.txid)}
+                                </p>
                               </div>
                             </TableCell>
 
                             <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                              <div className="flex justify-between items-center max-w-36 gap-5">
+                              <div className="flex justify-between items-center max-w-36">
                                 {row.platform}
                                 {!isEXTRASMALL ? (
                                   <Image
                                     src={row.platform_icon ?? ""}
                                     alt={`${row.platform}_logo-icon`}
+                                    className={"rounded-full"}
                                     width={24}
                                     height={24}
                                   />
@@ -323,7 +329,7 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
                             </TableCell>
                             {row?.outgoing ? (
                               <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                                <div className="flex justify-start items-center gap-5">
+                                <div className="flex justify-start items-center gap-2">
                                   <div className="flex justify-start gap-2">
                                     <span>
                                       -
@@ -350,7 +356,7 @@ const TransactionHistory = ({ isEXTRASMALL }: Props) => {
                             )}
                             {row.incoming ? (
                               <TableCell className="font-medium text-left text-sm md:text-md truncate text-[#7c7c8d]">
-                                <div className="flex justify-start items-center gap-5">
+                                <div className="flex justify-start items-center gap-2">
                                   <div className="flex justify-start gap-2">
                                     <span>
                                       +
@@ -408,6 +414,6 @@ const hdata = {
         key="chevron-last"
       />,
     ],
-    tabs: ["Recive", "All", "Swap", "Deposit", "Withdraw", "Repay", "Send"],
+    tabs: ["All", "Recive", "Swap", "Deposit", "Withdraw", "Repay", "Send"],
   },
 };

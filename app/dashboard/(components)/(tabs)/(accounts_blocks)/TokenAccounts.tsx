@@ -38,7 +38,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
       setTimeout(() => {
         setData([
           {
-            market: "SOL/USDC",
+            market: "STAKE(STAKE4)",
             market_icons: [
               "/assets/images/raydiumraycoin-1@2x.png",
               "/assets/images/raydiumraycoin-1@2x.png",
@@ -55,9 +55,9 @@ const Farm = ({ isEXTRASMALL }: Props) => {
   }, [gdata.length]);
 
   const data = {
-    title: "Open Order Accounts",
+    title: "Open Token Accounts",
     table: {
-      header: ["Asset", "Platform", "Account", "Balance", "Value", "Action"],
+      header: ["Asset", "Account", "Type", "Balance", "Value", "Action"],
     },
   };
 
@@ -70,12 +70,12 @@ const Farm = ({ isEXTRASMALL }: Props) => {
         <div className="flex justify-between w-full flex-col sm:flex-row gap-4">
           <div className="flex flex-col justify-start gap-3">
             <h3 className="w-max">{data.title}</h3>
-            <div className="flex justify-between w-full gap-4 md:gap-10">
-              <span className="text-xs sm:text-sm w-max text-[#7c7c8d] truncate">
+            <div className="flex flex-row items-center justify-between w-full gap-4 md:gap-10 text-[#D9F8FF]">
+              <span className="text-xs sm:text-sm w-max truncate">
                 {Math.floor(Math.random() * (50 - 2 + 1) + 2)} open order
                 account found
               </span>{" "}
-              <span className="text-xs sm:text-sm w-max text-[#7c7c8d] truncate">
+              <span className="text-xl w-max truncate">
                 $
                 {formatedNumber(
                   Math.floor(Math.random() * (2 - 1 + 1) + 2),
@@ -86,11 +86,17 @@ const Farm = ({ isEXTRASMALL }: Props) => {
             </div>
           </div>
 
-          <div className="flex gap-3 flex-wrap">
-            <Button size="sm" className="text-xs">
+          <div className="flex gap-3 flex-wrap mt-1">
+            <Button
+              size="sm"
+              className="text-xs shadow-[0px_0px_5px_#d9f8ff] border rounded-3xl"
+            >
               Close Selected Accounts
             </Button>
-            <Button size="sm" className="text-xs">
+            <Button
+              size="sm"
+              className="text-xs shadow-[0px_0px_5px_#d9f8ff] border rounded-3xl"
+            >
               Close All Accounts
             </Button>
           </div>
@@ -105,7 +111,7 @@ const Farm = ({ isEXTRASMALL }: Props) => {
               {data.table.header.map((header, index) => (
                 <TableHead
                   key={`${formatedString(header.toLocaleLowerCase())}_${index}`}
-                  className="text-sm md:text-md truncate max-w-[110px]"
+                  className="text-sm md:text-md truncate max-w-[110px] text-[#D9F8FF]"
                   align="left"
                 >
                   {header}
@@ -136,61 +142,52 @@ const Farm = ({ isEXTRASMALL }: Props) => {
                       row.id.toLocaleLowerCase()
                     )}_${index}`}
                   >
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d]">
-                      <div className="flex gap-5 items-center justify-between w-full max-w-36">
+                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d] pt-1">
+                      <div className={"flex flex-row items-center gap-2"}>
                         {row.market}
-                        {!isEXTRASMALL ? (
-                          <div className="max-w-9 hidden md:flex justify-between items-center">
-                            {row.market_icons.map((icon, id) => (
-                              <Image
-                                key={`${icon}_logo-icon_${id}`}
-                                src={icon}
-                                alt={`${icon}_logo-icon_${id}`}
-                                width={24}
-                                height={24}
-                              />
-                            ))}
-                          </div>
-                        ) : null}
+                        <img
+                          className={"w-6 h-6 rounded-full ml-6"}
+                          src={
+                            "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                          }
+                        />
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d]">
-                      <div className="flex gap-5 items-center justify-between w-full">
-                        {row.platform}
-                        {!isEXTRASMALL ? (
-                          <Image
-                            src={row.platform_icon}
-                            alt={`${row.platform}_logo-icon`}
-                            className="hidden md:flex"
-                            width={24}
-                            height={24}
-                          />
-                        ) : null}
+                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-[#7c7c8d] pt-1">
+                      <div className="flex items-center justify-between w-full underline text-[#D9F8FF]">
+                        <div
+                          className="flex gap-5 items-center justify-between w-full cursor-pointer truncate max-w-36 underline"
+                          onClick={() => {
+                            navigator.clipboard
+                              .writeText(row.account)
+                              .then((r) => {});
+                            toast({
+                              title: "Added to clipboard",
+                            });
+                          }}
+                        >
+                          {removeMiddleString(row.account)}
+                        </div>
                       </div>
                     </TableCell>
 
-                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-white">
-                      <div
-                        className="flex gap-5 items-center justify-between w-full cursor-pointer truncate max-w-36"
-                        onClick={() => {
-                          navigator.clipboard.writeText(row.account);
-                          toast({
-                            title: "Added to clipboard",
-                          });
-                        }}
+                    <TableCell className="font-medium text-left text-sm md:text-md truncate uppercase text-white pt-1">
+                      <p className={"text-xs text-[#7C7C8D]"}>
+                        Assoc. Token Acc
+                      </p>
+                    </TableCell>
+                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pt-1">
+                      $ {formatedNumber(row.balance, 2, isEXTRASMALL)}
+                    </TableCell>
+                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pt-1">
+                      $ {formatedNumber(row.value, 2, isEXTRASMALL)}
+                    </TableCell>
+
+                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 pt-1">
+                      <Button
+                        onClick={() => {}}
+                        className="shadow-[0px_0px_5px_#d9f8ff] border rounded-3xl h-6"
                       >
-                        {removeMiddleString(row.account)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.balance, 2, isEXTRASMALL)}
-                    </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      ${formatedNumber(row.value, 2, isEXTRASMALL)}
-                    </TableCell>
-
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2">
-                      <Button onClick={() => {}} className="rounded-full">
                         Close Account
                       </Button>
                     </TableCell>
