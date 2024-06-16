@@ -13,9 +13,9 @@ interface Props {
 
 type JUPModal = {
   open: boolean;
-  target?: "tokenA" | "tokenB";
+  target: "tokenA" | "tokenB";
   onClose: () => void;
-  onOpen?: () => void;
+  onOpen: (target: "tokenA" | "tokenB") => void;
 };
 
 export const useTradeModal = create<Props>((set) => ({
@@ -32,7 +32,7 @@ export const useTradeModal = create<Props>((set) => ({
 
 export const useJupiterModal = create<JUPModal>((set) => ({
   onClose: () => set({ open: false }),
-  onOpen: () => set({ open: true }),
+  onOpen: (target) => set({ open: true, target }),
   target: "tokenA",
   open: false,
 }));

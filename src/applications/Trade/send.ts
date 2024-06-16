@@ -13,9 +13,9 @@ import {
 } from "@solana/web3.js";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  //   @ts-ignore
+  // @ts-ignore
   createAssociatedTokenAccountInstruction,
-  //   @ts-ignore
+  // @ts-ignore
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
@@ -24,7 +24,6 @@ import {
   DexInstructions,
   Market,
   OpenOrders,
-  parseInstructionErrorResponse,
   TokenInstructions,
 } from "@mehranml/openbook";
 import { SelectedTokenAccounts, TokenAccount } from "./types";
@@ -37,7 +36,6 @@ import {
 } from "@solana/wallet-adapter-base";
 import { toast } from "@/components/ui/use-toast";
 import { TOKEN_MINTS } from "@openbook-dex/openbook";
-import { connection } from "@/lib/get-connections";
 
 export async function createTokenAccountTransaction({
   connection,

@@ -8,11 +8,10 @@ import { getPrice } from "@/data/price";
 import getTokenAccounts from "./userAccounts";
 import { ownerOpenOrders } from "./types";
 import { OPENBOOK_PROGRAM_ID } from "./config";
+import { fetchTokenList, getOpenOrder } from "@/applications/Trade/jup";
 
-const initialTrade = async (wallet: Wallet) => {
-  useTrade.setState({ fetchLoading: true });
+export const initialTrade = async (wallet: Wallet) => {
   try {
-    await getInitTokens();
     if (!useTrade.getState().market) {
       await getMarket(useTrade.getState().marketList[0].address);
     }
@@ -27,14 +26,18 @@ const initialTrade = async (wallet: Wallet) => {
   } catch (e) {
     console.log("initial failed", e);
   }
-  useTrade.setState({ fetchLoading: false });
+  useTrade.setState({ loading: false });
 };
 
-export default initialTrade;
+export const initialJupiterTrade = async (wallet: Wallet) => {
+  wallet.adapter.publicKey &&
+    (await getTokens(wallet.adapter.publicKey.toBase58()));
+  await fetchTokenList();
+  setInterval(async () => await getOpenOrder(wallet.adapter.publicKey), 5000);
+};
 
 export const getMarket = async (marketID: string) => {
   try {
-    console.log("load market");
     const market = await Market.load(
       connection,
       new PublicKey(marketID),
@@ -163,73 +166,58 @@ export const getWalletOrders = async (
         publicKey,
         OPENBOOK_PROGRAM_ID
       );
-      console.log("orders", orders);
       const data: ownerOpenOrders[] = [];
       for (const order of orders) {
-        setTimeout(async () => {
-          const market = await Market.load(
-            connection,
-            order.market,
-            {},
-            OPENBOOK_PROGRAM_ID
-          );
-          const orders = await market.loadOrdersForOwner(
-            connection,
-            publicKey,
-            30000
-          );
+        const market = await Market.load(
+          connection,
+          order.market,
+          {},
+          OPENBOOK_PROGRAM_ID
+        );
+        const orders = await market.loadOrdersForOwner(
+          connection,
+          publicKey,
+          30000
+        );
 
-          const baseToken = await findToken(market.decoded.baseMint.toString());
-          const quoteToken = await findToken(
-            market.decoded.quoteMint.toString()
-          );
-          const marketName = `${baseToken?.symbol}-${quoteToken?.symbol}`;
-          console.log(
-            `${marketName}baseTokenFree`,
-            order.baseTokenFree.toNumber()
-          );
-          const haveExtraSettleable =
-            (order.baseTokenFree.toNumber() > 0 ||
-              order.quoteTokenFree.toNumber() > 0) &&
-            orders.length > 0;
+        const baseToken = await findToken(market.decoded.baseMint.toString());
+        const quoteToken = await findToken(market.decoded.quoteMint.toString());
+        const marketName = `${baseToken?.symbol}-${quoteToken?.symbol}`;
 
-          data.push({
-            protocol: "OpenBook",
-            protocolIcon: "/assets/openBook.svg",
-            mint: baseToken,
-            market,
-            marketName,
-            baseToken,
-            quoteToken,
-            openOrder: order,
-            orders: orders,
-            baseFree:
-              order.baseTokenFree.toNumber() / 10 ** (baseToken?.decimals ?? 0),
-            quoteFree:
-              order.quoteTokenFree.toNumber() /
+        const haveExtraSettleable =
+          (order.baseTokenFree.toNumber() > 0 ||
+            order.quoteTokenFree.toNumber() > 0) &&
+          orders.length > 0;
+
+        data.push({
+          protocol: "OpenBook",
+          protocolIcon: "/assets/openBook.svg",
+          mint: baseToken,
+          market,
+          marketName,
+          baseToken,
+          quoteToken,
+          openOrder: order,
+          orders: orders,
+          baseFree:
+            order.baseTokenFree.toNumber() / 10 ** (baseToken?.decimals ?? 0),
+          quoteFree:
+            order.quoteTokenFree.toNumber() / 10 ** (quoteToken?.decimals ?? 0),
+          isDone:
+            order.baseTokenFree.toNumber() ===
+              order.baseTokenTotal.toNumber() &&
+            order.quoteTokenFree.toNumber() ===
+              order.quoteTokenTotal.toNumber(),
+          fee:
+            order.baseTokenTotal.toNumber() / 10 ** (baseToken?.decimals ?? 0) +
+            order.quoteTokenTotal.toNumber() /
               10 ** (quoteToken?.decimals ?? 0),
-            isDone:
-              order.baseTokenFree.toNumber() ===
-                order.baseTokenTotal.toNumber() &&
-              order.quoteTokenFree.toNumber() ===
-                order.quoteTokenTotal.toNumber(),
-            fee:
-              order.baseTokenTotal.toNumber() /
-                10 ** (baseToken?.decimals ?? 0) +
-              order.quoteTokenTotal.toNumber() /
-                10 ** (quoteToken?.decimals ?? 0),
-          });
-        }, 100);
+        });
       }
+      console.log("orders in initial", data);
       useTrade.setState({ orders: data });
     } catch (e) {
       console.log("Order fetch failed", e);
     }
   }
-};
-
-export const getInitTokens = async () => {
-  const tokenA = await findToken("SOL");
-  const tokenB = await findToken("USDC");
-  useJupiterTrade.setState({ tokenA, tokenB });
 };

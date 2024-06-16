@@ -1,37 +1,65 @@
-import { useJupiterModal, useTradeModal } from "@/lib/stores/trade.store";
+import { useJupiterModal } from "@/lib/stores/trade.store";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Plus } from "lucide-react";
-import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import formatedNumber from "@/lib/numbers";
-import { FillType } from "@/types/market";
-import { TradeState, useJupiterTrade } from "@/applications/Trade/store";
-import { useEffect } from "react";
+import { useJupiterTrade } from "@/applications/Trade/store";
+import { useEffect, useState } from "react";
 import { TokenType } from "@/stores/tokens";
 import { TOKEN_LIST_URL } from "@jup-ag/core";
+import { connection } from "@/lib/get-connections";
+import { ParsedTransactionWithMeta, PublicKey } from "@solana/web3.js";
 
 type HeaderProps = {
   isEXTRASMALL: boolean;
-  currentMarket?: TradeState["marketDetails"];
-  lastOrder?: FillType;
 };
 
-const JupiterHeader = ({
-  lastOrder,
-  currentMarket,
-  isEXTRASMALL,
-}: HeaderProps) => {
+const JupiterHeader = ({ isEXTRASMALL }: HeaderProps) => {
   const { onOpen } = useJupiterModal();
   const { tokenA, tokenB } = useJupiterTrade();
+  const [lastOrder, setLastOrder] = useState({ amount: 0, side: "BUY" });
+
+  const fetchLastOrder = async () => {
+    const t = await connection.getConfirmedSignaturesForAddress2(
+      new PublicKey(tokenA?.address ?? ""),
+      {
+        limit: 12,
+      }
+    );
+
+    const transaction: ParsedTransactionWithMeta =
+      await connection.getParsedTransaction(t[0].signature, {
+        maxSupportedTransactionVersion: 0,
+      });
+
+    const post = transaction?.meta?.postTokenBalances?.find(
+      (e) => e.mint === tokenA?.address
+    );
+    const pre = transaction?.meta?.preTokenBalances?.find(
+      (e) => e.mint === tokenA?.address
+    );
+
+    if (
+      (post?.uiTokenAmount.uiAmount ?? 0) > (pre?.uiTokenAmount.uiAmount ?? 0)
+    ) {
+      setLastOrder((e) => ({
+        side: "BUY",
+        amount: post?.uiTokenAmount.uiAmount ?? e.amount,
+      }));
+    } else {
+      setLastOrder((e) => ({
+        side: "SELL",
+        amount: post?.uiTokenAmount.uiAmount ?? e.amount,
+      }));
+    }
+  };
+
   useEffect(() => {
-    const fetchTokens = async () => {
-      const tokens: TokenType[] = await (
-        await fetch(TOKEN_LIST_URL["mainnet-beta"])
-      ).json();
-      useJupiterTrade.setState({ tokenList: tokens });
-    };
-    fetchTokens();
-  }, []);
+    if (!tokenB) return;
+    const interval = setInterval(async () => {
+      await fetchLastOrder();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [fetchLastOrder, tokenB]);
 
   return (
     <div
@@ -48,7 +76,10 @@ const JupiterHeader = ({
         </h3>
         {/* Actions */}
         <div className="flex items-center w-full flex-wrap">
-          <Button className="flex cursor-pointer  gap-1 " onClick={onOpen}>
+          <Button
+            className="flex cursor-pointer  gap-1 "
+            onClick={() => onOpen("tokenA")}
+          >
             <img src={tokenA?.logoURI} alt={tokenA?.name} className="w-7 h-7" />
             <span>{tokenA?.symbol}</span>
             <ChevronDown className=" ml-2 w-6 h-6 aspect-square object-contain" />
@@ -61,7 +92,10 @@ const JupiterHeader = ({
         </h3>
         {/* Actions */}
         <div className="flex items-center w-full flex-wrap">
-          <Button className="flex cursor-pointer  gap-1 " onClick={onOpen}>
+          <Button
+            className="flex cursor-pointer  gap-1 "
+            onClick={() => onOpen("tokenB")}
+          >
             <img src={tokenB?.logoURI} alt={tokenB?.name} className="w-7 h-7" />
             <span>{tokenB?.symbol}</span>
             <ChevronDown className=" ml-2 w-6 h-6 aspect-square object-contain" />
@@ -69,35 +103,23 @@ const JupiterHeader = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <h6 className="text-[#d9f8ff] text-sm md:text-lg">Total Value</h6>
-        {/*  */}
-        <span className="text-[#757788] text-sm md:text-lg">
-          ${formatedNumber(currentMarket?.tvl ?? 0, 2, isEXTRASMALL)}
-        </span>
-      </div>
-
+      <div></div>
       <div className="flex flex-col gap-4">
         <h6 className="text-[#d9f8ff] text-sm md:text-lg">Last Order</h6>
         {lastOrder ? (
           <div className="flex gap-4">
             <span
               className={`text-sm md:text-lg ${
-                lastOrder?.side.toUpperCase() === "BUY"
+                lastOrder.side.toUpperCase() === "BUY"
                   ? "text-[#88e8ad]"
                   : "text-[#c95901]"
               }`}
             >
-              $
-              {formatedNumber(
-                lastOrder?.size * lastOrder.price,
-                2,
-                isEXTRASMALL
-              )}
+              ${formatedNumber(lastOrder.amount, 2, isEXTRASMALL)}
             </span>
             <ChevronUp
               className={`w-6 h-6 aspect-square object-contain  ${
-                lastOrder?.side.toUpperCase() === "BUY"
+                lastOrder.side.toUpperCase() === "BUY"
                   ? "text-[#88e8ad]"
                   : "text-[#c95901] rotate-180"
               }`}

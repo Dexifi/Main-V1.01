@@ -3,13 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import formatedNumber from "@/lib/numbers";
 import { Token } from "@/types/token";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { TradeState, useJupiterTrade } from "@/applications/Trade/store";
 import { Market } from "@mehranml/openbook";
 import { useWallet } from "@solana/wallet-adapter-react";
-import Decimal from "decimal.js";
-import { Float } from "@solana/buffer-layout";
-import { createJupLimitOrder } from "@/applications/Trade/jup";
+import { createJupLimitOrder, getOpenOrder } from "@/applications/Trade/jup";
+import { getPrice } from "@/data/price";
+import { CircularProgress } from "@mui/material";
+import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
 
 type SidebarProps = {
   isEXTRASMALL: boolean;
@@ -26,12 +27,13 @@ type SidebarProps = {
   market: Market | null;
 };
 const JupiterSidebar = memo(
-  ({ isEXTRASMALL, form, userBalance, market }: SidebarProps) => {
+  ({ isEXTRASMALL, userBalance, market }: SidebarProps) => {
     const { tokenB, tokenA } = useJupiterTrade();
     const parts = [0.25, 0.5, 0.75, 1];
     const { wallet } = useWallet();
     const [amount, setAmount] = useState(0);
     const [price, setPrice] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     const tokenABalance = useMemo(
       () => userBalance.find((token) => token.mintAddress === tokenA?.address),
@@ -44,13 +46,19 @@ const JupiterSidebar = memo(
     );
     const handleOrder = useCallback(async () => {
       if (!wallet?.adapter || !tokenA || !tokenB) return;
-
-      await createJupLimitOrder(wallet?.adapter, {
-        outputMint: tokenB?.address,
-        inputMint: tokenA?.address,
-        outAmount: amount * price * 10 ** tokenB?.decimals,
-        inAmount: amount * 10 ** tokenA?.decimals,
-      });
+      try {
+        setLoading(true);
+        await createJupLimitOrder(wallet?.adapter as BaseSignerWalletAdapter, {
+          outputMint: tokenB?.address,
+          inputMint: tokenA?.address,
+          outAmount: (amount / price) * 10 ** tokenB.decimals,
+          inAmount: amount * 10 ** tokenA?.decimals,
+        });
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+        setLoading(false);
+      }
     }, [amount, price, tokenA, tokenB, wallet?.adapter]);
 
     const handleCalculateAmount = (part: number) => {
@@ -61,6 +69,15 @@ const JupiterSidebar = memo(
       if (newAmount > tokenABalance?.tokenBalance) return;
       setAmount(newAmount);
     };
+
+    useEffect(() => {
+      (async () => {
+        if (price > 0) return;
+        const tokenAPrice = await getPrice(tokenA?.symbol ?? "");
+        const tokenBPrice = await getPrice(tokenB?.symbol ?? "");
+        setPrice(parseFloat((tokenAPrice / tokenBPrice).toFixed(2)));
+      })();
+    }, [price, tokenA?.symbol, tokenB?.symbol]);
 
     return (
       <div
@@ -100,7 +117,7 @@ const JupiterSidebar = memo(
                 style={{ boxShadow: "0 0 5px rgba(217, 248, 255, 0.5)" }}
               >
                 <label className="text-white text-xs sm:text-sm">
-                  Sell {tokenA?.symbol} at rate
+                  Buy {tokenB?.symbol} at rate
                   <span className="text-white bg-[#0d111b] text-[10px] px-2 py-1 ml-1 rounded w-fit">
                     {tokenB?.symbol}
                   </span>
@@ -133,7 +150,7 @@ const JupiterSidebar = memo(
                 <Input
                   aria-label="Total"
                   disabled
-                  value={amount * price}
+                  value={parseFloat((amount / price).toString())}
                   className={`bg-transparent text-white rounded-2xl border-[#d9f8ff50] ${
                     isEXTRASMALL ? "max-w-[120px]" : "max-w-[170px]"
                   }`}
@@ -164,13 +181,19 @@ const JupiterSidebar = memo(
                 {formatedNumber(tokenABalance?.tokenBalance, 4, isEXTRASMALL)}
               </span>
             </div>
-
+            <Button onClick={() => getOpenOrder(wallet?.adapter.publicKey)}>
+              openOrder
+            </Button>
             <Button
-              disabled={amount === 0 || price === 0}
+              disabled={amount === 0 || price === 0 || loading}
               className={"bg-[#0b9f44]"}
               onClick={handleOrder}
             >
-              Place Order
+              {loading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                "Place Order"
+              )}
             </Button>
           </div>
         </Tabs>

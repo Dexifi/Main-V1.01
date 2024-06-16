@@ -1,4 +1,3 @@
-import { SettingsModal, SwapModal } from "@/components/modals";
 import { NETWORK } from "@/lib/endpoints";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { ConnectionProvider } from "@solana/wallet-adapter-react";
@@ -10,16 +9,9 @@ import {
   SafePalWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-
-const WalletProvider = dynamic(
-  () => import("@/components/providers/client-wallet-provider"),
-  {
-    ssr: false,
-  }
-);
+import ClientWalletProvider from "@/components/providers/client-wallet-provider";
 
 type Props = {
   children: React.ReactNode;
@@ -39,9 +31,9 @@ const DashboardProvider = ({ children }: Props) => {
   );
   return (
     <ConnectionProvider endpoint={NETWORK}>
-      <WalletProvider autoConnect>
+      <ClientWalletProvider autoConnect>
         <WalletModalProvider>{children}</WalletModalProvider>
-      </WalletProvider>
+      </ClientWalletProvider>
     </ConnectionProvider>
   );
 };

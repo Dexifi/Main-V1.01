@@ -53,6 +53,7 @@ const AddAmmTokenModal = () => {
             .fill(null)
             .map((_, i) => (
               <div
+                key={i}
                 className={
                   "flex flex-row border border-[#757788] rounded-3xl px-2 py-1 text-white items-center gap-1"
                 }
@@ -83,6 +84,7 @@ const AddAmmTokenModal = () => {
             .fill(null)
             .map((_, i) => (
               <div
+                key={i}
                 className={
                   "flex flex-row w-full text-amber-50 justify-between p-3"
                 }

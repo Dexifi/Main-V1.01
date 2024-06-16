@@ -17,7 +17,7 @@ const TradePage = (props: Props) => {
       <Toaster />
       <div className="bg-[#0d111b] relative min-h-screen w-full flex  items-center flex-col">
         {isClient && <Header isMobile={isMobile} />}
-        <div className="container relative w-full min-h-screen max-w-full pt-4 overflow-x-hidden mb-12">
+        <div className="container relative w-full min-h-screen pt-4 overflow-x-hidden mb-12">
           <div
             className="absolute -top-96 left-0 right-0 mx-auto w-[54rem] z-0 h-[32rem] lg:h-[64rem] overflow-hidden"
             style={{

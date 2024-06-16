@@ -5,13 +5,18 @@ import OrderBook from "./OrderBook";
 import Chart from "./Chart";
 import Orders from "./Order";
 import { useTrade } from "@/applications/Trade";
-import { MARKETS } from "@openbook-dex/openbook";
 import TradeProvider from "@/applications/Trade/Provider";
 import Balance from "./Balance";
-import { CircularProgress } from "@mui/material";
-import { memo, useState } from "react";
+import { memo } from "react";
 import JupiterSidebar from "./Jupiter/JupiterSidebar";
 import JupiterHeader from "./Jupiter/JupiterHeader";
+import {
+  TradingProviders,
+  useJupiterTrade,
+  useSelectedProvider,
+} from "@/applications/Trade/store";
+import JupiterOrders from "./Jupiter/JupiterOrders";
+import { CircularProgress, Stack } from "@mui/material";
 
 type Props = {
   isEXTRASMALL: boolean;
@@ -39,56 +44,53 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
     market,
     tokens,
     availableSide,
-    fetchLoading,
-    placeOrder,
+    loading: openBookLoading,
   } = useTrade();
-  const [selectedProvider, setSelectedProvider] = useState<"jup" | "openBook">(
-    "jup"
-  );
+  const jupiterLoading = useJupiterTrade((state) => state.loading);
+  const { tokenA } = useJupiterTrade();
+  const { selectedProvider, setSelectedProvider } = useSelectedProvider();
   return (
     <TradeProvider>
-      {fetchLoading ? (
-        <CircularProgress
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            margin: "auto",
-            color: "#fff",
-          }}
-        />
+      {(selectedProvider === TradingProviders.JUP && jupiterLoading) ||
+      (selectedProvider === TradingProviders.OPENBOOK && openBookLoading) ? (
+        <Stack sx={{ minHeight: "80vh" }}>
+          <CircularProgress sx={{ m: "auto", color: "#fff" }} />;
+        </Stack>
       ) : (
-        <div className="z-50 relative static py-5 flex flex-col gap-5 items-center w-full">
+        <div className="z-50 relative  py-5 flex flex-col gap-5 items-center w-full">
           <div className="flex w-full gap-4 flex-wrap xl:flex-nowrap xl:grid-cols-12 xl:grid">
             <div className="flex flex-col gap-2 md:gap-4 w-full xl:col-span-9">
-              {selectedProvider === "openBook" ? (
+              {selectedProvider === TradingProviders.OPENBOOK ? (
                 <Header
                   currentMarket={marketDetails}
                   lastOrder={fills[0]}
                   isEXTRASMALL={isEXTRASMALL}
                 />
               ) : (
-                <JupiterHeader
-                  currentMarket={marketDetails}
-                  lastOrder={fills[0]}
-                  isEXTRASMALL={isEXTRASMALL}
-                />
+                <JupiterHeader isEXTRASMALL={isEXTRASMALL} />
               )}
 
               <Chart
-                tokenA={marketDetails?.tokenA?.address ?? ""}
-                tokenB={marketDetails?.tokenB?.address ?? ""}
+                tokenA={
+                  selectedProvider === TradingProviders.JUP
+                    ? tokenA?.address
+                    : marketDetails?.tokenA?.address ?? ""
+                }
                 isEXTRASMALL={isEXTRASMALL}
               />
               <div className="flex flex-col md:flex-row w-full gap-4 xl:col-span-4">
-                <Orders
-                  selectedMarket={marketDetails}
-                  data={orders}
-                  isEXTRASMALL={isEXTRASMALL}
-                />
-                <Balance order={orders} isEXTRASMALL={isEXTRASMALL} />
+                {selectedProvider === TradingProviders.JUP ? (
+                  <JupiterOrders isEXTRASMALL={isEXTRASMALL} />
+                ) : (
+                  <>
+                    <Orders
+                      selectedMarket={marketDetails}
+                      data={orders}
+                      isEXTRASMALL={isEXTRASMALL}
+                    />
+                    <Balance order={orders} isEXTRASMALL={isEXTRASMALL} />
+                  </>
+                )}
               </div>
             </div>
             <div className="flex flex-col w-full gap-4 xl:col-span-3">
@@ -107,13 +109,13 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
                   }
                 >
                   <button
-                    onClick={() => setSelectedProvider("jup")}
+                    onClick={() => setSelectedProvider(TradingProviders.JUP)}
                     className={
                       "flex justify-center items-center flex-1 flex-row gap-2 text-lg bg-[#111b2a] p-4 rounded-xl "
                     }
                     style={{
                       boxShadow:
-                        selectedProvider === "jup"
+                        selectedProvider === TradingProviders.JUP
                           ? "0 0 8px rgba(217, 248, 255, 0.8)"
                           : "0 0 5px rgba(217, 248, 255, 0.5)",
                     }}
@@ -125,13 +127,15 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
                     Jupiter
                   </button>
                   <button
-                    onClick={() => setSelectedProvider("openBook")}
+                    onClick={() =>
+                      setSelectedProvider(TradingProviders.OPENBOOK)
+                    }
                     className={
                       "flex justify-center items-center flex-1 flex-row gap-2 text-lg bg-[#111b2a] p-4 rounded-xl "
                     }
                     style={{
                       boxShadow:
-                        selectedProvider === "openBook"
+                        selectedProvider === TradingProviders.OPENBOOK
                           ? "0 0 8px rgba(217, 248, 255, 0.8)"
                           : "0 0 5px rgba(217, 248, 255, 0.5)",
                     }}
@@ -145,7 +149,7 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
                 </div>
               </div>
 
-              {selectedProvider === "jup" ? (
+              {selectedProvider === TradingProviders.JUP ? (
                 <>
                   <JupiterSidebar
                     setForm={useTrade.getState().setNewOrder}
@@ -154,12 +158,6 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
                     userBalance={tokens}
                     availableSide={availableSide}
                     market={market}
-                  />
-                  <OrderBook
-                    data={marketDetails}
-                    isEXTRASMALL={isEXTRASMALL}
-                    bids={bids}
-                    asks={asks}
                   />
                 </>
               ) : (
@@ -183,7 +181,6 @@ const TradeChart = memo(({ isEXTRASMALL }: Props) => {
               )}
             </div>
           </div>
-
           <TradeMarketModal markets={marketList} />
         </div>
       )}

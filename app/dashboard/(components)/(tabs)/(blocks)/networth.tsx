@@ -12,14 +12,8 @@ import formatedString from "@/lib/string";
 import { cn } from "@/lib/utils";
 import { Cell, Pie, PieChart } from "recharts";
 import useConnection from "@/hooks/useConnection";
-import useWalletBalance from "@/hooks/useWalletBalance";
-import useLend from "@/hooks/useLend";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useMemo } from "react";
-import useTrade from "@/hooks/useTrade";
-import useLiquidity from "@/hooks/useLiquidity";
-import useStaking from "@/hooks/useStaking";
-import useFarm from "@/hooks/useFarm";
 import { useDashboard } from "@/applications/Dashboard/store";
 
 type Props = {

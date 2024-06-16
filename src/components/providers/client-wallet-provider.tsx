@@ -11,9 +11,9 @@ import {
 import { useMemo } from "react";
 import ModalProvider from "./modal-provider";
 
-export function ClientWalletProvider(
+export const ClientWalletProvider = (
   props: Omit<WalletProviderProps, "wallets">
-): JSX.Element {
+) => {
   const wallets = useMemo(
     () => [new SolflareWalletAdapter(), new PhantomWalletAdapter()],
     [NETWORK]
@@ -25,6 +25,6 @@ export function ClientWalletProvider(
       <ModalProvider />
     </WalletProvider>
   );
-}
+};
 
 export default ClientWalletProvider;

@@ -2,11 +2,10 @@ import { memo } from "react";
 
 type ChartProps = {
   isEXTRASMALL: boolean;
-  tokenA: string;
-  tokenB: string;
+  tokenA?: string;
 };
 
-const Chart = memo(({ tokenB, tokenA }: ChartProps) => {
+const Chart = memo(({ tokenA }: ChartProps) => {
   return (
     <div
       className="w-full rounded-xl overflow-hidden gap-4 md:flex flex-col"

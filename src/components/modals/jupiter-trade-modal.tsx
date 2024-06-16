@@ -15,6 +15,7 @@ import { createJupiterApiClient } from "@jup-ag/api";
 import axios from "@/data/axios";
 import { TOKEN_LIST_URL } from "@jup-ag/core";
 import { useJupiterTrade } from "@/applications/Trade/store";
+import { TokenInfo } from "@solana/spl-token-registry";
 
 const client = createJupiterApiClient();
 const filterData = (data: TokenType[], searchValue: string) =>
@@ -32,7 +33,7 @@ const JupiterTradeModal = () => {
   const [search, setSearch] = useState("");
 
   const { tokenList } = useJupiterTrade();
-  const { open, onClose } = useJupiterModal();
+  const { open, onClose, target } = useJupiterModal();
 
   tokenList.length > 0
     ? tokenList.sort((a: any, b: any) => {
@@ -53,7 +54,18 @@ const JupiterTradeModal = () => {
     tokens: mainTokens,
   };
 
-  const handleSelect = useCallback(() => {}, []);
+  const handleSelect = useCallback(
+    (token: TokenInfo) => {
+      if (!token) return;
+      if (target === "tokenA") {
+        useJupiterTrade.setState({ tokenA: token });
+      } else {
+        useJupiterTrade.setState({ tokenB: token });
+      }
+      onClose();
+    },
+    [onClose, target]
+  );
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -92,7 +104,7 @@ const JupiterTradeModal = () => {
                 key={`${token.address}-default`}
                 size={"lg"}
                 className="flex gap-3 tokens-center px-4 rounded-full hover:bg-[#d9f8ff20] transition-all"
-                onClick={() => handleSelect()}
+                onClick={() => handleSelect(token)}
                 style={{
                   boxShadow: "0 0 5px rgba(217, 248, 255, 0.25)",
                 }}
@@ -127,7 +139,7 @@ const JupiterTradeModal = () => {
                   <Button
                     key={token.address}
                     className="flex justify-start w-full gap-4"
-                    onClick={() => handleSelect()}
+                    onClick={() => handleSelect(token)}
                   >
                     {token.logoURI ? (
                       <img
