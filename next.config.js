@@ -2,6 +2,7 @@
 const nextConfig = {
   pageExtensions: ["ts", "tsx"],
   images: {
+    unoptimized: true,
     disableStaticImages: true,
     remotePatterns: [
       {
