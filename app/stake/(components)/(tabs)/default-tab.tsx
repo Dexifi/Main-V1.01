@@ -124,22 +124,17 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
       }, 5000);
   }, [gdata]);
   return (
-    <div className="flex flex-col gap-7">
-      <div className="flex justify-between gap-12 mt-4 flex-col lg:flex-row">
-        <div className="flex gap-2 flex-col min-w-full sm:min-w-96">
-          <h4 className="text-[#d9f8ff]  text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-medium">
+    <div className="flex flex-col gap-7 mt-6">
+      <div className="flex justify-center flex-row items-center gap-6">
+        <div className="flex gap-2 flex-col">
+          <h4 className="text-[#d9f8ff] text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-medium">
             List of All Active Vaults for DXE Token
           </h4>
           <h6 className="text-[#757788] text-sm text-center lg:text-left">
             With Staking DXE get access to IDO sale and get APY for lock time.
           </h6>
         </div>
-        <div
-          className="w-full bg-[#142030] p-4 rounded-2xl px-4 sm:px-7 flex-1 overflow-auto max-w-sm lg:max-w-xl mx-auto"
-          style={{
-            boxShadow: "0 0 5px 1px #d9f8ff",
-          }}
-        >
+        <div className="w-full bg-[#0D111B] p-4 rounded-2xl px-4 sm:px-7 flex-1 overflow-auto max-w-sm lg:max-w-xl border border-[#757788] shadow">
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 2xl:gap-5">
             {gdata.length === 0 ? (
               <>
@@ -162,13 +157,9 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
                       row.title
                     ).toLocaleLowerCase()}-data--ido/pool-${index}`}
                   >
-                    <span className="text-xs sm:text-sm text-[#d9f8ff]">
-                      {row.title}
-                    </span>
+                    <span className="text-xl text-[#d9f8ff]">{row.title}</span>
                     {row.text ? (
-                      <span className="text-xl sm:text-2xl font-semibold text-[#757788]">
-                        {row.text}
-                      </span>
+                      <span className="text-xl sm:text-2xl font-semibold text-[#757788]"></span>
                     ) : null}
                     {row.value ? (
                       <span className="flex gap-1 flex-nowrap text-xl sm:text-2xl font-semibold text-[#757788]">
@@ -188,7 +179,7 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
       </div>
       <div className="flex flex-wrap gap-4 justify-center w-full">
         <div
-          className="flex flex-col w-full max-w-sm bg-[#142030] py-5 px-4 sm:px-7 rounded-xl gap-4"
+          className="flex flex-col w-full max-w-sm bg-[#142030] py-5 px-4 sm:px-7 rounded-[25px] gap-4"
           style={{
             boxShadow: "0 0 4px #88d6ff",
           }}
@@ -203,7 +194,7 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
               <h6 className="text-lg text-[#d9f8ff]">Vaults</h6>
 
               {d_data ? (
-                <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
+                <div className="text-sm md:text-lg text-[#D9F8FF] font-medium">
                   DXE
                 </div>
               ) : (
@@ -213,9 +204,9 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
                 <Image
                   alt={`DXE-logo / lend`}
                   src="/assets/images/dexifi-logo@2x.png"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 aspect-square object-contain rounded-sm"
+                  width={26}
+                  height={26}
+                  className="w-8 h-8 aspect-square object-contain rounded-sm"
                 />
               ) : (
                 <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
@@ -227,17 +218,17 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
             <TableBody>
               {d_data.body.map((row: any, index: number) => (
                 <TableRow
-                  className="hover:bg-transparent border-[#7c7c8d]"
+                  className="hover:bg-transparent border-[#7c7c8d] border-b-0"
                   key={`${formatedString(
                     row.title.toLocaleLowerCase()
                   )}_${index}`}
                 >
                   <TableCell
-                    className={`font-medium text-left text-[#d9f8ff] py-2 text-sm pl-0`}
+                    className={`font-medium text-left text-[#D9F8FF] py-2 text-sm pl-0`}
                   >
                     {row.title}
                   </TableCell>
-                  <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
+                  <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0 text-right">
                     {row.value && (
                       <span>
                         {typeof row.value === "number"
@@ -265,7 +256,7 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
 
           <Button
             onClick={onDepositOpen}
-            className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm"
+            className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-lg bg-[#202d3a] text-[#D9F8FF]"
             style={{
               boxShadow: "0 0 4px #88d6ff",
             }}
@@ -273,12 +264,15 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
             Deposit
           </Button>
 
-          <div className="p-4 bg-[#0d111b] rounded-xl flex flex-col gap-4">
+          <div
+            className="p-4 bg-[#0d111b] rounded-xl flex flex-col gap-4 shadow"
+            style={{ boxShadow: "0 0 4px #88d6ff" }}
+          >
             <Table className="w-full flex-1">
               <TableBody>
                 {d_data.subbody.map((row: any, index: number) => (
                   <TableRow
-                    className="hover:bg-transparent border-[#7c7c8d]"
+                    className="hover:bg-transparent border-[#7c7c8d] border-b-0"
                     key={`${formatedString(
                       row.title.toLocaleLowerCase()
                     )}_${index}`}
@@ -290,7 +284,7 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
 
                       {row.additional && <div className="min-h-5" />}
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
+                    <TableCell className="font-medium text-right text-[#7c7c8d] py-2 text-sm pr-0">
                       <div className="flex flex-col gap-2">
                         {row.value && (
                           <span>
@@ -328,10 +322,7 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
 
             <Button
               onClick={onUnstakeOpen}
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
+              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-lg bg-[#202D3A] text-[#D9F8FF]"
             >
               Unstake
             </Button>
