@@ -3,7 +3,7 @@ import {
   getProgramId,
   getReservesFromChain,
   SolendMarket,
-} from "@solendprotocol/solend-sdk/index";
+} from "@solendprotocol/solend-sdk";
 import { LendState, useLend } from "./store";
 import SwitchboardProgram from "@switchboard-xyz/sbv2-lite";
 import BigNumber from "bignumber.js";

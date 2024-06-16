@@ -12,7 +12,7 @@ const getPoolsByMarketAddress = async (
         resolve(
           useLend
             .getState()
-            .poolList.filter((r) => r.poolAddress === marketAddress)
+            .poolList.filter((r) => r?.reserve?.poolAddress === marketAddress)
         );
       }
     }, 100);

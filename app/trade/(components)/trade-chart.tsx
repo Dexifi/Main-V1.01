@@ -5,7 +5,6 @@ import OrderBook from "./OrderBook";
 import Chart from "./Chart";
 import Orders from "./Order";
 import { useTrade } from "@/applications/Trade";
-import { MARKETS } from "@openbook-dex/openbook";
 import TradeProvider from "@/applications/Trade/Provider";
 import Balance from "./Balance";
 import { CircularProgress } from "@mui/material";

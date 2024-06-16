@@ -10,7 +10,7 @@ const TradeProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (loading) return;
-    let intervalFetch: NodeJS.Timer;
+    let intervalFetch: NodeJS.Timeout;
     (async () => {
       if (wallet) {
         await initialTrade(wallet);
