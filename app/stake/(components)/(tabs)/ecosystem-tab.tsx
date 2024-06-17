@@ -1,16 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
-import moment from "moment";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -110,15 +101,13 @@ const EcosystemTab = ({ isEXTRASMALL }: Props) => {
       }, 5000);
   }, [gdata]);
   return (
-    <div className="flex flex-col gap-7">
-      <div className="flex justify-between gap-12 mt-4 flex-col lg:flex-row">
-        <div className="flex gap-2 flex-col">
-          <h4 className="text-[#d9f8ff] text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-medium">
-            List of All Active Vaults in Ecosystem
-          </h4>
-        </div>
+    <div className="flex flex-col gap-7 h-screen">
+      <div className="flex flex-row justify-between mt-4">
+        <h4 className="text-[#d9f8ff] text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-medium">
+          List of All Active Vaults in Ecosystem
+        </h4>
         <div
-          className="w-full bg-[#0D111B] p-3 rounded-2xl px-4 sm:px-7 flex-1 overflow-auto max-w-sm lg:max-w-xl mx-auto z-50"
+          className="w-full bg-[#0D111B] p-3 rounded-2xl px-4 sm:px-7 flex-1 overflow-auto max-w-sm lg:max-w-xl z-50"
           style={{
             boxShadow: "0 0 5px 0px #d9f8ff",
           }}
@@ -168,9 +157,9 @@ const EcosystemTab = ({ isEXTRASMALL }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4 justify-center">
+      <div className="flex flex-wrap gap-4 justify-start">
         <div
-          className="flex flex-col w-full max-w-sm bg-[#142030] py-5 px-4 sm:px-7 rounded-[20px] gap-4"
+          className="flex flex-col w-full bg-[#142030] py-5 px-4 sm:px-7 rounded-[20px] gap-4 max-w-[360px]"
           style={{
             boxShadow: "0 0 4px #88d6ff",
           }}

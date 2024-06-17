@@ -13,7 +13,7 @@ import formatedNumber from "@/lib/numbers";
 import formatedString from "@/lib/string";
 import moment from "moment";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type Props = {
@@ -25,6 +25,11 @@ const LiquidityStakeTab = ({ isEXTRASMALL }: Props) => {
   const [amount, setAmount] = useState(0);
   const tabsName = ["Stake", "UnStake"];
   const [tab, setTab] = useState("Stake");
+  const [showMore, setShowMore] = useState(false);
+
+  const handleShowMore = useCallback(() => {
+    setShowMore(true);
+  }, []);
 
   const d_data = {
     headers: ["My locks", "Total", "Value", "Rewards"],
@@ -129,19 +134,14 @@ const LiquidityStakeTab = ({ isEXTRASMALL }: Props) => {
       }, 5000);
   }, [gdata]);
   return (
-    <div className="flex flex-col gap-7">
+    <div className="flex flex-col gap-7 h-screen">
       <div className="flex justify-between gap-12 mt-4 flex-col lg:flex-row">
-        <div
-          className="w-full bg-[#142030] p-4 rounded-2xl px-4 sm:px-7 flex-1 gap-4 flex justify-between items-center"
-          style={{
-            boxShadow: "0 0 5px 1px #d9f8ff",
-          }}
-        >
-          <div className="flex flex-col gap-4 max-w-xl">
-            <h4 className="text-[#d9f8ff] text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-mediuml">
+        <div className="w-full bg-[#0D111B] p-4 rounded-2xl px-4 sm:px-7 flex-1 gap-4 flex justify-between items-center z-10 shadow-[0px_0px_4px_0px_#88D6FF]">
+          <div className="flex flex-col gap-1">
+            <h4 className="text-[#d9f8ff] text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-medium">
               List of All Liquidity Stake Provided in Network For Staking Solana
             </h4>
-            <h6 className="text-[#d9f8ff] text-sm">
+            <h6 className="text-[#757788] text-sm">
               Note that Unstaking takes between 2-3 days, you can always
               exchange your tokens with Swap.
             </h6>
@@ -161,9 +161,9 @@ const LiquidityStakeTab = ({ isEXTRASMALL }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-4">
+      <div className="flex flex-wrap justify-start gap-4">
         <div
-          className="flex flex-col w-full max-w-sm bg-[#142030] py-5 px-4 rounded-[20px]"
+          className="flex flex-col w-full bg-[#142030] py-5 px-4 rounded-[20px] max-w-[360px]"
           style={{
             boxShadow: "0 0 4px #88d6ff",
           }}
@@ -249,228 +249,231 @@ const LiquidityStakeTab = ({ isEXTRASMALL }: Props) => {
             </div>
             <Button
               className={
-                "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow w-full"
+                "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow w-full z-50"
               }
               style={{ boxShadow: "0 0 4px #88d6ff" }}
+              onClick={handleShowMore}
             >
               More
             </Button>
-            <Tabs className={"text-white mt-4"}>
-              <div className={"flex flex-row justify-center items-center"}>
-                <div className={"bg-[#0D111B] rounded-[25px] h-[45px]"}>
-                  <TabsList className={"flex flex-row gap-1 h-[45px]"}>
-                    {tabsName.map((tab_item, index) => {
-                      return (
-                        <TabsTrigger
-                          value={tab_item.toLocaleLowerCase()}
-                          className="h-[45px] bg-[#0D111B] data-[state='active']:bg-[#212832] data-[state='active']:border-[#D9F8FF] rounded-[25px] shadow-[0px_0px_5px_0px_#D9F8FF] min-w-[100px] text-[#FFFFFF]"
-                          style={{
-                            border:
-                              tab_item.toLocaleLowerCase() === tab
-                                ? "1px solid #d9f8ff10"
-                                : "transparent",
-                            boxShadow:
-                              tab_item.toLocaleLowerCase() === tab
-                                ? "0 0 5px #d9f8ff"
-                                : "none",
-                          }}
-                          onClick={() => setTab(tab_item.toLocaleLowerCase())}
-                          key={index}
-                        >
-                          {tab_item}
-                        </TabsTrigger>
-                      );
-                    })}
-                  </TabsList>
+            {showMore && (
+              <Tabs className={"text-white mt-4"}>
+                <div className={"flex flex-row justify-center items-center"}>
+                  <div className={"bg-[#0D111B] rounded-[25px] h-[45px]"}>
+                    <TabsList className={"flex flex-row gap-1 h-[45px]"}>
+                      {tabsName.map((tab_item, index) => {
+                        return (
+                          <TabsTrigger
+                            value={tab_item.toLocaleLowerCase()}
+                            className="h-[45px] bg-[#0D111B] data-[state='active']:bg-[#212832] data-[state='active']:border-[#D9F8FF] rounded-[25px] shadow-[0px_0px_5px_0px_#D9F8FF] min-w-[100px] text-[#FFFFFF] z-50"
+                            style={{
+                              border:
+                                tab_item.toLocaleLowerCase() === tab
+                                  ? "1px solid #d9f8ff10"
+                                  : "transparent",
+                              boxShadow:
+                                tab_item.toLocaleLowerCase() === tab
+                                  ? "0 0 5px #d9f8ff"
+                                  : "none",
+                            }}
+                            onClick={() => setTab(tab_item.toLocaleLowerCase())}
+                            key={index}
+                          >
+                            {tab_item}
+                          </TabsTrigger>
+                        );
+                      })}
+                    </TabsList>
+                  </div>
                 </div>
-              </div>
-              <div className={"mt-6"}>
-                <TabsContent value={"stake"} className={"text-white"}>
-                  <div
-                    className={
-                      "shadow-[0px_0px_5px_0px_#FFF] bg-[#0D111B] rounded-[10px] p-3"
-                    }
-                  >
-                    <div className={"bg-[#202D3A] rounded-[10px] p-3"}>
-                      <div className={"flex flex-row gap-3"}>
-                        <div
-                          className={
-                            "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-full"
-                          }
-                        >
-                          <img
-                            className={"w-6 h-6 rounded-full"}
-                            src={
-                              "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
-                            }
-                          />
-                          <p
+                <div className={"mt-6"}>
+                  <TabsContent value={"stake"} className={"text-white"}>
+                    <div
+                      className={
+                        "shadow-[0px_0px_5px_0px_#FFF] bg-[#0D111B] rounded-[10px] p-3"
+                      }
+                    >
+                      <div className={"bg-[#202D3A] rounded-[10px] p-3"}>
+                        <div className={"flex flex-row gap-3"}>
+                          <div
                             className={
-                              "text-[#D9F8FF] font-medium w-full text-center text-base"
+                              "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-full"
                             }
                           >
-                            SOL
-                          </p>
-                        </div>
-                        <input
-                          className={
-                            "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-full"
-                          }
-                        />
-                      </div>
-
-                      <div
-                        className={
-                          "flex flex-row text-sm text-[#757788] font-medium mt-1"
-                        }
-                      >
-                        <p>Balance:</p>
-                        <p>113.66987 SOL</p>
-                      </div>
-                    </div>
-                    <div className={"flex flex-row justify-end mt-4 "}>
-                      <div />
-                      <Button
-                        size={"sm"}
-                        className={
-                          "shadow-[0px_0px_5px_0px_#D9F8FF] bg-[#202D3A] rounded-full px-6 w-[65px]"
-                        }
-                      >
-                        Max
-                      </Button>
-                    </div>
-                    <div className={"text-sm px-4 font-medium"}>
-                      <div className={"flex flex-row"}>
-                        <div />
-                        <p>Exchange rate</p>
-                      </div>
-                      <div className={"flex flex-row justify-end"}>
-                        <div />
-                        <div className={"flex flex-row text-[#757788]"}>
-                          <p>1 SOL</p>
-                          <p>≈</p>
-                          <p>0.90790 mSOL</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className={"text-sm px-4 font-medium"}>
-                      <div className={"flex flex-row"}>
-                        <div />
-                        <p>Value</p>
-                      </div>
-                      <div className={"flex flex-row justify-end"}>
-                        <div />
-                        <div className={"flex flex-row text-[#757788]"}>
-                          <p>10 mSOL</p>
-                          <p>≈</p>
-                          <p>$ 104.23</p>
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      className={
-                        "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow w-full"
-                      }
-                      style={{ boxShadow: "0 0 4px #88d6ff" }}
-                    >
-                      Stake
-                    </Button>
-                  </div>
-                </TabsContent>
-                <TabsContent value={"unstake"} className={"text-white"}>
-                  <div
-                    className={
-                      "shadow-[0px_0px_5px_0px_#FFF] bg-[#0D111B] rounded-[10px] p-3"
-                    }
-                  >
-                    <div className={"bg-[#202D3A] rounded-[10px] p-3"}>
-                      <div className={"flex flex-row gap-3"}>
-                        <div
-                          className={
-                            "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-full"
-                          }
-                        >
-                          <img
-                            className={"w-6 h-6 rounded-full"}
-                            src={
-                              "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                            <img
+                              className={"w-6 h-6 rounded-full"}
+                              src={
+                                "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                              }
+                            />
+                            <p
+                              className={
+                                "text-[#D9F8FF] font-medium w-full text-center text-base"
+                              }
+                            >
+                              SOL
+                            </p>
+                          </div>
+                          <input
+                            className={
+                              "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-full"
                             }
                           />
-                          <p
-                            className={
-                              "text-[#D9F8FF] font-medium w-full text-center text-base"
-                            }
-                          >
-                            mSOL
-                          </p>
                         </div>
-                        <input
-                          className={
-                            "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-full"
-                          }
-                        />
-                      </div>
 
-                      <div
-                        className={
-                          "flex flex-row text-sm text-[#757788] font-medium mt-1"
-                        }
-                      >
-                        <p>Balance:</p>
-                        <p>113.66987 SOL</p>
+                        <div
+                          className={
+                            "flex flex-row text-sm text-[#757788] font-medium mt-1"
+                          }
+                        >
+                          <p>Balance:</p>
+                          <p>113.66987 SOL</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className={"flex flex-row justify-end mt-4 "}>
-                      <div />
+                      <div className={"flex flex-row justify-end mt-4 "}>
+                        <div />
+                        <Button
+                          size={"sm"}
+                          className={
+                            "shadow-[0px_0px_5px_0px_#D9F8FF] bg-[#202D3A] rounded-full px-6 w-[65px]"
+                          }
+                        >
+                          Max
+                        </Button>
+                      </div>
+                      <div className={"text-sm px-4 font-medium"}>
+                        <div className={"flex flex-row"}>
+                          <div />
+                          <p>Exchange rate</p>
+                        </div>
+                        <div className={"flex flex-row justify-end"}>
+                          <div />
+                          <div className={"flex flex-row text-[#757788]"}>
+                            <p>1 SOL</p>
+                            <p>≈</p>
+                            <p>0.90790 mSOL</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={"text-sm px-4 font-medium"}>
+                        <div className={"flex flex-row"}>
+                          <div />
+                          <p>Value</p>
+                        </div>
+                        <div className={"flex flex-row justify-end"}>
+                          <div />
+                          <div className={"flex flex-row text-[#757788]"}>
+                            <p>10 mSOL</p>
+                            <p>≈</p>
+                            <p>$ 104.23</p>
+                          </div>
+                        </div>
+                      </div>
                       <Button
-                        size={"sm"}
                         className={
-                          "shadow-[0px_0px_5px_0px_#D9F8FF] bg-[#202D3A] rounded-full px-6 w-[65px]"
+                          "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow w-full"
                         }
+                        style={{ boxShadow: "0 0 4px #88d6ff" }}
                       >
-                        Max
+                        Stake
                       </Button>
                     </div>
-                    <div className={"text-sm px-4 font-medium"}>
-                      <div className={"flex flex-row"}>
-                        <div />
-                        <p>Exchange rate</p>
-                      </div>
-                      <div className={"flex flex-row justify-end"}>
-                        <div />
-                        <div className={"flex flex-row text-[#757788]"}>
-                          <p>1 SOL</p>
-                          <p>≈</p>
-                          <p>0.90790 mSOL</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className={"text-sm px-4 font-medium"}>
-                      <div className={"flex flex-row"}>
-                        <div />
-                        <p>Value</p>
-                      </div>
-                      <div className={"flex flex-row justify-end"}>
-                        <div />
-                        <div className={"flex flex-row text-[#757788]"}>
-                          <p>10 mSOL</p>
-                          <p>≈</p>
-                          <p>$ 104.23</p>
-                        </div>
-                      </div>
-                    </div>
-                    <Button
+                  </TabsContent>
+                  <TabsContent value={"unstake"} className={"text-white"}>
+                    <div
                       className={
-                        "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow w-full"
+                        "shadow-[0px_0px_5px_0px_#FFF] bg-[#0D111B] rounded-[10px] p-3"
                       }
-                      style={{ boxShadow: "0 0 4px #88d6ff" }}
                     >
-                      Unstake
-                    </Button>
-                  </div>
-                </TabsContent>
-              </div>
-            </Tabs>
+                      <div className={"bg-[#202D3A] rounded-[10px] p-3"}>
+                        <div className={"flex flex-row gap-3"}>
+                          <div
+                            className={
+                              "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-full"
+                            }
+                          >
+                            <img
+                              className={"w-6 h-6 rounded-full"}
+                              src={
+                                "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                              }
+                            />
+                            <p
+                              className={
+                                "text-[#D9F8FF] font-medium w-full text-center text-base"
+                              }
+                            >
+                              mSOL
+                            </p>
+                          </div>
+                          <input
+                            className={
+                              "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-full"
+                            }
+                          />
+                        </div>
+
+                        <div
+                          className={
+                            "flex flex-row text-sm text-[#757788] font-medium mt-1"
+                          }
+                        >
+                          <p>Balance:</p>
+                          <p>113.66987 SOL</p>
+                        </div>
+                      </div>
+                      <div className={"flex flex-row justify-end mt-4 "}>
+                        <div />
+                        <Button
+                          size={"sm"}
+                          className={
+                            "shadow-[0px_0px_5px_0px_#D9F8FF] bg-[#202D3A] rounded-full px-6 w-[65px]"
+                          }
+                        >
+                          Max
+                        </Button>
+                      </div>
+                      <div className={"text-sm px-4 font-medium"}>
+                        <div className={"flex flex-row"}>
+                          <div />
+                          <p>Exchange rate</p>
+                        </div>
+                        <div className={"flex flex-row justify-end"}>
+                          <div />
+                          <div className={"flex flex-row text-[#757788]"}>
+                            <p>1 SOL</p>
+                            <p>≈</p>
+                            <p>0.90790 mSOL</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={"text-sm px-4 font-medium"}>
+                        <div className={"flex flex-row"}>
+                          <div />
+                          <p>Value</p>
+                        </div>
+                        <div className={"flex flex-row justify-end"}>
+                          <div />
+                          <div className={"flex flex-row text-[#757788]"}>
+                            <p>10 mSOL</p>
+                            <p>≈</p>
+                            <p>$ 104.23</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        className={
+                          "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow w-full z-50"
+                        }
+                        style={{ boxShadow: "0 0 4px #88d6ff" }}
+                      >
+                        Unstake
+                      </Button>
+                    </div>
+                  </TabsContent>
+                </div>
+              </Tabs>
+            )}
           </div>
         </div>
       </div>

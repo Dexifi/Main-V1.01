@@ -124,8 +124,8 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
       }, 5000);
   }, [gdata]);
   return (
-    <div className="flex flex-col gap-7 mt-6">
-      <div className="flex justify-center flex-row items-center gap-6">
+    <div className="flex flex-col gap-7 mt-6 h-screen">
+      <div className="flex justify-between flex-row items-center gap-6">
         <div className="flex gap-2 flex-col">
           <h4 className="text-[#d9f8ff] text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-medium">
             List of All Active Vaults for DXE Token
@@ -177,9 +177,9 @@ const DefaultTab = ({ isEXTRASMALL }: Props) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap gap-4 justify-center w-full">
+      <div className="flex flex-wrap gap-4 justify-start w-full">
         <div
-          className="flex flex-col w-full max-w-sm bg-[#142030] py-5 px-4 sm:px-7 rounded-[25px] gap-4"
+          className="flex flex-col w-full bg-[#142030] py-5 px-4 sm:px-7 rounded-[25px] gap-4 max-w-[360px]"
           style={{
             boxShadow: "0 0 4px #88d6ff",
           }}

@@ -1,5 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import formatedNumber from "@/lib/numbers";
+import formatedString from "@/lib/string";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDepositModal, useUnstakeModal } from "@/lib/stores/stake.store";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,18 +12,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import formatedNumber from "@/lib/numbers";
-import formatedString from "@/lib/string";
-import moment from "moment";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-
 type Props = {
   isEXTRASMALL: boolean;
 };
 
 const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
   const [gdata, setData] = useState<any[]>([]);
+  const { onDepositOpen } = useDepositModal();
+  const { onUnstakeOpen } = useUnstakeModal();
+  const [showMore, setShowMore] = useState(true);
+  const [showDeposit, setShowDeposit] = useState(true);
+
+  const showMoreClick = useCallback(() => {
+    setShowMore(true);
+  }, []);
+
+  const depositClick = useCallback(() => {
+    setShowDeposit(true);
+  }, []);
   const d_data = {
     headers: ["My locks", "Total", "Value", "Rewards"],
     body: [
@@ -101,18 +112,15 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
       }, 5000);
   }, [gdata]);
   return (
-    <div className="flex flex-col gap-7">
-      <div className="flex justify-between gap-12 mt-4 flex-col lg:flex-row">
-        <div className="flex gap-2 flex-col min-w-full sm:min-w-96">
-          <h4 className="text-[#d9f8ff]  text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-medium">
-            List of All Active Vaults in Ecosystem
-          </h4>
-        </div>
+    <div className="flex flex-col gap-10 mt-16">
+      <div className="flex justify-between">
+        <h4 className="text-[#d9f8ff] text-2xl sm:text-4xl text-center lg:text-left font-['Helvetica'] font-medium">
+          List of All Active Vaults in Ecosystem
+        </h4>
+
         <div
-          className="w-full bg-[#142030] p-4 rounded-2xl px-4 sm:px-7 flex-1 overflow-auto max-w-sm lg:max-w-xl mx-auto"
-          style={{
-            boxShadow: "0 0 5px 1px #d9f8ff",
-          }}
+          className="w-full bg-[#0D111B] p-4 rounded-[20px] px-4 overflow-auto z-10 max-w-[540px] shadow-[0px_0px_5px_0px_rgba(217,248,255,0.50)]"
+          style={{}}
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 2xl:gap-5">
             {gdata.length === 0 ? (
@@ -131,22 +139,20 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
               <>
                 {gdata.map((row, index) => (
                   <div
-                    className="flex flex-col gap-2"
+                    className="flex flex-col gap-0.5"
                     key={`${formatedString(
                       row.title
                     ).toLocaleLowerCase()}-data--ido/pool-${index}`}
                   >
-                    <span className="text-xs sm:text-sm text-[#d9f8ff]">
+                    <span className="text-base text-[#D9F8FF] font-medium">
                       {row.title}
                     </span>
                     {row.text ? (
-                      <span className="text-3xl font-semibold text-[#757788]">
-                        {row.text}
-                      </span>
+                      <span className="text-3xl font-semibold text-[#757788]"></span>
                     ) : null}
                     {row.value ? (
-                      <span className="flex gap-1 flex-nowrap text-3xl font-semibold text-[#757788]">
-                        <span>{row.f_currency}</span>
+                      <span className="flex gap-0.5 flex-nowrap text-xl font-semibold text-[#757788]">
+                        $<span>{row.f_currency}</span>
                         <span>
                           {formatedNumber(row.value, 0, isEXTRASMALL)}
                         </span>
@@ -161,9 +167,10 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4 justify-center">
+      {/*  ss*/}
+      <div className="flex flex-wrap justify-start w-full gap-4">
         <div
-          className="flex flex-col w-full max-w-sm bg-[#142030] py-5 px-4 sm:px-7 rounded-xl gap-4"
+          className="flex flex-col min-w-[320px] bg-[#142030] py-5 px-4 sm:px-4 rounded-[25px] gap-4 h-fit"
           style={{
             boxShadow: "0 0 4px #88d6ff",
           }}
@@ -178,8 +185,8 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
               <h6 className="text-lg text-[#d9f8ff]">Vaults</h6>
 
               {d_data ? (
-                <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  RAY
+                <div className="text-sm md:text-lg text-[#D9F8FF] font-medium">
+                  DXE
                 </div>
               ) : (
                 <Skeleton className="w-24 h-6 bg-slate-600" />
@@ -188,9 +195,9 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
                 <Image
                   alt={`DXE-logo / lend`}
                   src="/assets/images/dexifi-logo@2x.png"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 aspect-square object-contain rounded-sm"
+                  width={26}
+                  height={26}
+                  className="w-8 h-8 aspect-square object-contain rounded-sm"
                 />
               ) : (
                 <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
@@ -198,21 +205,21 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
             </div>
           </div>
 
-          <Table className="w-full flex-1">
+          <Table className="min-w-[320px]">
             <TableBody>
               {d_data.body.map((row: any, index: number) => (
                 <TableRow
-                  className="hover:bg-transparent border-[#7c7c8d]"
+                  className="hover:bg-transparent border-[#7c7c8d] border-b-0"
                   key={`${formatedString(
                     row.title.toLocaleLowerCase()
                   )}_${index}`}
                 >
                   <TableCell
-                    className={`font-medium text-left text-[#d9f8ff] py-2 text-sm pl-0`}
+                    className={`font-medium text-left text-[#D9F8FF] py-2 text-sm pl-0`}
                   >
                     {row.title}
                   </TableCell>
-                  <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
+                  <TableCell className="font-medium text-[#7c7c8d] py-2 text-sm pr-0 text-right">
                     {row.value && (
                       <span>
                         {typeof row.value === "number"
@@ -239,8 +246,8 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
           </Table>
 
           <Button
-            onClick={() => {}}
-            className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm"
+            onClick={onDepositOpen}
+            className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-lg bg-[#202d3a] text-[#D9F8FF]"
             style={{
               boxShadow: "0 0 4px #88d6ff",
             }}
@@ -248,12 +255,15 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
             Deposit
           </Button>
 
-          <div className="p-4 bg-[#0d111b] rounded-xl flex flex-col gap-4">
+          <div
+            className="p-4 bg-[#0d111b] rounded-xl flex flex-col gap-4 shadow"
+            style={{ boxShadow: "0 0 4px #88d6ff" }}
+          >
             <Table className="w-full flex-1">
               <TableBody>
                 {d_data.subbody.map((row: any, index: number) => (
                   <TableRow
-                    className="hover:bg-transparent border-[#7c7c8d]"
+                    className="hover:bg-transparent border-[#7c7c8d] border-b-0"
                     key={`${formatedString(
                       row.title.toLocaleLowerCase()
                     )}_${index}`}
@@ -265,7 +275,7 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
 
                       {row.additional && <div className="min-h-5" />}
                     </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
+                    <TableCell className="font-medium text-right text-[#7c7c8d] py-2 text-sm pr-0">
                       <div className="flex flex-col gap-2">
                         {row.value && (
                           <span>
@@ -302,182 +312,333 @@ const MyVaultsTab = ({ isEXTRASMALL }: Props) => {
             </Table>
 
             <Button
-              onClick={() => {}}
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-            >
-              Claim Pending
-            </Button>
-            <Button
-              onClick={() => {}}
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
+              onClick={onUnstakeOpen}
+              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-lg bg-[#202D3A] text-[#D9F8FF]"
             >
               Unstake
             </Button>
           </div>
         </div>
-        <div
-          className="flex flex-col w-full max-w-sm bg-[#142030] py-5 px-4 sm:px-7 rounded-xl gap-4"
-          style={{
-            boxShadow: "0 0 4px #88d6ff",
-          }}
-        >
-          <div className="flex justify-between flex-col gap-3">
-            <div
-              className="flex justify-between items-center py-2 px-4 rounded-full bg-[#0d111b]"
-              style={{
-                boxShadow: "0 0 5px rgba(217, 248, 255, 0.25)",
-              }}
-            >
-              <h6 className="text-lg text-[#d9f8ff]">Vaults</h6>
-
-              {d_data ? (
-                <div className="text-sm md:text-lg text-[#d9f8ff60] font-medium">
-                  RAY
-                </div>
-              ) : (
-                <Skeleton className="w-24 h-6 bg-slate-600" />
-              )}
-              {d_data ? (
-                <Image
-                  alt={`DXE-logo / lend`}
-                  src="/assets/images/dexifi-logo@2x.png"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 aspect-square object-contain rounded-sm"
-                />
-              ) : (
-                <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
-              )}
-            </div>
-          </div>
-
-          <Table className="w-full flex-1">
-            <TableBody>
-              {d_data.body.map((row: any, index: number) => (
-                <TableRow
-                  className="hover:bg-transparent border-[#7c7c8d]"
-                  key={`${formatedString(
-                    row.title.toLocaleLowerCase()
-                  )}_${index}`}
-                >
-                  <TableCell
-                    className={`font-medium text-left text-[#d9f8ff] py-2 text-sm pl-0`}
-                  >
-                    {row.title}
-                  </TableCell>
-                  <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
-                    {row.value && (
-                      <span>
-                        {typeof row.value === "number"
-                          ? `${
-                              row.f_currency ? row.f_currency : ""
-                            }${formatedNumber(row.value, 2, isEXTRASMALL)} ${
-                              row.currency ? row.currency : ""
-                            }`
-                          : "0"}
-                      </span>
-                    )}
-                    {row.text && <span>{row.text}</span>}
-                    {row.range
-                      ? `${formatedNumber(row.range.min, 2, true)}${
-                          row.range.sign
-                        } to ${formatedNumber(row.range.max, 2, true)}${
-                          row.range.sign
-                        }`
-                      : null}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-
-          <Button
-            onClick={() => {}}
-            className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm"
+        {/*second card */}
+        <div className="flex flex-wrap gap-4 justify-center">
+          <div
+            className="flex flex-col max-w-[380px] bg-[#142030] py-5 px-4 sm:px-4 rounded-[20px] gap-4"
             style={{
               boxShadow: "0 0 4px #88d6ff",
             }}
           >
-            Deposit
-          </Button>
+            <div className="flex justify-center flex-col gap-3 w-full">
+              <div className="flex justify-between items-center py-2 px-8 rounded-full bg-[#0D111B] z-50">
+                <h6 className="text-xl text-[#D9F8FF]">Vaults</h6>
 
-          <div className="p-4 bg-[#0d111b] rounded-xl flex flex-col gap-4">
-            <Table className="w-full flex-1">
-              <TableBody>
-                {d_data.subbody.map((row: any, index: number) => (
-                  <TableRow
-                    className="hover:bg-transparent border-[#7c7c8d]"
-                    key={`${formatedString(
-                      row.title.toLocaleLowerCase()
-                    )}_${index}`}
-                  >
-                    <TableCell
-                      className={`font-medium text-left text-[#d9f8ff] py-2 text-sm pl-0`}
+                {d_data ? (
+                  <div className="text-xl text-[#D9F8FF] font-medium">RAY</div>
+                ) : (
+                  <Skeleton className="w-24 h-6 bg-slate-600" />
+                )}
+                {d_data ? (
+                  <Image
+                    alt={`DXE-logo / lend`}
+                    src="/assets/images/dexifi-logo@2x.png"
+                    width={24}
+                    height={24}
+                    className="w-8 h-8 aspect-square object-contain rounded-sm"
+                  />
+                ) : (
+                  <Skeleton className="w-6 h-6 aspect-square object-contain bg-slate-600" />
+                )}
+              </div>
+            </div>
+
+            <div className={"flex flex-col text-white gap-1"}>
+              <div className={"flex flex-row justify-between"}>
+                <p className={"text-[#D9F8FF] text-base font-medium"}>APR</p>
+                <p className={"text-[#757788] font-medium text-base"}>10.0%</p>
+              </div>
+              <div className={"flex flex-row justify-between"}>
+                <p className={"text-[#D9F8FF] text-base font-medium"}>
+                  Provider
+                </p>
+                <p className={"text-[#757788] font-medium text-base"}>10.0%</p>
+              </div>
+              <div className={"flex flex-row justify-between"}>
+                <p className={"text-[#D9F8FF] text-base font-medium"}>Reward</p>
+                <p className={"text-[#757788] font-medium text-base"}>10.0%</p>
+              </div>
+              {showMore && (
+                <>
+                  <div className={"flex flex-row justify-between"}>
+                    <p className={"text-[#D9F8FF] text-base font-medium"}>
+                      TVL
+                    </p>
+                    <p className={"text-[#757788] font-medium text-base"}>
+                      $5,373,978
+                    </p>
+                  </div>
+                  <div className={"flex flex-row justify-between"}>
+                    <p className={"text-[#D9F8FF] text-base font-medium"}>
+                      TVL $
+                    </p>
+                    <p className={"text-[#757788] font-medium text-base"}>
+                      24.051.027 RAY
+                    </p>
+                  </div>
+                  <div className={"flex flex-row justify-between"}>
+                    <p className={"text-[#D9F8FF] text-base font-medium"}>
+                      Lock Time
+                    </p>
+                    <p className={"text-[#757788] font-medium text-base"}>-</p>
+                  </div>
+                  <div className={"flex flex-row justify-between"}>
+                    <p className={"text-[#D9F8FF] text-base font-medium"}>
+                      Withdraw
+                    </p>
+                    <p className={"text-[#757788] font-medium text-base"}>-</p>
+                  </div>
+                  <div className={"flex flex-row justify-between"}>
+                    <p className={"text-[#D9F8FF] text-base font-medium"}>
+                      Pending
+                    </p>
+                    <p className={"text-[#757788] font-medium text-base"}>-</p>
+                  </div>
+                  <div className={"mt-4"}>
+                    <div
+                      className={
+                        "flex flex-row text-sm text-[#757788] ml-2 mb-1 font-medium gap-2"
+                      }
                     >
-                      {row.title}
-
-                      {row.additional && <div className="min-h-5" />}
-                    </TableCell>
-                    <TableCell className="font-medium text-left text-[#7c7c8d] py-2 text-sm pr-0">
-                      <div className="flex flex-col gap-2">
-                        {row.value && (
-                          <span>
-                            {typeof row.value === "number"
-                              ? `${
-                                  row.f_currency ? row.f_currency : ""
-                                }${formatedNumber(
-                                  row.value,
-                                  2,
-                                  isEXTRASMALL
-                                )} ${row.currency ? row.currency : ""}`
-                              : "0"}
-                          </span>
-                        )}
-                        {row.text && <span>{row.text}</span>}
-                        {row.additional && (
-                          <span>
-                            {row.additional_c}
-                            {row.additional}
-                          </span>
-                        )}
-                        {row.range
-                          ? `${formatedNumber(row.range.min, 2, true)}${
-                              row.range.sign
-                            } to ${formatedNumber(row.range.max, 2, true)}${
-                              row.range.sign
-                            }`
-                          : null}
+                      <p>Deposited:</p>
+                      <p>113.66987 RAY</p>
+                    </div>
+                    <div className={"bg-[#0D111B] rounded-[20px] p-4 relative"}>
+                      <div
+                        className={"flex flex-row justify-between w-full gap-3"}
+                      >
+                        <div className={"w-full"}>
+                          <div
+                            className={
+                              "flex flex-row w-full justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow"
+                            }
+                            style={{ boxShadow: "0 0 4px #88d6ff" }}
+                          >
+                            <img
+                              className={"w-6 h-6 rounded-full"}
+                              src={
+                                "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                              }
+                            />
+                            <p
+                              className={
+                                "text-[#D9F8FF] font-medium w-full text-center text-base"
+                              }
+                            >
+                              RAY
+                            </p>
+                          </div>
+                          <div className={"flex flex-row"}>
+                            <div
+                              className={"flex flex-row justify-between gap-3"}
+                            >
+                              <div
+                                className={
+                                  "flex flex-row justify-between items-center mt-3 gap-2"
+                                }
+                              >
+                                <button
+                                  className={
+                                    "py-2 rounded-[25px] px-6 bg-gray-900"
+                                  }
+                                  style={{ boxShadow: "0 0 4px #88d6ff" }}
+                                >
+                                  Half
+                                </button>
+                                <button
+                                  className={
+                                    "py-2 rounded-[25px] px-6 bg-gray-900"
+                                  }
+                                  style={{ boxShadow: "0 0 4px #88d6ff" }}
+                                >
+                                  Max
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={"w-full"}>
+                          <input
+                            className={
+                              "w-full rounded-[25px] border h-10 border-[#757788]"
+                            }
+                          />
+                          <div
+                            className={
+                              "mt-5 flex flex-row justify-end text-[#757788] font-medium"
+                            }
+                          >
+                            <p>$222.3453</p>
+                          </div>
+                        </div>
                       </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                    </div>
+                  </div>
+                  <Button
+                    className={
+                      "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow"
+                    }
+                    style={{ boxShadow: "0 0 4px #88d6ff" }}
+                    onClick={depositClick}
+                  >
+                    Deposit
+                  </Button>
+                  {showDeposit && (
+                    <div
+                      className={
+                        "bg-[#0D111B] rounded-[20px] p-4 relative mt-4"
+                      }
+                    >
+                      <div
+                        className={"flex flex-row justify-between text-base"}
+                      >
+                        <p>Deposited</p>
+                        <div
+                          className={
+                            "flex flex-row gap-1 text-[#757788] font-medium"
+                          }
+                        >
+                          <p>200.032</p>
+                          <p>Ray</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "flex flex-row justify-between text-base mt-1"
+                        }
+                      >
+                        <div />
+                        <div
+                          className={"flex flex-row text-[#757788] font-medium"}
+                        >
+                          <p>$ 200.32</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "flex flex-row justify-between text-base mt-1"
+                        }
+                      >
+                        <p>Pending Rewards</p>
+                        <div
+                          className={
+                            "flex flex-row gap-1 text-[#757788] font-medium"
+                          }
+                        >
+                          <p>200.032</p>
+                          <p>Ray</p>
+                        </div>
+                      </div>
+                      <div
+                        className={
+                          "flex flex-row justify-between text-base mt-1"
+                        }
+                      >
+                        <div />
+                        <div
+                          className={"flex flex-row text-[#757788] font-medium"}
+                        >
+                          <p>$ 200.32</p>
+                        </div>
+                      </div>
+                      <Button
+                        className={
+                          "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow w-full"
+                        }
+                        style={{ boxShadow: "0 0 4px #88d6ff" }}
+                      >
+                        Claim Pending
+                      </Button>
+                      <div
+                        className={
+                          "mt-3 flex flex-row w-full justify-between gap-3"
+                        }
+                      >
+                        <div className={"w-full"}>
+                          <div
+                            className={
+                              "flex flex-row justify-between bg-gray-900 rounded-[25px] py-2 px-4 items-center shadow w-[150px]"
+                            }
+                            style={{ boxShadow: "0 0 4px #88d6ff" }}
+                          >
+                            <img
+                              className={"w-6 h-6 rounded-full"}
+                              src={
+                                "https://img.raydium.io/icon/So11111111111111111111111111111111111111112.png"
+                              }
+                            />
+                            <p
+                              className={
+                                "text-[#D9F8FF] font-medium w-full text-center text-base"
+                              }
+                            >
+                              RAY
+                            </p>
+                          </div>
+                          <div
+                            className={
+                              "flex flex-row justify-between items-center mt-3 gap-2"
+                            }
+                          >
+                            <button
+                              className={
+                                "py-2 rounded-[25px] px-4 bg-gray-900 w-full"
+                              }
+                              style={{ boxShadow: "0 0 4px #88d6ff" }}
+                            >
+                              Half
+                            </button>
+                            <button
+                              className={
+                                "py-2 rounded-[25px] px-4 bg-gray-900 w-full"
+                              }
+                              style={{ boxShadow: "0 0 4px #88d6ff" }}
+                            >
+                              Max
+                            </button>
+                          </div>
+                        </div>
+                        <div className={"w-full items-center"}>
+                          <input
+                            className={
+                              "w-full rounded-[25px] border h-10 border-[#757788]"
+                            }
+                          />
+                        </div>
+                      </div>
+                      <Button
+                        className={
+                          "text-[22px] mt-4 rounded-[25px] bg-[#202D3A] py-6 shadow w-full"
+                        }
+                        style={{ boxShadow: "0 0 4px #88d6ff" }}
+                      >
+                        Unstake
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
 
-            <Button
-              onClick={() => {}}
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-            >
-              Claim Pending
-            </Button>
-            <Button
-              onClick={() => {}}
-              className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm"
-              style={{
-                boxShadow: "0 0 4px #88d6ff",
-              }}
-            >
-              Unstake
-            </Button>
+            {!showMore && (
+              <Button
+                size={"lg"}
+                onClick={showMoreClick}
+                className="rounded-full hover:bg-[#D9F8FF20] flex justify-center items-center box-border gap-2 w-full bg-transparent text-sm bg-[#202D3A] text-[#D9F8FF] text-[22px] z-50"
+                style={{
+                  boxShadow: "0 0 4px #88d6ff",
+                }}
+              >
+                More
+              </Button>
+            )}
           </div>
         </div>
       </div>
