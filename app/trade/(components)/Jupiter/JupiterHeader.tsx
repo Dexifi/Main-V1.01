@@ -4,8 +4,6 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import formatedNumber from "@/lib/numbers";
 import { useJupiterTrade } from "@/applications/Trade/store";
 import { useEffect, useState } from "react";
-import { TokenType } from "@/stores/tokens";
-import { TOKEN_LIST_URL } from "@jup-ag/core";
 import { connection } from "@/lib/get-connections";
 import { ParsedTransactionWithMeta, PublicKey } from "@solana/web3.js";
 

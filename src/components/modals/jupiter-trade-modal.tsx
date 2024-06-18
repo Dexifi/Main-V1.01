@@ -5,19 +5,14 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
-import { useAtom } from "jotai";
-import { tokenAtom, TokenType } from "@/stores/tokens";
+import { TokenType } from "@/stores/tokens";
 import { mainTokens } from "@/configuration/tokens";
 import { useJupiterModal } from "@/lib/stores/trade.store";
-import { createJupiterApiClient } from "@jup-ag/api";
-import axios from "@/data/axios";
-import { TOKEN_LIST_URL } from "@jup-ag/core";
 import { useJupiterTrade } from "@/applications/Trade/store";
 import { TokenInfo } from "@solana/spl-token-registry";
 
-const client = createJupiterApiClient();
 const filterData = (data: TokenType[], searchValue: string) =>
   data.filter(
     (token: TokenType) =>
