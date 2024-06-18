@@ -7,9 +7,7 @@ import { toast } from "@/components/ui/use-toast";
 import { connection } from "@/lib/get-connections";
 import { JupTradeState, useJupiterTrade } from "@/applications/Trade/store";
 import { TokenType } from "@/stores/tokens";
-import { TOKEN_LIST_URL } from "@jup-ag/core";
-
-import axios from "@/data/axios";
+import { TOKEN_LIST_URL } from "@/configuration/configs";
 
 const limitOrder = new LimitOrderProvider(connection);
 
@@ -22,10 +20,7 @@ type Params = {
 };
 
 export const fetchTokenList = async () => {
-  console.log("in fetch");
-  const tokenList: TokenType[] = await (
-    await fetch(TOKEN_LIST_URL["mainnet-beta"])
-  ).json();
+  const tokenList: TokenType[] = await (await fetch(TOKEN_LIST_URL)).json();
   const tokenA = tokenList.find((token) => token.symbol === "USDC");
   const tokenB = tokenList.find((token) => token.symbol === "SOL");
   console.log("here in fetchTokenList", tokenList, tokenA, tokenB);

@@ -1035,7 +1035,7 @@
     superstruct "^0.15.4"
     toml "^3.0.0"
 
-"@coral-xyz/anchor@0.28.1-beta.2":
+"@coral-xyz/anchor@0.28.1-beta.2", "@coral-xyz/anchor@^0.28.1-beta.2":
   version "0.28.1-beta.2"
   resolved "https://registry.yarnpkg.com/@coral-xyz/anchor/-/anchor-0.28.1-beta.2.tgz#4ddd4b2b66af04407be47cf9524147793ec514a0"
   integrity sha512-xreUcOFF8+IQKWOBUrDKJbIw2ftpRVybFlEPVrbSlOBCbreCWrQ5754Gt9cHIcuBDAzearCDiBqzsGQdNgPJiw==
@@ -1908,6 +1908,18 @@
     bs58 "^4.0.1"
     jsbi "4.3.0"
 
+"@jup-ag/limit-order-sdk@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@jup-ag/limit-order-sdk/-/limit-order-sdk-0.1.10.tgz#9445c0fa83055055cee4e432b01a7349171ee714"
+  integrity sha512-ucnkDtabsrB/Nt/Fq5JA9Cf7WQmmzbxiYWUW7GMIyX48QaI+pX+yj9eP94xerz9rLYbQ9mvJ1/qHoCqK2UK0hQ==
+  dependencies:
+    "@coral-xyz/anchor" "^0.28.1-beta.2"
+    "@jup-ag/referral-sdk" "^0.1.5"
+    "@solana/spl-token" "^0.3.5"
+    "@solana/web3.js" "^1.67.2"
+    "@trpc/client" "^10.9.0"
+    superjson "^1.12.1"
+
 "@jup-ag/react-hook@^6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@jup-ag/react-hook/-/react-hook-6.0.0.tgz#16765fb6060d0633130b76e0b5de108d644b10bd"
@@ -1918,6 +1930,16 @@
     "@mercurial-finance/optimist" "0.3.0"
     "@solana/spl-token" "0.1.8"
     superstruct "~1.0.3"
+
+"@jup-ag/referral-sdk@^0.1.5":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@jup-ag/referral-sdk/-/referral-sdk-0.1.7.tgz#c3e172e2b5e127d26a7b103bb2b6aa04679edaa1"
+  integrity sha512-Y+JdmeyTW6NkgbTUADHdGFVAtyKRnKTGjW0+aDehDHBR4m+xEV3l8cblQsNvRqkHmy6CySNm/nDE7btHKO75SA==
+  dependencies:
+    "@coral-xyz/anchor" "0.28.1-beta.2"
+    "@solana/spl-token" "0.3.8"
+    "@solana/web3.js" "^1.77.3"
+    lodash "^4.17.21"
 
 "@keystonehq/alias-sampling@^0.1.1":
   version "0.1.2"
@@ -4781,7 +4803,7 @@
     "@solana/wallet-standard-core" "^1.1.1"
     "@solana/wallet-standard-wallet-adapter" "^1.1.2"
 
-"@solana/web3.js@1.73.2", "@solana/web3.js@1.87.2", "@solana/web3.js@^1.17.0", "@solana/web3.js@^1.20.0", "@solana/web3.js@^1.21.0", "@solana/web3.js@^1.24.1", "@solana/web3.js@^1.28.0", "@solana/web3.js@^1.30.2", "@solana/web3.js@^1.31.0", "@solana/web3.js@^1.32.0", "@solana/web3.js@^1.35.1", "@solana/web3.js@^1.36.0", "@solana/web3.js@^1.42.0", "@solana/web3.js@^1.44.0", "@solana/web3.js@^1.56.2", "@solana/web3.js@^1.63.1", "@solana/web3.js@^1.66.2", "@solana/web3.js@^1.68.0", "@solana/web3.js@^1.70.0", "@solana/web3.js@^1.74.0", "@solana/web3.js@^1.78.7", "@solana/web3.js@^1.87.6", "@solana/web3.js@^1.90.2", "@solana/web3.js@^1.91.6", "@solana/web3.js@^1.92.1", "@solana/web3.js@^1.93.0", "@solana/web3.js@~1.74.0":
+"@solana/web3.js@1.73.2", "@solana/web3.js@1.87.2", "@solana/web3.js@^1.17.0", "@solana/web3.js@^1.20.0", "@solana/web3.js@^1.21.0", "@solana/web3.js@^1.24.1", "@solana/web3.js@^1.28.0", "@solana/web3.js@^1.30.2", "@solana/web3.js@^1.31.0", "@solana/web3.js@^1.32.0", "@solana/web3.js@^1.35.1", "@solana/web3.js@^1.36.0", "@solana/web3.js@^1.42.0", "@solana/web3.js@^1.44.0", "@solana/web3.js@^1.56.2", "@solana/web3.js@^1.63.1", "@solana/web3.js@^1.66.2", "@solana/web3.js@^1.67.2", "@solana/web3.js@^1.68.0", "@solana/web3.js@^1.70.0", "@solana/web3.js@^1.74.0", "@solana/web3.js@^1.77.3", "@solana/web3.js@^1.78.7", "@solana/web3.js@^1.87.6", "@solana/web3.js@^1.90.2", "@solana/web3.js@^1.91.6", "@solana/web3.js@^1.92.1", "@solana/web3.js@^1.93.0", "@solana/web3.js@~1.74.0":
   version "1.93.0"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.93.0.tgz#4b6975020993cec2f6626e4f2bf559ca042df8db"
   integrity sha512-suf4VYwWxERz4tKoPpXCRHFRNst7jmcFUaD65kII+zg9urpy5PeeqgLV6G5eWGzcVzA9tZeXOju1A1Y+0ojEVw==
@@ -5314,6 +5336,16 @@
     typeforce "^1.18.0"
     varuint-bitcoin "^1.1.2"
     wif "^4.0.0"
+
+"@trpc/client@^10.9.0":
+  version "10.45.2"
+  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.45.2.tgz#15f9ba81303bf3417083fc6bb742e4e86b49da90"
+  integrity sha512-ykALM5kYWTLn1zYuUOZ2cPWlVfrXhc18HzBDyRhoPYN0jey4iQHEFSEowfnhg1RvYnrAVjNBgHNeSAXjrDbGwg==
+
+"@trpc/server@^10.45.2":
+  version "10.45.2"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.45.2.tgz#5f2778c4810f93b5dc407146334f8da70a0b51fb"
+  integrity sha512-wOrSThNNE4HUnuhJG6PfDRp4L2009KDVxsd+2VYH8ro6o/7/jwYZ8Uu5j+VaW+mOmc8EHerHzGcdbGNQSAUPgg==
 
 "@types/big.js@^6.2.2":
   version "6.2.2"
@@ -7163,6 +7195,13 @@ cookie-es@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/cookie-es/-/cookie-es-1.1.0.tgz#68f8d9f48aeb5a534f3896f80e792760d3d20def"
   integrity sha512-L2rLOcK0wzWSfSDA33YR+PUHDG10a8px7rUHKWbGLP4YfbsMed2KFUw5fczvDPbT98DDe3LEzviswl810apTEw==
+
+copy-anything@^3.0.2:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/copy-anything/-/copy-anything-3.0.5.tgz#2d92dce8c498f790fa7ad16b01a1ae5a45b020a0"
+  integrity sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==
+  dependencies:
+    is-what "^4.1.8"
 
 copy-to-clipboard@^3.3.1:
   version "3.3.3"
@@ -9628,6 +9667,11 @@ is-weakset@^2.0.3:
   dependencies:
     call-bind "^1.0.7"
     get-intrinsic "^1.2.4"
+
+is-what@^4.1.8:
+  version "4.1.16"
+  resolved "https://registry.yarnpkg.com/is-what/-/is-what-4.1.16.tgz#1ad860a19da8b4895ad5495da3182ce2acdd7a6f"
+  integrity sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==
 
 is-wsl@^3.1.0:
   version "3.1.0"
@@ -12870,6 +12914,13 @@ sucrase@^3.32.0:
     mz "^2.7.0"
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
+
+superjson@^1.12.1:
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/superjson/-/superjson-1.13.3.tgz#3bd64046f6c0a47062850bb3180ef352a471f930"
+  integrity sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==
+  dependencies:
+    copy-anything "^3.0.2"
 
 superstruct@^0.15.4:
   version "0.15.5"

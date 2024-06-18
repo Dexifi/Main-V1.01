@@ -1,5 +1,5 @@
 import { Wallet } from "@solana/wallet-adapter-react";
-import { useJupiterTrade, useTrade } from "./store";
+import { useTrade } from "./store";
 import { Market, OpenOrders } from "@mehranml/openbook";
 import { connection } from "@/lib/get-connections";
 import { PublicKey } from "@solana/web3.js";
@@ -29,11 +29,12 @@ export const initialTrade = async (wallet: Wallet) => {
   useTrade.setState({ loading: false });
 };
 
-export const initialJupiterTrade = async (wallet: Wallet) => {
-  wallet.adapter.publicKey &&
-    (await getTokens(wallet.adapter.publicKey.toBase58()));
+export const initialJupiterTrade = async (wallet: Wallet | null) => {
   await fetchTokenList();
-  setInterval(async () => await getOpenOrder(wallet.adapter.publicKey), 5000);
+  if (wallet && wallet.adapter.publicKey) {
+    await getTokens(wallet.adapter.publicKey.toBase58());
+    setInterval(async () => await getOpenOrder(wallet.adapter.publicKey), 5000);
+  }
 };
 
 export const getMarket = async (marketID: string) => {
