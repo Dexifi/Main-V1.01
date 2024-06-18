@@ -27,8 +27,8 @@ import { Button } from "@/components/ui/button";
 import formatedString from "@/lib/string";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useDomainsForOwner } from "@bonfida/sns-react";
 import { useDashboard } from "@/applications/Dashboard/store";
+import { useDomainsForOwner } from "@bonfida/sns-react";
 
 type Props = {
   isEXTRASMALL: boolean;

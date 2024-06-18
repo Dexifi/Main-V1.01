@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -13,7 +14,6 @@ import { cn } from "@/lib/utils";
 import { Cell, Pie, PieChart } from "recharts";
 import useConnection from "@/hooks/useConnection";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useMemo } from "react";
 import { useDashboard } from "@/applications/Dashboard/store";
 
 type Props = {

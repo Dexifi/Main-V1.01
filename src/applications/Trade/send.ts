@@ -13,9 +13,7 @@ import {
 } from "@solana/web3.js";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  // @ts-ignore
   createAssociatedTokenAccountInstruction,
-  // @ts-ignore
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
@@ -51,10 +49,11 @@ export async function createTokenAccountTransaction({
 }> {
   assert(wallet.publicKey, "Expected `publicKey` to be non-null");
   const ata = await getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
     mintPublicKey,
-    wallet.publicKey
+    wallet.publicKey,
+    true,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
   );
   const transaction = new Transaction();
   transaction.add(

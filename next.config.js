@@ -1,6 +1,8 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["ts", "tsx"],
   images: {
+    unoptimized: true,
     disableStaticImages: true,
     remotePatterns: [
       {
@@ -56,6 +58,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  output: "export",
 };
 
 module.exports = nextConfig;
