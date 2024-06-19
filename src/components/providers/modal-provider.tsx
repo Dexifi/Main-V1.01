@@ -14,8 +14,9 @@ import {
   NFTGalleryBurnModal,
   NFTGallerySendModal,
   AddAmmLiquidityModal,
+  JupiterTradeModal,
 } from "@/components/modals";
-import { useTradeModal } from "@/lib/stores/trade.store";
+import { useJupiterModal, useTradeModal } from "@/lib/stores/trade.store";
 import {
   useAddAmmLiquidityModal,
   useAddLiquidityModal,
@@ -47,6 +48,7 @@ const ModalProvider = (props: Props) => {
   const { isOpen: isRemoveAllPoRLiquidityModal } =
     useRemoveAllPoRLiquidityModal();
   const { isOpen: isRemoveAmmLiquidityModal } = useRemoveAmmLiquidityModal();
+  const { open: isJupiterModal } = useJupiterModal();
   return (
     <>
       {isImportMarketOpen && <TradeImportMarketModal />}
@@ -60,6 +62,7 @@ const ModalProvider = (props: Props) => {
       {isRemoveAllPiRLiquidityModal && <RemoveAllInModal />}
       {isRemoveAllPoRLiquidityModal && <RemoveAllOutModal />}
       {isRemoveAmmLiquidityModal && <RemoveAmmLiquidityModal />}
+      {isJupiterModal && <JupiterTradeModal />}
       <RemoveFarmModal />
       <ClaimPendingModal />
       <NFTGalleryDetailsModal />

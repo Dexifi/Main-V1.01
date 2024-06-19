@@ -68,7 +68,7 @@ const Balance = ({ order, isEXTRASMALL }: Props) => {
 
   return (
     <div
-      className="bg-[#0d111b] min-h-56 w-full md:w-1/2 rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5 flex flex-col"
+      className="bg-[#0d111b] min-h-[200px] w-full md:w-1/2 rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5 flex flex-col"
       style={{
         boxShadow: "0 0 4px #88d6ff",
       }}

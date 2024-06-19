@@ -1,18 +1,23 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import initialTrade, { getMarketBAF } from "@/applications/Trade/initial";
+import {
+  getMarketBAF,
+  initialJupiterTrade,
+  initialTrade,
+} from "@/applications/Trade/initial";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "@/components/ui/use-toast";
-import { useTrade } from "@/applications/Trade/store";
+import { useSelectedProvider, useTrade } from "@/applications/Trade/store";
 
 const TradeProvider = ({ children }: PropsWithChildren) => {
   const { wallet } = useWallet();
-  const [loading, setLoading] = useState(true);
+  const { selectedProvider } = useSelectedProvider();
 
   useEffect(() => {
-    if (loading) return;
     let intervalFetch: NodeJS.Timeout;
     (async () => {
-      if (wallet) {
+      if (selectedProvider === "JUP") {
+        await initialJupiterTrade(wallet);
+      } else if (wallet) {
         await initialTrade(wallet);
         intervalFetch = setInterval(async () => {
           await getMarketBAF(useTrade.getState().market);
@@ -27,25 +32,7 @@ const TradeProvider = ({ children }: PropsWithChildren) => {
         clearInterval(intervalFetch);
       };
     })();
-  }, [wallet, loading]);
-
-  useEffect(() => {
-    console.log("re-initial", useTrade.getState().marketDetails.address);
-    console.log(useTrade.getState().marketDetails.address);
-    if (wallet) {
-      useTrade.getState().marketDetails.address === null &&
-        (async () => {
-          await initialTrade(wallet);
-          setLoading(false);
-        })();
-    } else {
-      toast({
-        description: "Please connect your wallet",
-        variant: "destructive",
-        duration: 10000,
-      });
-    }
-  }, [wallet]);
+  }, [wallet, selectedProvider]);
 
   return <>{children}</>;
 };

@@ -17,8 +17,9 @@ import {
 import { Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/system";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 type Props = {
   isMobile: boolean;
@@ -31,6 +32,7 @@ type ActionProps = {
 
 const Header = ({ isMobile }: Props) => {
   const { setVisible } = useWalletModal();
+  const { connected } = useWallet();
   const [menu, setMenu] = useState(false);
   const { onOpen } = useSettingsModal();
   const HeaderMenu = [
@@ -41,8 +43,6 @@ const Header = ({ isMobile }: Props) => {
     "Liquidity",
     "Farm",
     "Stake",
-    "IDO",
-    "NFT",
   ];
 
   const actions: ActionProps[] = [
@@ -58,6 +58,12 @@ const Header = ({ isMobile }: Props) => {
       },
     },
   ];
+
+  useEffect(() => {
+    if (!connected) {
+      setVisible(true);
+    }
+  }, [connected, setVisible]);
 
   return (
     <div className="z-[100] sticky w-full px-8 top-0 left-0 min-h-[80px] bg-[#19232D90] flex justify-between items-center text-center text-lg text-white font-['Helvetica']">

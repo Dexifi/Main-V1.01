@@ -49,11 +49,7 @@ export async function calculateClmmApr(poolId: string) {
     tvl: number;
     apr: number;
   }[] = [];
-  console.log(
-    "poolInfo.rewardInfos",
-    poolInfo.rewardInfos,
-    PublicKey.default.toString()
-  );
+
   for (const rewardInfo of poolInfo.rewardInfos) {
     if (rewardInfo.tokenMint.equals(PublicKey.default)) continue;
 
@@ -63,10 +59,7 @@ export async function calculateClmmApr(poolId: string) {
     );
     const rewardVaultAccountData = rewardVaultAccount.value
       ?.data as ParsedAccountData;
-    console.log(
-      "rewardVaultAccountData.program",
-      rewardVaultAccountData.program
-    );
+
     if (rewardVaultAccountData.program !== "spl-token") continue;
 
     const rewardPerSecond =
@@ -81,8 +74,6 @@ export async function calculateClmmApr(poolId: string) {
     const sendCountYearToU = sendCountYear.mul(
       mintPrice[rewardVaultAccountData.parsed.info.mint] ?? 0
     );
-    console.log("apiPoolInfo.tvl;", apiPoolInfo.tvl);
-    console.log("sendCountYearToU;", sendCountYearToU);
     const tvl = apiPoolInfo.tvl;
 
     formatRewardInfo.push({

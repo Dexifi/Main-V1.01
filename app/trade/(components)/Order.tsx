@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCallback, useState } from "react";
 import formatedString from "@/lib/string";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
 import formatedNumber from "@/lib/numbers";
 import { Order } from "@openbook-dex/openbook/lib/market";
 import { TradeState } from "@/applications/Trade/store";
@@ -41,10 +39,10 @@ type DataType = {
   tabs: string[];
   header: string[];
 };
-const Orders = ({ data, selectedMarket, isEXTRASMALL }: OrderProps) => {
+const Orders = ({ data, isEXTRASMALL }: OrderProps) => {
   const { publicKey, wallet } = useWallet();
   const [currentTab, setCurrentTab] = useState("all");
-  const [gdata, setData] = useState<DataType>({
+  const [gdata] = useState<DataType>({
     tabs: ["All", "Buy", "Sell"],
     header: ["Market", "Side", "Size", "Price"],
   });
@@ -92,7 +90,6 @@ const Orders = ({ data, selectedMarket, isEXTRASMALL }: OrderProps) => {
     },
     [publicKey, wallet?.adapter]
   );
-  console.log(ordersData);
   return (
     <div
       className="bg-[#0d111b] min-h-56 w-full md:w-1/2 rounded-3xl px-3 sm:px-5 lg:px-10 py-3 sm:py-5 flex overflow"

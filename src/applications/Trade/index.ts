@@ -3,7 +3,7 @@ import { placeOrder } from "./send";
 import { useTrade } from "./store";
 import {
   getMarket,
-  default as initialData,
+  initialTrade,
   getMarketBAF,
   getMarketDetails,
   getTokens,
@@ -13,7 +13,7 @@ export {
   placeOrder,
   useTrade,
   getMarket,
-  initialData,
+  initialTrade,
   getMarketBAF,
   getMarketDetails,
   getTokens,

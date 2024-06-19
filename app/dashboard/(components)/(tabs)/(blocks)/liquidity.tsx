@@ -75,7 +75,6 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
     netWorth: { totalClmm, totalAmm },
   } = useDashboard();
 
-  console.log("amm", amm);
   const data: dataType = useMemo(() => {
     let d: dataType = [];
 
@@ -125,7 +124,6 @@ const Liquidity = ({ isEXTRASMALL }: Props) => {
 
     return d;
   }, [amm, clmm, tokensPrice]);
-  console.log("data", data);
   const hData = {
     title: "Liquidity",
     color: "text-[#efd301]",
