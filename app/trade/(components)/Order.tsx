@@ -42,7 +42,7 @@ type DataType = {
 const Orders = ({ data, isEXTRASMALL }: OrderProps) => {
   const { publicKey, wallet } = useWallet();
   const [currentTab, setCurrentTab] = useState("all");
-  const [gdata, setData] = useState<DataType>({
+  const [gdata] = useState<DataType>({
     tabs: ["All", "Buy", "Sell"],
     header: ["Market", "Side", "Size", "Price"],
   });

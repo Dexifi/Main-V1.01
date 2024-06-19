@@ -366,7 +366,6 @@ export async function placeOrder({
   quoteCurrencyAccount: PublicKey | undefined;
   feeDiscountPubkey: PublicKey | undefined;
 }) {
-  console.log(price);
   let formattedMinOrderSize =
     market?.minOrderSize?.toFixed(getDecimalCount(market.minOrderSize)) ||
     market?.minOrderSize;
@@ -479,7 +478,6 @@ export async function placeOrder({
 
     return;
   }
-  console.log("payer", payer.toBase58());
   const params = {
     owner,
     payer,
@@ -489,7 +487,6 @@ export async function placeOrder({
     orderType,
     feeDiscountPubkey: feeDiscountPubkey || null,
   };
-  console.log(params);
 
   const matchOrderstransaction = market.makeMatchOrdersTransaction(5);
   transaction.add(matchOrderstransaction);

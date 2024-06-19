@@ -68,7 +68,6 @@ const Sidebar = memo(
         if (selectedMarket && tokenABalance && tokenBBalance) {
           const tokenAPrice = selectedMarket.tokenAPrice;
           const tokenBPrice = selectedMarket.tokenBPrice;
-          console.log(tokenAPrice, tokenBPrice);
           if (form.tab === "buy" && tokenAPrice && tokenBPrice) {
             setForm({
               ...form,

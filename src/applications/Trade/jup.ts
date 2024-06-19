@@ -23,7 +23,6 @@ export const fetchTokenList = async () => {
   const tokenList: TokenType[] = await (await fetch(TOKEN_LIST_URL)).json();
   const tokenA = tokenList.find((token) => token.symbol === "USDC");
   const tokenB = tokenList.find((token) => token.symbol === "SOL");
-  console.log("here in fetchTokenList", tokenList, tokenA, tokenB);
   useJupiterTrade.setState({ tokenList, tokenA, tokenB, loading: false });
 };
 

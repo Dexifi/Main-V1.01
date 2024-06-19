@@ -127,7 +127,6 @@ export const getTokens = async (publicKey: string) => {
     const market = useTrade.getState().market;
     const solBalance = await connection.getBalance(new PublicKey(publicKey));
     const availableSide: ("buy" | "sell")[] = [];
-    console.log("tokenAccounts", tokenAccounts);
     tokenAccounts.push({
       tokenBalance: solBalance / 10 ** 9,
       mintAddress: "So11111111111111111111111111111111111111112",
@@ -215,7 +214,6 @@ export const getWalletOrders = async (
               10 ** (quoteToken?.decimals ?? 0),
         });
       }
-      console.log("orders in initial", data);
       useTrade.setState({ orders: data });
     } catch (e) {
       console.log("Order fetch failed", e);
