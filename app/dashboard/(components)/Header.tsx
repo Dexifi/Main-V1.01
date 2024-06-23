@@ -33,8 +33,8 @@ const Header = ({ isMobile }: Props) => {
     "Trade",
     "Lend",
     "Liquidity",
-    "Farm",
-    "Stake",
+    // "Farm",
+    // "Stake",
   ];
 
   const actions: ActionProps[] = [
