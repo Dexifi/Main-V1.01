@@ -166,21 +166,9 @@ const Trading = ({ isEXTRASMALL }: Props) => {
                         <div className="flex flex-col gap-3 justify-between w-full">
                           <h6>
                             <span>
-                              $
-                              {formatedNumber(
-                                row.price * row.borrowMakingAmount,
-                                2
-                              )}
-                              {/*{row.p_and_l_state === "negative" ? "-" : "+"}*/}
-                              {/*{row.p_and_l_procent})*/}
+                              ${formatedNumber(row.tokenA?.price ?? 0, 2)}
                             </span>
                           </h6>
-                          {/*<h6>*/}
-                          {/*  Liq Price:*/}
-                          {/*  <span className="text-sm ml-3">*/}
-                          {/*    /!*%{formatedNumber(row.liq_price, 2)}*!/*/}
-                          {/*  </span>*/}
-                          {/*</h6>*/}
                         </div>
                       </TableCell>
                     </TableRow>

@@ -84,7 +84,6 @@ export const getOpenOrder = async (wallet: PublicKey | null | undefined) => {
   const res = await limitOrder.getOrders([ownerFilter(wallet)]);
 
   const openOrder = res.map((e) => ({ ...e.account, id: e.publicKey }));
-
   const parsedOrders = [];
   const tokenList = useJupiterTrade.getState().tokenList;
   for (let i = 0; i < openOrder.length; i++) {
