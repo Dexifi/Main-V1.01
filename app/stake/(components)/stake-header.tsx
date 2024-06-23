@@ -38,7 +38,7 @@ export const Header = ({ setPage, page, isEXTRASMALL }: HeaderProps) => {
               height={isEXTRASMALL ? 24 : 32}
             />
           ) : (
-            <span className="text-xs sm:text-sm">{tab}</span>
+            <span className="text-xl">{tab}</span>
           )}
         </TabsTrigger>
       ))}
