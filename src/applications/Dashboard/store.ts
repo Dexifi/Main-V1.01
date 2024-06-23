@@ -13,9 +13,10 @@ import {
   ClmmPoolPersonalPosition,
 } from "@raydium-io/raydium-sdk/src/clmm/clmm";
 import { Daum, UserAmmPositionType } from "@/applications/Liquidity/type";
-import { ApiPoolInfo, ApiPrice } from "@raydium-io/raydium-sdk";
+import { ApiPrice } from "@raydium-io/raydium-sdk";
 import { FarmType } from "@/applications/Dashboard/types";
 import { FindNftsByOwnerOutput } from "@metaplex-foundation/js";
+import { JupTradeState } from "@/applications/Trade/store";
 
 type DashboardState = {
   netWorth: {
@@ -40,6 +41,7 @@ type DashboardState = {
   }[];
   farms: FarmType[];
   trades?: ownerOpenOrders[];
+  jupTrade?: JupTradeState["openOrder"];
   liquidity: {
     amm?: Array<
       UserAmmPositionType & {
@@ -86,6 +88,7 @@ export const useDashboard = create<DashboardState>()(
     stakes: [],
     tokensPrice: undefined,
     trades: undefined,
+    jupTrade: undefined,
     walletBalance: 0,
     walletTokenAccounts: [],
   }))

@@ -32,7 +32,8 @@ const JupiterSidebar = memo(
     const parts = [0.25, 0.5, 0.75, 1];
     const { wallet } = useWallet();
     const [amount, setAmount] = useState(0);
-    const [price, setPrice] = useState(0);
+    const [tokenAPrice, setTokenAPrice] = useState(0);
+    const [tokenBPrice, setTokenBPrice] = useState(0);
     const [loading, setLoading] = useState(false);
 
     const tokenABalance = useMemo(
@@ -51,7 +52,8 @@ const JupiterSidebar = memo(
         await createJupLimitOrder(wallet?.adapter as BaseSignerWalletAdapter, {
           outputMint: tokenB?.address,
           inputMint: tokenA?.address,
-          outAmount: (amount / price) * 10 ** tokenB.decimals,
+          outAmount:
+            ((amount * tokenAPrice) / tokenBPrice) * 10 ** tokenB.decimals,
           inAmount: amount * 10 ** tokenA?.decimals,
         });
         setLoading(false);
@@ -59,7 +61,7 @@ const JupiterSidebar = memo(
         console.log(e);
         setLoading(false);
       }
-    }, [amount, price, tokenA, tokenB, wallet?.adapter]);
+    }, [wallet?.adapter, tokenA, tokenB, amount, tokenAPrice, tokenBPrice]);
 
     const handleCalculateAmount = (part: number) => {
       const amount = tokenABalance?.tokenBalance * part;
@@ -72,12 +74,13 @@ const JupiterSidebar = memo(
 
     useEffect(() => {
       (async () => {
-        if (price > 0) return;
-        const tokenAPrice = await getPrice(tokenA?.symbol ?? "");
-        const tokenBPrice = await getPrice(tokenB?.symbol ?? "");
-        setPrice(parseFloat((tokenAPrice / tokenBPrice).toFixed(2)));
+        if (tokenAPrice > 0) return;
+        const APrice = await getPrice(tokenA?.symbol ?? "");
+        const BPrice = await getPrice(tokenB?.symbol ?? "");
+        setTokenAPrice(APrice);
+        setTokenBPrice(BPrice);
       })();
-    }, [price, tokenA?.symbol, tokenB?.symbol]);
+    }, [tokenA?.symbol, tokenAPrice, tokenB?.symbol]);
 
     return (
       <div
@@ -117,20 +120,20 @@ const JupiterSidebar = memo(
                 style={{ boxShadow: "0 0 5px rgba(217, 248, 255, 0.5)" }}
               >
                 <label className="text-white text-xs sm:text-sm">
-                  Buy {tokenB?.symbol} at rate
+                  sell {tokenA?.symbol} at rate
                   <span className="text-white bg-[#0d111b] text-[10px] px-2 py-1 ml-1 rounded w-fit">
-                    {tokenB?.symbol}
+                    {tokenA?.symbol}
                   </span>
                 </label>
                 <Input
                   aria-label="Amount"
-                  value={price}
+                  value={tokenAPrice}
                   className={`bg-transparent text-white rounded-2xl border-[#d9f8ff50] ${
                     isEXTRASMALL ? "max-w-[120px]" : "max-w-[170px]"
                   }`}
                   type={"number"}
                   onChange={(e) =>
-                    setPrice(e.target.value as unknown as number)
+                    setTokenAPrice(e.target.value as unknown as number)
                   }
                   step={market?.tickSize}
                   min={0}
@@ -150,7 +153,9 @@ const JupiterSidebar = memo(
                 <Input
                   aria-label="Total"
                   disabled
-                  value={parseFloat((amount / price).toString())}
+                  value={parseFloat(
+                    ((amount * tokenAPrice) / tokenBPrice).toString()
+                  )}
                   className={`bg-transparent text-white rounded-2xl border-[#d9f8ff50] ${
                     isEXTRASMALL ? "max-w-[120px]" : "max-w-[170px]"
                   }`}
@@ -185,7 +190,7 @@ const JupiterSidebar = memo(
               openOrder
             </Button>
             <Button
-              disabled={amount === 0 || price === 0 || loading}
+              disabled={amount === 0 || tokenAPrice === 0 || loading}
               className={"bg-[#0b9f44]"}
               onClick={handleOrder}
             >
