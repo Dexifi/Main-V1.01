@@ -13,9 +13,7 @@ import {
 } from "@solana/web3.js";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  //   @ts-ignore
   createAssociatedTokenAccountInstruction,
-  //   @ts-ignore
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
@@ -24,7 +22,6 @@ import {
   DexInstructions,
   Market,
   OpenOrders,
-  parseInstructionErrorResponse,
   TokenInstructions,
 } from "@mehranml/openbook";
 import { SelectedTokenAccounts, TokenAccount } from "./types";
@@ -37,7 +34,6 @@ import {
 } from "@solana/wallet-adapter-base";
 import { toast } from "@/components/ui/use-toast";
 import { TOKEN_MINTS } from "@openbook-dex/openbook";
-import { connection } from "@/lib/get-connections";
 
 export async function createTokenAccountTransaction({
   connection,
@@ -53,10 +49,11 @@ export async function createTokenAccountTransaction({
 }> {
   assert(wallet.publicKey, "Expected `publicKey` to be non-null");
   const ata = await getAssociatedTokenAddress(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
     mintPublicKey,
-    wallet.publicKey
+    wallet.publicKey,
+    true,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
   );
   const transaction = new Transaction();
   transaction.add(
@@ -369,7 +366,6 @@ export async function placeOrder({
   quoteCurrencyAccount: PublicKey | undefined;
   feeDiscountPubkey: PublicKey | undefined;
 }) {
-  console.log(price);
   let formattedMinOrderSize =
     market?.minOrderSize?.toFixed(getDecimalCount(market.minOrderSize)) ||
     market?.minOrderSize;
@@ -482,7 +478,6 @@ export async function placeOrder({
 
     return;
   }
-  console.log("payer", payer.toBase58());
   const params = {
     owner,
     payer,
@@ -492,7 +487,6 @@ export async function placeOrder({
     orderType,
     feeDiscountPubkey: feeDiscountPubkey || null,
   };
-  console.log(params);
 
   const matchOrderstransaction = market.makeMatchOrdersTransaction(5);
   transaction.add(matchOrderstransaction);

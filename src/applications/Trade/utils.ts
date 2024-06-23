@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
 
-export function isValidPublicKey(key) {
+export function isValidPublicKey(key: string) {
   if (!key) {
     return false;
   }
@@ -14,7 +14,7 @@ export function isValidPublicKey(key) {
   }
 }
 
-export async function sleep(ms) {
+export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -40,7 +40,7 @@ export function roundToDecimal(
   return decimals ? Math.round(value * 10 ** decimals) / 10 ** decimals : value;
 }
 
-export function getDecimalCount(value): number {
+export function getDecimalCount(value: number): number {
   if (
     !isNaN(value) &&
     Math.floor(value) !== value &&
@@ -67,7 +67,7 @@ export function getTokenMultiplierFromDecimals(decimals: number): BN {
   return new BN(10).pow(new BN(decimals));
 }
 
-const localStorageListeners = {};
+const localStorageListeners: any = {};
 
 export function useLocalStorageStringState(
   key: string,
@@ -84,7 +84,7 @@ export function useLocalStorageStringState(
     localStorageListeners[key].push(notify);
     return () => {
       localStorageListeners[key] = localStorageListeners[key].filter(
-        (listener) => listener !== notify
+        (listener: any) => listener !== notify
       );
       if (localStorageListeners[key].length === 0) {
         delete localStorageListeners[key];
@@ -104,7 +104,7 @@ export function useLocalStorageStringState(
       } else {
         localStorage.setItem(key, newState);
       }
-      localStorageListeners[key]?.forEach((listener) =>
+      localStorageListeners[key]?.forEach((listener: any) =>
         listener(key + "\n" + newState)
       );
     },
@@ -128,14 +128,14 @@ export function useLocalStorageState<T = any>(
   ];
 }
 
-export function useEffectAfterTimeout(effect, timeout) {
+export function useEffectAfterTimeout(effect: any, timeout: any) {
   useEffect(() => {
     const handle = setTimeout(effect, timeout);
     return () => clearTimeout(handle);
   });
 }
 
-export function useListener(emitter, eventName) {
+export function useListener(emitter: any, eventName: any) {
   const [, forceUpdate] = useState(0);
   useEffect(() => {
     const listener = () => forceUpdate((i) => i + 1);
@@ -149,7 +149,7 @@ export function abbreviateAddress(address: PublicKey, size = 4) {
   return base58.slice(0, size) + "…" + base58.slice(-size);
 }
 
-export function isEqual(obj1, obj2, keys) {
+export function isEqual(obj1: any, obj2: any, keys: any) {
   if (!keys && Object.keys(obj1).length !== Object.keys(obj2).length) {
     return false;
   }
@@ -163,20 +163,21 @@ export function isEqual(obj1, obj2, keys) {
   return true;
 }
 
-export function flatten(obj, { prefix = "", restrictTo }) {
+export function flatten(obj: any, { prefix = "", restrictTo }: any) {
   let restrict = restrictTo;
   if (restrict) {
-    restrict = restrict.filter((k) => obj.hasOwnProperty(k));
+    restrict = restrict.filter((k: any) => obj.hasOwnProperty(k));
   }
   const result = {};
   (function recurse(obj, current, keys) {
-    (keys || Object.keys(obj)).forEach((key) => {
+    (keys || Object.keys(obj)).forEach((key: any) => {
       const value = obj[key];
       const newKey = current ? current + "." + key : key; // joined key with dot
       if (value && typeof value === "object") {
         // @ts-ignore
         recurse(value, newKey); // nested object
       } else {
+        // @ts-ignore
         result[newKey] = value;
       }
     });

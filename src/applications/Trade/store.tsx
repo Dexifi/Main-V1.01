@@ -6,7 +6,21 @@ import { placeOrder } from "./send";
 import { TokenInfo } from "@solana/spl-token-registry";
 import { MarketsListType, ownerOpenOrders } from "./types";
 import MARKETS from "./markets.json";
+import { TokenType } from "@/stores/tokens";
+import { PublicKey } from "@solana/web3.js";
+
+export enum TradingProviders {
+  JUP = "JUP",
+  OPENBOOK = "OPENBOOK",
+}
+
+type SelectedProviderState = {
+  selectedProvider: TradingProviders;
+  setSelectedProvider: (selectedProvider: TradingProviders) => void;
+};
+
 export type TradeState = {
+  loading: boolean;
   bids: { price: number; size: number; side: "buy" | "sell" }[];
   asks: { price: number; size: number; side: "buy" | "sell" }[];
   orders: ownerOpenOrders[];
@@ -30,14 +44,9 @@ export type TradeState = {
   };
   marketList: MarketsListType;
   availableSide: Array<"buy" | "sell">;
-
-  fetchLoading: boolean;
   placeOrderLoading: boolean;
   cancelOrderLoading: boolean;
-
   placeOrder: typeof placeOrder;
-
-  setFetchLoading: (fetchLoading: boolean) => void;
   setPlaceOrderLoading: (placeOrderLoading: boolean) => void;
   setCancelOrderLoading: (cancelOrderLoading: boolean) => void;
   setMarket: (market: Market) => void;
@@ -56,7 +65,29 @@ export type TradeState = {
   }) => void;
 };
 
+export type JupTradeState = {
+  amountIn: number;
+  amountOut: number;
+  limitPrice: number;
+  loading: boolean;
+  tokenList: TokenType[];
+  tokenA: TokenInfo | null;
+  tokenB: TokenInfo | null;
+  openOrder: {
+    id: PublicKey;
+    marketName: string;
+    expiredAt?: number;
+    tokenA?: TokenType;
+    tokenB?: TokenType;
+    borrowMakingAmount: number;
+    inAmountUi: number;
+    outAmountUi: number;
+    price: number;
+  }[];
+};
+
 export const useTrade = create<TradeState>((set) => ({
+  loading: true,
   bids: [],
   asks: [],
   orders: [],
@@ -80,14 +111,9 @@ export const useTrade = create<TradeState>((set) => ({
   },
   marketList: MARKETS,
   availableSide: ["buy", "sell"],
-
-  fetchLoading: true,
   placeOrderLoading: false,
   cancelOrderLoading: false,
-
   placeOrder: placeOrder,
-
-  setFetchLoading: (fetchLoading: boolean) => set({ fetchLoading }),
   setPlaceOrderLoading: (placeOrderLoading: boolean) =>
     set({ placeOrderLoading }),
   setCancelOrderLoading: (cancelOrderLoading: boolean) =>
@@ -101,4 +127,21 @@ export const useTrade = create<TradeState>((set) => ({
   setMarketDetails: (marketDetails: any) => set({ marketDetails }),
   setMarketList: (marketList: any) => set({ marketList }),
   setNewOrder: (newOrder: any) => set({ newOrder }),
+}));
+
+export const useJupiterTrade = create<JupTradeState>((set) => ({
+  amountIn: 0,
+  amountOut: 0,
+  limitPrice: 0,
+  tokenList: [],
+  tokenA: null,
+  tokenB: null,
+  openOrder: [],
+  loading: true,
+}));
+
+export const useSelectedProvider = create<SelectedProviderState>((set) => ({
+  selectedProvider: TradingProviders.JUP,
+  setSelectedProvider: (selectedProvider: TradingProviders) =>
+    set({ selectedProvider }),
 }));

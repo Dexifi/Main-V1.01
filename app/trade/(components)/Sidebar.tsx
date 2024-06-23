@@ -2,20 +2,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import formatedNumber from "@/lib/numbers";
-import { SelectedMarketType } from "@/types/market";
 import { Token } from "@/types/token";
-import { ChangeEvent, memo, useCallback, useMemo, useState } from "react";
-import { getPrice } from "@/data/price";
+import { ChangeEvent, memo, useCallback, useMemo } from "react";
 import { TradeState, useTrade } from "@/applications/Trade/store";
 import { Market } from "@mehranml/openbook";
 import { placeOrder } from "@/applications/Trade";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { BaseSignerWalletAdapter } from "@solana/wallet-adapter-base";
 import { connection } from "@/lib/get-connections";
-import string from "@/lib/string";
 import { PublicKey } from "@solana/web3.js";
 import { CircularProgress } from "@mui/material";
 import { toast } from "@/components/ui/use-toast";
+
 type SidebarProps = {
   isEXTRASMALL: boolean;
   form: {
@@ -70,7 +68,6 @@ const Sidebar = memo(
         if (selectedMarket && tokenABalance && tokenBBalance) {
           const tokenAPrice = selectedMarket.tokenAPrice;
           const tokenBPrice = selectedMarket.tokenBPrice;
-          console.log(tokenAPrice, tokenBPrice);
           if (form.tab === "buy" && tokenAPrice && tokenBPrice) {
             setForm({
               ...form,

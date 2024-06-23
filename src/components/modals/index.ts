@@ -15,8 +15,10 @@ import NFTGalleryDetailsModal from "./nft-gallery-details-modal";
 import NFTGallerySendModal from "./nft-gallery-send-modal";
 import NFTGalleryBurnModal from "./nft-gallery-burn-modal";
 import AddAmmLiquidityModal from "./add-amm-liquidity-modal";
+import JupiterTradeModal from "./jupiter-trade-modal";
 
 export {
+  JupiterTradeModal,
   NFTGalleryBurnModal,
   NFTGallerySendModal,
   NFTGalleryDetailsModal,
