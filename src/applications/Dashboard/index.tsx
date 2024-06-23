@@ -27,12 +27,15 @@ import { useLiquidity } from "@/applications/Liquidity/store";
 import { RaydiumPools } from "@/applications/Liquidity/pool";
 import { fetchPairs } from "@/data/pairs";
 import { Metaplex } from "@metaplex-foundation/js";
+import { fetchTokenList, getOpenOrder } from "@/applications/Trade/jup";
+import { useJupiterTrade } from "@/applications/Trade/store";
 
 export const initialData = async (wallet: BaseWalletAdapter) => {
   await getWalletBalance(wallet);
   await getTokensPrice();
   await getStakes(wallet);
   await getLends(wallet);
+  await getJupiterTrades(wallet);
   await getTrades(wallet);
   await getLiquidities(wallet);
   await getFarm(wallet);
@@ -226,44 +229,51 @@ const getLends = async (wallet: BaseWalletAdapter) => {
 
 const ProgramID = new PublicKey("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX");
 
+const getJupiterTrades = async (wallet: BaseWalletAdapter) => {
+  if (!wallet.publicKey || !connection) return;
+  await fetchTokenList();
+  const orders = await getOpenOrder(wallet.publicKey);
+  useDashboard.setState({ jupTrade: orders });
+};
 const getTrades = async (wallet: BaseWalletAdapter) => {
   if (!wallet.publicKey || !connection) return;
-
-  const orders = await OpenOrders.findForOwner(
-    connection,
-    wallet.publicKey,
-    ProgramID
-  );
-  const data: ownerOpenOrders[] = [];
-  for (const order of orders) {
-    const market = await Market.load(connection, order.market, {}, ProgramID);
-    const orders = await market.loadOrdersForOwner(
+  try {
+    const orders = await OpenOrders.findForOwner(
       connection,
       wallet.publicKey,
-      30000
+      ProgramID
     );
-
-    const baseToken = await findToken(market.decoded.baseMint.toString());
-    const quoteToken = await findToken(market.decoded.quoteMint.toString());
-    data.push({
-      protocol: "OpenBook",
-      protocolIcon: "/assets/openBook.svg",
-      mint: baseToken,
-      market,
-      baseToken,
-      quoteToken,
-      openOrder: order,
-      orders: orders,
-      isDone:
-        order.baseTokenFree.toNumber() === order.baseTokenTotal.toNumber() &&
-        order.quoteTokenFree.toNumber() === order.quoteTokenTotal.toNumber(),
-      fee:
-        order.baseTokenTotal.toNumber() / 10 ** (baseToken?.decimals ?? 0) +
-        order.quoteTokenTotal.toNumber() / 10 ** (quoteToken?.decimals ?? 0),
-    });
+    const data: ownerOpenOrders[] = [];
+    for (const order of orders) {
+      const market = await Market.load(connection, order.market, {}, ProgramID);
+      const orders = await market.loadOrdersForOwner(
+        connection,
+        wallet.publicKey,
+        30000
+      );
+      const baseToken = await findToken(market.decoded.baseMint.toString());
+      const quoteToken = await findToken(market.decoded.quoteMint.toString());
+      data.push({
+        protocol: "OpenBook",
+        protocolIcon: "/assets/openBook.svg",
+        mint: baseToken,
+        market,
+        baseToken,
+        quoteToken,
+        openOrder: order,
+        orders: orders,
+        isDone:
+          order.baseTokenFree.toNumber() === order.baseTokenTotal.toNumber() &&
+          order.quoteTokenFree.toNumber() === order.quoteTokenTotal.toNumber(),
+        fee:
+          order.baseTokenTotal.toNumber() / 10 ** (baseToken?.decimals ?? 0) +
+          order.quoteTokenTotal.toNumber() / 10 ** (quoteToken?.decimals ?? 0),
+      });
+    }
+    useDashboard.setState({ trades: data });
+  } catch (e: any) {
+    console.log(e);
   }
-
-  useDashboard.setState({ trades: data });
 };
 
 const getLiquidities = async (wallet: BaseWalletAdapter) => {

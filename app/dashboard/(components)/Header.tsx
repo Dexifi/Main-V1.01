@@ -1,14 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useSettingsModal } from "@/lib/stores/settings.store";
 import {
   useWalletModal,
@@ -18,7 +11,6 @@ import { Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { styled } from "@mui/system";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 type Props = {
@@ -32,7 +24,7 @@ type ActionProps = {
 
 const Header = ({ isMobile }: Props) => {
   const { setVisible } = useWalletModal();
-  const { connected } = useWallet();
+  const { connected, connecting } = useWallet();
   const [menu, setMenu] = useState(false);
   const { onOpen } = useSettingsModal();
   const HeaderMenu = [
@@ -60,10 +52,10 @@ const Header = ({ isMobile }: Props) => {
   ];
 
   useEffect(() => {
-    if (!connected) {
+    if (!connected && !connecting) {
       setVisible(true);
     }
-  }, [connected, setVisible]);
+  }, [connected, connecting, setVisible]);
 
   return (
     <div className="z-[100] sticky w-full px-8 top-0 left-0 min-h-[80px] bg-[#19232D90] flex justify-between items-center text-center text-lg text-white font-['Helvetica']">

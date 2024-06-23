@@ -14,7 +14,7 @@ const tabs = ["NFT Gallery", "Transactions", "Accounts"];
 const DashboardHeader = ({ isMobile }: Props) => {
   const [page, setPage] = useState("default");
   return (
-    <div className="flex justify-between items-center w-full relative z-50">
+    <div className="flex justify-between max-w-[1200px] mx-auto items-center w-full relative z-50">
       <Tabs className="w-full bg-transparent" defaultValue="default">
         <TabsList
           className={`flex justify-center items-center flex-wrap gap-4 h-max`}
@@ -32,32 +32,32 @@ const DashboardHeader = ({ isMobile }: Props) => {
               Back
             </TabsTrigger>
           )}
-          <div className="flex-1 flex justify-center ">
-            <div className="flex gap-0 sm:gap-x-2 z-10 bg-[#0d111b] rounded-full">
-              {tabs.map((tab, index) => (
-                <TabsTrigger
-                  value={formatedString(tab.toLocaleLowerCase())}
-                  key={index}
-                  className="text-xs sm:text-sm md:text-lg text-center hyphens-none flex md:flex px-3 sm:px-5 py-2 w-max cursor-pointer font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all box-border data-[state=active]:bg-[#D9F8FF10]  rounded-full transition-none shadow-none border-none"
-                  onClick={() =>
-                    setPage(formatedString(tab.toLocaleLowerCase()))
-                  }
-                  style={{
-                    border:
-                      formatedString(tab).toLocaleLowerCase() === page
-                        ? "1px solid #D9F8FF"
-                        : "",
-                    boxShadow:
-                      formatedString(tab).toLocaleLowerCase() === page
-                        ? "0 0 4px 1px #d9f8ff75"
-                        : "",
-                  }}
-                >
-                  {tab}
-                </TabsTrigger>
-              ))}
-            </div>
-          </div>
+          {/*<div className="flex-1 flex justify-center ">*/}
+          {/*  <div className="flex gap-0 sm:gap-x-2 z-10 bg-[#0d111b] rounded-full">*/}
+          {/*    {tabs.map((tab, index) => (*/}
+          {/*      <TabsTrigger*/}
+          {/*        value={formatedString(tab.toLocaleLowerCase())}*/}
+          {/*        key={index}*/}
+          {/*        className="text-xs sm:text-sm md:text-lg text-center hyphens-none flex md:flex px-3 sm:px-5 py-2 w-max cursor-pointer font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all box-border data-[state=active]:bg-[#D9F8FF10]  rounded-full transition-none shadow-none border-none"*/}
+          {/*        onClick={() =>*/}
+          {/*          setPage(formatedString(tab.toLocaleLowerCase()))*/}
+          {/*        }*/}
+          {/*        style={{*/}
+          {/*          border:*/}
+          {/*            formatedString(tab).toLocaleLowerCase() === page*/}
+          {/*              ? "1px solid #D9F8FF"*/}
+          {/*              : "",*/}
+          {/*          boxShadow:*/}
+          {/*            formatedString(tab).toLocaleLowerCase() === page*/}
+          {/*              ? "0 0 4px 1px #d9f8ff75"*/}
+          {/*              : "",*/}
+          {/*        }}*/}
+          {/*      >*/}
+          {/*        {tab}*/}
+          {/*      </TabsTrigger>*/}
+          {/*    ))}*/}
+          {/*  </div>*/}
+          {/*</div>*/}
           <div />
         </TabsList>
 
@@ -67,25 +67,25 @@ const DashboardHeader = ({ isMobile }: Props) => {
         >
           <DefaultTab />
         </TabsContent>
-        <TabsContent
-          value="nft_gallery"
-          className="w-full text-sm md:text-lg text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"
-        >
-          <NFT_Gallery />
-        </TabsContent>
+        {/*<TabsContent*/}
+        {/*  value="nft_gallery"*/}
+        {/*  className="w-full text-sm md:text-lg text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"*/}
+        {/*>*/}
+        {/*  <NFT_Gallery />*/}
+        {/*</TabsContent>*/}
 
-        <TabsContent
-          value="transactions"
-          className="w-full text-sm md:text-lg  text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"
-        >
-          <TransactionsTab />
-        </TabsContent>
-        <TabsContent
-          value="accounts"
-          className="w-full text-sm md:text-lg  text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"
-        >
-          <AccountsTab />
-        </TabsContent>
+        {/*<TabsContent*/}
+        {/*  value="transactions"*/}
+        {/*  className="w-full text-sm md:text-lg  text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"*/}
+        {/*>*/}
+        {/*  <TransactionsTab />*/}
+        {/*</TabsContent>*/}
+        {/*<TabsContent*/}
+        {/*  value="accounts"*/}
+        {/*  className="w-full text-sm md:text-lg  text-center hyphens-none py-2 font-['DM Sans'] text-[#d9f8ff] hover:text-white transition-all"*/}
+        {/*>*/}
+        {/*  <AccountsTab />*/}
+        {/*</TabsContent>*/}
       </Tabs>
     </div>
   );

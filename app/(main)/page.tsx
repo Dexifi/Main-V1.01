@@ -2,13 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import { useMediaQuery } from "usehooks-ts";
 import { Backgrounds, Footer, Header, StatisticItem } from "./(components)";
 import Image from "next/image";
 import useConnection from "@/hooks/useConnection";
 import useMagicEden from "@/hooks/useMagicEden";
+import formatedNumber from "@/lib/numbers";
+import axios from "@/data/axios";
 
 type StatisticProps = {
   columns: {
@@ -31,7 +33,7 @@ type StatisticProps = {
   position: "start" | "center" | "end";
 };
 
-const Main = () => {
+const Main = memo(() => {
   const router = useRouter();
   const { connection } = useConnection();
   const onComponent5Click = useCallback(() => {
@@ -40,7 +42,7 @@ const Main = () => {
   const isMobile = useMediaQuery("(max-width: 990px)");
   const { total } = useMagicEden();
   const [transactionsCount, setTransactionsCount] = useState(0);
-  const [isClient, setIsClient] = useState<boolean>(false);
+  const [raydiumTVL, setRaydiumTVL] = useState(0);
 
   const onFrameButton6Click = useCallback(() => {
     window.open("https://dexifi-finances.gitbook.io/dexifi-blog/");
@@ -51,20 +53,33 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    connection
-      .getTransactionCount()
-      .then((res: number) => {
-        setTransactionsCount(res);
-      })
-      .catch((error: any) => {
-        setTransactionsCount(123442859844);
-        console.log(error);
+    !transactionsCount &&
+      connection
+        .getTransactionCount()
+        .then((res: number) => {
+          setTransactionsCount(res);
+        })
+        .catch((error: any) => {
+          setTransactionsCount(123442859844);
+          console.log(error);
+        });
+  }, [transactionsCount]);
+
+  const fetchRaydiumTVL = useCallback(async () => {
+    try {
+      const res = await axios.get("https://uapi.raydium.io/v2/main/info", {
+        headers: {},
       });
+      const data = await res.data;
+      setRaydiumTVL(data.tvl);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    !raydiumTVL && fetchRaydiumTVL();
+  }, [fetchRaydiumTVL, raydiumTVL]);
 
   const statisticsARR: StatisticProps[] = [
     {
@@ -189,7 +204,7 @@ const Main = () => {
             title: "TOTAL LIQUIDITY ACCESSIBLE",
             position: "start",
             className: "flex flex-col",
-            value: `164,687,546.67 $`,
+            value: `${formatedNumber(raydiumTVL)} $`,
             valueCN: "pl-2 leading-7",
           },
         },
@@ -217,7 +232,7 @@ const Main = () => {
 
   return (
     <>
-      {isClient && (
+      {
         <div className=" bg-black w-screen overflow-hidden text-left relative text-3xl text-white min-h-screen font-['Helvetica']">
           <Header isMobile={isMobile} />
           <div
@@ -358,9 +373,10 @@ const Main = () => {
             </div>
           </div>
         </div>
-      )}
+      }
     </>
   );
-};
+});
 
+Main.displayName = "Main";
 export default Main;

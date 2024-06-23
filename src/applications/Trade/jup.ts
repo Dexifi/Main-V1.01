@@ -21,8 +21,8 @@ type Params = {
 
 export const fetchTokenList = async () => {
   const tokenList: TokenType[] = await (await fetch(TOKEN_LIST_URL)).json();
-  const tokenA = tokenList.find((token) => token.symbol === "USDC");
-  const tokenB = tokenList.find((token) => token.symbol === "SOL");
+  const tokenA = tokenList.find((token) => token.symbol === "SOL");
+  const tokenB = tokenList.find((token) => token.symbol === "USDC");
   useJupiterTrade.setState({ tokenList, tokenA, tokenB, loading: false });
 };
 
@@ -82,6 +82,7 @@ export const getOpenOrder = async (wallet: PublicKey | null | undefined) => {
   if (!wallet) return;
 
   const res = await limitOrder.getOrders([ownerFilter(wallet)]);
+
   const openOrder = res.map((e) => ({ ...e.account, id: e.publicKey }));
 
   const parsedOrders = [];
@@ -103,9 +104,9 @@ export const getOpenOrder = async (wallet: PublicKey | null | undefined) => {
         outAmountUi:
           order?.takingAmount?.toNumber() / 10 ** (tokenB?.decimals ?? 0) ?? 0,
         price:
-          (order?.makingAmount?.toNumber() / 10 ** (tokenA?.decimals ?? 0) ??
-            0) /
           (order?.takingAmount?.toNumber() / 10 ** (tokenB?.decimals ?? 0) ??
+            0) /
+          (order?.makingAmount?.toNumber() / 10 ** (tokenA?.decimals ?? 0) ??
             0),
         tokenA,
         tokenB,
@@ -118,6 +119,7 @@ export const getOpenOrder = async (wallet: PublicKey | null | undefined) => {
   }
 
   useJupiterTrade.setState({ openOrder: parsedOrders });
+  return parsedOrders;
 };
 
 export const cancelOrder = async (wallet: Adapter, orderPublicKey: string) => {
