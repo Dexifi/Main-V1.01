@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Dexifi
 
-## Getting Started
+A multi-protocol DeFi terminal for Solana. It aggregates a wallet's positions
+across protocols into a single dashboard, and provides swap, lending,
+liquidity, and order book interfaces.
 
-First, run the development server:
+Next.js 13 (App Router) frontend. All protocol interaction is client-side
+through the connected wallet; there is no backend in this repository.
+
+## Integrations
+
+- **Jupiter** — swap quoting and execution; limit orders
+- **Solend** — supply, borrow, withdraw, repay; obligation and reserve data
+- **Raydium** — AMM and CLMM positions, farms, staking
+- **OpenBook** — order book, open orders, order placement and settlement
+- **Metaplex** — NFT lookup by owner
+- **Bonfida** — SNS domain resolution
+
+## Stack
+
+Next.js 13, React 18, TypeScript, Tailwind CSS with Radix UI, Zustand and
+Jotai for state, Recharts, `@solana/web3.js` and `@solana/wallet-adapter`.
+
+## Setup
+
+Requires Node.js 16.14 or newer.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn install
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Fill in the values in `.env`. `NEXT_PUBLIC_REACT_APP_NETWORK` selects the
+cluster; at least one of `NEXT_PUBLIC_RPC_1` or `NEXT_PUBLIC_RPC_2` must be
+set, as the first populated entry becomes the default connection.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+yarn dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Runs at http://localhost:3000.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Other scripts: `yarn build`, `yarn start`, `yarn lint`.
